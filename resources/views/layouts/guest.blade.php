@@ -40,7 +40,9 @@
                 <div class="flex justify-between h-16">
                     <div class="flex">
                         <div class="flex-shrink-0 flex items-center">
-                            <a href="/" class="text-xl font-bold text-gray-800">Maintenance App</a>
+                            <a href="/" class="flex items-center">
+                                <img src="{{ asset('images/logo.png') }}" alt="Maintenance App Logo" class="h-8 w-auto">
+                            </a>
                         </div>
                     </div>
                     <div class="flex items-center">

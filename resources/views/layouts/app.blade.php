@@ -14,7 +14,9 @@
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center">
-                    <a href="/" class="text-xl font-bold text-blue-600">Maintenance App</a>
+                    <a href="/" class="flex items-center">
+                        <img src="{{ asset('images/logo.png') }}" alt="Maintenance App Logo" class="h-8 w-auto">
+                    </a>
                 </div>
                 
                 <nav class="flex items-center">
