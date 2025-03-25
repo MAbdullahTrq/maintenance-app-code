@@ -41,7 +41,7 @@
                     <div class="flex">
                         <div class="flex-shrink-0 flex items-center">
                             <a href="/" class="flex items-center">
-                                <img src="{{ asset('images/logo.png') }}" alt="Maintenance App Logo" class="h-8 w-auto">
+                                <img src="{{ asset('images/logo.png') }}" alt="Maintenance App Logo" class="h-12 w-auto">
                             </a>
                         </div>
                     </div>
