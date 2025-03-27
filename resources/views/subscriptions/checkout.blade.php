@@ -97,9 +97,17 @@
 @endsection
 
 @push('scripts')
-<script src="https://www.paypal.com/sdk/js?client-id={{ config('services.paypal.client_id') }}&currency=USD"></script>
+<script src="https://www.paypal.com/sdk/js?client-id={{ config('services.paypal.client_id') }}&currency=USD&intent=capture"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        if (typeof paypal === 'undefined') {
+            // PayPal SDK failed to load
+            document.getElementById('paypal-error').textContent = 'PayPal checkout is temporarily unavailable. Please try again later.';
+            document.getElementById('paypal-error').classList.remove('hidden');
+            document.getElementById('manual-paypal-button').style.display = 'block';
+            return;
+        }
+
         // Hide manual button if JavaScript is enabled
         document.getElementById('manual-paypal-button').style.display = 'none';
         
