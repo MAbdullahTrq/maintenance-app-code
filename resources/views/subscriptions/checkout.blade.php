@@ -97,7 +97,7 @@
 @endsection
 
 @push('scripts')
-<script src="https://www.paypal.com/sdk/js?client-id={{ config('services.paypal.client_id') }}&currency=USD&intent=capture"></script>
+<script src="https://www.paypal.com/sdk/js?client-id={{ config('services.paypal.cli ent_id') }}&currency=USD&intent=capture"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof paypal === 'undefined') {
