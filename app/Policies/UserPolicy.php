@@ -14,7 +14,7 @@ class UserPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->isSuperManager() || $user->isPropertyManager();
+        return $user->isAdmin() || $user->isPropertyManager();
     }
 
     /**
@@ -22,9 +22,9 @@ class UserPolicy
      */
     public function view(User $user, User $model): bool
     {
-        return $user->isSuperManager() || 
-               $user->id === $model->id || 
-               $user->id === $model->invited_by;
+        return $user->isAdmin() ||
+            ($user->isPropertyManager() && $model->invited_by === $user->id) ||
+            $user->id === $model->id;
     }
 
     /**
@@ -32,7 +32,7 @@ class UserPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isSuperManager() || $user->isPropertyManager();
+        return $user->isAdmin() || $user->isPropertyManager();
     }
 
     /**
@@ -40,17 +40,14 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        // Super managers can update any user
-        if ($user->isSuperManager()) {
+        if ($user->isAdmin()) {
             return true;
         }
 
-        // Property managers can update technicians they invited
-        if ($user->isPropertyManager() && $model->isTechnician() && $model->invited_by === $user->id) {
-            return true;
+        if ($user->isPropertyManager()) {
+            return $model->invited_by === $user->id || $user->id === $model->id;
         }
 
-        // Users can update their own profile
         return $user->id === $model->id;
     }
 
@@ -59,14 +56,12 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        // Super managers can delete any user except themselves
-        if ($user->isSuperManager() && $user->id !== $model->id) {
+        if ($user->isAdmin() && $user->id !== $model->id) {
             return true;
         }
 
-        // Property managers can delete technicians they invited
-        if ($user->isPropertyManager() && $model->isTechnician() && $model->invited_by === $user->id) {
-            return true;
+        if ($user->isPropertyManager()) {
+            return $model->invited_by === $user->id && $model->role->slug === 'technician';
         }
 
         return false;

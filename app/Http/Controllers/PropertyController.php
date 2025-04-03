@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class PropertyController extends Controller
 {
@@ -46,7 +47,11 @@ class PropertyController extends Controller
         // Generate QR code
         $this->generateQrCode($property);
 
-        return redirect()->route('properties.index')
+        // Check if the request is coming from admin routes
+        $isAdminRoute = str_starts_with($request->route()->getName(), 'admin.');
+        $redirectRoute = $isAdminRoute ? 'admin.properties.index' : 'properties.index';
+
+        return redirect()->route($redirectRoute)
             ->with('success', 'Property created successfully.');
     }
 
@@ -116,47 +121,25 @@ class PropertyController extends Controller
     {
         $url = $property->getRequestUrl();
         
-        $qrCodePath = 'qrcodes/property_' . $property->id . '.png';
-        $fullPath = storage_path('app/public/' . $qrCodePath);
-        
-        // Ensure directory exists
-        if (!file_exists(dirname($fullPath))) {
-            mkdir(dirname($fullPath), 0755, true);
+        // Create qrcodes directory if it doesn't exist
+        $qrCodeDirectory = storage_path('app/public/qrcodes');
+        if (!file_exists($qrCodeDirectory)) {
+            mkdir($qrCodeDirectory, 0755, true);
         }
         
-        // Instead of using QrCode package, create a placeholder image
-        // This is a temporary solution until the QrCode package is properly installed
-        $placeholderImage = imagecreate(300, 300);
-        $background = imagecolorallocate($placeholderImage, 255, 255, 255);
-        $textColor = imagecolorallocate($placeholderImage, 0, 0, 0);
+        $qrCodePath = 'qrcodes/property_' . $property->id . '.svg';
+        $fullPath = storage_path('app/public/' . $qrCodePath);
         
-        // Add text to the image
-        $text = "QR Code Placeholder";
-        $font = 5; // Built-in font
-        $textWidth = imagefontwidth($font) * strlen($text);
-        $textHeight = imagefontheight($font);
-        
-        // Center the text
-        $x = (300 - $textWidth) / 2;
-        $y = (300 - $textHeight) / 2;
-        
-        imagestring($placeholderImage, $font, $x, $y, $text, $textColor);
-        
-        // Add URL text
-        $urlText = $url;
-        $urlTextWidth = imagefontwidth($font) * strlen($urlText);
-        $x = (300 - $urlTextWidth) / 2;
-        $y = $y + $textHeight + 10;
-        
-        imagestring($placeholderImage, $font, $x, $y, $urlText, $textColor);
-        
-        // Save the image
-        imagepng($placeholderImage, $fullPath);
-        imagedestroy($placeholderImage);
+        // Generate QR code with property information
+        QrCode::format('svg')
+            ->size(300)
+            ->errorCorrection('H')
+            ->margin(1)
+            ->generate($url, $fullPath);
         
         // Update property with QR code path
         $property->update([
-            'qr_code' => $qrCodePath,
+            'qr_code' => $qrCodePath
         ]);
     }
 
@@ -171,6 +154,10 @@ class PropertyController extends Controller
             $this->generateQrCode($property);
         }
         
-        return Storage::download('public/' . $property->qr_code, $property->name . '_qrcode.png');
+        return response()->download(
+            storage_path('app/public/' . $property->qr_code),
+            $property->name . '_qrcode.svg',
+            ['Content-Type' => 'image/svg+xml']
+        );
     }
 } 

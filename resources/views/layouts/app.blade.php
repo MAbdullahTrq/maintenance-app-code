@@ -22,15 +22,15 @@
                 
                 <nav class="flex items-center">
                     @auth
-                        @if(Auth::user()->isSuperManager())
+                        @if(Auth::user()->isAdmin() && !Route::is('admin.dashboard'))
                             <a href="{{ route('admin.dashboard') }}" class="mr-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
                                 <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
                             </a>
-                        @elseif(Auth::user()->isPropertyManager())
+                        @elseif(Auth::user()->isPropertyManager() && !Route::is('manager.dashboard'))
                             <a href="{{ route('manager.dashboard') }}" class="mr-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
                                 <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
                             </a>
-                        @elseif(Auth::user()->isTechnician())
+                        @elseif(Auth::user()->isTechnician() && !Route::is('technician.dashboard'))
                             <a href="{{ route('technician.dashboard') }}" class="mr-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
                                 <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
                             </a>
@@ -43,12 +43,22 @@
                             </button>
                             
                             <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                                @if(Auth::user()->isSuperManager())
-                                    <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a>
-                                @elseif(Auth::user()->isPropertyManager())
-                                    <a href="{{ route('manager.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a>
-                                @elseif(Auth::user()->isTechnician())
-                                    <a href="{{ route('technician.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a>
+                                @if(Auth::user()->isAdmin())
+                                    <a href="{{ route('admin.users.create') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-user-plus mr-2 text-blue-500"></i>Add New User
+                                    </a>
+                                    <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-users mr-2 text-green-500"></i>View Users
+                                    </a>
+                                @endif
+                                
+                                @if(Auth::user()->isPropertyManager() && Auth::user()->hasActiveSubscription())
+                                    <a href="{{ route('technicians.create') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-user-hard-hat mr-2 text-green-500"></i>Add New Technician
+                                    </a>
+                                    <a href="{{ route('properties.create') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-building mr-2 text-purple-500"></i>Add New Property
+                                    </a>
                                 @endif
                                 
                                 <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>

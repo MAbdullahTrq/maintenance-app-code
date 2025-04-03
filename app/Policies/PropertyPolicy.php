@@ -15,7 +15,7 @@ class PropertyPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->isSuperManager() || $user->isPropertyManager();
+        return $user->isAdmin() || $user->isPropertyManager();
     }
 
     /**
@@ -23,7 +23,7 @@ class PropertyPolicy
      */
     public function view(User $user, Property $property): bool
     {
-        return $user->isSuperManager() || $property->manager_id === $user->id;
+        return $user->isAdmin() || $property->manager_id === $user->id;
     }
 
     /**
@@ -31,7 +31,7 @@ class PropertyPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isSuperManager() || $user->isPropertyManager();
+        return $user->isAdmin() || $user->isPropertyManager();
     }
 
     /**
@@ -39,7 +39,7 @@ class PropertyPolicy
      */
     public function update(User $user, Property $property): bool
     {
-        return $user->isSuperManager() || $property->manager_id === $user->id;
+        return $user->isAdmin() || $property->manager_id === $user->id;
     }
 
     /**
@@ -47,7 +47,7 @@ class PropertyPolicy
      */
     public function delete(User $user, Property $property): bool
     {
-        return $user->isSuperManager() || $property->manager_id === $user->id;
+        return $user->isAdmin() || $property->manager_id === $user->id;
     }
 
     /**
@@ -55,6 +55,11 @@ class PropertyPolicy
      */
     public function createRequest(User $user, Property $property): bool
     {
-        return $user->isSuperManager() || $property->manager_id === $user->id;
+        return $user->isAdmin() || $property->manager_id === $user->id;
+    }
+
+    public function restore(User $user, Property $property): bool
+    {
+        return $user->isAdmin() || $property->manager_id === $user->id;
     }
 } 

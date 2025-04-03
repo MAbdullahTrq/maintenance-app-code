@@ -57,7 +57,7 @@
                                     <div class="relative group">
                                         <img src="{{ asset('storage/' . $image->image_path) }}" alt="Maintenance Image" class="w-full h-40 object-cover rounded-lg">
                                         
-                                        @if(auth()->user()->isPropertyManager() || auth()->user()->isSuperManager())
+                                        @if(auth()->user()->isPropertyManager() || auth()->user()->isAdmin())
                                             <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <form action="{{ route('maintenance.image.delete', $image) }}" method="POST">
                                                     @csrf
@@ -200,7 +200,7 @@
             </div>
             
             <!-- Action Buttons -->
-            @if($maintenance->status == 'pending' && (auth()->user()->isPropertyManager() || auth()->user()->isSuperManager()))
+            @if($maintenance->status == 'pending' && (auth()->user()->isPropertyManager() || auth()->user()->isAdmin()))
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
                     <div class="p-6 border-b">
                         <h2 class="text-xl font-bold text-gray-900">Actions</h2>
@@ -226,7 +226,7 @@
                 </div>
             @endif
             
-            @if($maintenance->status == 'approved' && (auth()->user()->isPropertyManager() || auth()->user()->isSuperManager()))
+            @if($maintenance->status == 'approved' && (auth()->user()->isPropertyManager() || auth()->user()->isAdmin()))
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
                     <div class="p-6 border-b">
                         <h2 class="text-xl font-bold text-gray-900">Assign Technician</h2>

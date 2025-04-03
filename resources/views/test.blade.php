@@ -22,7 +22,7 @@
                     <p><strong>Email:</strong> {{ auth()->user()->email }}</p>
                     <p><strong>Role ID:</strong> {{ auth()->user()->role_id }}</p>
                     <p><strong>Role:</strong> {{ auth()->user()->role ? auth()->user()->role->name : 'No role assigned' }}</p>
-                    <p><strong>Is Super Manager:</strong> {{ auth()->user()->isSuperManager() ? 'Yes' : 'No' }}</p>
+                    <p><strong>Is Admin:</strong> {{ auth()->user()->isAdmin() ? 'Yes' : 'No' }}</p>
                     <p><strong>Is Property Manager:</strong> {{ auth()->user()->isPropertyManager() ? 'Yes' : 'No' }}</p>
                     <p><strong>Is Technician:</strong> {{ auth()->user()->isTechnician() ? 'Yes' : 'No' }}</p>
                 </div>

@@ -4,10 +4,39 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
+    <!-- Breadcrumb Navigation -->
+    <nav class="flex mb-6" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+                @if(auth()->user()->isAdmin())
+                    <a href="{{ route('admin.properties.index') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        Properties
+                    </a>
+                @else
+                    <a href="{{ route('properties.index') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        Properties
+                    </a>
+                @endif
+            </li>
+            <li aria-current="page">
+                <div class="flex items-center">
+                    <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                    <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">Create Property</span>
+                </div>
+            </li>
+        </ol>
+    </nav>
+
     <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow">
         <h1 class="text-2xl font-bold mb-6">Create New Property</h1>
         
-        <form action="{{ route('properties.store') }}" method="POST">
+        @if(auth()->user()->isAdmin())
+            <form action="{{ route('admin.properties.store') }}" method="POST">
+        @else
+            <form action="{{ route('properties.store') }}" method="POST">
+        @endif
             @csrf
             
             <div class="mb-4">
@@ -31,7 +60,11 @@
             </div>
             
             <div class="flex justify-end">
-                <a href="{{ route('properties.index') }}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg mr-2 hover:bg-gray-400">Cancel</a>
+                @if(auth()->user()->isAdmin())
+                    <a href="{{ route('admin.properties.index') }}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg mr-2 hover:bg-gray-400">Cancel</a>
+                @else
+                    <a href="{{ route('properties.index') }}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg mr-2 hover:bg-gray-400">Cancel</a>
+                @endif
                 <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Create Property</button>
             </div>
         </form>

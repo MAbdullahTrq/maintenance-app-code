@@ -15,7 +15,18 @@ class MaintenanceRequestPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true; // All authenticated users can view maintenance requests
+        // Admin can view all requests
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        // Property managers can view requests for their properties
+        if ($user->isPropertyManager()) {
+            return true;
+        }
+
+        // Technicians can view requests assigned to them
+        return $user->isTechnician();
     }
 
     /**
@@ -23,22 +34,7 @@ class MaintenanceRequestPolicy
      */
     public function view(User $user, MaintenanceRequest $maintenanceRequest): bool
     {
-        // Super managers can view all requests
-        if ($user->isSuperManager()) {
-            return true;
-        }
-
-        // Property managers can view requests for their properties
-        if ($user->isPropertyManager() && $maintenanceRequest->property->manager_id === $user->id) {
-            return true;
-        }
-
-        // Technicians can view requests assigned to them
-        if ($user->isTechnician() && $maintenanceRequest->assigned_to === $user->id) {
-            return true;
-        }
-
-        return false;
+        return $user->isAdmin() || $user->isPropertyManager();
     }
 
     /**
@@ -46,7 +42,13 @@ class MaintenanceRequestPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isSuperManager() || $user->isPropertyManager();
+        // Admin can create requests
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        // Property managers can create requests
+        return $user->isPropertyManager();
     }
 
     /**
@@ -54,14 +56,14 @@ class MaintenanceRequestPolicy
      */
     public function update(User $user, MaintenanceRequest $maintenanceRequest): bool
     {
-        // Super managers can update all requests
-        if ($user->isSuperManager()) {
+        // Admin can update any request
+        if ($user->isAdmin()) {
             return true;
         }
 
         // Property managers can update requests for their properties
-        if ($user->isPropertyManager() && $maintenanceRequest->property->manager_id === $user->id) {
-            return true;
+        if ($user->isPropertyManager()) {
+            return $maintenanceRequest->property->manager_id === $user->id;
         }
 
         return false;
@@ -72,14 +74,14 @@ class MaintenanceRequestPolicy
      */
     public function delete(User $user, MaintenanceRequest $maintenanceRequest): bool
     {
-        // Super managers can delete all requests
-        if ($user->isSuperManager()) {
+        // Admin can delete any request
+        if ($user->isAdmin()) {
             return true;
         }
 
         // Property managers can delete requests for their properties
-        if ($user->isPropertyManager() && $maintenanceRequest->property->manager_id === $user->id) {
-            return true;
+        if ($user->isPropertyManager()) {
+            return $maintenanceRequest->property->manager_id === $user->id;
         }
 
         return false;
@@ -95,8 +97,8 @@ class MaintenanceRequestPolicy
             return false;
         }
 
-        // Super managers can approve all requests
-        if ($user->isSuperManager()) {
+        // Admin can approve all requests
+        if ($user->isAdmin()) {
             return true;
         }
 
@@ -118,8 +120,8 @@ class MaintenanceRequestPolicy
             return false;
         }
 
-        // Super managers can assign all requests
-        if ($user->isSuperManager()) {
+        // Admin can assign all requests
+        if ($user->isAdmin()) {
             return true;
         }
 
@@ -136,8 +138,8 @@ class MaintenanceRequestPolicy
      */
     public function updateStatus(User $user, MaintenanceRequest $maintenanceRequest): bool
     {
-        // Super managers can update status of all requests
-        if ($user->isSuperManager()) {
+        // Admin can update status of all requests
+        if ($user->isAdmin()) {
             return true;
         }
 
@@ -159,14 +161,29 @@ class MaintenanceRequestPolicy
      */
     public function deleteImage(User $user, MaintenanceRequest $maintenanceRequest): bool
     {
-        // Super managers can delete images from all requests
-        if ($user->isSuperManager()) {
+        // Admin can delete images from all requests
+        if ($user->isAdmin()) {
             return true;
         }
 
         // Property managers can delete images from requests for their properties
         if ($user->isPropertyManager() && $maintenanceRequest->property->manager_id === $user->id) {
             return true;
+        }
+
+        return false;
+    }
+
+    public function restore(User $user, MaintenanceRequest $maintenanceRequest): bool
+    {
+        // Admin can restore any request
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        // Property managers can restore requests for their properties
+        if ($user->isPropertyManager()) {
+            return $maintenanceRequest->property->manager_id === $user->id;
         }
 
         return false;

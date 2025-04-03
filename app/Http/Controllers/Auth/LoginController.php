@@ -43,7 +43,7 @@ class LoginController extends Controller
             }
 
             // Redirect based on user role
-            if ($user->isSuperManager()) {
+            if ($user->isAdmin()) {
                 return redirect()->intended(route('admin.dashboard'));
             } elseif ($user->isPropertyManager()) {
                 // Check if property manager has an active subscription

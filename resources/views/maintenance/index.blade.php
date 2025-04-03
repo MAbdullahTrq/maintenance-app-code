@@ -7,7 +7,7 @@
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-900">Maintenance Requests</h1>
         
-        @if(auth()->user()->isPropertyManager() || auth()->user()->isSuperManager())
+        @if(auth()->user()->isPropertyManager() || auth()->user()->isAdmin())
             <a href="{{ route('maintenance.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                 <i class="fas fa-plus mr-2"></i>Create Request
             </a>
@@ -25,7 +25,7 @@
             <div class="p-6 text-center">
                 <p class="text-gray-500">No maintenance requests found.</p>
                 
-                @if(auth()->user()->isPropertyManager() || auth()->user()->isSuperManager())
+                @if(auth()->user()->isPropertyManager() || auth()->user()->isAdmin())
                     <a href="{{ route('maintenance.create') }}" class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                         Create Your First Request
                     </a>
@@ -91,7 +91,7 @@
                                         View
                                     </a>
                                     
-                                    @if(auth()->user()->isPropertyManager() || auth()->user()->isSuperManager())
+                                    @if(auth()->user()->isPropertyManager() || auth()->user()->isAdmin())
                                         @if($request->status == 'pending')
                                             <a href="{{ route('maintenance.edit', $request) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">
                                                 Edit

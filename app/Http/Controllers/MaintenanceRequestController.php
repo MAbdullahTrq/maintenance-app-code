@@ -20,13 +20,11 @@ class MaintenanceRequestController extends Controller
     {
         $user = Auth::user();
         
-        if ($user->isSuperManager()) {
-            $requests = MaintenanceRequest::with(['property', 'assignedTechnician'])
-                ->latest()
-                ->paginate(10);
+        if ($user->isAdmin()) {
+            $requests = MaintenanceRequest::with(['property', 'assignedTo', 'approvedBy'])->latest()->get();
         } elseif ($user->isPropertyManager()) {
             $propertyIds = $user->managedProperties()->pluck('id');
-            $requests = MaintenanceRequest::with(['property', 'assignedTechnician'])
+            $requests = MaintenanceRequest::with(['property', 'assignedTo', 'approvedBy'])
                 ->whereIn('property_id', $propertyIds)
                 ->latest()
                 ->paginate(10);
@@ -104,7 +102,7 @@ class MaintenanceRequestController extends Controller
         $maintenance->load(['property', 'assignedTechnician', 'approvedBy', 'images', 'comments.user']);
         
         $technicians = [];
-        if (Auth::user()->isPropertyManager() || Auth::user()->isSuperManager()) {
+        if (Auth::user()->isPropertyManager() || Auth::user()->isAdmin()) {
             $technicians = User::whereHas('role', function ($query) {
                 $query->where('slug', 'technician');
             })->get();
@@ -419,8 +417,8 @@ class MaintenanceRequestController extends Controller
         $this->authorize('view', $comment->maintenanceRequest);
         
         // Only allow users to delete their own comments
-        if ($comment->user_id !== Auth::id() && !Auth::user()->isSuperManager()) {
-            abort(403, 'Unauthorized action.');
+        if ($comment->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
+            return back()->with('error', 'You do not have permission to delete this comment.');
         }
         
         $comment->delete();
