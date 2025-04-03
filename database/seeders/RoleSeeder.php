@@ -14,9 +14,9 @@ class RoleSeeder extends Seeder
     {
         $roles = [
             [
-                'name' => 'Super Property Manager',
-                'slug' => 'super_manager',
-                'description' => 'Oversees the entire platform and manages client accounts.',
+                'name' => 'Admin',
+                'slug' => 'admin',
+                'description' => 'Administrator with full access to all features',
             ],
             [
                 'name' => 'Property Manager',

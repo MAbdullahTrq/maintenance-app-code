@@ -17,17 +17,12 @@ class UserController extends Controller
      */
     public function index()
     {
-        // Check if the route name starts with 'admin.'
-        $isAdminRoute = str_starts_with(request()->route()->getName(), 'admin.');
-        
-        if (auth()->user()->hasRole('super_manager')) {
+        if (auth()->user()->hasRole('admin')) {
             $users = User::with('role')->get();
         } else {
-            // Property managers can only see technicians they invited
-            $users = User::where('invited_by', auth()->id())->with('role')->get();
+            $users = User::with('role')->where('id', auth()->id())->get();
         }
-        
-        return view('users.index', compact('users', 'isAdminRoute'));
+        return view('users.index', compact('users'));
     }
 
     /**
@@ -39,7 +34,7 @@ class UserController extends Controller
         $isAdminRoute = str_starts_with(request()->route()->getName(), 'admin.');
         
         // Super managers can create any type of user
-        if (auth()->user()->hasRole('super_manager')) {
+        if (auth()->user()->hasRole('admin')) {
             $roles = Role::all();
         } else {
             // Property managers can only create technicians
@@ -65,7 +60,7 @@ class UserController extends Controller
         ]);
 
         // Super managers can create any type of user
-        if (auth()->user()->hasRole('super_manager')) {
+        if (auth()->user()->hasRole('admin')) {
             // Allow any role
         } else {
             // Property managers can only create technicians
@@ -106,7 +101,7 @@ class UserController extends Controller
         $isAdminRoute = str_starts_with(request()->route()->getName(), 'admin.');
         
         // Super managers can edit any user
-        if (auth()->user()->hasRole('super_manager')) {
+        if (auth()->user()->hasRole('admin')) {
             $roles = Role::all();
         } else {
             // Property managers can only edit technicians they invited
@@ -136,7 +131,7 @@ class UserController extends Controller
         ]);
 
         // Super managers can update any user
-        if (auth()->user()->hasRole('super_manager')) {
+        if (auth()->user()->hasRole('admin')) {
             // Allow any role
         } else {
             // Property managers can only update technicians they invited
@@ -281,7 +276,7 @@ class UserController extends Controller
         $isAdminRoute = str_starts_with(request()->route()->getName(), 'admin.');
         
         // Super managers can delete any user except themselves
-        if (auth()->user()->hasRole('super_manager')) {
+        if (auth()->user()->hasRole('admin')) {
             if ($user->id === auth()->id()) {
                 return redirect()->back()->with('error', 'You cannot delete your own account.');
             }

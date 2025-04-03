@@ -136,7 +136,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profile/password', [UserController::class, 'changePassword'])->name('password.update');
 
     // Super manager routes
-    Route::middleware(['super_manager'])->group(function () {
+    Route::middleware(['admin'])->group(function () {
         Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])->name('admin.dashboard');
         
         // Give super managers access to all features without subscription requirement
