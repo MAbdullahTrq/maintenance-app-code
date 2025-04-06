@@ -23,6 +23,12 @@ class TechnicianController extends Controller
             'phone' => 'required|string|max:20',
         ]);
 
+        // Get technician role
+        $technicianRole = Role::where('slug', 'technician')->first();
+        if (!$technicianRole) {
+            return redirect()->back()->with('error', 'Technician role not found.');
+        }
+
         // Generate a random password
         $password = Str::random(10);
 
@@ -33,11 +39,8 @@ class TechnicianController extends Controller
             'phone' => $request->phone,
             'password' => Hash::make($password),
             'property_manager_id' => auth()->id(), // Associate with current property manager
+            'role_id' => $technicianRole->id, // Assign technician role directly
         ]);
-
-        // Assign technician role
-        $technicianRole = Role::where('name', 'technician')->first();
-        $technician->roles()->attach($technicianRole);
 
         // TODO: Send email to technician with their credentials
 
