@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
@@ -197,5 +198,82 @@ class SubscriptionController extends Controller
         $environment = new SandboxEnvironment($clientId, $clientSecret);
         
         return new PayPalHttpClient($environment);
+    }
+
+    /**
+     * Show the form for granting a subscription to a user.
+     */
+    public function showGrantForm(User $user)
+    {
+        // Only allow granting subscriptions to property managers
+        if (!$user->isPropertyManager()) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Subscriptions can only be granted to property managers.');
+        }
+
+        $plans = SubscriptionPlan::where('is_active', true)->get();
+        $activeSubscription = $user->subscriptions()
+            ->where('status', 'active')
+            ->where('ends_at', '>', now())
+            ->first();
+
+        return view('subscriptions.grant', compact('user', 'plans', 'activeSubscription'));
+    }
+
+    /**
+     * Grant a subscription to a user.
+     */
+    public function grantSubscription(Request $request, User $user)
+    {
+        // Validate request
+        $validated = $request->validate([
+            'plan_id' => 'required|exists:subscription_plans,id',
+            'duration' => 'required|integer|min:1',
+            'duration_unit' => 'required|in:days,months,years',
+        ]);
+
+        // Only allow granting subscriptions to property managers
+        if (!$user->isPropertyManager()) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Subscriptions can only be granted to property managers.');
+        }
+
+        $plan = SubscriptionPlan::findOrFail($validated['plan_id']);
+
+        // Calculate the end date based on duration and unit
+        $durationInDays = match ($validated['duration_unit']) {
+            'days' => $validated['duration'],
+            'months' => $validated['duration'] * 30,
+            'years' => $validated['duration'] * 365,
+        };
+
+        // Check if user has an active subscription
+        $activeSubscription = $user->subscriptions()
+            ->where('status', 'active')
+            ->first();
+
+        if ($activeSubscription) {
+            // Update existing subscription
+            $activeSubscription->update([
+                'plan_id' => $plan->id,
+                'starts_at' => now(),
+                'ends_at' => now()->addDays($durationInDays),
+                'payment_method' => 'manual',
+                'status' => 'active',
+            ]);
+        } else {
+            // Create new subscription
+            Subscription::create([
+                'user_id' => $user->id,
+                'plan_id' => $plan->id,
+                'starts_at' => now(),
+                'ends_at' => now()->addDays($durationInDays),
+                'payment_method' => 'manual',
+                'status' => 'active',
+            ]);
+        }
+
+        return redirect()->route('admin.users.show', $user)
+            ->with('success', 'Subscription granted successfully.');
     }
 } 

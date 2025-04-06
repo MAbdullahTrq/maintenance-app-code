@@ -59,6 +59,10 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active');
         Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
         
+        // Subscription management routes
+        Route::get('/users/{user}/grant-subscription', [SubscriptionController::class, 'showGrantForm'])->name('users.grant-subscription.create');
+        Route::post('/users/{user}/grant-subscription', [SubscriptionController::class, 'grantSubscription'])->name('users.grant-subscription.store');
+        
         // Property routes
         Route::get('/properties', [PropertyController::class, 'index'])->name('properties.index');
         Route::get('/properties/create', [PropertyController::class, 'create'])->name('properties.create');
