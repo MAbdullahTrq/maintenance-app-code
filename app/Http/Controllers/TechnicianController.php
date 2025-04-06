@@ -38,8 +38,9 @@ class TechnicianController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($password),
-            'property_manager_id' => auth()->id(), // Associate with current property manager
-            'role_id' => $technicianRole->id, // Assign technician role directly
+            'invited_by' => auth()->id(), // Changed from property_manager_id to invited_by
+            'role_id' => $technicianRole->id,
+            'is_active' => true,
         ]);
 
         // TODO: Send email to technician with their credentials
