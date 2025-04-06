@@ -31,7 +31,9 @@ class DashboardController extends Controller
         $inProgressRequests = MaintenanceRequest::where('status', 'in_progress')->count();
         $completedRequests = MaintenanceRequest::where('status', 'completed')->count();
         
-        $recentRequests = MaintenanceRequest::with(['property', 'assignedTechnician'])
+        // Get active users instead of recent requests
+        $activeUsers = User::with('role')
+            ->where('is_active', true)
             ->latest()
             ->take(5)
             ->get();
@@ -44,7 +46,7 @@ class DashboardController extends Controller
             'pendingRequests',
             'inProgressRequests',
             'completedRequests',
-            'recentRequests'
+            'activeUsers'
         ));
     }
 
