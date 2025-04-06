@@ -208,7 +208,7 @@
                                     {{ $technician->in_progress_count }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <a href="{{ route('users.show', $technician) }}" class="text-blue-600 hover:text-blue-900">View</a>
+                                    <a href="{{ route('technicians.edit', $technician) }}" class="text-blue-600 hover:text-blue-900">View Details</a>
                                 </td>
                             </tr>
                         @endforeach

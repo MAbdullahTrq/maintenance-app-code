@@ -87,6 +87,16 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/subscription/history', [SubscriptionController::class, 'history'])->name('subscription.history');
         Route::post('/subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
         
+        // Technician management routes
+        Route::get('/technicians', [TechnicianController::class, 'index'])->name('technicians.index');
+        Route::get('/technicians/create', [TechnicianController::class, 'create'])->name('technicians.create');
+        Route::post('/technicians', [TechnicianController::class, 'store'])->name('technicians.store');
+        Route::get('/technicians/{user}/edit', [TechnicianController::class, 'edit'])->name('technicians.edit');
+        Route::put('/technicians/{user}', [TechnicianController::class, 'update'])->name('technicians.update');
+        Route::delete('/technicians/{user}', [TechnicianController::class, 'destroy'])->name('technicians.destroy');
+        Route::put('/technicians/{user}/toggle-active', [TechnicianController::class, 'toggleActive'])->name('technicians.toggle-active');
+        Route::post('/technicians/{user}/reset-password', [TechnicianController::class, 'resetPassword'])->name('technicians.reset-password');
+        
         // Property manager routes with active subscription
         Route::middleware(['subscription'])->group(function () {
             // Property routes for managers
@@ -98,16 +108,6 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/properties/{property}', [PropertyController::class, 'update'])->name('properties.update');
             Route::delete('/properties/{property}', [PropertyController::class, 'destroy'])->name('properties.destroy');
             Route::get('/properties/{property}/qrcode', [PropertyController::class, 'downloadQrCode'])->name('properties.qrcode');
-            
-            // Technician management routes
-            Route::get('/technicians', [TechnicianController::class, 'index'])->name('technicians.index');
-            Route::get('/technicians/create', [TechnicianController::class, 'create'])->name('technicians.create');
-            Route::post('/technicians', [TechnicianController::class, 'store'])->name('technicians.store');
-            Route::get('/technicians/{user}/edit', [TechnicianController::class, 'edit'])->name('technicians.edit');
-            Route::put('/technicians/{user}', [TechnicianController::class, 'update'])->name('technicians.update');
-            Route::delete('/technicians/{user}', [TechnicianController::class, 'destroy'])->name('technicians.destroy');
-            Route::put('/technicians/{user}/toggle-active', [TechnicianController::class, 'toggleActive'])->name('technicians.toggle-active');
-            Route::post('/technicians/{user}/reset-password', [TechnicianController::class, 'resetPassword'])->name('technicians.reset-password');
         });
     });
 
