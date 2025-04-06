@@ -56,6 +56,9 @@
                                     <a href="{{ route('technicians.create') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         <i class="fas fa-user-hard-hat mr-2 text-green-500"></i>Add New Technician
                                     </a>
+                                    <a href="{{ route('technicians.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-users-cog mr-2 text-blue-500"></i>View Technicians
+                                    </a>
                                     <a href="{{ route('properties.create') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         <i class="fas fa-building mr-2 text-purple-500"></i>Add New Property
                                     </a>
