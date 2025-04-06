@@ -112,50 +112,86 @@
             @endif
         </div>
         
-        <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4">Request Status</h2>
-            
-            <div class="space-y-4">
-                <div>
-                    <div class="flex justify-between mb-1">
-                        <span class="text-sm font-medium text-gray-700">Pending</span>
-                        <span class="text-sm font-medium text-gray-700">{{ $pendingRequests }}</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-yellow-500 h-2 rounded-full" style="width: {{ $totalRequests > 0 ? ($pendingRequests / $totalRequests * 100) : 0 }}%"></div>
-                    </div>
-                </div>
+        <div class="space-y-6">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">Request Status</h2>
                 
-                <div>
-                    <div class="flex justify-between mb-1">
-                        <span class="text-sm font-medium text-gray-700">In Progress</span>
-                        <span class="text-sm font-medium text-gray-700">{{ $inProgressRequests }}</span>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium text-gray-700">Pending</span>
+                            <span class="text-sm font-medium text-gray-700">{{ $pendingRequests }}</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-yellow-500 h-2 rounded-full" style="width: {{ $totalRequests > 0 ? ($pendingRequests / $totalRequests * 100) : 0 }}%"></div>
+                        </div>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-purple-500 h-2 rounded-full" style="width: {{ $totalRequests > 0 ? ($inProgressRequests / $totalRequests * 100) : 0 }}%"></div>
+                    
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium text-gray-700">In Progress</span>
+                            <span class="text-sm font-medium text-gray-700">{{ $inProgressRequests }}</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-purple-500 h-2 rounded-full" style="width: {{ $totalRequests > 0 ? ($inProgressRequests / $totalRequests * 100) : 0 }}%"></div>
+                        </div>
                     </div>
-                </div>
-                
-                <div>
-                    <div class="flex justify-between mb-1">
-                        <span class="text-sm font-medium text-gray-700">Completed</span>
-                        <span class="text-sm font-medium text-gray-700">{{ $completedRequests }}</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-green-500 h-2 rounded-full" style="width: {{ $totalRequests > 0 ? ($completedRequests / $totalRequests * 100) : 0 }}%"></div>
+                    
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium text-gray-700">Completed</span>
+                            <span class="text-sm font-medium text-gray-700">{{ $completedRequests }}</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-500 h-2 rounded-full" style="width: {{ $totalRequests > 0 ? ($completedRequests / $totalRequests * 100) : 0 }}%"></div>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="mt-6">
-                <h3 class="text-sm font-medium text-gray-700 mb-2">Quick Actions</h3>
-                <div class="space-y-2">
-                    <a href="{{ route('admin.users.create') }}" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
-                        <i class="fas fa-user-plus mr-2 text-blue-500"></i> Add New User
-                    </a>
-                    <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
-                        <i class="fas fa-users mr-2 text-green-500"></i> View Users
-                    </a>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-crown mr-2 text-yellow-500"></i>Subscription Management
+                </h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium text-gray-700">Active Subscriptions</span>
+                            <span class="text-sm font-medium text-gray-700">{{ $activeSubscriptions ?? 0 }}</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-500 h-2 rounded-full" style="width: {{ isset($totalPropertyManagers) && $totalPropertyManagers > 0 ? (($activeSubscriptions ?? 0) / $totalPropertyManagers * 100) : 0 }}%"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium text-gray-700">Expired Subscriptions</span>
+                            <span class="text-sm font-medium text-gray-700">{{ $expiredSubscriptions ?? 0 }}</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-red-500 h-2 rounded-full" style="width: {{ isset($totalPropertyManagers) && $totalPropertyManagers > 0 ? (($expiredSubscriptions ?? 0) / $totalPropertyManagers * 100) : 0 }}%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <h3 class="text-sm font-medium text-gray-700 mb-2">Quick Actions</h3>
+                    <div class="space-y-2">
+                        <a href="{{ route('admin.users.create') }}" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
+                            <i class="fas fa-user-plus mr-2 text-blue-500"></i> Add New User
+                        </a>
+                        <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
+                            <i class="fas fa-users mr-2 text-green-500"></i> View Users
+                        </a>
+                        <a href="{{ route('admin.subscription.plans') }}" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
+                            <i class="fas fa-tags mr-2 text-yellow-500"></i> Manage Plans
+                        </a>
+                        <a href="{{ route('admin.subscription.index') }}" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
+                            <i class="fas fa-list-alt mr-2 text-purple-500"></i> View All Subscriptions
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

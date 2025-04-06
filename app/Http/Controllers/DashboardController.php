@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\MaintenanceRequest;
 use App\Models\Property;
 use App\Models\User;
+use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,12 +32,22 @@ class DashboardController extends Controller
         $inProgressRequests = MaintenanceRequest::where('status', 'in_progress')->count();
         $completedRequests = MaintenanceRequest::where('status', 'completed')->count();
         
-        // Get active users instead of recent requests
+        // Get active users
         $activeUsers = User::with('role')
             ->where('is_active', true)
             ->latest()
             ->take(5)
             ->get();
+
+        // Get subscription statistics
+        $activeSubscriptions = Subscription::where('status', 'active')
+            ->where('ends_at', '>', now())
+            ->count();
+
+        $expiredSubscriptions = Subscription::where(function($query) {
+            $query->where('status', 'expired')
+                ->orWhere('ends_at', '<=', now());
+        })->count();
         
         return view('dashboards.admin', compact(
             'totalPropertyManagers',
@@ -46,7 +57,9 @@ class DashboardController extends Controller
             'pendingRequests',
             'inProgressRequests',
             'completedRequests',
-            'activeUsers'
+            'activeUsers',
+            'activeSubscriptions',
+            'expiredSubscriptions'
         ));
     }
 

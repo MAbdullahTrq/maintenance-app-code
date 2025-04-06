@@ -60,6 +60,13 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
         
         // Subscription management routes
+        Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscription.index');
+        Route::get('/subscription/plans', [SubscriptionController::class, 'plans'])->name('subscription.plans');
+        Route::get('/subscription/plans/create', [SubscriptionController::class, 'createPlan'])->name('subscription.plans.create');
+        Route::post('/subscription/plans', [SubscriptionController::class, 'storePlan'])->name('subscription.plans.store');
+        Route::get('/subscription/plans/{plan}/edit', [SubscriptionController::class, 'editPlan'])->name('subscription.plans.edit');
+        Route::put('/subscription/plans/{plan}', [SubscriptionController::class, 'updatePlan'])->name('subscription.plans.update');
+        Route::delete('/subscription/plans/{plan}', [SubscriptionController::class, 'destroyPlan'])->name('subscription.plans.destroy');
         Route::get('/users/{user}/grant-subscription', [SubscriptionController::class, 'showGrantForm'])->name('users.grant-subscription.create');
         Route::post('/users/{user}/grant-subscription', [SubscriptionController::class, 'grantSubscription'])->name('users.grant-subscription.store');
         
