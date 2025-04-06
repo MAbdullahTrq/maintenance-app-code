@@ -54,7 +54,7 @@
                     <i class="fas fa-arrow-left mr-2"></i>Back to Users
                 </a>
             @else
-                <a href="{{ route('users.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 flex items-center">
+                <a href="{{ route('admin.users.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 flex items-center">
                     <i class="fas fa-arrow-left mr-2"></i>Back to Users
                 </a>
             @endif
@@ -87,7 +87,7 @@
             @if(isset($isAdminRoute) && $isAdminRoute)
                 <form action="{{ route('admin.users.store') }}" method="POST">
             @else
-                <form action="{{ route('users.store') }}" method="POST">
+                <form action="{{ route('admin.users.store') }}" method="POST">
             @endif
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -164,7 +164,7 @@
                             <i class="fas fa-times mr-2"></i>Cancel
                         </a>
                     @else
-                        <a href="{{ route('users.index') }}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 flex items-center">
+                        <a href="{{ route('admin.users.index') }}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 flex items-center">
                             <i class="fas fa-times mr-2"></i>Cancel
                         </a>
                     @endif

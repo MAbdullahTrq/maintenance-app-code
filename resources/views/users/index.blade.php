@@ -48,7 +48,7 @@
                     <i class="fas fa-user-plus mr-2"></i>Add User
                 </a>
             @else
-                <a href="{{ route('users.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
+                <a href="{{ route('admin.users.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
                     <i class="fas fa-user-plus mr-2"></i>Add User
                 </a>
             @endif
@@ -170,11 +170,11 @@
                                                 </button>
                                             </form>
                                         @else
-                                            <a href="{{ route('users.edit', $user) }}" class="text-blue-600 hover:text-blue-900" title="Edit">
+                                            <a href="{{ route('admin.users.edit', $user) }}" class="text-blue-600 hover:text-blue-900" title="Edit">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             
-                                            <form action="{{ route('users.toggle-active', $user) }}" method="POST" class="inline">
+                                            <form action="{{ route('admin.users.toggle-active', $user) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('PUT')
                                                 <button type="submit" class="{{ $user->is_active ? 'text-yellow-600 hover:text-yellow-900' : 'text-green-600 hover:text-green-900' }}" title="{{ $user->is_active ? 'Deactivate' : 'Activate' }}">
@@ -182,7 +182,7 @@
                                                 </button>
                                             </form>
                                             
-                                            <form action="{{ route('users.reset-password', $user) }}" method="POST" class="inline">
+                                            <form action="{{ route('admin.users.reset-password', $user) }}" method="POST" class="inline">
                                                 @csrf
                                                 <button type="submit" class="text-blue-600 hover:text-blue-900" title="Reset Password" onclick="return confirm('Are you sure you want to reset the password?')">
                                                     <i class="fas fa-key"></i>

@@ -28,7 +28,7 @@
             <li>
                 <div class="flex items-center">
                     <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                    <a href="{{ route('users.index') }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2">Users</a>
+                    <a href="{{ route('admin.users.index') }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2">Users</a>
                 </div>
             </li>
             <li aria-current="page">
@@ -42,11 +42,8 @@
 
     <!-- Back Button -->
     <div class="mb-6">
-        <a href="{{ route('users.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-            Back to Users
+        <a href="{{ route('admin.users.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-200">
+            <i class="fas fa-arrow-left mr-2"></i>Back to Users
         </a>
     </div>
 
@@ -64,11 +61,8 @@
                 <h1 class="text-xl font-semibold text-white">User Details</h1>
                 <div class="flex space-x-2">
                     @can('update', $user)
-                    <a href="{{ route('users.edit', $user) }}" class="inline-flex items-center px-3 py-1 bg-white text-blue-600 rounded-md text-sm font-medium hover:bg-blue-50">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                        </svg>
-                        Edit
+                    <a href="{{ route('admin.users.edit', $user) }}" class="inline-flex items-center px-3 py-1 bg-white text-blue-600 rounded-md text-sm font-medium hover:bg-blue-50">
+                        <i class="fas fa-edit mr-2"></i>Edit
                     </a>
                     @endcan
                 </div>
@@ -209,14 +203,11 @@
     <!-- Action Buttons -->
     <div class="flex flex-wrap gap-4 mt-6">
         @can('update', $user)
-            <a href="{{ route('users.edit', $user) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                </svg>
-                Edit User
+            <a href="{{ route('admin.users.edit', $user) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
+                <i class="fas fa-edit mr-2"></i>Edit User
             </a>
             
-            <form action="{{ route('users.reset-password', $user) }}" method="POST" class="inline">
+            <form action="{{ route('admin.users.reset-password', $user) }}" method="POST" class="inline">
                 @csrf
                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-yellow-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-700 focus:bg-yellow-700 active:bg-yellow-800 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -226,7 +217,7 @@
                 </button>
             </form>
             
-            <form action="{{ route('users.toggle-active', $user) }}" method="POST" class="inline">
+            <form action="{{ route('admin.users.toggle-active', $user) }}" method="POST" class="inline">
                 @csrf
                 @method('PUT')
                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-{{ $user->is_active ? 'red' : 'green' }}-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-{{ $user->is_active ? 'red' : 'green' }}-700 focus:bg-{{ $user->is_active ? 'red' : 'green' }}-700 active:bg-{{ $user->is_active ? 'red' : 'green' }}-800 focus:outline-none focus:ring-2 focus:ring-{{ $user->is_active ? 'red' : 'green' }}-500 focus:ring-offset-2 transition ease-in-out duration-150">
@@ -239,7 +230,7 @@
         @endcan
         
         @can('delete', $user)
-            <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this user? This action cannot be undone.');">
+            <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this user? This action cannot be undone.');">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">

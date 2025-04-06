@@ -19,10 +19,11 @@ class UserController extends Controller
     {
         if (auth()->user()->isAdmin()) {
             $users = User::with('role')->get();
+            return view('users.index', ['users' => $users, 'isAdminRoute' => true]);
         } else {
             $users = User::with('role')->where('id', auth()->id())->get();
+            return view('users.index', ['users' => $users, 'isAdminRoute' => false]);
         }
-        return view('users.index', compact('users'));
     }
 
     /**
@@ -179,7 +180,7 @@ class UserController extends Controller
 
         $status = $user->is_active ? 'activated' : 'deactivated';
 
-        return redirect()->route('users.index')
+        return redirect()->route('admin.users.index')
             ->with('success', 'User ' . $status . ' successfully.');
     }
 
@@ -197,10 +198,8 @@ class UserController extends Controller
             'password' => Hash::make($password),
         ]);
 
-        // TODO: Send password reset email
-
-        return redirect()->route('users.index')
-            ->with('success', 'Password reset successfully. Temporary password: ' . $password);
+        return redirect()->route('admin.users.index')
+            ->with('success', 'Password has been reset successfully. New password: ' . $password);
     }
 
     /**
