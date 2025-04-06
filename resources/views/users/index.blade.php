@@ -143,6 +143,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex justify-end space-x-2">
                                         @if(isset($isAdminRoute) && $isAdminRoute)
+                                            @if($user->role->slug == 'property_manager')
+                                                <a href="{{ route('admin.users.grant-subscription.create', $user) }}" class="text-yellow-600 hover:text-yellow-900" title="Grant Subscription">
+                                                    <i class="fas fa-crown"></i>
+                                                </a>
+                                            @endif
+                                            
                                             <a href="{{ route('admin.users.edit', $user) }}" class="text-blue-600 hover:text-blue-900" title="Edit">
                                                 <i class="fas fa-edit"></i>
                                             </a>
