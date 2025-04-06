@@ -100,12 +100,14 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/properties/{property}/qrcode', [PropertyController::class, 'downloadQrCode'])->name('properties.qrcode');
             
             // Technician management routes
+            Route::get('/technicians', [TechnicianController::class, 'index'])->name('technicians.index');
             Route::get('/technicians/create', [TechnicianController::class, 'create'])->name('technicians.create');
             Route::post('/technicians', [TechnicianController::class, 'store'])->name('technicians.store');
-            
-            Route::resource('users', UserController::class);
-            Route::put('/users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active');
-            Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
+            Route::get('/technicians/{user}/edit', [TechnicianController::class, 'edit'])->name('technicians.edit');
+            Route::put('/technicians/{user}', [TechnicianController::class, 'update'])->name('technicians.update');
+            Route::delete('/technicians/{user}', [TechnicianController::class, 'destroy'])->name('technicians.destroy');
+            Route::put('/technicians/{user}/toggle-active', [TechnicianController::class, 'toggleActive'])->name('technicians.toggle-active');
+            Route::post('/technicians/{user}/reset-password', [TechnicianController::class, 'resetPassword'])->name('technicians.reset-password');
         });
     });
 

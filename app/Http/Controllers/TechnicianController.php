@@ -2,14 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class TechnicianController extends Controller
 {
+    public function index()
+    {
+        $technicians = User::where('invited_by', auth()->id())
+            ->with('role')
+            ->get();
+
+        return view('technicians.index', compact('technicians'));
+    }
+
     public function create()
     {
         return view('technicians.create');
@@ -23,29 +32,77 @@ class TechnicianController extends Controller
             'phone' => 'required|string|max:20',
         ]);
 
-        // Get technician role
-        $technicianRole = Role::where('slug', 'technician')->first();
-        if (!$technicianRole) {
-            return redirect()->back()->with('error', 'Technician role not found.');
-        }
-
-        // Generate a random password
+        $role = Role::where('slug', 'technician')->first();
         $password = Str::random(10);
 
-        // Create the technician user
         $technician = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($password),
-            'invited_by' => auth()->id(), // Changed from property_manager_id to invited_by
-            'role_id' => $technicianRole->id,
+            'invited_by' => auth()->id(),
+            'role_id' => $role->id,
             'is_active' => true,
         ]);
 
-        // TODO: Send email to technician with their credentials
-
         return redirect()->route('manager.dashboard')
-            ->with('success', 'Technician created successfully. Password: ' . $password);
+            ->with('success', "Technician created successfully! Their temporary password is: {$password}");
+    }
+
+    public function edit(User $user)
+    {
+        abort_if($user->invited_by !== auth()->id(), 403);
+        return view('technicians.edit', compact('user'));
+    }
+
+    public function update(Request $request, User $user)
+    {
+        abort_if($user->invited_by !== auth()->id(), 403);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'phone' => 'required|string|max:20',
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+        ]);
+
+        return redirect()->route('technicians.index')
+            ->with('success', 'Technician updated successfully!');
+    }
+
+    public function destroy(User $user)
+    {
+        abort_if($user->invited_by !== auth()->id(), 403);
+        $user->delete();
+
+        return redirect()->route('technicians.index')
+            ->with('success', 'Technician deleted successfully!');
+    }
+
+    public function toggleActive(User $user)
+    {
+        abort_if($user->invited_by !== auth()->id(), 403);
+        $user->update(['is_active' => !$user->is_active]);
+
+        return redirect()->route('technicians.index')
+            ->with('success', 'Technician status updated successfully!');
+    }
+
+    public function resetPassword(User $user)
+    {
+        abort_if($user->invited_by !== auth()->id(), 403);
+        $password = Str::random(10);
+        
+        $user->update([
+            'password' => Hash::make($password)
+        ]);
+
+        return redirect()->route('technicians.index')
+            ->with('success', "Password reset successfully! New temporary password is: {$password}");
     }
 }
