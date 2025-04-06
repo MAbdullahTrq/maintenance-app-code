@@ -45,7 +45,7 @@ class TechnicianController extends Controller
             'is_active' => true,
         ]);
 
-        return redirect()->route('manager.dashboard')
+        return redirect()->route('technicians.index')
             ->with('success', "Technician created successfully! Their temporary password is: {$password}");
     }
 
