@@ -273,12 +273,11 @@
                 </div>
             @endif
             
-            @if($maintenance->status == 'pending' && auth()->user()->role->slug == 'technician')
+            @if($maintenance->status == 'pending' && auth()->user()->role->slug === 'technician')
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
                     <div class="p-6 border-b">
                         <h2 class="text-xl font-bold text-gray-900">Task Actions</h2>
                     </div>
-                    
                     <div class="p-6">
                         <div class="flex space-x-4">
                             <form action="{{ route('maintenance.accept', $maintenance) }}" method="POST" style="display:inline;">
@@ -295,28 +294,34 @@
                 </div>
             @endif
             
-            @if($maintenance->status == 'approved' && auth()->user()->id == $maintenance->assigned_to)
+            @if($maintenance->status == 'approved' && auth()->user()->id === $maintenance->assigned_to)
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
                     <div class="p-6 border-b">
                         <h2 class="text-xl font-bold text-gray-900">Task Actions</h2>
                     </div>
-                    
                     <div class="p-6">
                         <div class="flex space-x-4">
-                            @if($maintenance->status == 'approved' && auth()->user()->id == $maintenance->assigned_to)
-                                <form action="{{ route('maintenance.inProgress', $maintenance) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    <button type="submit" class="btn btn-warning">Mark as Started</button>
-                                </form>
-                            @endif
-                            
-                            @if($maintenance->status == 'in_progress' && auth()->user()->id == $maintenance->assigned_to)
-                                <form action="{{ route('maintenance.complete', $maintenance) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    <input type="text" name="comment" placeholder="Completion notes" required>
-                                    <button type="submit" class="btn btn-primary">Mark as Completed</button>
-                                </form>
-                            @endif
+                            <form action="{{ route('maintenance.inProgress', $maintenance) }}" method="POST" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-warning">Mark as Started</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @endif
+            
+            @if($maintenance->status == 'in_progress' && auth()->user()->id === $maintenance->assigned_to)
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
+                    <div class="p-6 border-b">
+                        <h2 class="text-xl font-bold text-gray-900">Task Actions</h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex space-x-4">
+                            <form action="{{ route('maintenance.complete', $maintenance) }}" method="POST" style="display:inline;">
+                                @csrf
+                                <input type="text" name="comment" placeholder="Completion notes" required>
+                                <button type="submit" class="btn btn-primary">Mark as Completed</button>
+                            </form>
                         </div>
                     </div>
                 </div>
