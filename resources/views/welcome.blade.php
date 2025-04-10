@@ -32,21 +32,21 @@
                     <div class="inline-flex rounded-md shadow">
                         @if(Auth::user()->isAdmin())
                             <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
-                                Go to Dashboard
+                                <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
                             </a>
                         @elseif(Auth::user()->isPropertyManager())
                             @if(Auth::user()->hasActiveSubscription())
                                 <a href="{{ route('manager.dashboard') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
-                                    Go to Dashboard
+                                    <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
                                 </a>
                             @else
                                 <a href="{{ route('subscription.plans') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
-                                    View Subscription Plans
+                                    <i class="fas fa-crown mr-2"></i>View Subscription Plans
                                 </a>
                             @endif
                         @else
                             <a href="{{ route('technician.dashboard') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
-                                Go to Dashboard
+                                <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
                             </a>
                         @endif
                     </div>
