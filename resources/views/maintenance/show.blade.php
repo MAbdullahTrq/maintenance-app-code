@@ -275,7 +275,7 @@
                     
                     <div class="p-6">
                         <div class="flex space-x-4">
-                            @if($maintenance->isPending())
+                            @if($maintenance->status == 'pending' && auth()->user()->isTechnician())
                                 <form action="{{ route('maintenance.accept', $maintenance) }}" method="POST" style="display:inline;">
                                     @csrf
                                     <button type="submit" class="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
@@ -291,7 +291,7 @@
                                 </form>
                             @endif
                             
-                            @if($maintenance->isApproved())
+                            @if($maintenance->status == 'approved' && auth()->user()->id == $maintenance->assigned_to)
                                 <form action="{{ route('maintenance.inProgress', $maintenance) }}" method="POST" style="display:inline;">
                                     @csrf
                                     <button type="submit" class="w-full px-4 py-2 bg-warning text-white rounded-lg hover:bg-warning">
@@ -300,7 +300,7 @@
                                 </form>
                             @endif
                             
-                            @if($maintenance->isInProgress())
+                            @if($maintenance->status == 'in_progress' && auth()->user()->id == $maintenance->assigned_to)
                                 <form action="{{ route('maintenance.complete', $maintenance) }}" method="POST" style="display:inline;">
                                     @csrf
                                     <input type="text" name="comment" placeholder="Completion notes" required>
