@@ -133,7 +133,12 @@ class UserController extends Controller
 
         // Admins can update any user
         if (auth()->user()->isAdmin()) {
-            // Allow any role
+            // Prevent changing role of technicians
+            $currentRole = $user->role->slug;
+            $newRole = Role::find($validated['role_id'])->slug;
+            if ($currentRole === 'technician' && $newRole !== 'technician') {
+                return redirect()->back()->withErrors(['role_id' => 'You cannot change the role of a technician.'])->withInput();
+            }
         } else {
             // Property managers can only update technicians they invited
             if ($user->invited_by !== auth()->id() && $user->id !== auth()->id()) {

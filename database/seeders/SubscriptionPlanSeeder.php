@@ -16,7 +16,7 @@ class SubscriptionPlanSeeder extends Seeder
             [
                 'name' => 'Basic',
                 'description' => 'Perfect for small property managers with limited properties.',
-                'price' => 29.99,
+                'price' => 9.99,
                 'duration_in_days' => 30,
                 'property_limit' => 3,
                 'technician_limit' => 5,
@@ -24,7 +24,7 @@ class SubscriptionPlanSeeder extends Seeder
             [
                 'name' => 'Standard',
                 'description' => 'Ideal for medium-sized property management companies.',
-                'price' => 59.99,
+                'price' => 19.99,
                 'duration_in_days' => 30,
                 'property_limit' => 10,
                 'technician_limit' => 15,
@@ -32,15 +32,15 @@ class SubscriptionPlanSeeder extends Seeder
             [
                 'name' => 'Premium',
                 'description' => 'Best for large property management companies with multiple properties.',
-                'price' => 99.99,
+                'price' => 29.99,
                 'duration_in_days' => 30,
-                'property_limit' => 25,
+                'property_limit' => 100,
                 'technician_limit' => 30,
             ],
             [
                 'name' => 'Annual Basic',
                 'description' => 'Annual subscription for small property managers with limited properties.',
-                'price' => 299.99,
+                'price' => 99.99,
                 'duration_in_days' => 365,
                 'property_limit' => 3,
                 'technician_limit' => 5,
@@ -48,7 +48,7 @@ class SubscriptionPlanSeeder extends Seeder
             [
                 'name' => 'Annual Standard',
                 'description' => 'Annual subscription for medium-sized property management companies.',
-                'price' => 599.99,
+                'price' => 199.99,
                 'duration_in_days' => 365,
                 'property_limit' => 10,
                 'technician_limit' => 15,
@@ -56,9 +56,9 @@ class SubscriptionPlanSeeder extends Seeder
             [
                 'name' => 'Annual Premium',
                 'description' => 'Annual subscription for large property management companies with multiple properties.',
-                'price' => 999.99,
+                'price' => 299.99,
                 'duration_in_days' => 365,
-                'property_limit' => 25,
+                'property_limit' => 100,
                 'technician_limit' => 30,
             ],
         ];

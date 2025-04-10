@@ -15,7 +15,13 @@
                 Simplify Your Maintenance Management
             </h1>
             <p class="mt-6 text-xl md:text-2xl text-white max-w-3xl mx-auto font-medium" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
-                Our responsive maintenance software streamlines request handling, work orders, and team coordination with a seamless, invite-only system.
+                Property Manager
+                Handles work orders, approves requests, and assigns tasks to technicians for their properties.
+                Technician
+                Receives assigned tasks, completes maintenance work, and provides updates and documentation.
+                Requester
+                Can create a new request via a QR code or link without the need to login or create an account. The requester can also be notified and updated on the status of the maintenance request.
+                Simplify your maintenance workflow
             </p>
             <div class="mt-10 flex justify-center">
                 <div class="inline-flex rounded-md shadow">
