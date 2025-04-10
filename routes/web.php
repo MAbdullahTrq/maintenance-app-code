@@ -45,6 +45,23 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Protected routes
 Route::middleware(['auth'])->group(function () {
+    // Dashboard route that redirects to the appropriate dashboard based on user role
+    Route::get('/dashboard', function () {
+        $user = auth()->user();
+        
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->isPropertyManager()) {
+            // Check if property manager has an active subscription
+            if (!$user->hasActiveSubscription()) {
+                return redirect()->route('subscription.plans');
+            }
+            return redirect()->route('manager.dashboard');
+        } else {
+            return redirect()->route('technician.dashboard');
+        }
+    })->name('dashboard');
+    
     // Profile routes
     Route::get('/profile', [UserController::class, 'showProfile'])->name('profile.edit');
     Route::put('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
