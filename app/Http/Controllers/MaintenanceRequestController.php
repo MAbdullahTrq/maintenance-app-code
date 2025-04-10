@@ -73,6 +73,7 @@ class MaintenanceRequestController extends Controller
             'requester_name' => Auth::user()->name,
             'requester_email' => Auth::user()->email,
             'requester_phone' => Auth::user()->phone,
+            'status' => 'pending', // Set initial status to pending
         ]);
 
         // Handle image uploads
@@ -403,10 +404,8 @@ class MaintenanceRequestController extends Controller
     {
         $this->authorize('accept', $maintenance);
         
-        // Update status to in progress
-        $maintenance->markAsInProgress();
-        
-        // Add comment
+        $maintenance->update(['status' => 'accepted']);
+
         RequestComment::create([
             'maintenance_request_id' => $maintenance->id,
             'user_id' => Auth::id(),
@@ -470,5 +469,21 @@ class MaintenanceRequestController extends Controller
         $comment->delete();
 
         return back()->with('success', 'Comment deleted successfully.');
+    }
+
+    public function close(MaintenanceRequest $maintenance)
+    {
+        $this->authorize('close', $maintenance);
+        
+        $maintenance->update(['status' => 'closed']);
+
+        RequestComment::create([
+            'maintenance_request_id' => $maintenance->id,
+            'user_id' => Auth::id(),
+            'comment' => 'Task closed by manager.',
+        ]);
+
+        return redirect()->route('maintenance.show', $maintenance)
+            ->with('success', 'Task closed successfully.');
     }
 } 
