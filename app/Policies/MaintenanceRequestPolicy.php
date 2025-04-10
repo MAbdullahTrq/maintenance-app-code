@@ -149,6 +149,34 @@ class MaintenanceRequestPolicy
     }
 
     /**
+     * Determine whether the user can accept the maintenance request.
+     */
+    public function accept(User $user, MaintenanceRequest $maintenanceRequest): bool
+    {
+        // Only technicians can accept requests
+        if (!$user->isTechnician()) {
+            return false;
+        }
+
+        // Only assigned technicians can accept requests
+        return $maintenanceRequest->assigned_to === $user->id;
+    }
+
+    /**
+     * Determine whether the user can reject the maintenance request.
+     */
+    public function reject(User $user, MaintenanceRequest $maintenanceRequest): bool
+    {
+        // Only technicians can reject requests
+        if (!$user->isTechnician()) {
+            return false;
+        }
+
+        // Only assigned technicians can reject requests
+        return $maintenanceRequest->assigned_to === $user->id;
+    }
+
+    /**
      * Determine whether the user can update the status of the maintenance request.
      */
     public function updateStatus(User $user, MaintenanceRequest $maintenanceRequest): bool

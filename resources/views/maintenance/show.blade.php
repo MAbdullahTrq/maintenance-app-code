@@ -267,6 +267,53 @@
                 </div>
             @endif
             
+            @if($maintenance->status == 'approved' && auth()->user()->id == $maintenance->assigned_to)
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
+                    <div class="p-6 border-b">
+                        <h2 class="text-xl font-bold text-gray-900">Task Actions</h2>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div class="flex space-x-4">
+                            <form action="{{ route('maintenance.accept', $maintenance) }}" method="POST" class="flex-1">
+                                @csrf
+                                <button type="submit" class="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                                    Accept Task
+                                </button>
+                            </form>
+                            
+                            <button type="button" onclick="document.getElementById('rejectModal').classList.remove('hidden')" class="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                                Reject Task
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reject Modal -->
+                <div id="rejectModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+                    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                        <div class="mt-3">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Reject Task</h3>
+                            <form action="{{ route('maintenance.reject', $maintenance) }}" method="POST">
+                                @csrf
+                                <div class="mb-4">
+                                    <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">Reason for Rejection</label>
+                                    <textarea name="comment" id="comment" rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required></textarea>
+                                </div>
+                                <div class="flex justify-end space-x-3">
+                                    <button type="button" onclick="document.getElementById('rejectModal').classList.add('hidden')" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
+                                        Cancel
+                                    </button>
+                                    <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                                        Reject
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @endif
+            
             @if($maintenance->status == 'in_progress' && auth()->user()->id == $maintenance->assigned_to)
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
                     <div class="p-6 border-b">

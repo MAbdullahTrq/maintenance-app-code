@@ -397,6 +397,46 @@ class MaintenanceRequestController extends Controller
     }
 
     /**
+     * Accept the maintenance request by the assigned technician.
+     */
+    public function accept(MaintenanceRequest $maintenance)
+    {
+        $this->authorize('accept', $maintenance);
+        
+        // Add comment
+        RequestComment::create([
+            'maintenance_request_id' => $maintenance->id,
+            'user_id' => Auth::id(),
+            'comment' => 'Task accepted by technician.',
+        ]);
+
+        return redirect()->route('maintenance.show', $maintenance)
+            ->with('success', 'Task accepted successfully.');
+    }
+
+    /**
+     * Reject the maintenance request by the assigned technician.
+     */
+    public function reject(Request $request, MaintenanceRequest $maintenance)
+    {
+        $this->authorize('reject', $maintenance);
+        
+        $request->validate([
+            'comment' => 'required|string',
+        ]);
+
+        // Add comment
+        RequestComment::create([
+            'maintenance_request_id' => $maintenance->id,
+            'user_id' => Auth::id(),
+            'comment' => 'Task rejected by technician: ' . $request->comment,
+        ]);
+
+        return redirect()->route('maintenance.show', $maintenance)
+            ->with('success', 'Task rejected successfully.');
+    }
+
+    /**
      * Delete an image from the maintenance request.
      */
     public function deleteImage(RequestImage $image)
