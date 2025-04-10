@@ -267,7 +267,7 @@
                 </div>
             @endif
             
-            @if($maintenance->status == 'pending' && auth()->user()->isTechnician())
+            @if($maintenance->status == 'pending' && auth()->user()->role == 'technician')
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
                     <div class="p-6 border-b">
                         <h2 class="text-xl font-bold text-gray-900">Task Actions</h2>
