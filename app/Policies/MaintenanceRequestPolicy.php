@@ -34,7 +34,22 @@ class MaintenanceRequestPolicy
      */
     public function view(User $user, MaintenanceRequest $maintenanceRequest): bool
     {
-        return $user->isAdmin() || $user->isPropertyManager();
+        // Admin can view all requests
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        // Property managers can view requests for their properties
+        if ($user->isPropertyManager()) {
+            return true;
+        }
+
+        // Technicians can view requests assigned to them
+        if ($user->isTechnician()) {
+            return $maintenanceRequest->assigned_to === $user->id;
+        }
+
+        return false;
     }
 
     /**
