@@ -403,6 +403,9 @@ class MaintenanceRequestController extends Controller
     {
         $this->authorize('accept', $maintenance);
         
+        // Update status to in progress
+        $maintenance->markAsInProgress();
+        
         // Add comment
         RequestComment::create([
             'maintenance_request_id' => $maintenance->id,
@@ -425,6 +428,9 @@ class MaintenanceRequestController extends Controller
             'comment' => 'required|string',
         ]);
 
+        // Update status to declined
+        $maintenance->markAsDeclined();
+        
         // Add comment
         RequestComment::create([
             'maintenance_request_id' => $maintenance->id,
