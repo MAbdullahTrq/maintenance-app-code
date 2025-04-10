@@ -55,153 +55,46 @@
         </div>
     </div>
 
-    @if(session('success'))
-        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
-            <div class="flex">
-                <i class="fas fa-check-circle mt-1 mr-2"></i>
-                <p>{{ session('success') }}</p>
-            </div>
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Users</h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500">A list of all users in the system.</p>
         </div>
-    @endif
-
-    @if(session('error'))
-        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
-            <div class="flex">
-                <i class="fas fa-exclamation-circle mt-1 mr-2"></i>
-                <p>{{ session('error') }}</p>
-            </div>
-        </div>
-    @endif
-
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="bg-gray-50 px-6 py-4 border-b">
-            <h2 class="text-lg font-semibold text-gray-800">
-                @if(isset($isAdminRoute) && $isAdminRoute)
-                    <i class="fas fa-list mr-2 text-blue-500"></i>All Users
-                @else
-                    <i class="fas fa-list mr-2 text-blue-500"></i>User List
-                @endif
-            </h2>
-        </div>
-        <div class="p-6">
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <i class="fas fa-user mr-2"></i>Name
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <i class="fas fa-envelope mr-2"></i>Email
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <i class="fas fa-tag mr-2"></i>Role
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <i class="fas fa-toggle-on mr-2"></i>Status
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <i class="fas fa-cogs mr-2"></i>Actions
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach($users as $user)
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500">{{ $user->email }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($user->role->slug == 'admin')
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
-                                            Admin
-                                        </span>
-                                    @elseif($user->role->slug == 'property_manager')
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                            {{ $user->role->name }}
-                                        </span>
-                                    @else
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            {{ $user->role->name }}
-                                        </span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($user->is_active)
-                                        <span class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            <i class="fas fa-check-circle mr-1.5"></i>Active
-                                        </span>
-                                    @else
-                                        <span class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                            <i class="fas fa-times-circle mr-1.5"></i>Inactive
-                                        </span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <div class="flex justify-end space-x-2">
-                                        @if(isset($isAdminRoute) && $isAdminRoute)
-                                            @if($user->role->slug == 'property_manager')
-                                                <a href="{{ route('admin.users.grant-subscription.create', $user) }}" class="text-yellow-600 hover:text-yellow-900" title="Grant Subscription">
-                                                    <i class="fas fa-crown"></i>
-                                                </a>
-                                            @endif
-                                            
-                                            <a href="{{ route('admin.users.edit', $user) }}" class="text-blue-600 hover:text-blue-900" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            
-                                            <form action="{{ route('admin.users.toggle-active', $user) }}" method="POST" class="inline">
-                                                @csrf
-                                                @method('PUT')
-                                                <button type="submit" class="{{ $user->is_active ? 'text-yellow-600 hover:text-yellow-900' : 'text-green-600 hover:text-green-900' }}" title="{{ $user->is_active ? 'Deactivate' : 'Activate' }}">
-                                                    <i class="fas fa-{{ $user->is_active ? 'ban' : 'check' }}"></i>
-                                                </button>
-                                            </form>
-                                            
-                                            <form action="{{ route('admin.users.reset-password', $user) }}" method="POST" class="inline">
-                                                @csrf
-                                                <button type="submit" class="text-blue-600 hover:text-blue-900" title="Reset Password" onclick="return confirm('Are you sure you want to reset the password?')">
-                                                    <i class="fas fa-key"></i>
-                                                </button>
-                                            </form>
-                                            
-                                            <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900" title="Delete" onclick="return confirm('Are you sure you want to delete this user?')">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        @else
-                                            <a href="{{ route('admin.users.edit', $user) }}" class="text-blue-600 hover:text-blue-900" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            
-                                            <form action="{{ route('admin.users.toggle-active', $user) }}" method="POST" class="inline">
-                                                @csrf
-                                                @method('PUT')
-                                                <button type="submit" class="{{ $user->is_active ? 'text-yellow-600 hover:text-yellow-900' : 'text-green-600 hover:text-green-900' }}" title="{{ $user->is_active ? 'Deactivate' : 'Activate' }}">
-                                                    <i class="fas fa-{{ $user->is_active ? 'ban' : 'check' }}"></i>
-                                                </button>
-                                            </form>
-                                            
-                                            <form action="{{ route('admin.users.reset-password', $user) }}" method="POST" class="inline">
-                                                @csrf
-                                                <button type="submit" class="text-blue-600 hover:text-blue-900" title="Reset Password" onclick="return confirm('Are you sure you want to reset the password?')">
-                                                    <i class="fas fa-key"></i>
-                                                </button>
-                                            </form>
-                                        @endif
+        <div class="border-t border-gray-200">
+            <ul role="list" class="divide-y divide-gray-200">
+                @foreach($users as $user)
+                    <li class="px-4 py-4 sm:px-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                                        <span class="text-gray-500 font-medium">{{ substr($user->name, 0, 1) }}</span>
                                     </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
+                                    <div class="text-sm text-gray-500">{{ $user->email }}</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <a href="{{ route('admin.users.show', $user) }}" class="text-blue-600 hover:text-blue-900">View</a>
+                                <a href="{{ route('admin.users.edit', $user) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                <form action="{{ route('admin.users.toggle-active', $user) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="text-{{ $user->is_active ? 'red' : 'green' }}-600 hover:text-{{ $user->is_active ? 'red' : 'green' }}-900">
+                                        {{ $user->is_active ? 'Deactivate' : 'Activate' }}
+                                    </button>
+                                </form>
+                                <form action="{{ route('admin.users.reset-password', $user) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="submit" class="text-yellow-600 hover:text-yellow-900">Reset Password</button>
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+                @endforeach
+            </ul>
         </div>
     </div>
 </div>
