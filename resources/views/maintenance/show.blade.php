@@ -267,6 +267,28 @@
                 </div>
             @endif
             
+            @if($maintenance->status == 'pending' && auth()->user()->isTechnician())
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
+                    <div class="p-6 border-b">
+                        <h2 class="text-xl font-bold text-gray-900">Task Actions</h2>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div class="flex space-x-4">
+                            <form action="{{ route('maintenance.accept', $maintenance) }}" method="POST" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-success">Accept</button>
+                            </form>
+                            <form action="{{ route('maintenance.reject', $maintenance) }}" method="POST" style="display:inline;">
+                                @csrf
+                                <input type="text" name="comment" placeholder="Reason for rejection" required>
+                                <button type="submit" class="btn btn-danger">Reject</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @endif
+            
             @if($maintenance->status == 'approved' && auth()->user()->id == $maintenance->assigned_to)
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
                     <div class="p-6 border-b">
@@ -275,28 +297,10 @@
                     
                     <div class="p-6">
                         <div class="flex space-x-4">
-                            @if($maintenance->status == 'pending' && auth()->user()->isTechnician())
-                                <form action="{{ route('maintenance.accept', $maintenance) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    <button type="submit" class="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
-                                        Accept
-                                    </button>
-                                </form>
-                                <form action="{{ route('maintenance.reject', $maintenance) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    <input type="text" name="comment" placeholder="Reason for rejection" required>
-                                    <button type="submit" class="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
-                                        Reject
-                                    </button>
-                                </form>
-                            @endif
-                            
                             @if($maintenance->status == 'approved' && auth()->user()->id == $maintenance->assigned_to)
                                 <form action="{{ route('maintenance.inProgress', $maintenance) }}" method="POST" style="display:inline;">
                                     @csrf
-                                    <button type="submit" class="w-full px-4 py-2 bg-warning text-white rounded-lg hover:bg-warning">
-                                        Mark as Started
-                                    </button>
+                                    <button type="submit" class="btn btn-warning">Mark as Started</button>
                                 </form>
                             @endif
                             
@@ -304,9 +308,7 @@
                                 <form action="{{ route('maintenance.complete', $maintenance) }}" method="POST" style="display:inline;">
                                     @csrf
                                     <input type="text" name="comment" placeholder="Completion notes" required>
-                                    <button type="submit" class="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary">
-                                        Mark as Completed
-                                    </button>
+                                    <button type="submit" class="btn btn-primary">Mark as Completed</button>
                                 </form>
                             @endif
                         </div>
