@@ -19,13 +19,18 @@
                 @endauth
             </h1>
             <p class="mt-6 text-xl md:text-2xl text-white max-w-3xl mx-auto font-medium" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
-                Property Manager
-                Handles work orders, approves requests, and assigns tasks to technicians for their properties.
-                Technician
-                Receives assigned tasks, completes maintenance work, and provides updates and documentation.
-                Requester
-                Can create a new request via a QR code or link without the need to login or create an account. The requester can also be notified and updated on the status of the maintenance request.
-                Simplify your maintenance workflow
+                <strong>Property Manager</strong><br>
+                Handles work orders, approves requests, and assigns tasks to technicians for their
+                properties.<br><br>
+                <strong>Technician</strong><br>
+                Receives assigned tasks, completes maintenance work, and provides updates and
+                documentation.<br><br>
+                <strong>Requester</strong><br>
+                Can create a new request via a QR code or link without the need to login or create
+                an account. The requester can also be notified and updated on the status of the
+                maintenance request.<br><br>
+                <strong>Simplify your maintenance workflow</strong><br>
+                <span style="font-size: 2em; font-weight: bold;">FEATURES – HOW IT WORKS – USER ROLES</span>
             </p>
             <div class="mt-10 flex justify-center">
                 @auth
@@ -208,17 +213,7 @@
             </div>
 
             <div class="mt-16">
-                <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
-                    <div class="bg-gray-50 rounded-lg p-6 border border-gray-100 shadow-sm">
-                        <div class="text-blue-600 mb-4">
-                            <i class="fas fa-user-tie text-3xl"></i>
-                        </div>
-                        <h3 class="text-xl font-medium text-gray-900">Super Property Manager</h3>
-                        <p class="mt-2 text-base text-gray-500">
-                            Oversees the entire platform and manages client accounts with full administrative access.
-                        </p>
-                    </div>
-
+                <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
                     <div class="bg-gray-50 rounded-lg p-6 border border-gray-100 shadow-sm">
                         <div class="text-blue-600 mb-4">
                             <i class="fas fa-user-cog text-3xl"></i>
