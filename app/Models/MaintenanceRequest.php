@@ -88,27 +88,27 @@ class MaintenanceRequest extends Model
     }
 
     /**
-     * Check if the request is accepted.
+     * Check if the request is accepted (approved in DB).
      */
     public function isAccepted(): bool
     {
-        return $this->status === 'accepted';
+        return $this->status === 'approved';
     }
 
     /**
-     * Check if the request is assigned.
+     * Check if the request is assigned (also uses approved in DB).
      */
     public function isAssigned(): bool
     {
-        return $this->status === 'assigned';
+        return $this->status === 'approved' && $this->assigned_to !== null;
     }
 
     /**
-     * Check if the request is started.
+     * Check if the request is started (in_progress in DB).
      */
     public function isStarted(): bool
     {
-        return $this->status === 'started';
+        return $this->status === 'in_progress';
     }
 
     /**
@@ -133,7 +133,7 @@ class MaintenanceRequest extends Model
     public function markAsAccepted(User $user, ?string $dueDate = null): self
     {
         $this->update([
-            'status' => 'accepted',
+            'status' => 'approved',
             'approved_by' => $user->id,
             'due_date' => $dueDate,
         ]);
@@ -146,8 +146,9 @@ class MaintenanceRequest extends Model
      */
     public function markAsAssigned(): self
     {
+        // We keep the status as 'approved' but assign a technician
         $this->update([
-            'status' => 'assigned',
+            'status' => 'approved',
         ]);
 
         return $this;
@@ -159,7 +160,7 @@ class MaintenanceRequest extends Model
     public function markAsStarted(): self
     {
         $this->update([
-            'status' => 'started',
+            'status' => 'in_progress',
         ]);
 
         return $this;

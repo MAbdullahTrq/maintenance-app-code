@@ -234,11 +234,11 @@ class MaintenanceRequestPolicy
 
     public function start(User $user, MaintenanceRequest $maintenanceRequest)
     {
-        return $user->isTechnician() && $maintenanceRequest->technician_id === $user->id && $maintenanceRequest->status === 'approved';
+        return $user->isTechnician() && $maintenanceRequest->assigned_to === $user->id && $maintenanceRequest->status === 'assigned';
     }
 
     public function finish(User $user, MaintenanceRequest $maintenanceRequest)
     {
-        return $user->isTechnician() && $maintenanceRequest->technician_id === $user->id && $maintenanceRequest->status === 'in_progress';
+        return $user->isTechnician() && $maintenanceRequest->assigned_to === $user->id && $maintenanceRequest->status === 'started';
     }
 } 

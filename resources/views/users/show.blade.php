@@ -164,13 +164,17 @@
                                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                                     Pending
                                                 </span>
-                                            @elseif($request->status == 'approved')
+                                            @elseif($request->status == 'accepted')
                                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                                    Approved
+                                                    Accepted
                                                 </span>
-                                            @elseif($request->status == 'in_progress')
+                                            @elseif($request->status == 'assigned')
                                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
-                                                    In Progress
+                                                    Assigned
+                                                </span>
+                                            @elseif($request->status == 'started')
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
+                                                    Started
                                                 </span>
                                             @elseif($request->status == 'completed')
                                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">

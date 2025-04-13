@@ -105,9 +105,9 @@ class DashboardController extends Controller
                 $query->where('slug', 'technician');
             })
             ->withCount(['assignedRequests as pending_count' => function ($query) {
-                $query->where('status', 'pending');
+                $query->where('status', 'assigned');
             }, 'assignedRequests as in_progress_count' => function ($query) {
-                $query->where('status', 'in_progress');
+                $query->where('status', 'started');
             }])
             ->get();
         
@@ -133,11 +133,11 @@ class DashboardController extends Controller
         $totalAssignedRequests = $user->assignedRequests()->count();
         
         $pendingRequests = $user->assignedRequests()
-            ->where('status', 'approved')
+            ->where('status', 'assigned')
             ->count();
         
         $inProgressRequests = $user->assignedRequests()
-            ->where('status', 'in_progress')
+            ->where('status', 'started')
             ->count();
         
         $completedRequests = $user->assignedRequests()
@@ -146,14 +146,14 @@ class DashboardController extends Controller
         
         $upcomingRequests = $user->assignedRequests()
             ->with('property')
-            ->where('status', 'approved')
+            ->where('status', 'assigned')
             ->orderBy('due_date')
             ->take(5)
             ->get();
         
         $inProgressTasks = $user->assignedRequests()
             ->with('property')
-            ->where('status', 'in_progress')
+            ->where('status', 'started')
             ->latest()
             ->take(5)
             ->get();

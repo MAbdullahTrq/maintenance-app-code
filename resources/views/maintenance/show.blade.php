@@ -40,7 +40,7 @@
                             @elseif($maintenance->status == 'completed') bg-green-100 text-green-800
                             @elseif($maintenance->status == 'declined') bg-red-100 text-red-800
                             @endif">
-                            {{ ucfirst(str_replace('_', ' ', $maintenance->status)) }}
+                            {{ ucfirst($maintenance->status) }}
                         </span>
                     </div>
                 </div>

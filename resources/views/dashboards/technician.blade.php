@@ -157,11 +157,11 @@
         
         <div class="mt-6 grid grid-cols-3 gap-4 text-center">
             <div>
-                <p class="text-sm font-medium text-gray-500">Pending</p>
+                <p class="text-sm font-medium text-gray-500">Assigned</p>
                 <p class="text-xl font-semibold text-yellow-500">{{ $pendingRequests }}</p>
             </div>
             <div>
-                <p class="text-sm font-medium text-gray-500">In Progress</p>
+                <p class="text-sm font-medium text-gray-500">Started</p>
                 <p class="text-xl font-semibold text-purple-500">{{ $inProgressRequests }}</p>
             </div>
             <div>

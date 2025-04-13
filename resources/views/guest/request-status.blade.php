@@ -19,13 +19,17 @@
                             <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                 Pending
                             </span>
-                        @elseif($maintenanceRequest->status == 'approved')
+                        @elseif($maintenanceRequest->status == 'accepted')
                             <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                Approved
+                                Accepted
                             </span>
-                        @elseif($maintenanceRequest->status == 'in_progress')
+                        @elseif($maintenanceRequest->status == 'assigned')
                             <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
-                                In Progress
+                                Assigned
+                            </span>
+                        @elseif($maintenanceRequest->status == 'started')
+                            <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
+                                Started
                             </span>
                         @elseif($maintenanceRequest->status == 'completed')
                             <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 text-green-800">
