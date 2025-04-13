@@ -15,6 +15,7 @@ class MaintenanceRequest extends Model
         'title',
         'description',
         'location',
+        'priority',
         'requester_name',
         'requester_email',
         'requester_phone',

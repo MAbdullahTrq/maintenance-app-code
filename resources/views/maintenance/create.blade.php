@@ -55,6 +55,38 @@
                 </div>
                 
                 <div class="mb-6">
+                    <label for="priority" class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="border rounded-md p-4 cursor-pointer hover:bg-gray-50 relative">
+                            <input type="radio" id="priority-low" name="priority" value="low" class="absolute opacity-0" {{ old('priority') == 'low' ? 'checked' : '' }}>
+                            <label for="priority-low" class="block cursor-pointer">
+                                <div class="font-medium text-blue-600 mb-1">LOW</div>
+                                <div class="text-sm text-gray-500">You can fix after we leave, just wanted to let you know.</div>
+                            </label>
+                        </div>
+                        
+                        <div class="border rounded-md p-4 cursor-pointer hover:bg-gray-50 relative">
+                            <input type="radio" id="priority-medium" name="priority" value="medium" class="absolute opacity-0" {{ old('priority', 'medium') == 'medium' ? 'checked' : '' }}>
+                            <label for="priority-medium" class="block cursor-pointer">
+                                <div class="font-medium text-yellow-600 mb-1">MEDIUM</div>
+                                <div class="text-sm text-gray-500">You can fix the next cleaning day is fine.</div>
+                            </label>
+                        </div>
+                        
+                        <div class="border rounded-md p-4 cursor-pointer hover:bg-gray-50 relative">
+                            <input type="radio" id="priority-high" name="priority" value="high" class="absolute opacity-0" {{ old('priority') == 'high' ? 'checked' : '' }}>
+                            <label for="priority-high" class="block cursor-pointer">
+                                <div class="font-medium text-red-600 mb-1">HIGH</div>
+                                <div class="text-sm text-gray-500">Fix asap please.</div>
+                            </label>
+                        </div>
+                    </div>
+                    @error('priority')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                
+                <div class="mb-6">
                     <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
                     <textarea id="description" name="description" rows="4" 
                         class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"

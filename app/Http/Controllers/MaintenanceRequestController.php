@@ -57,6 +57,7 @@ class MaintenanceRequestController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'location' => 'required|string|max:255',
+            'priority' => 'required|in:low,medium,high',
             'property_id' => 'required|exists:properties,id',
             'images.*' => 'nullable|image|max:2048',
         ]);
@@ -69,6 +70,7 @@ class MaintenanceRequestController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'location' => $request->location,
+            'priority' => $request->priority,
             'property_id' => $request->property_id,
             'requester_name' => Auth::user()->name,
             'requester_email' => Auth::user()->email,
@@ -135,6 +137,7 @@ class MaintenanceRequestController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'location' => 'required|string|max:255',
+            'priority' => 'required|in:low,medium,high',
             'property_id' => 'required|exists:properties,id',
             'images.*' => 'nullable|image|max:2048',
         ]);
@@ -143,6 +146,7 @@ class MaintenanceRequestController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'location' => $request->location,
+            'priority' => $request->priority,
             'property_id' => $request->property_id,
         ]);
 
