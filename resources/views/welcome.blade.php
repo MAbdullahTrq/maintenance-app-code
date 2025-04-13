@@ -21,9 +21,7 @@
             <p class="mt-6 text-xl md:text-2xl text-white max-w-3xl mx-auto font-medium" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
                 Simplify your maintenance workflow
             </p>
-            <p class="mt-4 text-lg md:text-xl text-white max-w-3xl mx-auto" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">
-                FEATURES – HOW IT WORKS – USER ROLES
-            </p>
+           
             <div class="mt-10 flex justify-center">
                 @auth
                     <div class="inline-flex rounded-md shadow">
