@@ -376,8 +376,8 @@ class MaintenanceRequestController extends Controller
     {
         $this->authorize('accept', $maintenance);
         
-        // We don't change the status here, just add a comment
-        // The status remains 'approved' since that's our "assigned" state in the DB
+        // Update status to acknowledged
+        $maintenance->markAsAcknowledged();
         
         RequestComment::create([
             'maintenance_request_id' => $maintenance->id,

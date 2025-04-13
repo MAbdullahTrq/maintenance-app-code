@@ -158,8 +158,8 @@ class MaintenanceRequestPolicy
             return false;
         }
 
-        // Only assigned technicians can accept requests
-        return $maintenanceRequest->assigned_to === $user->id;
+        // Only assigned technicians can accept requests that are in 'assigned' status
+        return $maintenanceRequest->assigned_to === $user->id && $maintenanceRequest->status === 'assigned';
     }
 
     /**
@@ -234,7 +234,9 @@ class MaintenanceRequestPolicy
 
     public function start(User $user, MaintenanceRequest $maintenanceRequest)
     {
-        return $user->isTechnician() && $maintenanceRequest->assigned_to === $user->id && $maintenanceRequest->status === 'assigned';
+        return $user->isTechnician() && 
+               $maintenanceRequest->assigned_to === $user->id && 
+               ($maintenanceRequest->status === 'assigned' || $maintenanceRequest->status === 'acknowledged');
     }
 
     public function finish(User $user, MaintenanceRequest $maintenanceRequest)

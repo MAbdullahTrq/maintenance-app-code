@@ -68,6 +68,8 @@
                                     <a href="{{ route('maintenance.show', $request) }}" class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                         View
                                     </a>
+                                    
+                                    @if($request->status === 'assigned')
                                     <form action="{{ route('maintenance.accept', $request) }}" method="POST" class="inline">
                                         @csrf
                                         <button type="submit" class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
@@ -80,18 +82,25 @@
                                             Reject
                                         </button>
                                     </form>
+                                    @endif
+                                    
+                                    @if($request->status === 'assigned' || $request->status === 'acknowledged')
                                     <form action="{{ route('maintenance.start-task', $request) }}" method="POST" class="inline">
                                         @csrf
                                         <button type="submit" class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
                                             Start
                                         </button>
                                     </form>
+                                    @endif
+                                    
+                                    @if($request->status === 'started')
                                     <form action="{{ route('maintenance.finish-task', $request) }}" method="POST" class="inline">
                                         @csrf
                                         <button type="submit" class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
                                             Finish
                                         </button>
                                     </form>
+                                    @endif
                                 </div>
                             </div>
                         </div>

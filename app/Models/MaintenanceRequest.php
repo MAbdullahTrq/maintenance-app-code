@@ -128,6 +128,14 @@ class MaintenanceRequest extends Model
     }
 
     /**
+     * Check if the request is acknowledged by technician.
+     */
+    public function isAcknowledged(): bool
+    {
+        return $this->status === 'acknowledged';
+    }
+
+    /**
      * Mark the request as accepted.
      */
     public function markAsAccepted(User $user, ?string $dueDate = null): self
@@ -185,6 +193,18 @@ class MaintenanceRequest extends Model
     {
         $this->update([
             'status' => 'declined',
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * Mark the request as acknowledged by technician.
+     */
+    public function markAsAcknowledged(): self
+    {
+        $this->update([
+            'status' => 'acknowledged',
         ]);
 
         return $this;
