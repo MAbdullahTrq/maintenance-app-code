@@ -211,6 +211,26 @@ class MaintenanceRequest extends Model
     }
 
     /**
+     * Mark the request as closed.
+     */
+    public function markAsClosed(): self
+    {
+        $this->update([
+            'status' => 'closed',
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * Check if the request is closed.
+     */
+    public function isClosed(): bool
+    {
+        return $this->status === 'closed';
+    }
+
+    /**
      * Assign the request to a technician.
      */
     public function assignTo(User $technician): self

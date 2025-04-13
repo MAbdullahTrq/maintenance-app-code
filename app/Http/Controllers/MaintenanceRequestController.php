@@ -451,7 +451,7 @@ class MaintenanceRequestController extends Controller
     {
         $this->authorize('close', $maintenance);
         
-        $maintenance->update(['status' => 'closed']);
+        $maintenance->markAsClosed();
 
         RequestComment::create([
             'maintenance_request_id' => $maintenance->id,
