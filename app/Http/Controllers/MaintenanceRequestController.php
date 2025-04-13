@@ -235,7 +235,7 @@ class MaintenanceRequestController extends Controller
     {
         $this->authorize('updateStatus', $maintenance);
         
-        $maintenance->update(['status' => 'started']);
+        $maintenance->markAsStarted();
 
         RequestComment::create([
             'maintenance_request_id' => $maintenance->id,
@@ -244,7 +244,7 @@ class MaintenanceRequestController extends Controller
         ]);
 
         return redirect()->route('maintenance.show', $maintenance)
-            ->with('success', 'Maintenance request marked as in progress.');
+            ->with('success', 'Maintenance request marked as started.');
     }
 
     /**
