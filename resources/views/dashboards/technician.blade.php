@@ -80,13 +80,13 @@
                                             Reject
                                         </button>
                                     </form>
-                                    <form action="{{ route('maintenance.start', $request) }}" method="POST" class="inline">
+                                    <form action="{{ route('maintenance.start-task', $request) }}" method="POST" class="inline">
                                         @csrf
                                         <button type="submit" class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
                                             Start
                                         </button>
                                     </form>
-                                    <form action="{{ route('maintenance.finish', $request) }}" method="POST" class="inline">
+                                    <form action="{{ route('maintenance.finish-task', $request) }}" method="POST" class="inline">
                                         @csrf
                                         <button type="submit" class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
                                             Finish
