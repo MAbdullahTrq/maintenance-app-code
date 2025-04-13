@@ -37,12 +37,21 @@ class PropertyController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $property = Auth::user()->managedProperties()->create([
+        $data = [
             'name' => $request->name,
             'address' => $request->address,
-        ]);
+        ];
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('property-images', 'public');
+            $data['image'] = $imagePath;
+        }
+
+        $property = Auth::user()->managedProperties()->create($data);
 
         // Generate QR code
         $this->generateQrCode($property);
@@ -85,12 +94,26 @@ class PropertyController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $property->update([
+        $data = [
             'name' => $request->name,
             'address' => $request->address,
-        ]);
+        ];
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($property->image) {
+                Storage::delete('public/' . $property->image);
+            }
+            
+            $imagePath = $request->file('image')->store('property-images', 'public');
+            $data['image'] = $imagePath;
+        }
+
+        $property->update($data);
 
         return redirect()->route('properties.index')
             ->with('success', 'Property updated successfully.');

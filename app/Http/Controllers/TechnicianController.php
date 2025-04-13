@@ -30,12 +30,13 @@ class TechnicianController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'phone' => 'required|string|max:20',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $role = Role::where('slug', 'technician')->first();
         $password = Str::random(10);
 
-        $technician = User::create([
+        $userData = [
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
@@ -43,7 +44,15 @@ class TechnicianController extends Controller
             'invited_by' => auth()->id(),
             'role_id' => $role->id,
             'is_active' => true,
-        ]);
+        ];
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('technician-images', 'public');
+            $userData['image'] = $imagePath;
+        }
+
+        $technician = User::create($userData);
 
         return redirect()->route('technicians.index')
             ->with('success', "Technician created successfully! Their temporary password is: {$password}");
@@ -63,13 +72,27 @@ class TechnicianController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'phone' => 'required|string|max:20',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $user->update([
+        $userData = [
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-        ]);
+        ];
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($user->image) {
+                \Illuminate\Support\Facades\Storage::delete('public/' . $user->image);
+            }
+            
+            $imagePath = $request->file('image')->store('technician-images', 'public');
+            $userData['image'] = $imagePath;
+        }
+
+        $user->update($userData);
 
         return redirect()->route('technicians.index')
             ->with('success', 'Technician updated successfully!');

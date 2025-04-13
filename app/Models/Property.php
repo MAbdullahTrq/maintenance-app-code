@@ -20,6 +20,7 @@ class Property extends Model
     protected $fillable = [
         'name',
         'address',
+        'image',
         'qr_code',
         'access_link',
         'manager_id',

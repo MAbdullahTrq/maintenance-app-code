@@ -62,7 +62,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('technicians.store') }}" method="POST">
+            <form action="{{ route('technicians.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div>
@@ -98,6 +98,18 @@
                         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('phone') border-red-500 @enderror" 
                         placeholder="Enter technician's phone number" required>
                     @error('phone')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-6">
+                    <label for="image" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-image mr-2 text-gray-500"></i>Profile Image
+                    </label>
+                    <input type="file" id="image" name="image" 
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('image') border-red-500 @enderror">
+                    <p class="text-sm text-gray-500 mt-1">Optional. Upload a profile image (JPEG, PNG, JPG, GIF, max 2MB).</p>
+                    @error('image')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>

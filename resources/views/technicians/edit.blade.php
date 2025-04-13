@@ -8,7 +8,7 @@
 <div class="container mx-auto px-4 pt-12">
     <div class="max-w-2xl mx-auto">
         <div class="bg-white shadow-md rounded-lg p-6">
-            <form action="{{ route('technicians.update', $user) }}" method="POST">
+            <form action="{{ route('technicians.update', $user) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -31,11 +31,32 @@
                 </div>
 
                 <div class="mb-6">
-                    <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
-                    <input type="tel" name="phone" id="phone" value="{{ old('phone', $user->phone) }}" required
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-phone mr-2 text-gray-500"></i>Phone Number
+                    </label>
+                    <input type="tel" id="phone" name="phone" value="{{ old('phone', $user->phone) }}" 
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('phone') border-red-500 @enderror" 
+                        placeholder="Enter technician's phone number" required>
                     @error('phone')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-6">
+                    <label for="image" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-image mr-2 text-gray-500"></i>Profile Image
+                    </label>
+                    @if($user->image)
+                        <div class="mb-2">
+                            <img src="{{ asset('storage/' . $user->image) }}" alt="{{ $user->name }}" class="w-32 h-32 object-cover rounded-full">
+                            <p class="text-sm text-gray-500 mt-1">Current image</p>
+                        </div>
+                    @endif
+                    <input type="file" id="image" name="image" 
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('image') border-red-500 @enderror">
+                    <p class="text-sm text-gray-500 mt-1">Optional. Upload a new profile image to replace the current one (JPEG, PNG, JPG, GIF, max 2MB).</p>
+                    @error('image')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 

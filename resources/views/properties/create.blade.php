@@ -33,9 +33,9 @@
         <h1 class="text-2xl font-bold mb-6">Create New Property</h1>
         
         @if(auth()->user()->isAdmin())
-            <form action="{{ route('admin.properties.store') }}" method="POST">
+            <form action="{{ route('admin.properties.store') }}" method="POST" enctype="multipart/form-data">
         @else
-            <form action="{{ route('properties.store') }}" method="POST">
+            <form action="{{ route('properties.store') }}" method="POST" enctype="multipart/form-data">
         @endif
             @csrf
             
@@ -49,12 +49,22 @@
                 @enderror
             </div>
             
-            <div class="mb-6">
+            <div class="mb-4">
                 <label for="address" class="block text-gray-700 font-medium mb-2">Property Address</label>
                 <textarea name="address" id="address" rows="3" 
                     class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('address') border-red-500 @enderror" 
                     required>{{ old('address') }}</textarea>
                 @error('address')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="mb-6">
+                <label for="image" class="block text-gray-700 font-medium mb-2">Property Image</label>
+                <input type="file" name="image" id="image" 
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('image') border-red-500 @enderror">
+                <p class="text-sm text-gray-500 mt-1">Optional. Upload an image of the property (JPEG, PNG, JPG, GIF, max 2MB).</p>
+                @error('image')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>

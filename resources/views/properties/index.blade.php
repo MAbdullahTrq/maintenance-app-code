@@ -23,7 +23,7 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
@@ -32,14 +32,38 @@
                     @foreach($properties as $property)
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">{{ $property->name }}</div>
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10">
+                                        @if($property->image)
+                                            <img class="h-10 w-10 rounded-full object-cover" src="{{ asset('storage/' . $property->image) }}" alt="{{ $property->name }}">
+                                        @else
+                                            <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                                <i class="fas fa-building text-gray-400"></i>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">{{ $property->name }}</div>
+                                    </div>
+                                </div>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-900">{{ $property->address }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <a href="{{ route('properties.show', $property) }}" class="text-blue-600 hover:text-blue-900 mr-3">View</a>
-                                <a href="{{ route('properties.qrcode', $property) }}" class="text-green-600 hover:text-green-900">QR Code</a>
+                                <div class="flex space-x-2">
+                                    <a href="{{ route('properties.show', $property) }}" class="text-blue-600 hover:text-blue-900">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                    <a href="{{ route('properties.qrcode', $property) }}" class="text-green-600 hover:text-green-900">
+                                        <i class="fas fa-qrcode"></i> QR Code
+                                    </a>
+                                    <button type="button" 
+                                        class="text-indigo-600 hover:text-indigo-900 copy-link-btn" 
+                                        data-url="{{ $property->getRequestUrl() }}">
+                                        <i class="fas fa-copy"></i> Copy Link
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
@@ -55,4 +79,27 @@
         @endif
     </div>
 </div>
-@endsection 
+@endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const copyButtons = document.querySelectorAll('.copy-link-btn');
+        
+        copyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                navigator.clipboard.writeText(url).then(() => {
+                    // Change button text temporarily
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                    }, 2000);
+                });
+            });
+        });
+    });
+</script>
+@endpush 

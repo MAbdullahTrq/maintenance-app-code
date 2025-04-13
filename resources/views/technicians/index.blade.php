@@ -45,6 +45,15 @@
                     <tr>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                             <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10">
+                                    @if($technician->image)
+                                        <img class="h-10 w-10 rounded-full object-cover" src="{{ asset('storage/' . $technician->image) }}" alt="{{ $technician->name }}">
+                                    @else
+                                        <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                            <i class="fas fa-user text-gray-400"></i>
+                                        </div>
+                                    @endif
+                                </div>
                                 <div class="ml-3">
                                     <p class="text-gray-900 whitespace-no-wrap">
                                         {{ $technician->name }}
