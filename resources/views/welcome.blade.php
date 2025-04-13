@@ -257,7 +257,7 @@
                         Ready to streamline your maintenance process?
                     </h2>
                     <p class="mt-4 text-lg md:text-xl text-white font-medium" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.6);">
-                        Join thousands of property managers who have simplified their maintenance workflow.
+                        Simplify your maintenance workflow
                     </p>
                     <div class="mt-8 flex justify-center">
                         <div class="inline-flex rounded-md shadow">
