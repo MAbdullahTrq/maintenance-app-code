@@ -144,16 +144,14 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('maintenance', MaintenanceRequestController::class);
     Route::post('/maintenance/{maintenance}/approve', [MaintenanceRequestController::class, 'approve'])->name('maintenance.approve');
     Route::post('/maintenance/{maintenance}/decline', [MaintenanceRequestController::class, 'decline'])->name('maintenance.decline');
-    Route::post('/maintenance/{maintenance}/in-progress', [MaintenanceRequestController::class, 'inProgress'])->name('maintenance.in-progress');
-    Route::post('/maintenance/{maintenance}/complete', [MaintenanceRequestController::class, 'complete'])->name('maintenance.complete');
     Route::post('/maintenance/{maintenance}/assign', [MaintenanceRequestController::class, 'assign'])->name('maintenance.assign');
     Route::post('/maintenance/{maintenance}/accept', [MaintenanceRequestController::class, 'accept'])->name('maintenance.accept');
     Route::post('/maintenance/{maintenance}/reject', [MaintenanceRequestController::class, 'reject'])->name('maintenance.reject');
+    Route::post('/maintenance/{maintenance}/start-task', [MaintenanceRequestController::class, 'startTask'])->name('maintenance.start-task');
+    Route::post('/maintenance/{maintenance}/finish-task', [MaintenanceRequestController::class, 'finishTask'])->name('maintenance.finish-task');
     Route::post('/maintenance/{maintenance}/comment', [MaintenanceRequestController::class, 'addComment'])->name('maintenance.comment');
     Route::delete('/maintenance/image/{image}', [MaintenanceRequestController::class, 'deleteImage'])->name('maintenance.image.delete');
     Route::delete('/maintenance/comment/{comment}', [MaintenanceRequestController::class, 'deleteComment'])->name('maintenance.comment.delete');
-    Route::post('/maintenance-requests/{maintenanceRequest}/start', [MaintenanceRequestController::class, 'startTask'])->name('maintenance-requests.start');
-    Route::post('/maintenance-requests/{maintenanceRequest}/finish', [MaintenanceRequestController::class, 'finishTask'])->name('maintenance-requests.finish');
 
     // Debug routes
     if (config('app.debug')) {

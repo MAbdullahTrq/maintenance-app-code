@@ -34,8 +34,9 @@
                         </div>
                         <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold 
                             @if($maintenance->status == 'pending') bg-yellow-100 text-yellow-800
-                            @elseif($maintenance->status == 'approved') bg-blue-100 text-blue-800
-                            @elseif($maintenance->status == 'in_progress') bg-purple-100 text-purple-800
+                            @elseif($maintenance->status == 'accepted') bg-blue-100 text-blue-800
+                            @elseif($maintenance->status == 'assigned') bg-purple-100 text-purple-800
+                            @elseif($maintenance->status == 'started') bg-indigo-100 text-indigo-800
                             @elseif($maintenance->status == 'completed') bg-green-100 text-green-800
                             @elseif($maintenance->status == 'declined') bg-red-100 text-red-800
                             @endif">
@@ -217,8 +218,7 @@
                         @elseif($maintenance->status == 'assigned') bg-purple-100 text-purple-800
                         @elseif($maintenance->status == 'started') bg-indigo-100 text-indigo-800
                         @elseif($maintenance->status == 'completed') bg-green-100 text-green-800
-                        @elseif($maintenance->status == 'closed') bg-gray-100 text-gray-800
-                        @else bg-gray-100 text-gray-800
+                        @elseif($maintenance->status == 'declined') bg-red-100 text-red-800
                         @endif">
                         {{ ucfirst($maintenance->status) }}
                     </span>
@@ -271,7 +271,7 @@
                 </div>
             @endif
 
-            @if($maintenance->status == 'approved' && (auth()->user()->isPropertyManager() || auth()->user()->isAdmin()))
+            @if($maintenance->status == 'accepted' && (auth()->user()->isPropertyManager() || auth()->user()->isAdmin()))
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
                     <div class="p-6 border-b">
                         <h2 class="text-xl font-bold text-gray-900">Assign Technician</h2>
@@ -325,7 +325,7 @@
                                 @csrf
                                 <div class="mb-4">
                                     <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">Reason for Rejection</label>
-                                    <textarea name="comment" id="comment" rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required></textarea>
+                                    <textarea name="comment" id="comment" rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
                                 </div>
                                 <div class="flex justify-end space-x-3">
                                     <button type="button" onclick="document.getElementById('rejectModal').classList.add('hidden')" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
@@ -347,7 +347,7 @@
                         <h2 class="text-xl font-bold text-gray-900">Start Work</h2>
                     </div>
                     <div class="p-6">
-                        <form action="{{ route('maintenance.inProgress', $maintenance) }}" method="POST">
+                        <form action="{{ route('maintenance.start-task', $maintenance) }}" method="POST">
                             @csrf
                             <button type="submit" class="w-full px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600">
                                 Start Working
@@ -363,7 +363,7 @@
                         <h2 class="text-xl font-bold text-gray-900">Complete Task</h2>
                     </div>
                     <div class="p-6">
-                        <form action="{{ route('maintenance.complete', $maintenance) }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('maintenance.finish-task', $maintenance) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-4">
                                 <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">Completion Notes</label>

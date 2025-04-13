@@ -190,24 +190,18 @@ class MaintenanceRequestController extends Controller
         
         $request->validate([
             'due_date' => 'nullable|date|after_or_equal:today',
-            'assigned_to' => 'nullable|exists:users,id',
         ]);
 
-        $maintenance->update(['status' => 'approved']);
-
-        if ($request->assigned_to) {
-            $technician = User::findOrFail($request->assigned_to);
-            $maintenance->assignTo($technician);
-        }
+        $maintenance->markAsAccepted(Auth::user(), $request->due_date);
 
         RequestComment::create([
             'maintenance_request_id' => $maintenance->id,
             'user_id' => Auth::id(),
-            'comment' => 'Request approved' . ($request->due_date ? ' with due date ' . $request->due_date : '') . '.',
+            'comment' => 'Request accepted' . ($request->due_date ? ' with due date ' . $request->due_date : '') . '.',
         ]);
 
         return redirect()->route('maintenance.show', $maintenance)
-            ->with('success', 'Maintenance request approved successfully.');
+            ->with('success', 'Maintenance request accepted successfully.');
     }
 
     /**
@@ -348,18 +342,11 @@ class MaintenanceRequestController extends Controller
     }
 
     /**
-     * Assign the maintenance request to a technician.
+     * Assign a technician to the maintenance request.
      */
     public function assign(Request $request, MaintenanceRequest $maintenance)
     {
         $this->authorize('assign', $maintenance);
-        
-        // Debug: Log the request data
-        \Log::info('Assign request data:', [
-            'request_data' => $request->all(),
-            'maintenance_id' => $maintenance->id,
-            'maintenance_status' => $maintenance->status
-        ]);
         
         $request->validate([
             'assigned_to' => 'required|exists:users,id',
@@ -368,25 +355,14 @@ class MaintenanceRequestController extends Controller
         $technician = User::findOrFail($request->assigned_to);
         $maintenance->assignTo($technician);
         
-        // Mark the request as in progress when a technician is assigned
-        if ($maintenance->status === 'approved') {
-            $maintenance->markAsInProgress();
-        }
+        // Mark the request as assigned when a technician is assigned
+        $maintenance->markAsAssigned();
 
         // Add comment
         RequestComment::create([
             'maintenance_request_id' => $maintenance->id,
             'user_id' => Auth::id(),
             'comment' => 'Request assigned to ' . $technician->name . '.',
-        ]);
-
-        // TODO: Send notification to technician
-
-        // Debug: Log the updated maintenance request
-        \Log::info('Maintenance request updated:', [
-            'maintenance_id' => $maintenance->id,
-            'assigned_to' => $maintenance->assigned_to,
-            'status' => $maintenance->status
         ]);
 
         return redirect()->route('maintenance.show', $maintenance)
@@ -420,19 +396,24 @@ class MaintenanceRequestController extends Controller
         $this->authorize('reject', $maintenance);
         
         $request->validate([
-            'comment' => 'required|string',
+            'comment' => 'nullable|string',
         ]);
 
-        $maintenance->update(['status' => 'declined']);
+        // Set status back to accepted and remove technician
+        $maintenance->update([
+            'status' => 'accepted',
+            'assigned_to' => null
+        ]);
 
+        // Add comment
         RequestComment::create([
             'maintenance_request_id' => $maintenance->id,
             'user_id' => Auth::id(),
-            'comment' => 'Task rejected by technician: ' . $request->comment,
+            'comment' => 'Task rejected by technician.' . ($request->comment ? ' Reason: ' . $request->comment : ''),
         ]);
 
         return redirect()->route('maintenance.show', $maintenance)
-            ->with('success', 'Task rejected successfully.');
+            ->with('success', 'Task has been rejected and returned to manager.');
     }
 
     /**
@@ -481,11 +462,14 @@ class MaintenanceRequestController extends Controller
             ->with('success', 'Task closed successfully.');
     }
 
+    /**
+     * Start working on the maintenance request.
+     */
     public function startTask(MaintenanceRequest $maintenance)
     {
         $this->authorize('start', $maintenance);
 
-        $maintenance->markAsInProgress();
+        $maintenance->markAsStarted();
         RequestComment::create([
             'maintenance_request_id' => $maintenance->id,
             'user_id' => Auth::id(),

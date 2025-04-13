@@ -130,8 +130,8 @@ class MaintenanceRequestPolicy
      */
     public function assign(User $user, MaintenanceRequest $maintenanceRequest): bool
     {
-        // Only approved requests can be assigned
-        if (!$maintenanceRequest->isApproved() && !$maintenanceRequest->isPending()) {
+        // Only accepted requests can be assigned
+        if (!$maintenanceRequest->isAccepted()) {
             return false;
         }
 
