@@ -161,15 +161,18 @@
                 <h3 class="text-sm font-medium text-gray-700 mb-2">Quick Actions</h3>
                 <div class="space-y-2">
                     @if(auth()->user()->hasActiveSubscription())
-                        <a href="{{ route('technicians.index') }}" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
-                            <i class="fas fa-users-cog mr-2 text-blue-500"></i> Technicians
+                        <a href="{{ route('technicians.index') }}" class="flex items-center px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
+                            <i class="fas fa-users-cog text-blue-500 w-5 text-center"></i>
+                            <span class="ml-2">Technicians</span>
                         </a>
-                        <a href="{{ route('properties.index') }}" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
-                            <i class="fas fa-building mr-2 text-purple-500"></i> Properties
+                        <a href="{{ route('properties.index') }}" class="flex items-center px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
+                            <i class="fas fa-building text-purple-500 w-5 text-center"></i>
+                            <span class="ml-2">Properties</span>
                         </a>
                     @else
-                        <a href="{{ route('subscription.plans') }}" class="block px-4 py-2 bg-blue-50 hover:bg-blue-100 rounded-md text-sm font-medium text-blue-700">
-                            <i class="fas fa-crown mr-2 text-blue-500"></i> Subscribe Now
+                        <a href="{{ route('subscription.plans') }}" class="flex items-center px-4 py-2 bg-blue-50 hover:bg-blue-100 rounded-md text-sm font-medium text-blue-700">
+                            <i class="fas fa-crown text-blue-500 w-5 text-center"></i>
+                            <span class="ml-2">Subscribe Now</span>
                         </a>
                     @endif
                 </div>

@@ -44,17 +44,20 @@
                             
                             <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
                                 @if(Auth::user()->isAdmin())
-                                    <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-users mr-2 text-green-500"></i>Users
+                                    <a href="{{ route('admin.users.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-users text-green-500 w-5 text-center"></i>
+                                        <span class="ml-2">Users</span>
                                     </a>
                                 @endif
                                 
                                 @if(Auth::user()->isPropertyManager() && Auth::user()->hasActiveSubscription())
-                                    <a href="{{ route('technicians.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-users-cog mr-2 text-blue-500"></i>Technicians
+                                    <a href="{{ route('technicians.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-users-cog text-blue-500 w-5 text-center"></i>
+                                        <span class="ml-2">Technicians</span>
                                     </a>
-                                    <a href="{{ route('properties.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-building mr-2 text-purple-500"></i>Properties
+                                    <a href="{{ route('properties.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-building text-purple-500 w-5 text-center"></i>
+                                        <span class="ml-2">Properties</span>
                                     </a>
                                 @endif
                                 
