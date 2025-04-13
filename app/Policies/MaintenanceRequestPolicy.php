@@ -243,4 +243,19 @@ class MaintenanceRequestPolicy
     {
         return $user->isTechnician() && $maintenanceRequest->assigned_to === $user->id && $maintenanceRequest->status === 'started';
     }
+
+    public function close(User $user, MaintenanceRequest $maintenanceRequest)
+    {
+        // Admin can close any request
+        if ($user->isAdmin()) {
+            return true;
+        }
+        
+        // Property managers can close completed requests for their properties
+        if ($user->isPropertyManager() && $maintenanceRequest->property->manager_id === $user->id) {
+            return $maintenanceRequest->status === 'completed';
+        }
+        
+        return false;
+    }
 } 
