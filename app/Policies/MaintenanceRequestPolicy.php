@@ -231,4 +231,14 @@ class MaintenanceRequestPolicy
 
         return false;
     }
+
+    public function start(User $user, MaintenanceRequest $maintenanceRequest)
+    {
+        return $user->isTechnician() && $maintenanceRequest->technician_id === $user->id && $maintenanceRequest->status === 'approved';
+    }
+
+    public function finish(User $user, MaintenanceRequest $maintenanceRequest)
+    {
+        return $user->isTechnician() && $maintenanceRequest->technician_id === $user->id && $maintenanceRequest->status === 'in_progress';
+    }
 } 

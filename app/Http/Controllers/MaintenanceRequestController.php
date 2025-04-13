@@ -400,7 +400,7 @@ class MaintenanceRequestController extends Controller
     {
         $this->authorize('accept', $maintenance);
         
-        $maintenance->update(['status' => 'in_progress']);
+        $maintenance->update(['status' => 'accepted']);
 
         RequestComment::create([
             'maintenance_request_id' => $maintenance->id,
@@ -479,5 +479,33 @@ class MaintenanceRequestController extends Controller
 
         return redirect()->route('maintenance.show', $maintenance)
             ->with('success', 'Task closed successfully.');
+    }
+
+    public function startTask(MaintenanceRequest $maintenance)
+    {
+        $this->authorize('start', $maintenance);
+
+        $maintenance->markAsInProgress();
+        RequestComment::create([
+            'maintenance_request_id' => $maintenance->id,
+            'user_id' => Auth::id(),
+            'comment' => 'Task started by technician.',
+        ]);
+
+        return redirect()->back()->with('success', 'Task has been started.');
+    }
+
+    public function finishTask(MaintenanceRequest $maintenance)
+    {
+        $this->authorize('finish', $maintenance);
+
+        $maintenance->markAsCompleted();
+        RequestComment::create([
+            'maintenance_request_id' => $maintenance->id,
+            'user_id' => Auth::id(),
+            'comment' => 'Task completed by technician.',
+        ]);
+
+        return redirect()->back()->with('success', 'Task has been completed.');
     }
 } 
