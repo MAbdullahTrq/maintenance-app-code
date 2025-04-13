@@ -65,7 +65,7 @@
     <div class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
-                <h2 class="text-2xl font-semibold text-blue-600 tracking-wide uppercase">Features</h2>
+                <h2 class="text-4xl font-semibold text-blue-600 tracking-wide uppercase">Features</h2>
                 <p class="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight">
                     Everything you need to manage maintenance
                 </p>
