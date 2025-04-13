@@ -16,12 +16,6 @@
         </div>
     @endif
     
-    <!-- Debug Information -->
-    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
-        <p>User Role: {{ auth()->user()->role }}</p>
-        <p>Request Status: {{ $maintenance->status }}</p>
-    </div>
-    
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Main Content -->
         <div class="lg:col-span-2">

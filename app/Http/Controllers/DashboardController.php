@@ -146,7 +146,7 @@ class DashboardController extends Controller
         
         $upcomingRequests = $user->assignedRequests()
             ->with('property')
-            ->where('status', 'assigned')
+            ->whereIn('status', ['assigned', 'acknowledged'])
             ->orderBy('due_date')
             ->take(5)
             ->get();
