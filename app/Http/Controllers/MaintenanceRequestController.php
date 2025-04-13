@@ -193,21 +193,19 @@ class MaintenanceRequestController extends Controller
             'assigned_to' => 'nullable|exists:users,id',
         ]);
 
-        $maintenance->markAsApproved(Auth::user(), $request->due_date);
-        
+        $maintenance->update(['status' => 'accepted']);
+
         if ($request->assigned_to) {
             $technician = User::findOrFail($request->assigned_to);
             $maintenance->assignTo($technician);
+            $maintenance->update(['status' => 'assigned']);
         }
 
-        // Add comment
         RequestComment::create([
             'maintenance_request_id' => $maintenance->id,
             'user_id' => Auth::id(),
             'comment' => 'Request approved' . ($request->due_date ? ' with due date ' . $request->due_date : '') . '.',
         ]);
-
-        // TODO: Send notification to technician
 
         return redirect()->route('maintenance.show', $maintenance)
             ->with('success', 'Maintenance request approved successfully.');
@@ -244,9 +242,8 @@ class MaintenanceRequestController extends Controller
     {
         $this->authorize('updateStatus', $maintenance);
         
-        $maintenance->markAsInProgress();
+        $maintenance->update(['status' => 'started']);
 
-        // Add comment
         RequestComment::create([
             'maintenance_request_id' => $maintenance->id,
             'user_id' => Auth::id(),
@@ -404,7 +401,7 @@ class MaintenanceRequestController extends Controller
     {
         $this->authorize('accept', $maintenance);
         
-        $maintenance->update(['status' => 'accepted']);
+        $maintenance->update(['status' => 'assigned']);
 
         RequestComment::create([
             'maintenance_request_id' => $maintenance->id,
@@ -427,10 +424,8 @@ class MaintenanceRequestController extends Controller
             'comment' => 'required|string',
         ]);
 
-        // Update status to declined
-        $maintenance->markAsDeclined();
-        
-        // Add comment
+        $maintenance->update(['status' => 'accepted']);
+
         RequestComment::create([
             'maintenance_request_id' => $maintenance->id,
             'user_id' => Auth::id(),

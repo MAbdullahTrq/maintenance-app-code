@@ -32,7 +32,7 @@
                             <h1 class="text-2xl font-bold text-gray-900">{{ $maintenance->title }}</h1>
                             <p class="text-sm text-gray-500 mt-1">Submitted on {{ $maintenance->created_at->format('M d, Y \a\t h:i A') }}</p>
                         </div>
-                        <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full 
+                        <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold 
                             @if($maintenance->status == 'pending') bg-yellow-100 text-yellow-800
                             @elseif($maintenance->status == 'approved') bg-blue-100 text-blue-800
                             @elseif($maintenance->status == 'in_progress') bg-purple-100 text-purple-800
@@ -205,124 +205,194 @@
                 </div>
             </div>
             
+            <!-- Status Badge -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
+                <div class="p-6 border-b">
+                    <h2 class="text-xl font-bold text-gray-900">Request Status</h2>
+                </div>
+                <div class="p-6">
+                    <span class="px-3 py-1 rounded-full text-sm font-semibold
+                        @if($maintenance->status == 'pending') bg-yellow-100 text-yellow-800
+                        @elseif($maintenance->status == 'accepted') bg-blue-100 text-blue-800
+                        @elseif($maintenance->status == 'assigned') bg-purple-100 text-purple-800
+                        @elseif($maintenance->status == 'started') bg-indigo-100 text-indigo-800
+                        @elseif($maintenance->status == 'completed') bg-green-100 text-green-800
+                        @elseif($maintenance->status == 'closed') bg-gray-100 text-gray-800
+                        @else bg-gray-100 text-gray-800
+                        @endif">
+                        {{ ucfirst($maintenance->status) }}
+                    </span>
+                </div>
+            </div>
+            
             <!-- Action Buttons -->
-            @if($maintenance->status == 'pending' && (auth()->user()->isPropertyManager() || auth()->user()->isAdmin()))
+            @if($maintenance->status == 'pending' && auth()->user()->isPropertyManager())
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
                     <div class="p-6 border-b">
-                        <h2 class="text-xl font-bold text-gray-900">Actions</h2>
+                        <h2 class="text-xl font-bold text-gray-900">Request Actions</h2>
                     </div>
-                    
                     <div class="p-6">
-                        <div class="flex space-x-3 mb-4">
+                        <div class="flex space-x-4">
                             <form action="{{ route('maintenance.approve', $maintenance) }}" method="POST" class="flex-1">
                                 @csrf
                                 <button type="submit" class="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
-                                    Approve
+                                    Accept Request
                                 </button>
                             </form>
-                            
-                            <form action="{{ route('maintenance.decline', $maintenance) }}" method="POST" class="flex-1">
+                            <button type="button" onclick="document.getElementById('declineModal').classList.remove('hidden')" class="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                                Decline Request
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Decline Modal -->
+                <div id="declineModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+                    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                        <div class="mt-3">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Decline Request</h3>
+                            <form action="{{ route('maintenance.decline', $maintenance) }}" method="POST">
                                 @csrf
-                                <button type="submit" class="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
-                                    Decline
-                                </button>
+                                <div class="mb-4">
+                                    <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">Reason for Declining</label>
+                                    <textarea name="comment" id="comment" rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required></textarea>
+                                </div>
+                                <div class="flex justify-end space-x-3">
+                                    <button type="button" onclick="document.getElementById('declineModal').classList.add('hidden')" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
+                                        Cancel
+                                    </button>
+                                    <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                                        Decline
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
             @endif
-            
-            @if($maintenance->status == 'approved' && (auth()->user()->isPropertyManager() || auth()->user()->isAdmin()))
+
+            @if($maintenance->status == 'accepted' && auth()->user()->isPropertyManager())
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
                     <div class="p-6 border-b">
                         <h2 class="text-xl font-bold text-gray-900">Assign Technician</h2>
                     </div>
-                    
                     <div class="p-6">
-                        @if ($errors->any())
-                            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
-                                <p class="font-bold">Validation errors:</p>
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-                        
                         <form action="{{ route('maintenance.assign', $maintenance) }}" method="POST">
                             @csrf
-                            <div class="mb-3">
-                                <label for="assigned_to" class="block text-sm font-medium text-gray-700 mb-1">Assign to Technician</label>
-                                <select name="assigned_to" id="assigned_to" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                    <option value="">Select a Technician</option>
+                            <div class="mb-4">
+                                <label for="assigned_to" class="block text-sm font-medium text-gray-700 mb-1">Select Technician</label>
+                                <select name="assigned_to" id="assigned_to" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+                                    <option value="">Select a technician</option>
                                     @foreach($technicians as $technician)
                                         <option value="{{ $technician->id }}">{{ $technician->name }}</option>
                                     @endforeach
                                 </select>
-                                @error('assigned_to')
-                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                                @enderror
                             </div>
-                            
                             <button type="submit" class="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                                Assign
+                                Assign Technician
                             </button>
                         </form>
                     </div>
                 </div>
             @endif
-            
-            @if($maintenance->status == 'pending' && auth()->user()->role->slug === 'technician')
+
+            @if($maintenance->status == 'assigned' && auth()->user()->id == $maintenance->assigned_to)
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
                     <div class="p-6 border-b">
                         <h2 class="text-xl font-bold text-gray-900">Task Actions</h2>
                     </div>
                     <div class="p-6">
                         <div class="flex space-x-4">
-                            <form action="{{ route('maintenance.accept', $maintenance) }}" method="POST" style="display:inline;">
+                            <form action="{{ route('maintenance.accept', $maintenance) }}" method="POST" class="flex-1">
                                 @csrf
-                                <button type="submit" class="btn btn-success">Accept</button>
+                                <button type="submit" class="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                                    Accept Task
+                                </button>
                             </form>
-                            <form action="{{ route('maintenance.reject', $maintenance) }}" method="POST" style="display:inline;">
+                            <button type="button" onclick="document.getElementById('rejectModal').classList.remove('hidden')" class="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                                Reject Task
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reject Modal -->
+                <div id="rejectModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+                    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                        <div class="mt-3">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Reject Task</h3>
+                            <form action="{{ route('maintenance.reject', $maintenance) }}" method="POST">
                                 @csrf
-                                <input type="text" name="comment" placeholder="Reason for rejection" required>
-                                <button type="submit" class="btn btn-danger">Reject</button>
+                                <div class="mb-4">
+                                    <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">Reason for Rejection</label>
+                                    <textarea name="comment" id="comment" rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required></textarea>
+                                </div>
+                                <div class="flex justify-end space-x-3">
+                                    <button type="button" onclick="document.getElementById('rejectModal').classList.add('hidden')" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
+                                        Cancel
+                                    </button>
+                                    <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                                        Reject
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
             @endif
-            
-            @if($maintenance->status == 'approved' && auth()->user()->id === $maintenance->assigned_to)
+
+            @if($maintenance->status == 'assigned' && auth()->user()->id == $maintenance->assigned_to)
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
                     <div class="p-6 border-b">
-                        <h2 class="text-xl font-bold text-gray-900">Task Actions</h2>
+                        <h2 class="text-xl font-bold text-gray-900">Start Work</h2>
                     </div>
                     <div class="p-6">
-                        <div class="flex space-x-4">
-                            <form action="{{ route('maintenance.inProgress', $maintenance) }}" method="POST" style="display:inline;">
-                                @csrf
-                                <button type="submit" class="btn btn-warning">Mark as Started</button>
-                            </form>
-                        </div>
+                        <form action="{{ route('maintenance.inProgress', $maintenance) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="w-full px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600">
+                                Start Working
+                            </button>
+                        </form>
                     </div>
                 </div>
             @endif
-            
-            @if($maintenance->status == 'in_progress' && auth()->user()->id === $maintenance->assigned_to)
+
+            @if($maintenance->status == 'started' && auth()->user()->id == $maintenance->assigned_to)
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
                     <div class="p-6 border-b">
-                        <h2 class="text-xl font-bold text-gray-900">Task Actions</h2>
+                        <h2 class="text-xl font-bold text-gray-900">Complete Task</h2>
                     </div>
                     <div class="p-6">
-                        <div class="flex space-x-4">
-                            <form action="{{ route('maintenance.complete', $maintenance) }}" method="POST" style="display:inline;">
-                                @csrf
-                                <input type="text" name="comment" placeholder="Completion notes" required>
-                                <button type="submit" class="btn btn-primary">Mark as Completed</button>
-                            </form>
-                        </div>
+                        <form action="{{ route('maintenance.complete', $maintenance) }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="mb-4">
+                                <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">Completion Notes</label>
+                                <textarea name="comment" id="comment" rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required></textarea>
+                            </div>
+                            <div class="mb-4">
+                                <label for="images" class="block text-sm font-medium text-gray-700 mb-1">Attach Images (Optional)</label>
+                                <input type="file" name="images[]" id="images" multiple class="w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                            </div>
+                            <button type="submit" class="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                                Mark as Completed
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @endif
+
+            @if($maintenance->status == 'completed' && auth()->user()->isPropertyManager())
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
+                    <div class="p-6 border-b">
+                        <h2 class="text-xl font-bold text-gray-900">Close Request</h2>
+                    </div>
+                    <div class="p-6">
+                        <form action="{{ route('maintenance.close', $maintenance) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+                                Close Request
+                            </button>
+                        </form>
                     </div>
                 </div>
             @endif
