@@ -21,10 +21,10 @@ class MaintenanceRequestController extends Controller
         $user = Auth::user();
         
         if ($user->isAdmin()) {
-            $requests = MaintenanceRequest::with(['property', 'assignedTo', 'approvedBy'])->latest()->get();
+            $requests = MaintenanceRequest::with(['property', 'assignedTechnician', 'approvedBy'])->latest()->get();
         } elseif ($user->isPropertyManager()) {
             $propertyIds = $user->managedProperties()->pluck('id');
-            $requests = MaintenanceRequest::with(['property', 'assignedTo', 'approvedBy'])
+            $requests = MaintenanceRequest::with(['property', 'assignedTechnician', 'approvedBy'])
                 ->whereIn('property_id', $propertyIds)
                 ->latest()
                 ->paginate(10);
