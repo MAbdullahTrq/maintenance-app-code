@@ -97,7 +97,14 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <a href="{{ route('admin.users.show', $user) }}" class="text-blue-600 hover:text-blue-900">View</a>
+                                        @if($user->role->slug == 'property_manager')
+                                            <div class="flex space-x-2">
+                                                <a href="{{ route('admin.users.show', $user) }}" class="text-blue-600 hover:text-blue-900">View</a>
+                                                <a href="{{ route('admin.users.grant-subscription.create', $user) }}" class="text-green-600 hover:text-green-900">Grant Subscription</a>
+                                            </div>
+                                        @else
+                                            <a href="{{ route('admin.users.show', $user) }}" class="text-blue-600 hover:text-blue-900">View</a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -190,6 +197,9 @@
                         </a>
                         <a href="{{ route('admin.subscription.index') }}" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
                             <i class="fas fa-list-alt mr-2 text-purple-500"></i> View All Subscriptions
+                        </a>
+                        <a href="{{ route('admin.users.index') }}?role=property_manager" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
+                            <i class="fas fa-user-shield mr-2 text-indigo-500"></i> Manage Property Managers
                         </a>
                     </div>
                 </div>
