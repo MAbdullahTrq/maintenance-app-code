@@ -133,7 +133,7 @@ class MaintenanceRequest extends Model
     public function markAsAccepted(User $user, ?string $dueDate = null): self
     {
         $this->update([
-            'status' => 'approved',
+            'status' => 'accepted',
             'approved_by' => $user->id,
             'due_date' => $dueDate,
         ]);
