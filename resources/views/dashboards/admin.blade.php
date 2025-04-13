@@ -185,7 +185,7 @@
                         <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
                             <i class="fas fa-users mr-2 text-green-500"></i> View Users
                         </a>
-                        <a href="{{ route('admin.subscription.plans') }}" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
+                        <a href="{{ route('admin.subscription.plans.index') }}" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
                             <i class="fas fa-tags mr-2 text-yellow-500"></i> Manage Plans
                         </a>
                         <a href="{{ route('admin.subscription.index') }}" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">

@@ -79,12 +79,12 @@ Route::middleware(['auth'])->group(function () {
         
         // Subscription management routes
         Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscription.index');
-        Route::get('/subscription/plans', [SubscriptionController::class, 'plans'])->name('subscription.plans');
-        Route::get('/subscription/plans/create', [SubscriptionController::class, 'createPlan'])->name('subscription.plans.create');
-        Route::post('/subscription/plans', [SubscriptionController::class, 'storePlan'])->name('subscription.plans.store');
-        Route::get('/subscription/plans/{plan}/edit', [SubscriptionController::class, 'editPlan'])->name('subscription.plans.edit');
-        Route::put('/subscription/plans/{plan}', [SubscriptionController::class, 'updatePlan'])->name('subscription.plans.update');
-        Route::delete('/subscription/plans/{plan}', [SubscriptionController::class, 'destroyPlan'])->name('subscription.plans.destroy');
+        Route::get('/subscription/plans', [SubscriptionController::class, 'plans'])->name('subscription.plans.index');
+        Route::get('/subscription/plans/create', [SubscriptionController::class, 'create'])->name('subscription.plans.create');
+        Route::post('/subscription/plans', [SubscriptionController::class, 'store'])->name('subscription.plans.store');
+        Route::get('/subscription/plans/{plan}/edit', [SubscriptionController::class, 'edit'])->name('subscription.plans.edit');
+        Route::put('/subscription/plans/{plan}', [SubscriptionController::class, 'update'])->name('subscription.plans.update');
+        Route::delete('/subscription/plans/{plan}', [SubscriptionController::class, 'destroy'])->name('subscription.plans.destroy');
         Route::get('/users/{user}/grant-subscription', [SubscriptionController::class, 'showGrantForm'])->name('users.grant-subscription.create');
         Route::post('/users/{user}/grant-subscription', [SubscriptionController::class, 'grantSubscription'])->name('users.grant-subscription.store');
         
@@ -161,13 +161,33 @@ Route::middleware(['auth'])->group(function () {
     }
 });
 
-// Admin Routes
+// Admin routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    // Subscription Plans
-    Route::get('subscription/plans', [SubscriptionController::class, 'plans'])->name('subscription.plans.index');
-    Route::get('subscription/plans/create', [SubscriptionController::class, 'create'])->name('subscription.plans.create');
-    Route::post('subscription/plans', [SubscriptionController::class, 'store'])->name('subscription.plans.store');
-    Route::get('subscription/plans/{plan}/edit', [SubscriptionController::class, 'edit'])->name('subscription.plans.edit');
-    Route::put('subscription/plans/{plan}', [SubscriptionController::class, 'update'])->name('subscription.plans.update');
-    Route::delete('subscription/plans/{plan}', [SubscriptionController::class, 'destroy'])->name('subscription.plans.destroy');
+    Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])->name('dashboard');
+    
+    // User management routes
+    Route::resource('users', UserController::class);
+    Route::put('/users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active');
+    Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
+    
+    // Subscription management routes
+    Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscription.index');
+    Route::get('/subscription/plans', [SubscriptionController::class, 'plans'])->name('subscription.plans.index');
+    Route::get('/subscription/plans/create', [SubscriptionController::class, 'create'])->name('subscription.plans.create');
+    Route::post('/subscription/plans', [SubscriptionController::class, 'store'])->name('subscription.plans.store');
+    Route::get('/subscription/plans/{plan}/edit', [SubscriptionController::class, 'edit'])->name('subscription.plans.edit');
+    Route::put('/subscription/plans/{plan}', [SubscriptionController::class, 'update'])->name('subscription.plans.update');
+    Route::delete('/subscription/plans/{plan}', [SubscriptionController::class, 'destroy'])->name('subscription.plans.destroy');
+    Route::get('/users/{user}/grant-subscription', [SubscriptionController::class, 'showGrantForm'])->name('users.grant-subscription.create');
+    Route::post('/users/{user}/grant-subscription', [SubscriptionController::class, 'grantSubscription'])->name('users.grant-subscription.store');
+    
+    // Property routes
+    Route::get('/properties', [PropertyController::class, 'index'])->name('properties.index');
+    Route::get('/properties/create', [PropertyController::class, 'create'])->name('properties.create');
+    Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
+    Route::get('/properties/{property}', [PropertyController::class, 'show'])->name('properties.show');
+    Route::get('/properties/{property}/edit', [PropertyController::class, 'edit'])->name('properties.edit');
+    Route::put('/properties/{property}', [PropertyController::class, 'update'])->name('properties.update');
+    Route::delete('/properties/{property}', [PropertyController::class, 'destroy'])->name('properties.destroy');
+    Route::get('/properties/{property}/qrcode', [PropertyController::class, 'downloadQrCode'])->name('properties.qrcode');
 });
