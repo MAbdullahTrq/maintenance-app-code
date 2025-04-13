@@ -79,6 +79,11 @@
                                     @csrf
                                     <button type="submit" class="text-yellow-600 hover:text-yellow-900">Reset Password</button>
                                 </form>
+                                @if($user->role === 'property_manager')
+                                    <a href="{{ route('subscriptions.grant.show', $user->id) }}" class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-800 rounded-md hover:bg-indigo-200 transition" title="Grant Subscription">
+                                        <i class="fas fa-crown mr-1"></i> Grant Subscription
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     </li>

@@ -106,15 +106,11 @@
                             <p class="text-base text-gray-900">{{ $user->updated_at->format('M d, Y') }}</p>
                         </div>
                         @if($user->invited_by)
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">Invited By</p>
-                                <p class="text-base text-gray-900">
-                                    @if($user->inviter)
-                                        {{ $user->inviter->name }}
-                                    @else
-                                        User ID: {{ $user->invited_by }}
-                                    @endif
-                                </p>
+                            <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                                <dt class="text-sm font-medium text-gray-500">Invited By</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    {{ \App\Models\User::find($user->invited_by)->email ?? 'Unknown' }}
+                                </dd>
                             </div>
                         @endif
                     </div>
