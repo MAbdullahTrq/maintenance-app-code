@@ -149,6 +149,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/maintenance/{maintenance}/reject', [MaintenanceRequestController::class, 'reject'])->name('maintenance.reject');
     Route::post('/maintenance/{maintenance}/start-task', [MaintenanceRequestController::class, 'startTask'])->name('maintenance.start-task');
     Route::post('/maintenance/{maintenance}/finish-task', [MaintenanceRequestController::class, 'finishTask'])->name('maintenance.finish-task');
+    Route::post('/maintenance/{maintenance}/complete', [MaintenanceRequestController::class, 'complete'])->name('maintenance.complete');
     Route::post('/maintenance/{maintenance}/comment', [MaintenanceRequestController::class, 'addComment'])->name('maintenance.comment');
     Route::post('/maintenance/{maintenance}/close', [MaintenanceRequestController::class, 'close'])->name('maintenance.close');
     Route::delete('/maintenance/image/{image}', [MaintenanceRequestController::class, 'deleteImage'])->name('maintenance.image.delete');
