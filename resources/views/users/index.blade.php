@@ -42,17 +42,6 @@
                 <i class="fas fa-users mr-2 text-blue-500"></i>Users
             @endif
         </h1>
-        <div>
-            @if(isset($isAdminRoute) && $isAdminRoute)
-                <a href="{{ route('admin.users.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
-                    <i class="fas fa-user-plus mr-2"></i>Add User
-                </a>
-            @else
-                <a href="{{ route('admin.users.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
-                    <i class="fas fa-user-plus mr-2"></i>Add User
-                </a>
-            @endif
-        </div>
     </div>
 
     <div class="bg-white shadow overflow-hidden sm:rounded-lg">

@@ -161,9 +161,6 @@
                 <h3 class="text-sm font-medium text-gray-700 mb-2">Quick Actions</h3>
                 <div class="space-y-2">
                     @if(auth()->user()->hasActiveSubscription())
-                        <a href="{{ route('technicians.create') }}" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
-                            <i class="fas fa-user-hard-hat mr-2 text-green-500"></i> Add New Technician
-                        </a>
                         <a href="{{ route('technicians.index') }}" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
                             <i class="fas fa-users-cog mr-2 text-blue-500"></i> View Technicians
                         </a>

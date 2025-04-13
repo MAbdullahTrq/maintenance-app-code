@@ -44,18 +44,12 @@
                             
                             <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
                                 @if(Auth::user()->isAdmin())
-                                    <a href="{{ route('admin.users.create') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-user-plus mr-2 text-blue-500"></i>Add New User
-                                    </a>
                                     <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         <i class="fas fa-users mr-2 text-green-500"></i>View Users
                                     </a>
                                 @endif
                                 
                                 @if(Auth::user()->isPropertyManager() && Auth::user()->hasActiveSubscription())
-                                    <a href="{{ route('technicians.create') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-user-hard-hat mr-2 text-green-500"></i>Add New Technician
-                                    </a>
                                     <a href="{{ route('technicians.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         <i class="fas fa-users-cog mr-2 text-blue-500"></i>View Technicians
                                     </a>
