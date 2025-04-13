@@ -47,13 +47,6 @@
         </a>
     </div>
 
-    <!-- Success Message -->
-    @if(session('success'))
-        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
-            <p>{{ session('success') }}</p>
-        </div>
-    @endif
-
     <!-- User Details Card -->
     <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
         <div class="bg-blue-600 px-6 py-4">
