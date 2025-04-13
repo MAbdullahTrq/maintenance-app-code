@@ -171,22 +171,32 @@
                     <div class="mb-4">
                         <h3 class="text-sm font-medium text-gray-500">Priority</h3>
                         <div class="mt-1">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                @if($maintenance->priority == 'low') bg-blue-100 text-blue-800
-                                @elseif($maintenance->priority == 'medium') bg-yellow-100 text-yellow-800
-                                @elseif($maintenance->priority == 'high') bg-red-100 text-red-800
-                                @endif">
-                                {{ strtoupper($maintenance->priority) }}
-                            </span>
-                            <p class="mt-1 text-sm text-gray-600">
-                                @if($maintenance->priority == 'low')
-                                    You can fix after we leave, just wanted to let you know.
-                                @elseif($maintenance->priority == 'medium')
+                            @if($maintenance->priority)
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                    @if($maintenance->priority == 'low') bg-blue-100 text-blue-800
+                                    @elseif($maintenance->priority == 'medium') bg-yellow-100 text-yellow-800
+                                    @elseif($maintenance->priority == 'high') bg-red-100 text-red-800
+                                    @else bg-gray-100 text-gray-800
+                                    @endif">
+                                    {{ strtoupper($maintenance->priority ?: 'MEDIUM') }}
+                                </span>
+                                <p class="mt-1 text-sm text-gray-600">
+                                    @if($maintenance->priority == 'low')
+                                        You can fix after we leave, just wanted to let you know.
+                                    @elseif($maintenance->priority == 'medium' || !$maintenance->priority)
+                                        You can fix the next cleaning day is fine.
+                                    @elseif($maintenance->priority == 'high')
+                                        Fix asap please.
+                                    @endif
+                                </p>
+                            @else
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                    MEDIUM
+                                </span>
+                                <p class="mt-1 text-sm text-gray-600">
                                     You can fix the next cleaning day is fine.
-                                @elseif($maintenance->priority == 'high')
-                                    Fix asap please.
-                                @endif
-                            </p>
+                                </p>
+                            @endif
                         </div>
                     </div>
                     

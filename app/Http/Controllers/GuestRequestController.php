@@ -31,6 +31,7 @@ class GuestRequestController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'location' => 'required|string|max:255',
+            'priority' => 'required|in:low,medium,high',
             'name' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:20',
@@ -41,10 +42,12 @@ class GuestRequestController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'location' => $request->location,
+            'priority' => $request->priority,
             'property_id' => $property->id,
             'requester_name' => $request->name,
             'requester_email' => $request->email,
             'requester_phone' => $request->phone,
+            'status' => 'pending', // Set initial status to pending
         ]);
 
         // Handle image uploads
