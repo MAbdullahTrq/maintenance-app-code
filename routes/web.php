@@ -160,3 +160,14 @@ Route::middleware(['auth'])->group(function () {
         });
     }
 });
+
+// Admin Routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Subscription Plans
+    Route::get('subscription/plans', [SubscriptionController::class, 'plans'])->name('subscription.plans.index');
+    Route::get('subscription/plans/create', [SubscriptionController::class, 'create'])->name('subscription.plans.create');
+    Route::post('subscription/plans', [SubscriptionController::class, 'store'])->name('subscription.plans.store');
+    Route::get('subscription/plans/{plan}/edit', [SubscriptionController::class, 'edit'])->name('subscription.plans.edit');
+    Route::put('subscription/plans/{plan}', [SubscriptionController::class, 'update'])->name('subscription.plans.update');
+    Route::delete('subscription/plans/{plan}', [SubscriptionController::class, 'destroy'])->name('subscription.plans.destroy');
+});

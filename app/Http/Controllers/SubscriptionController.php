@@ -276,4 +276,76 @@ class SubscriptionController extends Controller
         return redirect()->route('admin.users.show', $user)
             ->with('success', 'Subscription granted successfully.');
     }
+
+    /**
+     * Display a listing of subscription plans.
+     */
+    public function plans()
+    {
+        $plans = SubscriptionPlan::all();
+        return view('subscriptions.plans.index', compact('plans'));
+    }
+
+    /**
+     * Show the form for creating a new subscription plan.
+     */
+    public function create()
+    {
+        return view('subscriptions.plans.create');
+    }
+
+    /**
+     * Store a newly created subscription plan in storage.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'property_limit' => 'required|integer|min:1',
+            'description' => 'required|string',
+        ]);
+
+        SubscriptionPlan::create($request->all());
+
+        return redirect()->route('admin.subscription.plans.index')
+            ->with('success', 'Subscription plan created successfully.');
+    }
+
+    /**
+     * Show the form for editing the specified subscription plan.
+     */
+    public function edit(SubscriptionPlan $plan)
+    {
+        return view('subscriptions.plans.edit', compact('plan'));
+    }
+
+    /**
+     * Update the specified subscription plan in storage.
+     */
+    public function update(Request $request, SubscriptionPlan $plan)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'property_limit' => 'required|integer|min:1',
+            'description' => 'required|string',
+        ]);
+
+        $plan->update($request->all());
+
+        return redirect()->route('admin.subscription.plans.index')
+            ->with('success', 'Subscription plan updated successfully.');
+    }
+
+    /**
+     * Remove the specified subscription plan from storage.
+     */
+    public function destroy(SubscriptionPlan $plan)
+    {
+        $plan->delete();
+
+        return redirect()->route('admin.subscription.plans.index')
+            ->with('success', 'Subscription plan deleted successfully.');
+    }
 } 
