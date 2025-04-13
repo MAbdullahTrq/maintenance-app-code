@@ -193,12 +193,11 @@ class MaintenanceRequestController extends Controller
             'assigned_to' => 'nullable|exists:users,id',
         ]);
 
-        $maintenance->update(['status' => 'accepted']);
+        $maintenance->update(['status' => 'approved']);
 
         if ($request->assigned_to) {
             $technician = User::findOrFail($request->assigned_to);
             $maintenance->assignTo($technician);
-            $maintenance->update(['status' => 'assigned']);
         }
 
         RequestComment::create([
@@ -401,7 +400,7 @@ class MaintenanceRequestController extends Controller
     {
         $this->authorize('accept', $maintenance);
         
-        $maintenance->update(['status' => 'assigned']);
+        $maintenance->update(['status' => 'in_progress']);
 
         RequestComment::create([
             'maintenance_request_id' => $maintenance->id,
@@ -424,7 +423,7 @@ class MaintenanceRequestController extends Controller
             'comment' => 'required|string',
         ]);
 
-        $maintenance->update(['status' => 'accepted']);
+        $maintenance->update(['status' => 'declined']);
 
         RequestComment::create([
             'maintenance_request_id' => $maintenance->id,
