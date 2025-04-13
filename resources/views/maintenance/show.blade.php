@@ -271,7 +271,7 @@
                 </div>
             @endif
 
-            @if($maintenance->status == 'accepted' && auth()->user()->isPropertyManager())
+            @if($maintenance->status == 'approved' && (auth()->user()->isPropertyManager() || auth()->user()->isAdmin()))
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
                     <div class="p-6 border-b">
                         <h2 class="text-xl font-bold text-gray-900">Assign Technician</h2>
