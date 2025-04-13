@@ -103,6 +103,6 @@ class TechnicianController extends Controller
         ]);
 
         return redirect()->route('technicians.index')
-            ->with('success', "Password reset successfully! New temporary password is: {$password}");
+            ->with('password_reset', "Password reset successfully! New temporary password is: {$password}");
     }
 }

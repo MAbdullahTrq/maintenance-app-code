@@ -13,6 +13,12 @@
         </a>
     </div>
 
+    @if(session('password_reset'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span class="block sm:inline">{{ session('password_reset') }}</span>
+        </div>
+    @endif
+
     <div class="bg-white shadow-md rounded-lg overflow-hidden">
         <table class="min-w-full leading-normal">
             <thead>
