@@ -335,7 +335,7 @@
                 </div>
             @endif
 
-            @if($maintenance->status == 'assigned' && auth()->user()->id == $maintenance->assigned_to)
+            @if(($maintenance->status == 'assigned' || $maintenance->status == 'acknowledged') && auth()->user()->id == $maintenance->assigned_to)
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
                     <div class="p-6 border-b">
                         <h2 class="text-xl font-bold text-gray-900">Start Work</h2>
