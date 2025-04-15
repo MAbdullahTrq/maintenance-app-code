@@ -86,7 +86,7 @@ class MaintenanceRequestController extends Controller
                 RequestImage::create([
                     'maintenance_request_id' => $maintenanceRequest->id,
                     'image_path' => $path,
-                    'type' => 'request',
+                    'type' => 'initial',
                 ]);
             }
         }
@@ -158,7 +158,7 @@ class MaintenanceRequestController extends Controller
                 RequestImage::create([
                     'maintenance_request_id' => $maintenance->id,
                     'image_path' => $path,
-                    'type' => 'request',
+                    'type' => 'initial',
                 ]);
             }
         }

@@ -58,7 +58,7 @@ class GuestRequestController extends Controller
                 RequestImage::create([
                     'maintenance_request_id' => $maintenanceRequest->id,
                     'image_path' => $path,
-                    'type' => 'request',
+                    'type' => 'initial',
                 ]);
             }
         }
