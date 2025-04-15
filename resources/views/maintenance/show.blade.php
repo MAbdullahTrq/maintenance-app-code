@@ -44,11 +44,11 @@
                         <p class="text-gray-700">{{ $maintenance->location }}</p>
                     </div>
                     
-                    @if($maintenance->images && $maintenance->images->where('type', 'initial')->count() > 0)
+                    @if($maintenance->images && $maintenance->images->where('type', 'request')->count() > 0)
                         <div class="mb-6">
                             <h2 class="text-lg font-semibold text-gray-900 mb-2">Images</h2>
                             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                @foreach($maintenance->images->where('type', 'initial') as $image)
+                                @foreach($maintenance->images->where('type', 'request') as $image)
                                     <div class="relative group">
                                         <img src="{{ asset('storage/' . $image->image_path) }}" alt="Maintenance Image" class="w-full h-40 object-cover rounded-lg">
                                         
