@@ -13,7 +13,7 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-500">Assigned Tasks</p>
-                    <p class="text-2xl font-semibold text-gray-800">{{ $totalAssignedRequests }}</p>
+                    <p class="text-2xl font-semibold text-gray-800">{{ $assignedRequests }}</p>
                 </div>
             </div>
         </div>
@@ -91,12 +91,9 @@
                                     @endif
                                     
                                     @if($request->status === 'started')
-                                    <form action="{{ route('maintenance.finish-task', $request) }}" method="POST" class="inline">
-                                        @csrf
-                                        <button type="submit" class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
-                                            Finish
-                                        </button>
-                                    </form>
+                                    <button type="button" onclick="showFinishModal({{ $request->id }})" class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                                        Finish
+                                    </button>
                                     @endif
                                 </div>
                             </div>
@@ -163,8 +160,8 @@
         
         <div class="mt-6 grid grid-cols-3 gap-4 text-center">
             <div>
-                <p class="text-sm font-medium text-gray-500">Assigned/Acknowledged</p>
-                <p class="text-xl font-semibold text-yellow-500">{{ $pendingRequests }}</p>
+                <p class="text-sm font-medium text-gray-500">Assigned</p>
+                <p class="text-xl font-semibold text-yellow-500">{{ $assignedRequests }}</p>
             </div>
             <div>
                 <p class="text-sm font-medium text-gray-500">Started</p>
@@ -208,6 +205,40 @@
     </div>
 </div>
 
+<!-- Finish Task Modal -->
+<div id="finishModal" class="fixed inset-0 z-50 overflow-auto bg-gray-800 bg-opacity-75 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg w-full max-w-md p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-semibold text-gray-900">Complete Task</h3>
+            <button type="button" onclick="hideFinishModal()" class="text-gray-400 hover:text-gray-500">
+                <span class="sr-only">Close</span>
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <form id="finishForm" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="mb-4">
+                <label for="finish_comment" class="block text-sm font-medium text-gray-700">Completion Notes</label>
+                <textarea id="finish_comment" name="comment" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required></textarea>
+            </div>
+            <div class="mb-4">
+                <label for="finish_images" class="block text-sm font-medium text-gray-700">Attach Images (Optional)</label>
+                <input type="file" id="finish_images" name="images[]" multiple class="w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+            </div>
+            <div class="mt-4 flex justify-end">
+                <button type="button" onclick="hideFinishModal()" class="mr-2 inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">
+                    Cancel
+                </button>
+                <button type="submit" class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md shadow-sm hover:bg-green-700">
+                    Complete
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     let currentRequestId = null;
     
@@ -219,6 +250,16 @@
     
     function hideDeclineModal() {
         document.getElementById('rejectModal').classList.add('hidden');
+    }
+    
+    function showFinishModal(requestId) {
+        currentRequestId = requestId;
+        document.getElementById('finishForm').action = `/maintenance/${requestId}/finish-task`;
+        document.getElementById('finishModal').classList.remove('hidden');
+    }
+    
+    function hideFinishModal() {
+        document.getElementById('finishModal').classList.add('hidden');
     }
 </script>
 @endsection 

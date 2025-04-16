@@ -132,9 +132,15 @@ class DashboardController extends Controller
         
         $totalAssignedRequests = $user->assignedRequests()->count();
         
-        $pendingRequests = $user->assignedRequests()
+        $assignedRequests = $user->assignedRequests()
             ->where('status', 'assigned')
             ->count();
+        
+        $acknowledgedRequests = $user->assignedRequests()
+            ->where('status', 'acknowledged')
+            ->count();
+        
+        $pendingRequests = $acknowledgedRequests;
         
         $inProgressRequests = $user->assignedRequests()
             ->where('status', 'started')
@@ -160,6 +166,8 @@ class DashboardController extends Controller
         
         return view('dashboards.technician', compact(
             'totalAssignedRequests',
+            'assignedRequests',
+            'acknowledgedRequests',
             'pendingRequests',
             'inProgressRequests',
             'completedRequests',

@@ -484,16 +484,37 @@ class MaintenanceRequestController extends Controller
         return redirect()->back()->with('success', 'Task has been started.');
     }
 
-    public function finishTask(MaintenanceRequest $maintenance)
+    public function finishTask(Request $request, MaintenanceRequest $maintenance)
     {
         $this->authorize('finish', $maintenance);
 
+        $request->validate([
+            'comment' => 'required|string',
+            'images.*' => 'nullable|image|max:2048',
+        ]);
+
         $maintenance->markAsCompleted();
-        RequestComment::create([
+        
+        // Add comment
+        $comment = RequestComment::create([
             'maintenance_request_id' => $maintenance->id,
             'user_id' => Auth::id(),
-            'comment' => 'Task completed by technician.',
+            'comment' => $request->comment,
         ]);
+        
+        // Handle image uploads
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('maintenance_requests', 'public');
+                
+                RequestImage::create([
+                    'maintenance_request_id' => $maintenance->id,
+                    'comment_id' => $comment->id,
+                    'image_path' => $path,
+                    'type' => 'completion',
+                ]);
+            }
+        }
 
         return redirect()->back()->with('success', 'Task has been completed.');
     }
