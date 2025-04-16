@@ -166,7 +166,7 @@
         
         <div class="mt-6 grid grid-cols-3 gap-4 text-center">
             <div>
-                <p class="text-sm font-medium text-gray-500">Assigned</p>
+                <p class="text-sm font-medium text-gray-500">Assigned/Accepted</p>
                 <p class="text-xl font-semibold text-yellow-500">{{ $pendingRequests }}</p>
             </div>
             <div>

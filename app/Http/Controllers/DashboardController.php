@@ -29,7 +29,7 @@ class DashboardController extends Controller
         $totalRequests = MaintenanceRequest::count();
         
         $pendingRequests = MaintenanceRequest::where('status', 'pending')->count();
-        $inProgressRequests = MaintenanceRequest::where('status', 'in_progress')->count();
+        $inProgressRequests = MaintenanceRequest::whereIn('status', ['assigned', 'acknowledged', 'started'])->count();
         $completedRequests = MaintenanceRequest::where('status', 'completed')->count();
         
         // Get active users
@@ -87,7 +87,7 @@ class DashboardController extends Controller
             ->count();
         
         $inProgressRequests = MaintenanceRequest::whereIn('property_id', $propertyIds)
-            ->where('status', 'in_progress')
+            ->whereIn('status', ['assigned', 'acknowledged', 'started'])
             ->count();
         
         $completedRequests = MaintenanceRequest::whereIn('property_id', $propertyIds)

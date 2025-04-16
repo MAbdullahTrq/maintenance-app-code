@@ -87,7 +87,25 @@
                                         @elseif($request->status == 'completed') bg-green-100 text-green-800
                                         @elseif($request->status == 'declined') bg-red-100 text-red-800
                                         @endif">
-                                        {{ ucfirst($request->status) }}
+                                        @if($request->status == 'pending')
+                                            Pending
+                                        @elseif($request->status == 'accepted')
+                                            Approved
+                                        @elseif($request->status == 'assigned')
+                                            Assigned
+                                        @elseif($request->status == 'acknowledged')
+                                            Accepted
+                                        @elseif($request->status == 'started')
+                                            Started
+                                        @elseif($request->status == 'completed')
+                                            Completed
+                                        @elseif($request->status == 'declined')
+                                            Declined
+                                        @elseif($request->status == 'closed')
+                                            Closed
+                                        @else
+                                            {{ ucfirst($request->status) }}
+                                        @endif
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">

@@ -28,7 +28,25 @@
                             @elseif($maintenance->status == 'completed') bg-green-100 text-green-800
                             @elseif($maintenance->status == 'declined') bg-red-100 text-red-800
                             @endif">
-                            {{ ucfirst($maintenance->status) }}
+                            @if($maintenance->status == 'pending')
+                                Pending
+                            @elseif($maintenance->status == 'accepted')
+                                Approved
+                            @elseif($maintenance->status == 'assigned')
+                                Assigned
+                            @elseif($maintenance->status == 'acknowledged')
+                                Accepted
+                            @elseif($maintenance->status == 'started')
+                                Started
+                            @elseif($maintenance->status == 'completed')
+                                Completed
+                            @elseif($maintenance->status == 'declined')
+                                Declined
+                            @elseif($maintenance->status == 'closed')
+                                Closed
+                            @else
+                                {{ ucfirst($maintenance->status) }}
+                            @endif
                         </span>
                     </div>
                 </div>
@@ -235,7 +253,25 @@
                         @elseif($maintenance->status == 'completed') bg-green-100 text-green-800
                         @elseif($maintenance->status == 'declined') bg-red-100 text-red-800
                         @endif">
-                        {{ ucfirst($maintenance->status) }}
+                        @if($maintenance->status == 'pending')
+                            Pending
+                        @elseif($maintenance->status == 'accepted')
+                            Approved
+                        @elseif($maintenance->status == 'assigned')
+                            Assigned
+                        @elseif($maintenance->status == 'acknowledged')
+                            Accepted
+                        @elseif($maintenance->status == 'started')
+                            Started
+                        @elseif($maintenance->status == 'completed')
+                            Completed
+                        @elseif($maintenance->status == 'declined')
+                            Declined
+                        @elseif($maintenance->status == 'closed')
+                            Closed
+                        @else
+                            {{ ucfirst($maintenance->status) }}
+                        @endif
                     </span>
                 </div>
             </div>
