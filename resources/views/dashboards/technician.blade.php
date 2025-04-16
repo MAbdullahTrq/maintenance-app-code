@@ -76,12 +76,9 @@
                                             Accept
                                         </button>
                                     </form>
-                                    <form action="{{ route('maintenance.reject', $request) }}" method="POST" class="inline">
-                                        @csrf
-                                        <button type="submit" class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                            Reject
-                                        </button>
-                                    </form>
+                                    <button type="button" onclick="showDeclineModal({{ $request->id }})" class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                        Decline
+                                    </button>
                                     @endif
                                     
                                     @if($request->status === 'assigned' || $request->status === 'acknowledged')
@@ -166,7 +163,7 @@
         
         <div class="mt-6 grid grid-cols-3 gap-4 text-center">
             <div>
-                <p class="text-sm font-medium text-gray-500">Assigned/Accepted</p>
+                <p class="text-sm font-medium text-gray-500">Assigned/Acknowledged</p>
                 <p class="text-xl font-semibold text-yellow-500">{{ $pendingRequests }}</p>
             </div>
             <div>
@@ -180,4 +177,48 @@
         </div>
     </div>
 </div>
+
+<!-- Decline Task Modal -->
+<div id="rejectModal" class="fixed inset-0 z-50 overflow-auto bg-gray-800 bg-opacity-75 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg w-full max-w-md p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-semibold text-gray-900">Decline Task</h3>
+            <button type="button" onclick="hideDeclineModal()" class="text-gray-400 hover:text-gray-500">
+                <span class="sr-only">Close</span>
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <form id="declineForm" method="POST">
+            @csrf
+            <div class="mb-4">
+                <label for="comment" class="block text-sm font-medium text-gray-700">Reason for declining</label>
+                <textarea id="comment" name="comment" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required></textarea>
+            </div>
+            <div class="mt-4 flex justify-end">
+                <button type="button" onclick="hideDeclineModal()" class="mr-2 inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">
+                    Cancel
+                </button>
+                <button type="submit" class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700">
+                    Decline
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    let currentRequestId = null;
+    
+    function showDeclineModal(requestId) {
+        currentRequestId = requestId;
+        document.getElementById('declineForm').action = `/maintenance/${requestId}/reject`;
+        document.getElementById('rejectModal').classList.remove('hidden');
+    }
+    
+    function hideDeclineModal() {
+        document.getElementById('rejectModal').classList.add('hidden');
+    }
+</script>
 @endsection 
