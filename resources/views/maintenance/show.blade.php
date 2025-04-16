@@ -86,6 +86,31 @@
                             </div>
                         </div>
                     @endif
+                    
+                    @if($maintenance->images && $maintenance->images->where('type', 'completion')->count() > 0)
+                        <div class="mb-6">
+                            <h2 class="text-lg font-semibold text-gray-900 mb-2">Completion Images</h2>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                @foreach($maintenance->images->where('type', 'completion') as $image)
+                                    <div class="relative group">
+                                        <img src="{{ asset('storage/' . $image->image_path) }}" alt="Completion Image" class="w-full h-40 object-cover rounded-lg">
+                                        
+                                        @if(auth()->user()->isPropertyManager() || auth()->user()->isAdmin())
+                                            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <form action="{{ route('maintenance.image.delete', $image) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg" onclick="return confirm('Are you sure you want to delete this image?')">
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
             
