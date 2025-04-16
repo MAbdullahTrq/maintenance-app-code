@@ -319,11 +319,6 @@
                                 Decline Request
                             </button>
                         </div>
-                        <div class="mt-4">
-                            <button type="button" onclick="document.getElementById('completeModal').classList.remove('hidden')" class="w-full px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
-                                Mark as Completed
-                            </button>
-                        </div>
                     </div>
                 </div>
 
@@ -373,11 +368,6 @@
                                 Assign Technician
                             </button>
                         </form>
-                        <div class="mt-4">
-                            <button type="button" onclick="document.getElementById('completeModal').classList.remove('hidden')" class="w-full px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
-                                Mark as Completed
-                            </button>
-                        </div>
                     </div>
                 </div>
             @endif
@@ -392,11 +382,11 @@
                             <form action="{{ route('maintenance.accept', $maintenance) }}" method="POST" class="flex-1">
                                 @csrf
                                 <button type="submit" class="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
-                                    Approve Task
+                                    Accept
                                 </button>
                             </form>
                             <button type="button" onclick="document.getElementById('declineTaskModal').classList.remove('hidden')" class="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
-                                Decline Task
+                                Reject
                             </button>
                         </div>
                     </div>
@@ -417,7 +407,7 @@
                                     Cancel
                                 </button>
                                 <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
-                                    Decline
+                                    Reject
                                 </button>
                             </div>
                         </form>
@@ -425,7 +415,7 @@
                 </div>
             @endif
 
-            @if(($maintenance->status == 'assigned' || $maintenance->status == 'acknowledged') && auth()->user()->id == $maintenance->assigned_to)
+            @if($maintenance->status == 'acknowledged' && auth()->user()->id == $maintenance->assigned_to)
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
                     <div class="p-6 border-b">
                         <h2 class="text-xl font-bold text-gray-900">Start Work</h2>
