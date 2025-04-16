@@ -109,6 +109,10 @@
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                                                 Declined
                                             </span>
+                                        @elseif($request->status == 'closed')
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                                Closed
+                                            </span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -161,6 +165,16 @@
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2">
                         <div class="bg-green-500 h-2 rounded-full" style="width: {{ $totalRequests > 0 ? ($completedRequests / $totalRequests * 100) : 0 }}%"></div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-sm font-medium text-gray-700">Closed</span>
+                        <span class="text-sm font-medium text-gray-700">{{ $closedRequests }}</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-gray-500 h-2 rounded-full" style="width: {{ $totalRequests > 0 ? ($closedRequests / $totalRequests * 100) : 0 }}%"></div>
                     </div>
                 </div>
             </div>

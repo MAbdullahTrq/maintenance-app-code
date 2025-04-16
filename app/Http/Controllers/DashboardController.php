@@ -94,6 +94,10 @@ class DashboardController extends Controller
             ->where('status', 'completed')
             ->count();
         
+        $closedRequests = MaintenanceRequest::whereIn('property_id', $propertyIds)
+            ->where('status', 'closed')
+            ->count();
+        
         $recentRequests = MaintenanceRequest::whereIn('property_id', $propertyIds)
             ->with(['property', 'assignedTechnician'])
             ->latest()
@@ -118,6 +122,7 @@ class DashboardController extends Controller
             'pendingRequests',
             'inProgressRequests',
             'completedRequests',
+            'closedRequests',
             'recentRequests',
             'technicians'
         ));
