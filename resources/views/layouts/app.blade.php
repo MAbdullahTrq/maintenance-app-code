@@ -24,9 +24,17 @@
             }
             
             /* Responsive logo */
+            .logo-container, .logo-container a {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            
             .logo-container img {
-                height: 2.5rem;
-                width: auto;
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                max-width: 100% !important;
+                height: auto !important;
             }
             
             /* Adjust header for very small screens */
@@ -90,7 +98,6 @@
         @media (max-width: 400px) {
             .logo-container img {
                 max-width: 120px !important;
-                height: auto !important;
             }
             .auth-buttons {
                 flex-direction: column !important;
@@ -110,13 +117,13 @@
 <body class="bg-gray-100 min-h-screen flex flex-col">
     <header class="bg-white shadow">
         <div class="container mx-auto px-4">
-            <div class="flex flex-col sm:flex-row justify-between items-center py-4 gap-2 sm:gap-0">
-                <div class="flex items-center justify-center w-full sm:w-auto logo-container">
-                    <a href="/" class="flex items-center justify-center w-full">
-                        <img src="{{ asset('images/logo.png') }}" alt="Maintenance App Logo" class="max-h-10 sm:max-h-12 w-auto mx-auto" style="max-width: 160px; height: auto;">
+            <div class="flex flex-col items-center py-4 gap-2 sm:flex-row sm:justify-between sm:items-center sm:gap-0">
+                <div class="w-full flex justify-center sm:justify-start mb-2 sm:mb-0">
+                    <a href="/" class="block w-full max-w-[160px] sm:max-w-none">
+                        <img src="{{ asset('images/logo.png') }}" alt="Maintenance App Logo" class="block mx-auto max-h-10 sm:max-h-12 w-auto" style="max-width: 100%; height: auto;">
                     </a>
                 </div>
-                <nav class="flex items-center w-full sm:w-auto justify-center sm:justify-end mt-2 sm:mt-0">
+                <nav class="w-full flex justify-center sm:justify-end">
                     @auth
                         @if(Auth::user()->isAdmin() && !Route::is('admin.dashboard'))
                             <a href="{{ route('admin.dashboard') }}" class="mr-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
@@ -169,7 +176,7 @@
                             </div>
                         </div>
                     @else
-                        <div class="auth-buttons flex flex-col sm:flex-row items-center gap-2 sm:gap-2 w-full sm:w-auto">
+                        <div class="auth-buttons flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
                             <a href="{{ route('login') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-lg hover:bg-gray-100 w-full sm:w-auto text-center">Login</a>
                             <a href="{{ route('register') }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 whitespace-nowrap w-full sm:w-auto text-center">Register</a>
                         </div>
