@@ -162,3 +162,53 @@ Route::middleware(['auth'])->group(function () {
         });
     }
 });
+
+// Mobile routes
+Route::prefix('m')->middleware(['auth'])->group(function () {
+    // Manager mobile routes
+    Route::middleware(['manager'])->group(function () {
+        // Dashboard
+        Route::get('/dash', [App\Http\Controllers\Mobile\ManagerController::class, 'dashboard'])->name('mobile.manager.dashboard');
+        
+        // Properties
+        Route::get('/ap', [App\Http\Controllers\Mobile\PropertyController::class, 'index'])->name('mobile.properties.index');
+        Route::get('/p/{property}', [App\Http\Controllers\Mobile\PropertyController::class, 'show'])->name('mobile.properties.show');
+        Route::get('/ep/{property}', [App\Http\Controllers\Mobile\PropertyController::class, 'edit'])->name('mobile.properties.edit');
+        Route::post('/ep/{property}', [App\Http\Controllers\Mobile\PropertyController::class, 'update'])->name('mobile.properties.update');
+        
+        // Technicians
+        Route::get('/at', [App\Http\Controllers\Mobile\TechnicianController::class, 'index'])->name('mobile.technicians.index');
+        Route::get('/t/{user}', [App\Http\Controllers\Mobile\TechnicianController::class, 'show'])->name('mobile.technicians.show');
+        Route::get('/et/{user}', [App\Http\Controllers\Mobile\TechnicianController::class, 'edit'])->name('mobile.technicians.edit');
+        Route::post('/et/{user}', [App\Http\Controllers\Mobile\TechnicianController::class, 'update'])->name('mobile.technicians.update');
+        
+        // Maintenance Requests
+        Route::get('/ar', [App\Http\Controllers\Mobile\MaintenanceController::class, 'index'])->name('mobile.maintenance.index');
+        Route::get('/r/pending', [App\Http\Controllers\Mobile\MaintenanceController::class, 'pending'])->name('mobile.maintenance.pending');
+        Route::get('/r/assigned', [App\Http\Controllers\Mobile\MaintenanceController::class, 'assigned'])->name('mobile.maintenance.assigned');
+        Route::get('/r/completed', [App\Http\Controllers\Mobile\MaintenanceController::class, 'completed'])->name('mobile.maintenance.completed');
+        
+        // Maintenance actions
+        Route::post('/r/{maintenance}/approve', [App\Http\Controllers\Mobile\MaintenanceController::class, 'approve'])->name('mobile.maintenance.approve');
+        Route::post('/r/{maintenance}/decline', [App\Http\Controllers\Mobile\MaintenanceController::class, 'decline'])->name('mobile.maintenance.decline');
+        Route::post('/r/{maintenance}/complete', [App\Http\Controllers\Mobile\MaintenanceController::class, 'complete'])->name('mobile.maintenance.complete');
+    });
+    
+    // Technician mobile routes
+    Route::middleware(['technician'])->group(function () {
+        // Dashboard
+        Route::get('/t/dash', [App\Http\Controllers\Mobile\TechnicianDashboardController::class, 'dashboard'])->name('mobile.technician.dashboard');
+        
+        // Requests
+        Route::get('/t/r/assigned', [App\Http\Controllers\Mobile\TechnicianRequestController::class, 'assigned'])->name('mobile.technician.assigned');
+        Route::get('/t/r/accepted', [App\Http\Controllers\Mobile\TechnicianRequestController::class, 'accepted'])->name('mobile.technician.accepted');
+        Route::get('/t/r/started', [App\Http\Controllers\Mobile\TechnicianRequestController::class, 'started'])->name('mobile.technician.started');
+        Route::get('/t/r/completed', [App\Http\Controllers\Mobile\TechnicianRequestController::class, 'completed'])->name('mobile.technician.completed');
+        
+        // Actions
+        Route::post('/t/r/{maintenance}/accept', [App\Http\Controllers\Mobile\TechnicianRequestController::class, 'accept'])->name('mobile.technician.accept');
+        Route::post('/t/r/{maintenance}/decline', [App\Http\Controllers\Mobile\TechnicianRequestController::class, 'decline'])->name('mobile.technician.decline');
+        Route::post('/t/r/{maintenance}/start', [App\Http\Controllers\Mobile\TechnicianRequestController::class, 'start'])->name('mobile.technician.start');
+        Route::post('/t/r/{maintenance}/finish', [App\Http\Controllers\Mobile\TechnicianRequestController::class, 'finish'])->name('mobile.technician.finish');
+    });
+});
