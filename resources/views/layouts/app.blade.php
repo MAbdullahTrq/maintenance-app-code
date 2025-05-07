@@ -23,35 +23,56 @@
                 padding-right: 1rem;
             }
             
-            /* Adjust table display for mobile */
+            /* Responsive logo */
+            .logo-container img {
+                height: 2.5rem;
+                width: auto;
+            }
+            
+            /* Adjust header for very small screens */
+            @media (max-width: 360px) {
+                .logo-container img {
+                    height: 2rem;
+                }
+                
+                .auth-buttons {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                }
+                
+                .auth-buttons a {
+                    font-size: 0.875rem;
+                    padding: 0.5rem 1rem;
+                    width: 100%;
+                    text-align: center;
+                }
+            }
+            
+            /* Existing mobile styles */
             .table-responsive {
                 display: block;
                 width: 100%;
                 overflow-x: auto;
             }
             
-            /* Stack form elements vertically */
             .form-group {
                 margin-bottom: 1rem;
             }
             
-            /* Make buttons full width on mobile */
             .btn-mobile-full {
                 width: 100%;
                 margin-bottom: 0.5rem;
             }
             
-            /* Adjust card padding */
             .card {
                 padding: 1rem;
             }
             
-            /* Hide less important columns in tables */
             .mobile-hide {
                 display: none;
             }
             
-            /* Adjust navigation for mobile */
             .mobile-nav {
                 position: fixed;
                 bottom: 0;
@@ -65,6 +86,22 @@
                 z-index: 50;
             }
         }
+
+        @media (max-width: 400px) {
+            .logo-container img {
+                max-width: 120px !important;
+                height: auto !important;
+            }
+            .auth-buttons {
+                flex-direction: column !important;
+                gap: 0.5rem !important;
+                width: 100% !important;
+            }
+            .auth-buttons a {
+                width: 100% !important;
+                text-align: center !important;
+            }
+        }
     </style>
 
     <!-- Scripts -->
@@ -73,33 +110,33 @@
 <body class="bg-gray-100 min-h-screen flex flex-col">
     <header class="bg-white shadow">
         <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center py-4">
-                <div class="flex items-center">
-                    <a href="/" class="flex items-center">
-                        <img src="{{ asset('images/logo.png') }}" alt="Maintenance App Logo" class="h-12 w-auto">
+            <div class="flex flex-col sm:flex-row justify-between items-center py-4 gap-2 sm:gap-0">
+                <div class="flex items-center justify-center w-full sm:w-auto logo-container">
+                    <a href="/" class="flex items-center justify-center w-full">
+                        <img src="{{ asset('images/logo.png') }}" alt="Maintenance App Logo" class="max-h-10 sm:max-h-12 w-auto mx-auto" style="max-width: 160px; height: auto;">
                     </a>
                 </div>
-                
-                <nav class="flex items-center">
+                <nav class="flex items-center w-full sm:w-auto justify-center sm:justify-end mt-2 sm:mt-0">
                     @auth
                         @if(Auth::user()->isAdmin() && !Route::is('admin.dashboard'))
                             <a href="{{ route('admin.dashboard') }}" class="mr-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
-                                <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                                <i class="fas fa-tachometer-alt mr-2"></i><span class="hidden sm:inline">Dashboard</span>
                             </a>
                         @elseif(Auth::user()->isPropertyManager() && !Route::is('manager.dashboard'))
                             <a href="{{ route('manager.dashboard') }}" class="mr-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
-                                <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                                <i class="fas fa-tachometer-alt mr-2"></i><span class="hidden sm:inline">Dashboard</span>
                             </a>
                         @elseif(Auth::user()->isTechnician() && !Route::is('technician.dashboard'))
                             <a href="{{ route('technician.dashboard') }}" class="mr-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
-                                <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                                <i class="fas fa-tachometer-alt mr-2"></i><span class="hidden sm:inline">Dashboard</span>
                             </a>
                         @endif
                         
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" class="flex items-center text-gray-700 hover:text-blue-600 focus:outline-none">
-                                <span class="mr-2">{{ Auth::user()->name }}</span>
-                                <i class="fas fa-chevron-down text-xs"></i>
+                                <span class="mr-2 hidden sm:inline">{{ Auth::user()->name }}</span>
+                                <i class="fas fa-user-circle sm:hidden text-xl"></i>
+                                <i class="fas fa-chevron-down text-xs hidden sm:inline"></i>
                             </button>
                             
                             <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
@@ -132,8 +169,10 @@
                             </div>
                         </div>
                     @else
-                        <a href="{{ route('login') }}" class="text-gray-700 hover:text-blue-600 mr-4">Login</a>
-                        <a href="{{ route('register') }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Register</a>
+                        <div class="auth-buttons flex flex-col sm:flex-row items-center gap-2 sm:gap-2 w-full sm:w-auto">
+                            <a href="{{ route('login') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-lg hover:bg-gray-100 w-full sm:w-auto text-center">Login</a>
+                            <a href="{{ route('register') }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 whitespace-nowrap w-full sm:w-auto text-center">Register</a>
+                        </div>
                     @endauth
                 </nav>
             </div>
