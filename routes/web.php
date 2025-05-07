@@ -9,8 +9,6 @@ use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TechnicianController;
-use App\Http\Controllers\MobileManagerController;
-use App\Http\Controllers\MobileTechnicianController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -164,29 +162,3 @@ Route::middleware(['auth'])->group(function () {
         });
     }
 });
-
-// Mobile homepage
-Route::get('/mobile', function () {
-    return view('mobile.home');
-})->name('mobile.home');
-
-// Redirect /m and /t to mobile homepage
-Route::redirect('/m', '/mobile');
-Route::redirect('/t', '/mobile');
-
-// Manager mobile dashboard
-Route::get('/m/dash', [MobileManagerController::class, 'dashboard'])->name('mobile.manager.dash');
-// Technician mobile dashboard
-Route::get('/t/dash', [MobileTechnicianController::class, 'dashboard'])->name('mobile.technician.dash');
-// ... other mobile routes ...
-
-// Force desktop/mobile mode
-Route::post('/force-desktop', function () {
-    session(['force_desktop' => true]);
-    return redirect('/');
-})->name('force.desktop');
-
-Route::post('/force-mobile', function () {
-    session()->forget('force_desktop');
-    return redirect('/mobile');
-})->name('force.mobile');

@@ -1,14 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="robots" content="noindex, nofollow">
     <title>@yield('title') - Maintenance App</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.3/dist/cdn.min.js" defer></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+    <!-- Mobile-specific styles -->
+    <style>
+        /* Mobile-first breakpoints */
+        @media (max-width: 640px) {
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            /* Adjust table display for mobile */
+            .table-responsive {
+                display: block;
+                width: 100%;
+                overflow-x: auto;
+            }
+            
+            /* Stack form elements vertically */
+            .form-group {
+                margin-bottom: 1rem;
+            }
+            
+            /* Make buttons full width on mobile */
+            .btn-mobile-full {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            
+            /* Adjust card padding */
+            .card {
+                padding: 1rem;
+            }
+            
+            /* Hide less important columns in tables */
+            .mobile-hide {
+                display: none;
+            }
+            
+            /* Adjust navigation for mobile */
+            .mobile-nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+                padding: 0.5rem;
+                display: flex;
+                justify-content: space-around;
+                z-index: 50;
+            }
+        }
+    </style>
+
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
     <header class="bg-white shadow">
