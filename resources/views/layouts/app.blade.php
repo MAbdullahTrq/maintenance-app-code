@@ -116,73 +116,69 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
     <header class="bg-white shadow">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col items-center py-4 gap-2 sm:flex-row sm:justify-between sm:items-center sm:gap-0">
-                <div class="w-full flex justify-center sm:justify-start mb-2 sm:mb-0">
-                    <a href="/" class="block w-full max-w-[160px] sm:max-w-none">
-                        <img src="{{ asset('images/logo.png') }}" alt="Maintenance App Logo" class="block mx-auto max-h-10 sm:max-h-12 w-auto" style="max-width: 100%; height: auto;">
-                    </a>
-                </div>
-                <nav class="w-full flex justify-center sm:justify-end">
-                    @auth
-                        @if(Auth::user()->isAdmin() && !Route::is('admin.dashboard'))
-                            <a href="{{ route('admin.dashboard') }}" class="mr-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
-                                <i class="fas fa-tachometer-alt mr-2"></i><span class="hidden sm:inline">Dashboard</span>
-                            </a>
-                        @elseif(Auth::user()->isPropertyManager() && !Route::is('manager.dashboard'))
-                            <a href="{{ route('manager.dashboard') }}" class="mr-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
-                                <i class="fas fa-tachometer-alt mr-2"></i><span class="hidden sm:inline">Dashboard</span>
-                            </a>
-                        @elseif(Auth::user()->isTechnician() && !Route::is('technician.dashboard'))
-                            <a href="{{ route('technician.dashboard') }}" class="mr-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
-                                <i class="fas fa-tachometer-alt mr-2"></i><span class="hidden sm:inline">Dashboard</span>
-                            </a>
-                        @endif
+        <div class="w-full flex flex-col items-center justify-center py-4 space-y-2 sm:flex-row sm:justify-between sm:items-center sm:space-y-0 sm:space-x-4">
+            <a href="/" class="block w-full flex justify-center sm:w-auto">
+                <img src="{{ asset('images/logo.png') }}"
+                     alt="Maintenance App Logo"
+                     class="h-10 sm:h-12 w-auto max-w-[140px] sm:max-w-none object-contain mx-auto" />
+            </a>
+            <nav class="w-full flex flex-col items-center gap-2 sm:flex-row sm:w-auto sm:gap-2">
+                @auth
+                    @if(Auth::user()->isAdmin() && !Route::is('admin.dashboard'))
+                        <a href="{{ route('admin.dashboard') }}" class="mr-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
+                            <i class="fas fa-tachometer-alt mr-2"></i><span class="hidden sm:inline">Dashboard</span>
+                        </a>
+                    @elseif(Auth::user()->isPropertyManager() && !Route::is('manager.dashboard'))
+                        <a href="{{ route('manager.dashboard') }}" class="mr-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
+                            <i class="fas fa-tachometer-alt mr-2"></i><span class="hidden sm:inline">Dashboard</span>
+                        </a>
+                    @elseif(Auth::user()->isTechnician() && !Route::is('technician.dashboard'))
+                        <a href="{{ route('technician.dashboard') }}" class="mr-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
+                            <i class="fas fa-tachometer-alt mr-2"></i><span class="hidden sm:inline">Dashboard</span>
+                        </a>
+                    @endif
+                    
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="flex items-center text-gray-700 hover:text-blue-600 focus:outline-none">
+                            <span class="mr-2 hidden sm:inline">{{ Auth::user()->name }}</span>
+                            <i class="fas fa-user-circle sm:hidden text-xl"></i>
+                            <i class="fas fa-chevron-down text-xs hidden sm:inline"></i>
+                        </button>
                         
-                        <div class="relative" x-data="{ open: false }">
-                            <button @click="open = !open" class="flex items-center text-gray-700 hover:text-blue-600 focus:outline-none">
-                                <span class="mr-2 hidden sm:inline">{{ Auth::user()->name }}</span>
-                                <i class="fas fa-user-circle sm:hidden text-xl"></i>
-                                <i class="fas fa-chevron-down text-xs hidden sm:inline"></i>
-                            </button>
+                        <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                            @if(Auth::user()->isAdmin())
+                                <a href="{{ route('admin.users.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-users text-green-500 w-5 text-center"></i>
+                                    <span class="ml-2">Users</span>
+                                </a>
+                            @endif
                             
-                            <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                                @if(Auth::user()->isAdmin())
-                                    <a href="{{ route('admin.users.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-users text-green-500 w-5 text-center"></i>
-                                        <span class="ml-2">Users</span>
-                                    </a>
-                                @endif
-                                
-                                @if(Auth::user()->isPropertyManager() && Auth::user()->hasActiveSubscription())
-                                    <a href="{{ route('technicians.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-users-cog text-blue-500 w-5 text-center"></i>
-                                        <span class="ml-2">Technicians</span>
-                                    </a>
-                                    <a href="{{ route('properties.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-building text-purple-500 w-5 text-center"></i>
-                                        <span class="ml-2">Properties</span>
-                                    </a>
-                                @endif
-                                
-                                <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
-                                
-                                <form action="{{ route('logout') }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        Logout
-                                    </button>
-                                </form>
-                            </div>
+                            @if(Auth::user()->isPropertyManager() && Auth::user()->hasActiveSubscription())
+                                <a href="{{ route('technicians.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-users-cog text-blue-500 w-5 text-center"></i>
+                                    <span class="ml-2">Technicians</span>
+                                </a>
+                                <a href="{{ route('properties.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-building text-purple-500 w-5 text-center"></i>
+                                    <span class="ml-2">Properties</span>
+                                </a>
+                            @endif
+                            
+                            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                            
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Logout
+                                </button>
+                            </form>
                         </div>
-                    @else
-                        <div class="auth-buttons flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
-                            <a href="{{ route('login') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-lg hover:bg-gray-100 w-full sm:w-auto text-center">Login</a>
-                            <a href="{{ route('register') }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 whitespace-nowrap w-full sm:w-auto text-center">Register</a>
-                        </div>
-                    @endauth
-                </nav>
-            </div>
+                    </div>
+                @else
+                    <a href="{{ route('login') }}" class="w-full sm:w-auto text-gray-700 hover:text-blue-600 px-3 py-2 rounded-lg hover:bg-gray-100 text-center">Login</a>
+                    <a href="{{ route('register') }}" class="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 whitespace-nowrap text-center">Register</a>
+                @endauth
+            </nav>
         </div>
     </header>
     
