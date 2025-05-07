@@ -86,9 +86,16 @@ class DashboardController extends Controller
             ->where('status', 'pending')
             ->count();
         
-        $inProgressRequests = MaintenanceRequest::whereIn('property_id', $propertyIds)
-            ->whereIn('status', ['assigned', 'acknowledged', 'started'])
+        // Split the in-progress into assigned and started
+        $assignedRequests = MaintenanceRequest::whereIn('property_id', $propertyIds)
+            ->whereIn('status', ['assigned', 'acknowledged'])
             ->count();
+            
+        $startedRequests = MaintenanceRequest::whereIn('property_id', $propertyIds)
+            ->where('status', 'started')
+            ->count();
+            
+        $inProgressRequests = $assignedRequests + $startedRequests;
         
         $completedRequests = MaintenanceRequest::whereIn('property_id', $propertyIds)
             ->where('status', 'completed')
@@ -120,6 +127,8 @@ class DashboardController extends Controller
             'totalTechnicians',
             'totalRequests',
             'pendingRequests',
+            'assignedRequests',
+            'startedRequests',
             'inProgressRequests',
             'completedRequests',
             'closedRequests',

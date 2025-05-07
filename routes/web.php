@@ -166,7 +166,7 @@ Route::middleware(['auth'])->group(function () {
 // Mobile routes
 Route::prefix('m')->middleware(['auth'])->group(function () {
     // Manager mobile routes
-    Route::middleware(['manager'])->group(function () {
+    Route::middleware(['property_manager'])->group(function () {
         // Dashboard
         Route::get('/dash', [App\Http\Controllers\Mobile\ManagerController::class, 'dashboard'])->name('mobile.manager.dashboard');
         

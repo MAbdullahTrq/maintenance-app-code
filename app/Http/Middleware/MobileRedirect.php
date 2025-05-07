@@ -36,8 +36,29 @@ class MobileRedirect
             }
         }
         
+        // Enhanced mobile detection to work with Chrome's device emulation
+        $isMobile = $agent->isMobile() || $agent->isTablet();
+        
+        // Check for common mobile user agent strings
+        $userAgent = strtolower($request->header('User-Agent'));
+        if (!$isMobile && (
+            strpos($userAgent, 'mobile') !== false ||
+            strpos($userAgent, 'android') !== false ||
+            strpos($userAgent, 'iphone') !== false ||
+            strpos($userAgent, 'ipad') !== false ||
+            // Chrome emulation often includes these
+            strpos($userAgent, 'chrome mobile') !== false
+        )) {
+            $isMobile = true;
+        }
+        
+        // Add a debug query parameter to force mobile view for testing
+        if ($request->query('view') === 'mobile') {
+            $isMobile = true;
+        }
+        
         // Redirect mobile devices to mobile version
-        if ($agent->isMobile() || $agent->isTablet()) {
+        if ($isMobile) {
             $path = $request->path();
             
             // Map certain paths to their mobile equivalents
