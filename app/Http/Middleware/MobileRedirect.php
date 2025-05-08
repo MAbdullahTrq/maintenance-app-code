@@ -38,7 +38,7 @@ class MobileRedirect
         
         // Skip redirect for certain paths
         $excludedPaths = [
-            'api/', 'login', 'register', 'password', 'logout', 
+            'api/', 'password', 'logout', 
             'email', 'csrf-cookie', 'sanctum', 'livewire'
         ];
         
@@ -97,6 +97,17 @@ class MobileRedirect
                 file_put_contents($debugLog, "Redirecting to /m\n\n", FILE_APPEND);
                 // Redirect to mobile welcome page
                 return redirect('m');
+            }
+            
+            // Special handling for auth pages
+            if ($path === 'login') {
+                file_put_contents($debugLog, "Redirecting to /m/login\n\n", FILE_APPEND);
+                return redirect('m/login');
+            }
+            
+            if ($path === 'register') {
+                file_put_contents($debugLog, "Redirecting to /m/register\n\n", FILE_APPEND);
+                return redirect('m/register');
             }
             
             // Map certain paths to their mobile equivalents

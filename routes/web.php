@@ -33,6 +33,15 @@ Route::get('/m', function () {
     return view('mobile.welcome');
 })->name('mobile.welcome');
 
+// Mobile auth routes
+Route::get('/m/login', function () {
+    return view('mobile.auth.login');
+})->name('mobile.login');
+
+Route::get('/m/register', function () {
+    return view('mobile.auth.register');
+})->name('mobile.register');
+
 // Device debug route
 Route::get('/device-debug', function (Request $request) {
     $agent = new \Jenssegers\Agent\Agent();

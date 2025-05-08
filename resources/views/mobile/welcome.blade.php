@@ -55,10 +55,10 @@
                 @endif
             @else
                 <div>
-                    <a href="{{ route('login') }}" style="display: block; background-color: white; color: #2563eb; padding: 12px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-bottom: 10px;">
+                    <a href="{{ route('mobile.login') }}" style="display: block; background-color: white; color: #2563eb; padding: 12px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-bottom: 10px;">
                         🔐 Login
                     </a>
-                    <a href="{{ route('register') }}" style="display: block; background-color: #22c55e; color: white; padding: 12px; border-radius: 6px; text-decoration: none; font-weight: bold;">
+                    <a href="{{ route('mobile.register') }}" style="display: block; background-color: #22c55e; color: white; padding: 12px; border-radius: 6px; text-decoration: none; font-weight: bold;">
                         ✨ Register
                     </a>
                 </div>
