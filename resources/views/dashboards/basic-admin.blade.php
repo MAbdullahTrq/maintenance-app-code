@@ -8,8 +8,42 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .logo-text span:first-child {
+            color: #0000ff;
+        }
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-link {
+            color: #374151;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .nav-link:hover {
+            color: #2563eb;
+        }
+        .content {
+            padding: 20px;
         }
         .container {
             max-width: 1200px;
@@ -131,198 +165,218 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Admin Dashboard</h1>
-        
-        <!-- Stats Cards -->
-        <div class="grid">
-            <div class="card stats-card">
-                <div class="stats-icon" style="background-color: rgba(59, 130, 246, 0.1);">
-                    PM
-                </div>
-                <div>
-                    <div class="stats-label">Property Managers</div>
-                    <div class="stats-value">{{ $totalPropertyManagers }}</div>
-                </div>
-            </div>
-            
-            <div class="card stats-card">
-                <div class="stats-icon" style="background-color: rgba(16, 185, 129, 0.1);">
-                    T
-                </div>
-                <div>
-                    <div class="stats-label">Technicians</div>
-                    <div class="stats-value">{{ $totalTechnicians }}</div>
-                </div>
-            </div>
-            
-            <div class="card stats-card">
-                <div class="stats-icon" style="background-color: rgba(139, 92, 246, 0.1);">
-                    P
-                </div>
-                <div>
-                    <div class="stats-label">Properties</div>
-                    <div class="stats-value">{{ $totalProperties }}</div>
-                </div>
-            </div>
-            
-            <div class="card stats-card">
-                <div class="stats-icon" style="background-color: rgba(245, 158, 11, 0.1);">
-                    R
-                </div>
-                <div>
-                    <div class="stats-label">Total Requests</div>
-                    <div class="stats-value">{{ $totalRequests }}</div>
-                </div>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <div class="logo-text">
+                <span>M</span><span>aintain</span>
             </div>
         </div>
+        <div class="nav-menu">
+            <a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a>
+            <a href="{{ route('admin.users.index') }}" class="nav-link">Users</a>
+            <a href="{{ route('admin.subscription.index') }}" class="nav-link">Subscriptions</a>
+            <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
+        </div>
+    </div>
 
-        <div class="grid" style="grid-template-columns: 2fr 1fr;">
-            <!-- Active Users Table -->
-            <div class="card">
-                <h2>Active Users</h2>
-                
-                @if($activeUsers->count() > 0)
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($activeUsers as $user)
-                                <tr>
-                                    <td>
-                                        {{ $user->name }}
-                                    </td>
-                                    <td>
-                                        {{ $user->email }}
-                                    </td>
-                                    <td>
-                                        @if($user->role->slug == 'admin')
-                                            <span class="badge badge-purple">
-                                                Admin
-                                            </span>
-                                        @elseif($user->role->slug == 'property_manager')
-                                            <span class="badge badge-blue">
-                                                Property Manager
-                                            </span>
-                                        @else
-                                            <span class="badge badge-green">
-                                                Technician
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('admin.users.show', $user) }}" class="btn-link">View</a>
-                                        
-                                        @if($user->role->slug === 'property_manager')
-                                            <a href="{{ route('admin.users.grant-subscription.create', $user) }}" class="btn-link" style="margin-left: 8px;">Grant Subscription</a>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <div class="mt-4" style="text-align: right;">
-                        <a href="{{ route('admin.users.index') }}" class="btn-link">
-                            View All Users →
-                        </a>
-                    </div>
-                @else
-                    <p>No active users found.</p>
-                @endif
-            </div>
+    <div class="content">
+        <div class="container">
+            <h1>Admin Dashboard</h1>
             
-            <!-- Sidebar Sections -->
-            <div class="space-y-4">
-                <!-- Request Status -->
-                <div class="card">
-                    <h2>Request Status</h2>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <div class="flex justify-between">
-                                <span style="font-size: 14px; font-weight: 500;">Pending</span>
-                                <span style="font-size: 14px; font-weight: 500;">{{ $pendingRequests }}</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-value" style="width: {{ $totalRequests > 0 ? ($pendingRequests / $totalRequests * 100) : 0 }}%; background-color: #f59e0b;"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between">
-                                <span style="font-size: 14px; font-weight: 500;">In Progress</span>
-                                <span style="font-size: 14px; font-weight: 500;">{{ $inProgressRequests }}</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-value" style="width: {{ $totalRequests > 0 ? ($inProgressRequests / $totalRequests * 100) : 0 }}%; background-color: #3b82f6;"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between">
-                                <span style="font-size: 14px; font-weight: 500;">Completed</span>
-                                <span style="font-size: 14px; font-weight: 500;">{{ $completedRequests }}</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-value" style="width: {{ $totalRequests > 0 ? ($completedRequests / $totalRequests * 100) : 0 }}%; background-color: #10b981;"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between">
-                                <span style="font-size: 14px; font-weight: 500;">Closed</span>
-                                <span style="font-size: 14px; font-weight: 500;">{{ $closedRequests }}</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-value" style="width: {{ $totalRequests > 0 ? ($closedRequests / $totalRequests * 100) : 0 }}%; background-color: #6b7280;"></div>
-                            </div>
-                        </div>
+            <!-- Stats Cards -->
+            <div class="grid">
+                <div class="card stats-card">
+                    <div class="stats-icon" style="background-color: rgba(59, 130, 246, 0.1);">
+                        PM
+                    </div>
+                    <div>
+                        <div class="stats-label">Property Managers</div>
+                        <div class="stats-value">{{ $totalPropertyManagers }}</div>
                     </div>
                 </div>
+                
+                <div class="card stats-card">
+                    <div class="stats-icon" style="background-color: rgba(16, 185, 129, 0.1);">
+                        T
+                    </div>
+                    <div>
+                        <div class="stats-label">Technicians</div>
+                        <div class="stats-value">{{ $totalTechnicians }}</div>
+                    </div>
+                </div>
+                
+                <div class="card stats-card">
+                    <div class="stats-icon" style="background-color: rgba(139, 92, 246, 0.1);">
+                        P
+                    </div>
+                    <div>
+                        <div class="stats-label">Properties</div>
+                        <div class="stats-value">{{ $totalProperties }}</div>
+                    </div>
+                </div>
+                
+                <div class="card stats-card">
+                    <div class="stats-icon" style="background-color: rgba(245, 158, 11, 0.1);">
+                        R
+                    </div>
+                    <div>
+                        <div class="stats-label">Total Requests</div>
+                        <div class="stats-value">{{ $totalRequests }}</div>
+                    </div>
+                </div>
+            </div>
 
-                <!-- Subscription Management -->
+            <div class="grid" style="grid-template-columns: 2fr 1fr;">
+                <!-- Active Users Table -->
                 <div class="card">
-                    <h2>Subscription Management</h2>
+                    <h2>Active Users</h2>
                     
-                    <div class="space-y-4">
-                        <div>
-                            <div class="flex justify-between">
-                                <span style="font-size: 14px; font-weight: 500;">Active Subscriptions</span>
-                                <span style="font-size: 14px; font-weight: 500;">{{ $activeSubscriptions ?? 0 }}</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-value" style="width: {{ isset($totalPropertyManagers) && $totalPropertyManagers > 0 ? (($activeSubscriptions ?? 0) / $totalPropertyManagers * 100) : 0 }}%; background-color: #10b981;"></div>
-                            </div>
+                    @if($activeUsers->count() > 0)
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($activeUsers as $user)
+                                    <tr>
+                                        <td>
+                                            {{ $user->name }}
+                                        </td>
+                                        <td>
+                                            {{ $user->email }}
+                                        </td>
+                                        <td>
+                                            @if($user->role->slug == 'admin')
+                                                <span class="badge badge-purple">
+                                                    Admin
+                                                </span>
+                                            @elseif($user->role->slug == 'property_manager')
+                                                <span class="badge badge-blue">
+                                                    Property Manager
+                                                </span>
+                                            @else
+                                                <span class="badge badge-green">
+                                                    Technician
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('admin.users.show', $user) }}" class="btn-link">View</a>
+                                            
+                                            @if($user->role->slug === 'property_manager')
+                                                <a href="{{ route('admin.users.grant-subscription.create', $user) }}" class="btn-link" style="margin-left: 8px;">Grant Subscription</a>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <div class="mt-4" style="text-align: right;">
+                            <a href="{{ route('admin.users.index') }}" class="btn-link">
+                                View All Users →
+                            </a>
                         </div>
+                    @else
+                        <p>No active users found.</p>
+                    @endif
+                </div>
+                
+                <!-- Sidebar Sections -->
+                <div class="space-y-4">
+                    <!-- Request Status -->
+                    <div class="card">
+                        <h2>Request Status</h2>
                         
-                        <div>
-                            <div class="flex justify-between">
-                                <span style="font-size: 14px; font-weight: 500;">Expired Subscriptions</span>
-                                <span style="font-size: 14px; font-weight: 500;">{{ $expiredSubscriptions ?? 0 }}</span>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between">
+                                    <span style="font-size: 14px; font-weight: 500;">Pending</span>
+                                    <span style="font-size: 14px; font-weight: 500;">{{ $pendingRequests }}</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-value" style="width: {{ $totalRequests > 0 ? ($pendingRequests / $totalRequests * 100) : 0 }}%; background-color: #f59e0b;"></div>
+                                </div>
                             </div>
-                            <div class="progress-bar">
-                                <div class="progress-value" style="width: {{ isset($totalPropertyManagers) && $totalPropertyManagers > 0 ? (($expiredSubscriptions ?? 0) / $totalPropertyManagers * 100) : 0 }}%; background-color: #ef4444;"></div>
+                            
+                            <div>
+                                <div class="flex justify-between">
+                                    <span style="font-size: 14px; font-weight: 500;">In Progress</span>
+                                    <span style="font-size: 14px; font-weight: 500;">{{ $inProgressRequests }}</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-value" style="width: {{ $totalRequests > 0 ? ($inProgressRequests / $totalRequests * 100) : 0 }}%; background-color: #3b82f6;"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between">
+                                    <span style="font-size: 14px; font-weight: 500;">Completed</span>
+                                    <span style="font-size: 14px; font-weight: 500;">{{ $completedRequests }}</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-value" style="width: {{ $totalRequests > 0 ? ($completedRequests / $totalRequests * 100) : 0 }}%; background-color: #10b981;"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between">
+                                    <span style="font-size: 14px; font-weight: 500;">Closed</span>
+                                    <span style="font-size: 14px; font-weight: 500;">{{ $closedRequests }}</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-value" style="width: {{ $totalRequests > 0 ? ($closedRequests / $totalRequests * 100) : 0 }}%; background-color: #6b7280;"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mt-4">
-                        <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 8px;">Quick Actions</h3>
-                        <div class="space-y-2">
+                    <!-- Subscription Management -->
+                    <div class="card">
+                        <h2>Subscription Management</h2>
+                        
+                        <div class="space-y-4">
                             <div>
-                                <a href="{{ route('admin.users.index') }}" class="btn-link">Manage Users</a>
+                                <div class="flex justify-between">
+                                    <span style="font-size: 14px; font-weight: 500;">Active Subscriptions</span>
+                                    <span style="font-size: 14px; font-weight: 500;">{{ $activeSubscriptions ?? 0 }}</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-value" style="width: {{ isset($totalPropertyManagers) && $totalPropertyManagers > 0 ? (($activeSubscriptions ?? 0) / $totalPropertyManagers * 100) : 0 }}%; background-color: #10b981;"></div>
+                                </div>
                             </div>
+                            
                             <div>
-                                <a href="{{ route('admin.subscription.plans.index') }}" class="btn-link">Manage Plans</a>
+                                <div class="flex justify-between">
+                                    <span style="font-size: 14px; font-weight: 500;">Expired Subscriptions</span>
+                                    <span style="font-size: 14px; font-weight: 500;">{{ $expiredSubscriptions ?? 0 }}</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-value" style="width: {{ isset($totalPropertyManagers) && $totalPropertyManagers > 0 ? (($expiredSubscriptions ?? 0) / $totalPropertyManagers * 100) : 0 }}%; background-color: #ef4444;"></div>
+                                </div>
                             </div>
-                            <div>
-                                <a href="{{ route('admin.subscription.index') }}" class="btn-link">View All Subscriptions</a>
+                        </div>
+
+                        <div class="mt-4">
+                            <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 8px;">Quick Actions</h3>
+                            <div class="space-y-2">
+                                <div>
+                                    <a href="{{ route('admin.users.index') }}" class="btn-link">Manage Users</a>
+                                </div>
+                                <div>
+                                    <a href="{{ route('admin.subscription.plans.index') }}" class="btn-link">Manage Plans</a>
+                                </div>
+                                <div>
+                                    <a href="{{ route('admin.subscription.index') }}" class="btn-link">View All Subscriptions</a>
+                                </div>
                             </div>
                         </div>
                     </div>
