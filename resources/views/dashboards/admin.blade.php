@@ -70,10 +70,10 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -226,4 +226,58 @@
         </div>
     </div>
 </div>
+
+<style>
+/* Add !important to critical CSS classes to prevent overrides */
+.admin-dashboard-container h1,
+.admin-dashboard-container h2,
+.admin-dashboard-container h3 {
+  font-family: sans-serif !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.admin-dashboard-container table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+}
+
+.admin-dashboard-container th,
+.admin-dashboard-container td {
+  padding: 0.5rem !important;
+  text-align: left !important;
+}
+
+.admin-dashboard-container .bg-white {
+  background-color: white !important;
+}
+
+.admin-dashboard-container .rounded-lg {
+  border-radius: 0.5rem !important;
+}
+
+.admin-dashboard-container .shadow {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Add admin-dashboard-container class to the main container for scoped styling
+  document.querySelector('.container').classList.add('admin-dashboard-container');
+  
+  // Force re-render of critical elements
+  const tables = document.querySelectorAll('table');
+  tables.forEach(function(table) {
+    table.style.display = 'table';
+    table.style.width = '100%';
+  });
+  
+  // Force FontAwesome icons to display correctly
+  const icons = document.querySelectorAll('.fas');
+  icons.forEach(function(icon) {
+    icon.style.display = 'inline-block';
+    icon.style.verticalAlign = 'middle';
+  });
+});
+</script>
 @endsection 
