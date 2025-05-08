@@ -10,6 +10,7 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TechnicianController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,24 @@ Route::get('/', function () {
 Route::get('/m', function () {
     return view('mobile.welcome');
 })->name('mobile.welcome');
+
+// Device debug route
+Route::get('/device-debug', function (Request $request) {
+    $agent = new \Jenssegers\Agent\Agent();
+    
+    $data = [
+        'user_agent' => $request->header('User-Agent'),
+        'is_mobile' => $agent->isMobile(),
+        'is_tablet' => $agent->isTablet(),
+        'is_desktop' => $agent->isDesktop(),
+        'device' => $agent->device(),
+        'platform' => $agent->platform(),
+        'browser' => $agent->browser(),
+        'screen_width' => isset($_COOKIE['screen_width']) ? $_COOKIE['screen_width'] : 'unknown',
+    ];
+    
+    return response()->json($data);
+});
 
 // Guest maintenance request routes
 Route::get('/request/{accessLink}', [GuestRequestController::class, 'showRequestForm'])->name('guest.request.form');

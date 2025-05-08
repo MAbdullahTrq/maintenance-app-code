@@ -9,6 +9,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.3/dist/cdn.min.js" defer></script>
+    <script>
+        // Store screen width in a cookie for mobile detection
+        document.cookie = 'screen_width=' + window.innerWidth + '; path=/';
+        window.addEventListener('resize', function() {
+            document.cookie = 'screen_width=' + window.innerWidth + '; path=/';
+        });
+    </script>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
     <header class="bg-white shadow">
