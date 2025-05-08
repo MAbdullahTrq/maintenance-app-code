@@ -31,6 +31,7 @@ class DashboardController extends Controller
         $pendingRequests = MaintenanceRequest::where('status', 'pending')->count();
         $inProgressRequests = MaintenanceRequest::whereIn('status', ['assigned', 'acknowledged', 'started'])->count();
         $completedRequests = MaintenanceRequest::where('status', 'completed')->count();
+        $closedRequests = MaintenanceRequest::where('status', 'closed')->count();
         
         // Get active users
         $activeUsers = User::with('role')
@@ -57,6 +58,7 @@ class DashboardController extends Controller
             'pendingRequests',
             'inProgressRequests',
             'completedRequests',
+            'closedRequests',
             'activeUsers',
             'activeSubscriptions',
             'expiredSubscriptions'
