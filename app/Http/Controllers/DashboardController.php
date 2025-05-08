@@ -50,7 +50,7 @@ class DashboardController extends Controller
                 ->orWhere('ends_at', '<=', now());
         })->count();
         
-        $data = compact(
+        return view('dashboards.admin', compact(
             'totalPropertyManagers',
             'totalTechnicians',
             'totalProperties',
@@ -62,31 +62,7 @@ class DashboardController extends Controller
             'activeUsers',
             'activeSubscriptions',
             'expiredSubscriptions'
-        );
-        
-        // Check if we're in development mode and have npm run dev active
-        // Use the basic view which doesn't rely on Tailwind/complex styling
-        $useBasicView = app()->environment('local') && (request()->has('basic') || $this->isHotReloadActive());
-        
-        return $useBasicView 
-            ? view('dashboards.basic-admin', $data)
-            : view('dashboards.admin', $data);
-    }
-
-    /**
-     * Check if hot reload is active (npm run dev)
-     */
-    protected function isHotReloadActive()
-    {
-        // This is just a simple check, might not be 100% reliable
-        // but should work in most cases to detect npm run dev
-        try {
-            $viteManifest = file_exists(public_path('build/manifest.json'));
-            $hotFile = file_exists(public_path('hot'));
-            return $viteManifest || $hotFile;
-        } catch (\Exception $e) {
-            return false;
-        }
+        ));
     }
 
     /**

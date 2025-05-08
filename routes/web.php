@@ -68,8 +68,8 @@ Route::get('/request/{accessLink}/status/{requestId}', [GuestRequestController::
 
 // Authentication routes
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login']);
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
     Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
     Route::post('/register', [RegisterController::class, 'register']);
 });
@@ -94,7 +94,7 @@ Route::middleware(['auth'])->group(function () {
             return redirect()->route('technician.dashboard');
         }
     })->name('dashboard');
-    
+
     // Profile routes
     Route::get('/profile', [UserController::class, 'showProfile'])->name('profile.edit');
     Route::put('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
@@ -190,7 +190,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Debug routes
     if (config('app.debug')) {
-        Route::get('/debug/roles', function () {
+    Route::get('/debug/roles', function () {
             return ['status' => 'success', 'roles' => \App\Models\Role::all()];
         });
     }
