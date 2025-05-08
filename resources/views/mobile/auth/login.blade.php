@@ -4,6 +4,14 @@
 
 @section('content')
 <div style="padding: 20px; max-width: 500px; margin: 0 auto;">
+    <div style="margin-bottom: 20px;">
+        <a href="{{ route('mobile.welcome') }}" style="display: inline-block; color: #2563eb; text-decoration: none; font-size: 16px;">
+            <span style="display: inline-flex; align-items: center;">
+                ← Back to Home
+            </span>
+        </a>
+    </div>
+
     <h1 style="text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 20px;">Login to Your Account</h1>
     
     @if (session('status'))

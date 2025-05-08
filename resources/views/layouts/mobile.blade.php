@@ -299,7 +299,9 @@
     
     <div class="header">
         <div class="logo">
-            <span>M</span>aintain<span>X</span>tra
+            <a href="{{ route('mobile.welcome') }}" style="text-decoration: none; color: inherit;">
+                <span>M</span>aintain<span>X</span>tra
+            </a>
         </div>
         <div class="user-type">
             @if(Auth::check() && Auth::user()->isManager())
