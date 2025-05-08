@@ -113,6 +113,7 @@ class MobileRedirect
             // Map certain paths to their mobile equivalents
             $pathMap = [
                 'dashboard' => 'm/dash',
+                'admin/dashboard' => 'm/admin/dashboard',
                 'properties' => 'm/ap',
                 'technicians' => 'm/at',
                 'maintenance' => 'm/ar',

@@ -198,6 +198,11 @@ Route::middleware(['auth'])->group(function () {
 
 // Mobile routes
 Route::prefix('m')->middleware(['auth'])->group(function () {
+    // Admin mobile routes
+    Route::middleware(['admin'])->group(function () {
+        Route::get('/admin/dashboard', [App\Http\Controllers\Mobile\AdminController::class, 'dashboard'])->name('mobile.admin.dashboard');
+    });
+    
     // Manager mobile routes
     Route::middleware(['property_manager'])->group(function () {
         // Dashboard
