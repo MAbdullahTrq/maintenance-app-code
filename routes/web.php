@@ -27,6 +27,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Mobile welcome route
+Route::get('/m', function () {
+    return view('mobile.welcome');
+})->name('mobile.welcome');
+
 // Guest maintenance request routes
 Route::get('/request/{accessLink}', [GuestRequestController::class, 'showRequestForm'])->name('guest.request.form');
 Route::post('/request/{accessLink}', [GuestRequestController::class, 'submitRequest'])->name('guest.request.submit');

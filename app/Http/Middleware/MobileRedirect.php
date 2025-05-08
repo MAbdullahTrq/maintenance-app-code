@@ -61,6 +61,12 @@ class MobileRedirect
         if ($isMobile) {
             $path = $request->path();
             
+            // Special handling for home page (/)
+            if ($path === '/' || $path === '') {
+                // Redirect to mobile welcome page
+                return redirect('m');
+            }
+            
             // Map certain paths to their mobile equivalents
             $pathMap = [
                 'dashboard' => 'm/dash',
