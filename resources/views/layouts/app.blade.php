@@ -39,7 +39,7 @@
                             <span class="mr-2">{{ Auth::user()->name }}</span>
                             <i class="fas fa-chevron-down text-xs"></i>
                         </button>
-                        <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                        <div x-show="open" @click.away="open = false" class="absolute mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10" style="left: 0; right: 0; margin-left: auto; margin-right: auto; top: 100%;">
                             @if(Auth::user()->isAdmin())
                                 <a href="{{ route('admin.users.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     <i class="fas fa-users text-green-500 w-5 text-center"></i>
