@@ -7,7 +7,121 @@
     <meta name="robots" content="noindex, nofollow">
     <title>@yield('title') - Maintenance App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Vite Assets with Fallback -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <!-- Fallback for when Vite is failing in dev mode -->
+    @if(config('app.env') === 'local')
+    <script>
+        // Check if Vite styles loaded, if not use fallback
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const appStyles = document.querySelector('[data-vite]');
+                if (!appStyles || !document.body.classList.contains('bg-gray-100')) {
+                    const fallbackStyles = document.createElement('link');
+                    fallbackStyles.rel = 'stylesheet';
+                    fallbackStyles.href = '{{ asset('build/assets/app.css') }}';
+                    document.head.appendChild(fallbackStyles);
+                    
+                    const fallbackScript = document.createElement('script');
+                    fallbackScript.src = '{{ asset('build/assets/app.js') }}';
+                    document.body.appendChild(fallbackScript);
+                    
+                    console.warn('Vite assets not loaded, using fallback assets');
+                }
+            }, 500);
+        });
+    </script>
+    
+    <!-- Critical CSS to ensure basic layout even if Vite fails -->
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        main {
+            flex-grow: 1;
+        }
+        
+        footer {
+            background-color: white;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+            text-align: center;
+            color: #6b7280;
+        }
+        
+        nav {
+            display: flex;
+            align-items: center;
+        }
+        
+        a {
+            text-decoration: none;
+            color: #374151;
+        }
+        
+        .badge {
+            display: inline-flex;
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+        }
+        
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+    </style>
+    @endif
+    
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.3/dist/cdn.min.js" defer></script>
     <script>
         // Store screen width in a cookie for mobile detection
