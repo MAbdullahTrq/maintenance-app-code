@@ -4,96 +4,248 @@
 @section('header', 'Property Manager Dashboard')
 
 @section('content')
-<div class="container mx-auto px-4 py-8 mb-16 md:mb-0">
-    <!-- Stats Overview -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-lg shadow p-4">
-            <h3 class="text-lg font-semibold text-gray-700">Pending</h3>
-            <p class="text-2xl font-bold text-blue-600">{{ $pendingRequests }}</p>
-        </div>
-        <div class="bg-white rounded-lg shadow p-4">
-            <h3 class="text-lg font-semibold text-gray-700">Assigned</h3>
-            <p class="text-2xl font-bold text-yellow-600">{{ $assignedRequests }}</p>
-        </div>
-        <div class="bg-white rounded-lg shadow p-4">
-            <h3 class="text-lg font-semibold text-gray-700">Started</h3>
-            <p class="text-2xl font-bold text-green-600">{{ $startedRequests }}</p>
-        </div>
-        <div class="bg-white rounded-lg shadow p-4">
-            <h3 class="text-lg font-semibold text-gray-700">Completed</h3>
-            <p class="text-2xl font-bold text-purple-600">{{ $completedRequests }}</p>
-        </div>
-    </div>
-
-    <!-- Recent Requests -->
-    <div class="bg-white rounded-lg shadow mb-6">
-        <div class="p-4 border-b border-gray-200">
-            <h2 class="text-xl font-semibold text-gray-800">Recent Maintenance Requests</h2>
-        </div>
-        <div class="overflow-x-auto">
-            @foreach($recentRequests as $request)
-            <div class="p-4 border-b border-gray-200">
-                <div class="flex justify-between items-start mb-2">
-                    <div>
-                        <h3 class="font-semibold text-gray-800">{{ $request->title }}</h3>
-                        <p class="text-sm text-gray-600">{{ $request->property->name }}</p>
-                    </div>
-                    <span class="px-2 py-1 text-xs rounded-full 
-                        @if($request->status === 'pending') bg-blue-100 text-blue-800
-                        @elseif($request->status === 'assigned') bg-yellow-100 text-yellow-800
-                        @elseif($request->status === 'started') bg-green-100 text-green-800
-                        @elseif($request->status === 'completed') bg-purple-100 text-purple-800
-                        @endif">
-                        {{ ucfirst($request->status) }}
-                    </span>
+<div class="container mx-auto px-4 pt-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-purple-500 bg-opacity-10">
+                    <i class="fas fa-building text-purple-500 text-xl"></i>
                 </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-600">
-                        <i class="fas fa-clock mr-1"></i>
-                        {{ $request->created_at->format('d M, Y') }}
-                    </span>
-                    <a href="{{ route('maintenance.show', $request) }}" 
-                       class="btn-mobile-full md:btn-normal px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                        View Details
-                    </a>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-500">Properties</p>
+                    <p class="text-2xl font-semibold text-gray-800">{{ $totalProperties }}</p>
                 </div>
             </div>
-            @endforeach
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-green-500 bg-opacity-10">
+                    <i class="fas fa-user-hard-hat text-green-500 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-500">Technicians</p>
+                    <p class="text-2xl font-semibold text-gray-800">{{ $totalTechnicians }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-yellow-500 bg-opacity-10">
+                    <i class="fas fa-tools text-yellow-500 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-500">Total Requests</p>
+                    <p class="text-2xl font-semibold text-gray-800">{{ $totalRequests }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-red-500 bg-opacity-10">
+                    <i class="fas fa-exclamation-circle text-red-500 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-500">Pending Requests</p>
+                    <p class="text-2xl font-semibold text-gray-800">{{ $pendingRequests }}</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Properties Overview -->
-    <div class="bg-white rounded-lg shadow mb-6">
-        <div class="p-4 border-b border-gray-200">
-            <h2 class="text-xl font-semibold text-gray-800">Properties Overview</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow p-6 lg:col-span-2">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Recent Maintenance Requests</h2>
+            
+            @if($recentRequests->count() > 0)
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            @foreach($recentRequests as $request)
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        {{ Str::limit($request->title, 30) }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{ $request->property->name }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($request->status == 'pending')
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                Pending
+                                            </span>
+                                        @elseif($request->status == 'accepted')
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                Approved
+                                            </span>
+                                        @elseif($request->status == 'assigned')
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                                Assigned
+                                            </span>
+                                        @elseif($request->status == 'acknowledged')
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                Accepted
+                                            </span>
+                                        @elseif($request->status == 'started')
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
+                                                Started
+                                            </span>
+                                        @elseif($request->status == 'completed')
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                Completed
+                                            </span>
+                                        @elseif($request->status == 'declined')
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                Declined
+                                            </span>
+                                        @elseif($request->status == 'closed')
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                                Closed
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{ $request->created_at->format('M d, Y') }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <a href="{{ route('maintenance.show', $request) }}" class="text-blue-600 hover:text-blue-900">View</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4 text-right">
+                    <a href="{{ route('maintenance.index') }}" class="text-blue-600 hover:text-blue-900 text-sm font-medium">View All Requests</a>
+                </div>
+            @else
+                <p class="text-gray-500">No maintenance requests found.</p>
+            @endif
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-            @foreach($properties as $property)
-            <div class="border rounded-lg p-4">
-                <div class="flex items-center mb-2">
-                    @if($property->image)
-                        <img src="{{ asset('storage/' . $property->image) }}" 
-                             alt="{{ $property->name }}" 
-                             class="w-16 h-16 rounded-lg object-cover mr-4">
+        
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Request Status</h2>
+            
+            <div class="space-y-4">
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-sm font-medium text-gray-700">Pending</span>
+                        <span class="text-sm font-medium text-gray-700">{{ $pendingRequests }}</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-yellow-500 h-2 rounded-full" style="width: {{ $totalRequests > 0 ? ($pendingRequests / $totalRequests * 100) : 0 }}%"></div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-sm font-medium text-gray-700">In Progress</span>
+                        <span class="text-sm font-medium text-gray-700">{{ $inProgressRequests }}</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-purple-500 h-2 rounded-full" style="width: {{ $totalRequests > 0 ? ($inProgressRequests / $totalRequests * 100) : 0 }}%"></div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-sm font-medium text-gray-700">Completed</span>
+                        <span class="text-sm font-medium text-gray-700">{{ $completedRequests }}</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-green-500 h-2 rounded-full" style="width: {{ $totalRequests > 0 ? ($completedRequests / $totalRequests * 100) : 0 }}%"></div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-sm font-medium text-gray-700">Closed</span>
+                        <span class="text-sm font-medium text-gray-700">{{ $closedRequests }}</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-gray-500 h-2 rounded-full" style="width: {{ $totalRequests > 0 ? ($closedRequests / $totalRequests * 100) : 0 }}%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6">
+                <h3 class="text-sm font-medium text-gray-700 mb-2">Quick Actions</h3>
+                <div class="space-y-2">
+                    @if(auth()->user()->hasActiveSubscription())
+                        <a href="{{ route('technicians.index') }}" class="flex items-center px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
+                            <i class="fas fa-users-cog text-blue-500 w-5 text-center"></i>
+                            <span class="ml-2">Technicians</span>
+                        </a>
+                        <a href="{{ route('properties.index') }}" class="flex items-center px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
+                            <i class="fas fa-building text-purple-500 w-5 text-center"></i>
+                            <span class="ml-2">Properties</span>
+                        </a>
                     @else
-                        <div class="w-16 h-16 rounded-lg bg-gray-200 mr-4 flex items-center justify-center">
-                            <i class="fas fa-building text-gray-400 text-2xl"></i>
-                        </div>
+                        <a href="{{ route('subscription.plans') }}" class="flex items-center px-4 py-2 bg-blue-50 hover:bg-blue-100 rounded-md text-sm font-medium text-blue-700">
+                            <i class="fas fa-crown text-blue-500 w-5 text-center"></i>
+                            <span class="ml-2">Subscribe Now</span>
+                        </a>
                     @endif
-                    <div>
-                        <h3 class="font-semibold text-gray-800">{{ $property->name }}</h3>
-                        <p class="text-sm text-gray-600">{{ $property->address }}</p>
-                    </div>
-                </div>
-                <div class="flex justify-end">
-                    <a href="{{ route('properties.show', $property) }}" 
-                       class="text-blue-500 hover:text-blue-600">
-                        <i class="fas fa-chevron-right"></i>
-                    </a>
                 </div>
             </div>
-            @endforeach
         </div>
     </div>
+
+    @if($technicians->count() > 0)
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-800">Technician Workload</h2>
+                <a href="{{ route('technicians.index') }}" class="text-blue-600 hover:text-blue-900 text-sm font-medium">
+                    All Technicians
+                </a>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pending Tasks</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">In Progress</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach($technicians as $technician)
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    {{ $technician->name }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ $technician->email }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ $technician->pending_count }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ $technician->in_progress_count }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <a href="{{ route('technicians.edit', $technician) }}" class="text-blue-600 hover:text-blue-900">View Details</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
 </div>
 @endsection 

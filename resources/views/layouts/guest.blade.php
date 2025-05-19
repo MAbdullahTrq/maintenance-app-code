@@ -30,14 +30,6 @@
         }
     </style>
     
-    <script>
-        // Store screen width in a cookie for mobile detection
-        document.cookie = 'screen_width=' + window.innerWidth + '; path=/';
-        window.addEventListener('resize', function() {
-            document.cookie = 'screen_width=' + window.innerWidth + '; path=/';
-        });
-    </script>
-    
     @stack('styles')
 </head>
 <body class="font-sans antialiased bg-gray-50 min-h-screen">

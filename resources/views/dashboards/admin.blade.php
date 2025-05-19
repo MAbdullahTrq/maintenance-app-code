@@ -1,16 +1,14 @@
 @extends('layouts.app')
 
 @section('title', 'Admin Dashboard')
+@section('header', 'Admin Dashboard')
 
 @section('content')
-<div class="container mx-auto px-4 py-6">
-    <h1 class="text-2xl font-bold mb-6 text-gray-800">Admin Dashboard</h1>
-    
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-lg shadow p-5 hover:shadow-lg transition-shadow">
+<div class="container mx-auto px-4 pt-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center">
-                <div class="p-3 rounded-full bg-blue-500 bg-opacity-10 flex items-center justify-center" style="width: 48px; height: 48px;">
+                <div class="p-3 rounded-full bg-blue-500 bg-opacity-10">
                     <i class="fas fa-user-tie text-blue-500 text-xl"></i>
                 </div>
                 <div class="ml-4">
@@ -20,10 +18,10 @@
             </div>
         </div>
         
-        <div class="bg-white rounded-lg shadow p-5 hover:shadow-lg transition-shadow">
+        <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center">
-                <div class="p-3 rounded-full bg-green-500 bg-opacity-10 flex items-center justify-center" style="width: 48px; height: 48px;">
-                    <i class="fas fa-hard-hat text-green-500 text-xl"></i>
+                <div class="p-3 rounded-full bg-green-500 bg-opacity-10">
+                    <i class="fas fa-user-hard-hat text-green-500 text-xl"></i>
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-500">Technicians</p>
@@ -32,9 +30,9 @@
             </div>
         </div>
         
-        <div class="bg-white rounded-lg shadow p-5 hover:shadow-lg transition-shadow">
+        <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center">
-                <div class="p-3 rounded-full bg-purple-500 bg-opacity-10 flex items-center justify-center" style="width: 48px; height: 48px;">
+                <div class="p-3 rounded-full bg-purple-500 bg-opacity-10">
                     <i class="fas fa-building text-purple-500 text-xl"></i>
                 </div>
                 <div class="ml-4">
@@ -44,9 +42,9 @@
             </div>
         </div>
         
-        <div class="bg-white rounded-lg shadow p-5 hover:shadow-lg transition-shadow">
+        <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center">
-                <div class="p-3 rounded-full bg-yellow-500 bg-opacity-10 flex items-center justify-center" style="width: 48px; height: 48px;">
+                <div class="p-3 rounded-full bg-yellow-500 bg-opacity-10">
                     <i class="fas fa-tools text-yellow-500 text-xl"></i>
                 </div>
                 <div class="ml-4">
@@ -57,12 +55,10 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Active Users Table -->
-        <div class="bg-white rounded-lg shadow p-5 lg:col-span-2">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                <i class="fas fa-users mr-2 text-blue-500"></i>
-                <span>Active Users</span>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow p-6 lg:col-span-2">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                <i class="fas fa-users mr-2 text-blue-500"></i>Active Users
             </h2>
             
             @if($activeUsers->count() > 0)
@@ -70,44 +66,45 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 25%">Name</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 30%">Email</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 15%">Role</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 30%">Actions</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach($activeUsers as $user)
                                 <tr>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                         {{ $user->name }}
                                     </td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ $user->email }}
                                     </td>
-                                    <td class="px-4 py-3 whitespace-nowrap">
+                                    <td class="px-6 py-4 whitespace-nowrap">
                                         @if($user->role->slug == 'admin')
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                            <span class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
                                                 Admin
                                             </span>
                                         @elseif($user->role->slug == 'property_manager')
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                                Property Manager
+                                            <span class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                {{ $user->role->name }}
                                             </span>
                                         @else
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                Technician
+                                            <span class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                {{ $user->role->name }}
                                             </span>
                                         @endif
                                     </td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm">
-                                        <div class="flex space-x-2">
-                                            <a href="{{ route('admin.users.show', $user) }}" class="text-blue-600 hover:text-blue-900">View</a>
-                                            
-                                            @if($user->role->slug === 'property_manager')
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        @if($user->role->slug == 'property_manager')
+                                            <div class="flex space-x-2">
+                                                <a href="{{ route('admin.users.show', $user) }}" class="text-blue-600 hover:text-blue-900">View</a>
                                                 <a href="{{ route('admin.users.grant-subscription.create', $user) }}" class="text-green-600 hover:text-green-900">Grant Subscription</a>
-                                            @endif
-                                        </div>
+                                            </div>
+                                        @else
+                                            <a href="{{ route('admin.users.show', $user) }}" class="text-blue-600 hover:text-blue-900">View</a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -115,113 +112,91 @@
                     </table>
                 </div>
                 <div class="mt-4 text-right">
-                    <a href="{{ route('admin.users.index') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-900">
-                        View All Users
-                        <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </a>
+                    <a href="{{ route('admin.users.index') }}" class="text-blue-600 hover:text-blue-900 text-sm font-medium">View All Users</a>
                 </div>
             @else
                 <p class="text-gray-500">No active users found.</p>
             @endif
         </div>
         
-        <!-- Sidebar Sections -->
         <div class="space-y-6">
-            <!-- Request Status -->
-            <div class="bg-white rounded-lg shadow p-5">
-                <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <i class="fas fa-chart-pie mr-2 text-indigo-500"></i>
-                    <span>Request Status</span>
-                </h2>
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">Request Status</h2>
                 
                 <div class="space-y-4">
                     <div>
-                        <div class="flex justify-between mb-2">
+                        <div class="flex justify-between mb-1">
                             <span class="text-sm font-medium text-gray-700">Pending</span>
                             <span class="text-sm font-medium text-gray-700">{{ $pendingRequests }}</span>
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                            <div class="bg-yellow-500 h-2.5 rounded-full" style="width: {{ $totalRequests > 0 ? ($pendingRequests / $totalRequests * 100) : 0 }}%"></div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-yellow-500 h-2 rounded-full" style="width: {{ $totalRequests > 0 ? ($pendingRequests / $totalRequests * 100) : 0 }}%"></div>
                         </div>
                     </div>
                     
                     <div>
-                        <div class="flex justify-between mb-2">
+                        <div class="flex justify-between mb-1">
                             <span class="text-sm font-medium text-gray-700">In Progress</span>
                             <span class="text-sm font-medium text-gray-700">{{ $inProgressRequests }}</span>
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                            <div class="bg-blue-500 h-2.5 rounded-full" style="width: {{ $totalRequests > 0 ? ($inProgressRequests / $totalRequests * 100) : 0 }}%"></div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-purple-500 h-2 rounded-full" style="width: {{ $totalRequests > 0 ? ($inProgressRequests / $totalRequests * 100) : 0 }}%"></div>
                         </div>
                     </div>
                     
                     <div>
-                        <div class="flex justify-between mb-2">
+                        <div class="flex justify-between mb-1">
                             <span class="text-sm font-medium text-gray-700">Completed</span>
                             <span class="text-sm font-medium text-gray-700">{{ $completedRequests }}</span>
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                            <div class="bg-green-500 h-2.5 rounded-full" style="width: {{ $totalRequests > 0 ? ($completedRequests / $totalRequests * 100) : 0 }}%"></div>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="flex justify-between mb-2">
-                            <span class="text-sm font-medium text-gray-700">Closed</span>
-                            <span class="text-sm font-medium text-gray-700">{{ $closedRequests }}</span>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                            <div class="bg-gray-500 h-2.5 rounded-full" style="width: {{ $totalRequests > 0 ? ($closedRequests / $totalRequests * 100) : 0 }}%"></div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-500 h-2 rounded-full" style="width: {{ $totalRequests > 0 ? ($completedRequests / $totalRequests * 100) : 0 }}%"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Subscription Management -->
-            <div class="bg-white rounded-lg shadow p-5">
-                <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <i class="fas fa-crown mr-2 text-yellow-500"></i>
-                    <span>Subscription Management</span>
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-crown mr-2 text-yellow-500"></i>Subscription Management
                 </h2>
                 
                 <div class="space-y-4">
                     <div>
-                        <div class="flex justify-between mb-2">
+                        <div class="flex justify-between mb-1">
                             <span class="text-sm font-medium text-gray-700">Active Subscriptions</span>
                             <span class="text-sm font-medium text-gray-700">{{ $activeSubscriptions ?? 0 }}</span>
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                            <div class="bg-green-500 h-2.5 rounded-full" style="width: {{ isset($totalPropertyManagers) && $totalPropertyManagers > 0 ? (($activeSubscriptions ?? 0) / $totalPropertyManagers * 100) : 0 }}%"></div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-500 h-2 rounded-full" style="width: {{ isset($totalPropertyManagers) && $totalPropertyManagers > 0 ? (($activeSubscriptions ?? 0) / $totalPropertyManagers * 100) : 0 }}%"></div>
                         </div>
                     </div>
                     
                     <div>
-                        <div class="flex justify-between mb-2">
+                        <div class="flex justify-between mb-1">
                             <span class="text-sm font-medium text-gray-700">Expired Subscriptions</span>
                             <span class="text-sm font-medium text-gray-700">{{ $expiredSubscriptions ?? 0 }}</span>
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                            <div class="bg-red-500 h-2.5 rounded-full" style="width: {{ isset($totalPropertyManagers) && $totalPropertyManagers > 0 ? (($expiredSubscriptions ?? 0) / $totalPropertyManagers * 100) : 0 }}%"></div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-red-500 h-2 rounded-full" style="width: {{ isset($totalPropertyManagers) && $totalPropertyManagers > 0 ? (($expiredSubscriptions ?? 0) / $totalPropertyManagers * 100) : 0 }}%"></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-5">
-                    <h3 class="text-sm font-medium text-gray-700 mb-3">Quick Actions</h3>
-                    <div class="space-y-3">
-                        <a href="{{ route('admin.users.index') }}" class="flex items-center px-4 py-2.5 bg-gray-50 hover:bg-gray-100 rounded text-sm font-medium text-gray-700 transition">
-                            <i class="fas fa-users mr-3 text-blue-500 w-5 text-center"></i> 
-                            <span>Manage Users</span>
+                <div class="mt-6">
+                    <h3 class="text-sm font-medium text-gray-700 mb-2">Quick Actions</h3>
+                    <div class="space-y-2">
+                        <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
+                            <i class="fas fa-users mr-2 text-green-500"></i> View Users
                         </a>
-                        <a href="{{ route('admin.subscription.plans.index') }}" class="flex items-center px-4 py-2.5 bg-gray-50 hover:bg-gray-100 rounded text-sm font-medium text-gray-700 transition">
-                            <i class="fas fa-tags mr-3 text-yellow-500 w-5 text-center"></i> 
-                            <span>Manage Plans</span>
+                        <a href="{{ route('admin.subscription.plans.index') }}" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
+                            <i class="fas fa-tags mr-2 text-yellow-500"></i> Manage Plans
                         </a>
-                        <a href="{{ route('admin.subscription.index') }}" class="flex items-center px-4 py-2.5 bg-gray-50 hover:bg-gray-100 rounded text-sm font-medium text-gray-700 transition">
-                            <i class="fas fa-list-alt mr-3 text-purple-500 w-5 text-center"></i> 
-                            <span>View All Subscriptions</span>
+                        <a href="{{ route('admin.subscription.index') }}" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
+                            <i class="fas fa-list-alt mr-2 text-purple-500"></i> View All Subscriptions
+                        </a>
+                        <a href="{{ route('admin.users.index') }}?role=property_manager" class="block px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm font-medium text-gray-700">
+                            <i class="fas fa-user-shield mr-2 text-indigo-500"></i> Manage Property Managers
                         </a>
                     </div>
                 </div>
@@ -229,91 +204,4 @@
         </div>
     </div>
 </div>
-
-<style>
-/* Add !important to critical CSS classes to prevent overrides */
-.admin-dashboard-container h1,
-.admin-dashboard-container h2,
-.admin-dashboard-container h3 {
-  font-family: sans-serif !important;
-  margin-bottom: 0.5rem !important;
-}
-
-.admin-dashboard-container table {
-  width: 100% !important;
-  border-collapse: collapse !important;
-}
-
-.admin-dashboard-container th,
-.admin-dashboard-container td {
-  padding: 0.75rem 1rem !important;
-  text-align: left !important;
-}
-
-.admin-dashboard-container .bg-white {
-  background-color: white !important;
-}
-
-.admin-dashboard-container .rounded-lg {
-  border-radius: 0.5rem !important;
-}
-
-.admin-dashboard-container .shadow {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
-}
-
-.admin-dashboard-container .rounded-full {
-  border-radius: 9999px !important;
-}
-
-.admin-dashboard-container .h-2.5 {
-  height: 0.625rem !important;
-}
-
-.admin-dashboard-container .space-y-3 > * + * {
-  margin-top: 0.75rem !important;
-}
-
-.admin-dashboard-container .space-y-4 > * + * {
-  margin-top: 1rem !important;
-}
-
-.admin-dashboard-container .space-y-6 > * + * {
-  margin-top: 1.5rem !important;
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Add admin-dashboard-container class to the main container for scoped styling
-  document.querySelector('.container').classList.add('admin-dashboard-container');
-  
-  // Force re-render of critical elements
-  const tables = document.querySelectorAll('table');
-  tables.forEach(function(table) {
-    table.style.display = 'table';
-    table.style.width = '100%';
-  });
-  
-  // Force FontAwesome icons to display correctly
-  const icons = document.querySelectorAll('.fas');
-  icons.forEach(function(icon) {
-    icon.style.display = 'inline-block';
-    icon.style.verticalAlign = 'middle';
-  });
-  
-  // Set fixed width columns for table
-  const nameTh = document.querySelector('th:nth-child(1)');
-  const emailTh = document.querySelector('th:nth-child(2)');
-  const roleTh = document.querySelector('th:nth-child(3)');
-  const actionsTh = document.querySelector('th:nth-child(4)');
-  
-  if (nameTh && emailTh && roleTh && actionsTh) {
-    nameTh.style.width = '25%';
-    emailTh.style.width = '30%';
-    roleTh.style.width = '15%';
-    actionsTh.style.width = '30%';
-  }
-});
-</script>
 @endsection 

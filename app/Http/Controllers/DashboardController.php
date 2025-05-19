@@ -31,7 +31,6 @@ class DashboardController extends Controller
         $pendingRequests = MaintenanceRequest::where('status', 'pending')->count();
         $inProgressRequests = MaintenanceRequest::whereIn('status', ['assigned', 'acknowledged', 'started'])->count();
         $completedRequests = MaintenanceRequest::where('status', 'completed')->count();
-        $closedRequests = MaintenanceRequest::where('status', 'closed')->count();
         
         // Get active users
         $activeUsers = User::with('role')
@@ -58,7 +57,6 @@ class DashboardController extends Controller
             'pendingRequests',
             'inProgressRequests',
             'completedRequests',
-            'closedRequests',
             'activeUsers',
             'activeSubscriptions',
             'expiredSubscriptions'
@@ -88,16 +86,9 @@ class DashboardController extends Controller
             ->where('status', 'pending')
             ->count();
         
-        // Split the in-progress into assigned and started
-        $assignedRequests = MaintenanceRequest::whereIn('property_id', $propertyIds)
-            ->whereIn('status', ['assigned', 'acknowledged'])
+        $inProgressRequests = MaintenanceRequest::whereIn('property_id', $propertyIds)
+            ->whereIn('status', ['assigned', 'acknowledged', 'started'])
             ->count();
-            
-        $startedRequests = MaintenanceRequest::whereIn('property_id', $propertyIds)
-            ->where('status', 'started')
-            ->count();
-            
-        $inProgressRequests = $assignedRequests + $startedRequests;
         
         $completedRequests = MaintenanceRequest::whereIn('property_id', $propertyIds)
             ->where('status', 'completed')
@@ -129,8 +120,6 @@ class DashboardController extends Controller
             'totalTechnicians',
             'totalRequests',
             'pendingRequests',
-            'assignedRequests',
-            'startedRequests',
             'inProgressRequests',
             'completedRequests',
             'closedRequests',
