@@ -19,7 +19,7 @@ class DashboardController extends Controller
             abort(403);
         }
         $properties = Property::where('manager_id', $user->id)->get();
-        $technicians = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('manager_id', $user->id)->get();
+        $technicians = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->get();
         $pendingRequests = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->where('status', 'pending')->get();
         return view('mobile.dashboard', [
             'properties' => $properties,
