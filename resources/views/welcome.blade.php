@@ -244,7 +244,7 @@
 
     <!-- CTA section -->
     <div class="py-16 bg-gray-900">
-        <div class="relative">
+        <div class="absolute">
             <!-- Background gradient with overlay -->
             <div class="absolute inset-0 bg-gradient-to-r from-blue-900 to-indigo-900 opacity-80"></div>
             <!-- Content -->
