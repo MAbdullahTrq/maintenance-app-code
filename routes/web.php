@@ -162,3 +162,5 @@ Route::middleware(['auth'])->group(function () {
         });
     }
 });
+
+Route::get('/mobile', [App\Http\Controllers\Mobile\HomeController::class, 'index'])->name('mobile.home');
