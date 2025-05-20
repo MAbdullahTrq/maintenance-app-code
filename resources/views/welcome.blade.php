@@ -243,25 +243,23 @@
     </div>
 
     <!-- CTA section -->
-    <div class="py-16 bg-gray-900">
-        <div class="relative">
-            <!-- Background gradient with overlay -->
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-900 to-indigo-900 opacity-80"></div>
-            <!-- Content -->
-            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center">
-                    <h2 class="text-3xl font-extrabold text-white sm:text-4xl" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
-                        Ready to streamline your maintenance process?
-                    </h2>
-                    <p class="mt-4 text-lg md:text-xl text-white font-medium" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.6);">
-                        Simplify your maintenance workflow
-                    </p>
-                    <div class="mt-8 flex justify-center">
-                        <div class="inline-flex rounded-md shadow">
-                            <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
-                                Get Started Today
-                            </a>
-                        </div>
+    <div class="py-16 bg-gray-900 relative">
+        <!-- Background gradient with overlay -->
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-900 to-indigo-900 opacity-80"></div>
+        <!-- Content -->
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-extrabold text-white sm:text-4xl" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
+                    Ready to streamline your maintenance process?
+                </h2>
+                <p class="mt-4 text-lg md:text-xl text-white font-medium" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.6);">
+                    Simplify your maintenance workflow
+                </p>
+                <div class="mt-8 flex justify-center">
+                    <div class="inline-flex rounded-md shadow">
+                        <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
+                            Get Started Today
+                        </a>
                     </div>
                 </div>
             </div>
