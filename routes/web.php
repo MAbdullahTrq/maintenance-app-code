@@ -164,3 +164,8 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/mobile', [App\Http\Controllers\Mobile\HomeController::class, 'index'])->name('mobile.home');
+
+Route::prefix('m')->namespace('App\\Http\\Controllers\\Mobile')->group(function () {
+    Route::get('/dash', 'DashboardController@index')->name('mobile.manager.dashboard');
+    // More mobile routes will be added here
+});
