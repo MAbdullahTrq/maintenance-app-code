@@ -9,6 +9,7 @@ use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TechnicianController;
+use App\Http\Controllers\Mobile\DashboardController as MobileDashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -165,7 +166,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/mobile', [App\Http\Controllers\Mobile\HomeController::class, 'index'])->name('mobile.home');
 
-Route::prefix('m')->namespace('App\\Http\\Controllers\\Mobile')->group(function () {
-    Route::get('/dash', 'DashboardController@index')->name('mobile.manager.dashboard');
+Route::prefix('m')->group(function () {
+    Route::get('/dash', [MobileDashboardController::class, 'index'])->name('mobile.manager.dashboard');
     // More mobile routes will be added here
 });
