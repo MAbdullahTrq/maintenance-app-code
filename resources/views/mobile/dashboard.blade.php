@@ -7,10 +7,6 @@
 @endsection
 
 @section('content')
-<div class="text-center mb-2">
-    <div class="text-xs bg-green-300 text-black px-2 py-1 rounded inline-block mb-1">Dash – Manager</div>
-    <div class="text-xs mb-2">maintainxtra.com/m/dash</div>
-</div>
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
         <div class="grid grid-cols-3 divide-x divide-gray-400 border border-gray-400 rounded mb-4 text-center">
