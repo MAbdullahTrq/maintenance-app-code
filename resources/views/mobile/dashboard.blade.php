@@ -9,7 +9,7 @@
 @section('content')
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
-        <div class="grid grid-cols-3 divide-x divide-gray-400 border border-gray-400 rounded mb-4 text-center">
+        <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-400 border border-gray-400 rounded mb-4 text-center">
             <div class="py-2">
                 <div><i class="fas fa-home text-3xl text-green-600"></i></div>
                 <div class="text-lg font-bold">{{ $properties->count() }}</div>
@@ -28,7 +28,8 @@
         </div>
         <div class="text-center font-bold text-lg mb-2">Pending Requests</div>
         @if($pendingRequests->count())
-            <table class="w-full text-xs border border-gray-400 border-collapse rounded overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full text-xs border border-gray-400 border-collapse rounded overflow-hidden">
                 <thead>
                     <tr class="bg-gray-100 border-b border-gray-400">
                         <th class="p-1 border-r border-gray-400">Property</th>
@@ -53,6 +54,7 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
         @else
             <div class="text-center text-sm py-4">You have no new Pending Requests</div>
         @endif
