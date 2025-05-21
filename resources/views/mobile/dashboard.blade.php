@@ -9,7 +9,7 @@
 @section('content')
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
-        <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-400 border border-gray-400 rounded mb-4 text-center">
+        <div class="grid grid-cols-3 divide-x divide-gray-400 border border-gray-400 rounded mb-4 text-center">
             <div class="py-2">
                 <div><i class="fas fa-home text-3xl text-green-600"></i></div>
                 <div class="text-lg font-bold">{{ $properties->count() }}</div>
@@ -49,7 +49,9 @@
                             {{ ucfirst($req->priority) }}
                         </td>
                         <td class="p-1 align-top border-r border-gray-400">{{ \Carbon\Carbon::parse($req->created_at)->format('d M, Y') }}</td>
-                        <td class="p-1 align-top"><a href="#"><i class="fas fa-eye"></i></a></td>
+                        <td class="p-1 align-top">
+                            <a href="/m/r/{{ $req->id }}"><i class="fas fa-eye"></i></a>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
