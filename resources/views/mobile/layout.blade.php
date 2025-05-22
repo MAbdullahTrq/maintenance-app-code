@@ -6,6 +6,7 @@
     <title>@yield('title', 'MaintainXtra Mobile')</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     @vite('resources/css/app.css')
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
     <header class="bg-white shadow p-4 flex items-center justify-between">

@@ -130,11 +130,12 @@
                     <button type="submit" class="w-full bg-gray-500 text-white py-2 rounded">Close Request</button>
                 </form>
             @endif
-            @if(in_array($request->status, ['assigned', 'started']))
-                <form method="POST" action="{{ route('mobile.request.complete', $request->id) }}" class="mb-2">
-                    @csrf
-                    <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded">Mark as Complete</button>
-                </form>
+            {{-- Always show Mark as Complete if eligible --}}
+            @if(in_array($request->status, ['assigned', 'started', 'acknowledged', 'accepted']))
+            <form method="POST" action="{{ route('mobile.request.complete', $request->id) }}" class="mb-2">
+                @csrf
+                <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded">Mark as Complete</button>
+            </form>
             @endif
         </div>
     </div>
