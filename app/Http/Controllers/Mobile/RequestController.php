@@ -10,7 +10,7 @@ class RequestController extends Controller
 {
     public function show($id)
     {
-        $request = MaintenanceRequest::with(['property', 'assignedTechnician'])->findOrFail($id);
+        $request = MaintenanceRequest::with(['property', 'assignedTechnician', 'images'])->findOrFail($id);
         return view('mobile.request', ['request' => $request]);
     }
 

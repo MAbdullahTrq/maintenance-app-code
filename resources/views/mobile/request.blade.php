@@ -52,11 +52,21 @@
             <div class="font-semibold mt-2">Location</div>
             <div>{{ $request->location }}</div>
         </div>
-        <div class="mb-4"></div>
+        {{-- IMAGES SECTION --}}
+        @if($request->images && $request->images->count() > 0)
+        <div class="mb-4">
+            <div class="font-semibold mb-1">Images</div>
+            <div class="flex flex-wrap gap-2">
+                @foreach($request->images as $image)
+                    <img src="{{ asset('storage/' . $image->image_path) }}" alt="Request Image" class="w-24 h-24 object-cover rounded border">
+                @endforeach
+            </div>
+        </div>
+        @endif
         {{-- ACTIONS SECTION --}}
         <div class="mb-2">
             @if($request->status === 'pending')
-                <form method="POST" action="{{ route('maintenance.approve', $request->id) }}" class="mb-2 flex flex-col gap-2">
+                <form method="POST" action="{{ route('mobile.request.approve', $request->id) }}" class="mb-2 flex flex-col gap-2">
                     @csrf
                     <div class="mb-2">
                         <label class="block font-semibold mb-1">Assign Technician*</label>
@@ -73,7 +83,7 @@
                     </div>
                 </form>
                 <div id="declineModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-                    <form method="POST" action="{{ route('maintenance.decline', $request->id) }}" class="bg-white p-4 rounded shadow max-w-xs w-full">
+                    <form method="POST" action="{{ route('mobile.request.decline', $request->id) }}" class="bg-white p-4 rounded shadow max-w-xs w-full">
                         @csrf
                         <div class="mb-2 font-semibold">Reason for Decline</div>
                         <textarea name="comment" class="w-full border rounded p-2 mb-2" required></textarea>
@@ -84,23 +94,23 @@
                     </form>
                 </div>
             @elseif($request->status === 'assigned')
-                <form method="POST" action="{{ route('maintenance.start-task', $request->id) }}" class="mb-2">
+                <form method="POST" action="{{ route('mobile.request.start', $request->id) }}" class="mb-2">
                     @csrf
                     <button type="submit" class="w-full bg-green-500 text-white py-2 rounded">Start</button>
                 </form>
             @elseif($request->status === 'started')
-                <form method="POST" action="{{ route('maintenance.finish-task', $request->id) }}" class="mb-2">
+                <form method="POST" action="{{ route('mobile.request.finish', $request->id) }}" class="mb-2">
                     @csrf
                     <button type="submit" class="w-full bg-green-500 text-white py-2 rounded">Finish</button>
                 </form>
             @elseif($request->status === 'completed')
-                <form method="POST" action="{{ route('maintenance.close', $request->id) }}" class="mb-2">
+                <form method="POST" action="{{ route('mobile.request.close', $request->id) }}" class="mb-2">
                     @csrf
                     <button type="submit" class="w-full bg-gray-500 text-white py-2 rounded">Close Request</button>
                 </form>
             @endif
             @if(in_array($request->status, ['assigned', 'started']))
-                <form method="POST" action="{{ route('maintenance.complete', $request->id) }}" class="mb-2">
+                <form method="POST" action="{{ route('mobile.request.complete', $request->id) }}" class="mb-2">
                     @csrf
                     <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded">Mark as Complete</button>
                 </form>
