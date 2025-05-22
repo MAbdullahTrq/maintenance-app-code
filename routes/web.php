@@ -11,6 +11,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\TechnicianController;
 use App\Http\Controllers\Mobile\DashboardController as MobileDashboardController;
 use App\Http\Controllers\Mobile\RequestController;
+use App\Http\Controllers\Mobile\TechnicianController as MobileTechnicianController;
+use App\Http\Controllers\Mobile\PropertyController as MobilePropertyController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -176,5 +178,7 @@ Route::prefix('m')->group(function () {
     Route::post('/r/{id}/finish', [RequestController::class, 'finish'])->name('mobile.request.finish');
     Route::post('/r/{id}/complete', [RequestController::class, 'complete'])->name('mobile.request.complete');
     Route::post('/r/{id}/close', [RequestController::class, 'close'])->name('mobile.request.close');
+    Route::get('/at', [MobileTechnicianController::class, 'index'])->name('mobile.technicians.index');
+    Route::get('/ap', [MobilePropertyController::class, 'index'])->name('mobile.properties.index');
     // More mobile routes will be added here
 });
