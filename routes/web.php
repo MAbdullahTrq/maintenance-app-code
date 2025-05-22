@@ -10,6 +10,7 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TechnicianController;
 use App\Http\Controllers\Mobile\DashboardController as MobileDashboardController;
+use App\Http\Controllers\Mobile\RequestController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -168,5 +169,12 @@ Route::get('/mobile', [App\Http\Controllers\Mobile\HomeController::class, 'index
 
 Route::prefix('m')->group(function () {
     Route::get('/dash', [MobileDashboardController::class, 'index'])->name('mobile.manager.dashboard');
+    Route::get('/r/{id}', [RequestController::class, 'show'])->name('mobile.request.show');
+    Route::post('/r/{id}/approve', [RequestController::class, 'approve'])->name('mobile.request.approve');
+    Route::post('/r/{id}/decline', [RequestController::class, 'decline'])->name('mobile.request.decline');
+    Route::post('/r/{id}/start', [RequestController::class, 'start'])->name('mobile.request.start');
+    Route::post('/r/{id}/finish', [RequestController::class, 'finish'])->name('mobile.request.finish');
+    Route::post('/r/{id}/complete', [RequestController::class, 'complete'])->name('mobile.request.complete');
+    Route::post('/r/{id}/close', [RequestController::class, 'close'])->name('mobile.request.close');
     // More mobile routes will be added here
 });
