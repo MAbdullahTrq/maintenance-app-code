@@ -10,9 +10,26 @@
 <body class="bg-gray-50 min-h-screen">
     <header class="bg-white shadow p-4 flex items-center justify-between">
         <div class="font-extrabold text-xl"><span class="text-blue-700">Maintain</span><span class="text-black">Xtra</span></div>
-        <div>
-            @yield('header-actions')
+        @auth
+        <div x-data="{ open: false }" class="relative">
+            <button @click="open = !open" @click.away="open = false" class="text-sm font-medium flex items-center focus:outline-none">
+                {{ Auth::user()->name }} <i class="fas fa-chevron-down ml-1"></i>
+            </button>
+            <div x-show="open" x-transition class="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg py-2 z-50 border">
+                <a href="/m/at" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <i class="fas fa-users text-blue-600 mr-2"></i> Technicians
+                </a>
+                <a href="/m/ap" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <i class="fas fa-building text-purple-600 mr-2"></i> Properties
+                </a>
+                <a href="/m/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+                </form>
+            </div>
         </div>
+        @endauth
     </header>
     <main class="p-2">
         @yield('content')
