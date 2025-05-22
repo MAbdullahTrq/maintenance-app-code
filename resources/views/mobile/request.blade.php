@@ -12,7 +12,6 @@
         <div class="mb-2 flex items-center">
             <a href="/m/dash" class="mr-2 text-blue-700 hover:underline flex items-center"><i class="fas fa-arrow-left mr-1"></i> Back</a>
         </div>
-        <div class="font-extrabold text-xl mb-2"><span class="text-blue-700">Maintain</span><span class="text-black">Xtra</span></div>
         <div class="mb-2 text-center">
             <span class="inline-block bg-gray-200 px-2 py-1 rounded text-xs font-semibold mb-1">{{ ucfirst($request->status) }}</span>
             <div class="font-bold text-lg">Maintenance Request</div>
@@ -66,6 +65,25 @@
             </div>
         </div>
         @endif
+        {{-- COMMENTS SECTION --}}
+        @if($request->comments && $request->comments->count() > 0)
+        <div class="mb-4">
+            <div class="font-semibold mb-1">Comments</div>
+            <div class="space-y-2">
+                @foreach($request->comments as $comment)
+                    <div class="bg-gray-100 rounded p-2">
+                        <div class="text-xs text-gray-600 mb-1">{{ $comment->user->name ?? 'User' }} &middot; {{ \Carbon\Carbon::parse($comment->created_at)->diffForHumans() }}</div>
+                        <div class="text-sm">{{ $comment->comment }}</div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+        <form method="POST" action="{{ route('maintenance.comment', $request->id) }}" class="mb-4">
+            @csrf
+            <textarea name="comment" class="w-full border rounded p-2 mb-2" placeholder="Add a comment..." required></textarea>
+            <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded">Add Comment</button>
+        </form>
         {{-- ACTIONS SECTION --}}
         <div class="mb-2">
             @if($request->status === 'pending')
