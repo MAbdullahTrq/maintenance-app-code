@@ -107,6 +107,6 @@ function dropdownPortal() {
     <div x-show="open" :id="'dropdown-menu-'+$id" class="dropdown-portal-menu fixed z-[9999] bg-white rounded shadow-lg border text-xs min-w-max" x-cloak style="display:none;" :style="'top:'+top+'px;left:'+left+'px;'">
         <a href="{{ route('mobile.properties.qrcode', $property->id) }}" class="block px-4 py-2 hover:bg-gray-100">QR Code</a>
         <a href="{{ route('guest.request.form', $property->access_link) }}" class="block px-4 py-2 hover:bg-gray-100">Link</a>
-        <a :href="'/m/ep/' + $property->id" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
+        <a :href="'/m/ep/' + dropdownProperty" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
     </div>
 @endforeach 
