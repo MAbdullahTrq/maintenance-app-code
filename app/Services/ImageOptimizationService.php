@@ -2,13 +2,14 @@
 
 namespace App\Services;
 
-use Intervention\Image\Facades\Image;
+use Spatie\Image\Image;
+use Spatie\ImageOptimizer\OptimizerChainFactory;
 use Illuminate\Support\Facades\Storage;
 
 class ImageOptimizationService
 {
     /**
-     * Optimize and resize an image
+     * Optimize and resize an image using Spatie Image and Image Optimizer
      *
      * @param \Illuminate\Http\UploadedFile $image
      * @param string $path
@@ -18,39 +19,28 @@ class ImageOptimizationService
      */
     public function optimizeAndResize($image, $path, $width = 600, $height = 400)
     {
-        // Create image instance
-        $img = Image::make($image);
-
-        // Get original dimensions
-        $originalWidth = $img->width();
-        $originalHeight = $img->height();
-
-        // Calculate new dimensions while maintaining aspect ratio
-        if ($originalWidth > $originalHeight) {
-            // Landscape image
-            $newWidth = $width;
-            $newHeight = ($originalHeight / $originalWidth) * $width;
-        } else {
-            // Portrait image
-            $newHeight = $height;
-            $newWidth = ($originalWidth / $originalHeight) * $height;
-        }
-
-        // Resize image
-        $img->resize($newWidth, $newHeight, function ($constraint) {
-            $constraint->aspectRatio();
-            $constraint->upsize();
-        });
-
-        // Optimize image quality
-        $img->encode('jpg', 80);
-
         // Generate unique filename
-        $filename = uniqid() . '.jpg';
+        $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+        $storagePath = storage_path('app/public/' . $path);
+        if (!is_dir($storagePath)) {
+            mkdir($storagePath, 0755, true);
+        }
+        $fullPath = $storagePath . '/' . $filename;
 
-        // Store the image
-        Storage::put('public/' . $path . '/' . $filename, $img->stream());
+        // Move the uploaded file to storage
+        $image->move($storagePath, $filename);
 
+        // Resize using Spatie Image
+        Image::load($fullPath)
+            ->width($width)
+            ->height($height)
+            ->save();
+
+        // Optimize using Spatie Image Optimizer
+        $optimizerChain = OptimizerChainFactory::create();
+        $optimizerChain->optimize($fullPath);
+
+        // Return the relative path for storage
         return $path . '/' . $filename;
     }
 } 

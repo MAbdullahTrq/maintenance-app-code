@@ -14,7 +14,9 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
         "paypal/paypal-checkout-sdk": "^1.0",
-        "simplesoftwareio/simple-qrcode": "^4.2"
+        "simplesoftwareio/simple-qrcode": "^4.2",
+        "spatie/image": "*",
+        "spatie/image-optimizer": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
