@@ -8,19 +8,8 @@
         <div x-data="{ showForm: false, search: '', dropdownOpen: false, dropdownTop: 0, dropdownLeft: 0, dropdownTech: null }">
             <div class="flex justify-between items-center mb-4">
                 <div class="font-bold text-lg">All Technicians</div>
-                <a href="{{ route('mobile.technicians.create') }}" class="bg-blue-600 text-white px-3 py-1 rounded text-xs">Add Technician</a>
             </div>
             <input type="text" x-model="search" placeholder="Search" class="w-full border rounded p-2 mb-4" />
-            <form x-show="showForm" method="POST" action="{{ route('mobile.technicians.store') }}" class="mb-4 bg-gray-50 p-3 rounded border" @submit="showForm = false">
-                @csrf
-                <input type="text" name="name" class="w-full border rounded p-2 mb-2" placeholder="Name" required>
-                <input type="email" name="email" class="w-full border rounded p-2 mb-2" placeholder="Email" required>
-                <input type="text" name="phone" class="w-full border rounded p-2 mb-2" placeholder="Phone" required>
-                <div class="flex gap-2">
-                    <button type="submit" class="w-1/2 bg-blue-700 text-white py-2 rounded">Add</button>
-                    <button type="button" @click="showForm = false" class="w-1/2 bg-gray-300 text-black py-2 rounded">Cancel</button>
-                </div>
-            </form>
             <div class="overflow-x-visible">
                 <table class="min-w-full text-xs border border-gray-400 border-collapse rounded overflow-hidden">
                     <thead>
