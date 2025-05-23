@@ -39,14 +39,9 @@
                                 </div>
                             </td>
                             <td class="p-1 align-top border-r border-gray-400">{{ $property->address }}</td>
-                            <td class="p-1 align-top border-r border-gray-400 overflow-visible">
-                                <div x-data="{ open: false }" class="relative">
-                                    <button @click="open = !open" class="px-2 py-1"><i class="fas fa-ellipsis-v"></i></button>
-                                    <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 min-w-max bg-white rounded shadow-lg z-[999] border text-xs">
-                                        <a href="{{ route('mobile.properties.qrcode', $property->id) }}" class="block px-4 py-2 hover:bg-gray-100">QR Code</a>
-                                        <a href="{{ route('guest.request.form', $property->access_link) }}" class="block px-4 py-2 hover:bg-gray-100">Link</a>
-                                        <a href="{{ route('mobile.properties.edit', $property->id) }}" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
-                                    </div>
+                            <td class="p-1 align-top border-r border-gray-400">
+                                <div x-data="dropdownPortal()" class="relative">
+                                    <button @click="toggle($event)" class="px-2 py-1"><i class="fas fa-ellipsis-v"></i></button>
                                 </div>
                             </td>
                         </tr>
@@ -57,4 +52,46 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection
+
+@push('scripts')
+<script>
+function dropdownPortal() {
+    return {
+        open: false,
+        top: 0,
+        left: 0,
+        toggle(e) {
+            this.open = !this.open;
+            if (this.open) {
+                const rect = e.target.getBoundingClientRect();
+                this.top = rect.bottom + window.scrollY;
+                this.left = rect.right + window.scrollX - 140; // adjust for menu width
+                this.$nextTick(() => {
+                    document.getElementById('dropdown-menu-'+this._uid).style.display = 'block';
+                });
+            } else {
+                document.getElementById('dropdown-menu-'+this._uid).style.display = 'none';
+            }
+        },
+        close() {
+            this.open = false;
+            document.getElementById('dropdown-menu-'+this._uid).style.display = 'none';
+        }
+    }
+}
+</script>
+@endpush
+
+@if (!isset($__dropdown_menu_rendered))
+    @php($__dropdown_menu_rendered = true)
+    <div x-data="{}" x-init="window.addEventListener('click', function(e) { if (!e.target.closest('.dropdown-portal')) { document.querySelectorAll('.dropdown-portal-menu').forEach(el => el.style.display = 'none'); } })"></div>
+@endif
+
+@foreach($properties as $property)
+    <div x-show="open" :id="'dropdown-menu-'+$id" class="dropdown-portal-menu fixed z-[9999] bg-white rounded shadow-lg border text-xs min-w-max" x-cloak style="display:none;" :style="'top:'+top+'px;left:'+left+'px;'">
+        <a href="{{ route('mobile.properties.qrcode', $property->id) }}" class="block px-4 py-2 hover:bg-gray-100">QR Code</a>
+        <a href="{{ route('guest.request.form', $property->access_link) }}" class="block px-4 py-2 hover:bg-gray-100">Link</a>
+        <a href="{{ route('mobile.properties.edit', $property->id) }}" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
+    </div>
+@endforeach 

@@ -35,14 +35,23 @@
     @auth
     <nav class="bg-white shadow mb-2 rounded-b-xl">
         <div class="grid grid-cols-3 divide-x divide-gray-200 text-center">
-            <a href="{{ route('mobile.properties.index') }}" class="block py-2">
+            <a href="{{ route('mobile.properties.index') }}" class="block py-2 relative">
                 <i class="fas fa-home text-2xl text-green-600"></i>
+                @if(isset($properties))
+                    <span class="absolute -top-1 right-3 bg-blue-600 text-white text-xs rounded-full px-1.5 min-w-[18px] text-center" style="font-size:10px;">{{ $properties->count() }}</span>
+                @endif
             </a>
-            <a href="{{ route('mobile.technicians.index') }}" class="block py-2">
+            <a href="{{ route('mobile.technicians.index') }}" class="block py-2 relative">
                 <i class="fas fa-user-cog text-2xl text-gray-700"></i>
+                @if(isset($technicians))
+                    <span class="absolute -top-1 right-3 bg-blue-600 text-white text-xs rounded-full px-1.5 min-w-[18px] text-center" style="font-size:10px;">{{ $technicians->count() }}</span>
+                @endif
             </a>
-            <a href="{{ route('mobile.manager.dashboard') }}" class="block py-2">
+            <a href="{{ route('mobile.manager.dashboard') }}" class="block py-2 relative">
                 <i class="fas fa-file-alt text-2xl text-gray-700"></i>
+                @if(isset($allRequests))
+                    <span class="absolute -top-1 right-3 bg-blue-600 text-white text-xs rounded-full px-1.5 min-w-[18px] text-center" style="font-size:10px;">{{ $allRequests->count() }}</span>
+                @endif
             </a>
         </div>
     </nav>
