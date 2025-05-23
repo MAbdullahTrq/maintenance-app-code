@@ -39,10 +39,10 @@
                                 </div>
                             </td>
                             <td class="p-1 align-top border-r border-gray-400">{{ $property->address }}</td>
-                            <td class="p-1 align-top">
+                            <td class="p-1 align-top border-r border-gray-400 overflow-visible">
                                 <div x-data="{ open: false }" class="relative">
                                     <button @click="open = !open" class="px-2 py-1"><i class="fas fa-ellipsis-v"></i></button>
-                                    <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-32 bg-white rounded shadow-lg z-50 border text-xs">
+                                    <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 min-w-max bg-white rounded shadow-lg z-[999] border text-xs">
                                         <a href="{{ route('mobile.properties.qrcode', $property->id) }}" class="block px-4 py-2 hover:bg-gray-100">QR Code</a>
                                         <a href="{{ route('guest.request.form', $property->access_link) }}" class="block px-4 py-2 hover:bg-gray-100">Link</a>
                                         <a href="{{ route('mobile.properties.edit', $property->id) }}" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
