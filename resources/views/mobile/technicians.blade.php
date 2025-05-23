@@ -5,7 +5,7 @@
 @section('content')
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
-        <div x-data="{ showForm: false, search: '' }">
+        <div x-data="{ showForm: false, search: '', dropdownOpen: false, dropdownTop: 0, dropdownLeft: 0, dropdownTech: null }">
             <div class="flex justify-between items-center mb-4">
                 <div class="font-bold text-lg">All Technicians</div>
                 <button @click="showForm = !showForm" class="bg-blue-600 text-white px-3 py-1 rounded text-xs">Add Technician</button>
@@ -42,27 +42,38 @@
                                 <a href="mailto:{{ $tech->email }}" class="text-blue-700 underline">{{ $tech->email }}</a><br>
                                 <a href="tel:{{ $tech->phone }}" class="text-gray-700">{{ $tech->phone }}</a>
                             </td>
-                            <td class="p-1 align-top">
-                                <div x-data="{ open: false }" class="relative">
-                                    <button @click="open = !open" class="px-2 py-1"><i class="fas fa-ellipsis-v"></i></button>
-                                    <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-32 bg-white rounded shadow-lg z-50 border text-xs">
-                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
-                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">View</a>
-                                        <form method="POST" action="{{ route('mobile.technicians.update', $tech->id) }}" class="block">
-                                            @csrf
-                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-100">Deactivate</button>
-                                        </form>
-                                        <form method="POST" action="{{ route('mobile.technicians.update', $tech->id) }}" class="block">
-                                            @csrf
-                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-100">Reset Password</button>
-                                        </form>
-                                    </div>
+                            <td class="p-1 align-top border-r border-gray-400">
+                                <div class="relative">
+                                    <button @click.prevent="
+                                        dropdownOpen = true;
+                                        dropdownTech = {{ $tech->id }};
+                                        const rect = $event.target.getBoundingClientRect();
+                                        dropdownTop = rect.bottom + window.scrollY;
+                                        dropdownLeft = rect.left + window.scrollX;
+                                    " class="px-2 py-1"><i class="fas fa-ellipsis-v"></i></button>
                                 </div>
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+            <!-- Single dropdown menu rendered outside the table -->
+            <div x-show="dropdownOpen" @click.away="dropdownOpen = false" class="fixed z-[9999] bg-white rounded shadow-lg border text-xs min-w-max" x-cloak :style="'top:'+dropdownTop+'px;left:'+dropdownLeft+'px;'">
+                <template x-if="dropdownTech">
+                    <div>
+                        <a :href="'{{ url('m/technicians') }}/' + dropdownTech + '/edit'" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
+                        <a :href="'{{ url('m/technicians') }}/' + dropdownTech" class="block px-4 py-2 hover:bg-gray-100">View</a>
+                        <form :action="'{{ url('m/technicians') }}/' + dropdownTech + '/deactivate'" method="POST" class="block">
+                            @csrf
+                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-100">Deactivate</button>
+                        </form>
+                        <form :action="'{{ url('m/technicians') }}/' + dropdownTech + '/reset-password'" method="POST" class="block">
+                            @csrf
+                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-100">Reset Password</button>
+                        </form>
+                    </div>
+                </template>
             </div>
         </div>
     </div>
