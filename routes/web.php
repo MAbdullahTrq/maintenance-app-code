@@ -191,8 +191,8 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::get('/ep/{id}', [MobilePropertyController::class, 'edit'])->name('mobile.properties.edit');
     Route::post('/ep/{id}', [MobilePropertyController::class, 'update'])->name('mobile.properties.update');
     Route::get('/ap/{id}/qrcode', [MobilePropertyController::class, 'qrcode'])->name('mobile.properties.qrcode');
-    Route::get('/manager/dashboard', [App\Http\Controllers\Mobile\DashboardController::class, 'index'])->name('manager.dashboard');
-    Route::get('/manager/all-requests', [App\Http\Controllers\Mobile\DashboardController::class, 'allRequests'])->name('manager.all-requests');
+    Route::get('/manager/dashboard', [App\Http\Controllers\Mobile\DashboardController::class, 'index'])->name('mobile.manager.dashboard');
+    Route::get('/manager/all-requests', [App\Http\Controllers\Mobile\DashboardController::class, 'allRequests'])->name('mobile.manager.all-requests');
     // More mobile routes will be added here
 });
 
