@@ -5,12 +5,12 @@
 @section('content')
 <div class="bg-white rounded-xl shadow p-4 max-w-md mx-auto">
     <h2 class="text-center text-2xl font-bold mb-2 text-yellow-600">{{ $property->name }}</h2>
-    <div class="flex justify-center gap-2 mb-4">
-        <a href="{{ route('mobile.properties.qrcode', $property->id) }}" class="bg-gray-200 px-3 py-1 rounded text-xs font-semibold">QR Code</a>
-        <a href="{{ route('guest.request.form', $property->access_link) }}" class="bg-gray-200 px-3 py-1 rounded text-xs font-semibold">Link</a>
-        <a href="{{ route('mobile.properties.edit', $property->id) }}" class="bg-blue-600 text-white px-3 py-1 rounded text-xs font-semibold">Edit</a>
+    <div class="grid grid-cols-3 gap-0 mb-4">
+        <a href="{{ route('mobile.properties.qrcode', $property->id) }}" class="border border-gray-300 border-r-0 rounded-l px-2 py-1 text-center text-xs font-semibold bg-gray-50">QR Code</a>
+        <a href="{{ route('guest.request.form', $property->access_link) }}" class="border-t border-b border-gray-300 px-2 py-1 text-center text-xs font-semibold bg-gray-50">Link</a>
+        <a href="{{ route('mobile.properties.edit', $property->id) }}" class="border border-gray-300 border-l-0 rounded-r px-2 py-1 text-center text-xs font-semibold bg-gray-50">Edit</a>
     </div>
-    <div class="bg-gray-50 rounded p-3 mb-6">
+    <div class="bg-white border rounded p-4 mb-6">
         <div class="mb-2">
             <span class="font-semibold">Property name</span><br>
             {{ $property->name }}

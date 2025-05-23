@@ -48,8 +48,8 @@
             <div x-show="dropdownOpen" @click.away="dropdownOpen = false" class="fixed z-[9999] bg-white rounded shadow-lg border text-xs min-w-max" x-cloak :style="'top:'+dropdownTop+'px;left:'+dropdownLeft+'px;'">
                 <template x-if="dropdownProperty">
                     <div>
-                        <a :href="'{{ url('m/properties') }}/' + dropdownProperty + '/edit'" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
-                        <a :href="'{{ url('m/properties') }}/' + dropdownProperty" class="block px-4 py-2 hover:bg-gray-100">View</a>
+                        <a :href="'{{ url('ep') }}/' + dropdownProperty" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
+                        <a :href="'{{ url('ap') }}/' + dropdownProperty" class="block px-4 py-2 hover:bg-gray-100">View</a>
                         <a :href="'{{ url('m/properties') }}/' + dropdownProperty + '/qrcode'" class="block px-4 py-2 hover:bg-gray-100">QR code</a>
                         <a :href="'{{ url('request/form') }}/' + (dropdownPropertyAccessLink[dropdownProperty] || '')" class="block px-4 py-2 hover:bg-gray-100">Link</a>
                     </div>
