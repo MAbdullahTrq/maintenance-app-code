@@ -8,7 +8,6 @@
     "require": {
         "php": "^8.2",
         "guzzlehttp/guzzle": "^7.2",
-        "intervention/image": "*",
         "jenssegers/agent": "^2.6",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
@@ -75,11 +74,6 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true,
-    "repositories": [
-    {
-        "type": "vcs",
-        "url": "https://github.com/Intervention/image"
-    }
-    ]
+    "prefer-stable": true
+   
 }
