@@ -49,7 +49,12 @@
                                         dropdownTech = {{ $tech->id }};
                                         const rect = $event.target.getBoundingClientRect();
                                         dropdownTop = rect.bottom + window.scrollY;
-                                        dropdownLeft = rect.left + window.scrollX;
+                                        let left = rect.left + window.scrollX;
+                                        const menuWidth = 150;
+                                        if (left + menuWidth > window.innerWidth) {
+                                            left = window.innerWidth - menuWidth - 8;
+                                        }
+                                        dropdownLeft = left;
                                     " class="px-2 py-1"><i class="fas fa-ellipsis-h"></i></button>
                                 </div>
                             </td>
