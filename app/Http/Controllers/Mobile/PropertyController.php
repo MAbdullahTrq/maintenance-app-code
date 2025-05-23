@@ -91,13 +91,31 @@ class PropertyController extends Controller
     public function show($id)
     {
         $property = Property::with('maintenanceRequests')->findOrFail($id);
-        return view('mobile.property_show', compact('property'));
+        $user = auth()->user();
+        $propertiesCount = \App\Models\Property::where('manager_id', $user->id)->count();
+        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $user->id)->pluck('id'))->count();
+        return view('mobile.property_show', [
+            'property' => $property,
+            'propertiesCount' => $propertiesCount,
+            'techniciansCount' => $techniciansCount,
+            'requestsCount' => $requestsCount,
+        ]);
     }
 
     public function edit($id)
     {
         $property = Property::findOrFail($id);
-        return view('mobile.edit_property', compact('property'));
+        $user = auth()->user();
+        $propertiesCount = \App\Models\Property::where('manager_id', $user->id)->count();
+        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $user->id)->pluck('id'))->count();
+        return view('mobile.edit_property', [
+            'property' => $property,
+            'propertiesCount' => $propertiesCount,
+            'techniciansCount' => $techniciansCount,
+            'requestsCount' => $requestsCount,
+        ]);
     }
 
     public function qrcode($id)

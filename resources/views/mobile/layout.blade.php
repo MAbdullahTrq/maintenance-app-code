@@ -47,7 +47,7 @@
                     <span class="text-xs font-bold text-gray-600 mt-1">{{ isset($technicians) ? $technicians->count() : (isset($techniciansCount) ? $techniciansCount : 0) }}</span>
                 </div>
             </a>
-            <a href="{{ route('mobile.manager.dashboard') }}" class="block py-2">
+            <a href="{{ route('mobile.manager.all-requests') }}" class="block py-2">
                 <div class="flex flex-col items-center">
                     <i class="fas fa-file-alt text-2xl text-gray-700"></i>
                     <span class="text-xs font-bold text-gray-600 mt-1">{{ isset($allRequests) ? $allRequests->count() : (isset($requestsCount) ? $requestsCount : 0) }}</span>
