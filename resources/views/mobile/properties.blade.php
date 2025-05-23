@@ -49,7 +49,7 @@
                 <template x-if="dropdownProperty">
                     <div>
                         <a :href="'{{ url('ep') }}/' + dropdownProperty" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
-                        <a :href="route('mobile.properties.show', dropdownProperty)" class="block px-4 py-2 hover:bg-gray-100">View</a>
+                        <a :href="'/m/ap/' + dropdownProperty" class="block px-4 py-2 hover:bg-gray-100">View</a>
                         <a :href="'{{ url('m/properties') }}/' + dropdownProperty + '/qrcode'" class="block px-4 py-2 hover:bg-gray-100">QR code</a>
                         <a :href="'{{ url('request/form') }}/' + (dropdownPropertyAccessLink[dropdownProperty] || '')" class="block px-4 py-2 hover:bg-gray-100">Link</a>
                     </div>
@@ -107,6 +107,6 @@ function dropdownPortal() {
     <div x-show="open" :id="'dropdown-menu-'+$id" class="dropdown-portal-menu fixed z-[9999] bg-white rounded shadow-lg border text-xs min-w-max" x-cloak style="display:none;" :style="'top:'+top+'px;left:'+left+'px;'">
         <a href="{{ route('mobile.properties.qrcode', $property->id) }}" class="block px-4 py-2 hover:bg-gray-100">QR Code</a>
         <a href="{{ route('guest.request.form', $property->access_link) }}" class="block px-4 py-2 hover:bg-gray-100">Link</a>
-        <a :href="route('mobile.properties.edit', $property->id)" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
+        <a :href="'/m/ep/' + $property->id" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
     </div>
 @endforeach 
