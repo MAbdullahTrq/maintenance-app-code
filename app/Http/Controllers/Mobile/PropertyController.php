@@ -13,7 +13,13 @@ class PropertyController extends Controller
     {
         $user = Auth::user();
         $properties = Property::where('manager_id', $user->id)->get();
-        return view('mobile.properties', ['properties' => $properties]);
+        $technicians = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->get();
+        $allRequests = \App\Models\MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->latest()->get();
+        return view('mobile.properties', [
+            'properties' => $properties,
+            'technicians' => $technicians,
+            'allRequests' => $allRequests,
+        ]);
     }
 
     public function store(Request $request)
