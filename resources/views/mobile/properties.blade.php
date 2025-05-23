@@ -5,7 +5,7 @@
 @section('content')
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
-        <div x-data="{ showForm: false }">
+        <div x-data="{ showForm: false, dropdownOpen: false, dropdownTop: 0, dropdownLeft: 0, dropdownProperty: null }">
             <div class="flex justify-between items-center mb-4">
                 <div class="font-bold text-lg">All Properties</div>
                 <button @click="showForm = !showForm" class="bg-blue-600 text-white px-3 py-1 rounded text-xs">Add Property</button>
@@ -40,8 +40,14 @@
                             </td>
                             <td class="p-1 align-top border-r border-gray-400">{{ $property->address }}</td>
                             <td class="p-1 align-top border-r border-gray-400">
-                                <div x-data="dropdownPortal()" class="relative">
-                                    <button @click="toggle($event)" class="px-2 py-1"><i class="fas fa-ellipsis-v"></i></button>
+                                <div class="relative">
+                                    <button @click.prevent="
+                                        dropdownOpen = true;
+                                        dropdownProperty = {{ $property->id }};
+                                        const rect = $event.target.getBoundingClientRect();
+                                        dropdownTop = rect.bottom + window.scrollY;
+                                        dropdownLeft = rect.right + window.scrollX - 140;
+                                    " class="px-2 py-1"><i class="fas fa-ellipsis-v"></i></button>
                                 </div>
                             </td>
                         </tr>
@@ -49,6 +55,25 @@
                     </tbody>
                 </table>
             </div>
+            <!-- Single dropdown menu rendered outside the table -->
+            <div x-show="dropdownOpen" @click.away="dropdownOpen = false" class="fixed z-[9999] bg-white rounded shadow-lg border text-xs min-w-max" x-cloak :style="'top:'+dropdownTop+'px;left:'+dropdownLeft+'px;'">
+                <template x-if="dropdownProperty">
+                    <div>
+                        <a :href="'{{ url('m/properties') }}/' + dropdownProperty + '/qrcode'" class="block px-4 py-2 hover:bg-gray-100">QR Code</a>
+                        <a :href="'{{ url('request/form') }}/' + (dropdownPropertyAccessLink[dropdownProperty] || '')" class="block px-4 py-2 hover:bg-gray-100">Link</a>
+                        <a :href="'{{ url('m/properties') }}/' + dropdownProperty + '/edit'" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
+                    </div>
+                </template>
+            </div>
+            <script>
+                document.addEventListener('alpine:init', () => {
+                    Alpine.data('dropdownPropertyAccessLink', () => ({
+                        @foreach($properties as $property)
+                            {{ $property->id }}: "{{ $property->access_link }}",
+                        @endforeach
+                    }));
+                });
+            </script>
         </div>
     </div>
 </div>
