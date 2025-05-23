@@ -169,7 +169,8 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/mobile', [App\Http\Controllers\Mobile\HomeController::class, 'index'])->name('mobile.home');
 
-Route::prefix('m')->group(function () {
+// Protect mobile routes with auth middleware
+Route::prefix('m')->middleware('auth')->group(function () {
     Route::get('/dash', [MobileDashboardController::class, 'index'])->name('mobile.manager.dashboard');
     Route::get('/r/{id}', [RequestController::class, 'show'])->name('mobile.request.show');
     Route::post('/r/{id}/approve', [RequestController::class, 'approve'])->name('mobile.request.approve');
@@ -180,11 +181,16 @@ Route::prefix('m')->group(function () {
     Route::post('/r/{id}/close', [RequestController::class, 'close'])->name('mobile.request.close');
     Route::get('/at', [MobileTechnicianController::class, 'index'])->name('mobile.technicians.index');
     Route::post('/at/add', [MobileTechnicianController::class, 'store'])->name('mobile.technicians.store');
-    Route::get('/ap', [MobilePropertyController::class, 'index'])->name('mobile.properties.index');
-    Route::post('/ap/add', [MobilePropertyController::class, 'store'])->name('mobile.properties.store');
     Route::post('/at/{id}/edit', [MobileTechnicianController::class, 'update'])->name('mobile.technicians.update');
     Route::post('/at/{id}/delete', [MobileTechnicianController::class, 'destroy'])->name('mobile.technicians.destroy');
+    Route::get('/ap', [MobilePropertyController::class, 'index'])->name('mobile.properties.index');
+    Route::post('/ap/add', [MobilePropertyController::class, 'store'])->name('mobile.properties.store');
     Route::post('/ap/{id}/edit', [MobilePropertyController::class, 'update'])->name('mobile.properties.update');
     Route::post('/ap/{id}/delete', [MobilePropertyController::class, 'destroy'])->name('mobile.properties.destroy');
     // More mobile routes will be added here
 });
+
+Route::get('/m/login', [App\Http\Controllers\Mobile\LoginController::class, 'showLoginForm'])->name('mobile.login');
+Route::post('/m/login', [App\Http\Controllers\Mobile\LoginController::class, 'login'])->name('mobile.login.submit');
+Route::get('/m/register', [App\Http\Controllers\Mobile\RegisterController::class, 'showRegistrationForm'])->name('mobile.register');
+Route::post('/m/register', [App\Http\Controllers\Mobile\RegisterController::class, 'register'])->name('mobile.register.submit');

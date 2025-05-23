@@ -9,6 +9,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        return view('mobile.welcome');
+        // If you want to pass data, fetch it here (e.g., stats, features, etc.)
+        return view('mobile.home');
     }
 }
