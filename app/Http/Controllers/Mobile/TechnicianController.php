@@ -15,4 +15,47 @@ class TechnicianController extends Controller
         $technicians = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->get();
         return view('mobile.technicians', ['technicians' => $technicians]);
     }
+
+    public function store(Request $request)
+    {
+        $user = Auth::user();
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|string|max:20',
+        ]);
+        $technician = new User();
+        $technician->name = $request->name;
+        $technician->email = $request->email;
+        $technician->phone = $request->phone;
+        $technician->invited_by = $user->id;
+        $technician->password = bcrypt('password'); // Default password, should be changed
+        $technician->save();
+        // Assign technician role
+        $technician->role_id = \App\Models\Role::where('slug', 'technician')->first()->id;
+        $technician->save();
+        return redirect()->route('mobile.technicians.index')->with('success', 'Technician added successfully.');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'phone' => 'required|string|max:20',
+        ]);
+        $technician = User::findOrFail($id);
+        $technician->name = $request->name;
+        $technician->email = $request->email;
+        $technician->phone = $request->phone;
+        $technician->save();
+        return redirect()->route('mobile.technicians.index')->with('success', 'Technician updated successfully.');
+    }
+
+    public function destroy($id)
+    {
+        $technician = User::findOrFail($id);
+        $technician->delete();
+        return redirect()->route('mobile.technicians.index')->with('success', 'Technician deleted successfully.');
+    }
 }

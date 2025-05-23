@@ -179,6 +179,12 @@ Route::prefix('m')->group(function () {
     Route::post('/r/{id}/complete', [RequestController::class, 'complete'])->name('mobile.request.complete');
     Route::post('/r/{id}/close', [RequestController::class, 'close'])->name('mobile.request.close');
     Route::get('/at', [MobileTechnicianController::class, 'index'])->name('mobile.technicians.index');
+    Route::post('/at/add', [MobileTechnicianController::class, 'store'])->name('mobile.technicians.store');
     Route::get('/ap', [MobilePropertyController::class, 'index'])->name('mobile.properties.index');
+    Route::post('/ap/add', [MobilePropertyController::class, 'store'])->name('mobile.properties.store');
+    Route::post('/at/{id}/edit', [MobileTechnicianController::class, 'update'])->name('mobile.technicians.update');
+    Route::post('/at/{id}/delete', [MobileTechnicianController::class, 'destroy'])->name('mobile.technicians.destroy');
+    Route::post('/ap/{id}/edit', [MobilePropertyController::class, 'update'])->name('mobile.properties.update');
+    Route::post('/ap/{id}/delete', [MobilePropertyController::class, 'destroy'])->name('mobile.properties.destroy');
     // More mobile routes will be added here
 });
