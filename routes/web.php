@@ -195,6 +195,9 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::get('/manager/dashboard', [App\Http\Controllers\Mobile\DashboardController::class, 'index'])->name('mobile.manager.dashboard');
     Route::get('/manager/all-requests', [App\Http\Controllers\Mobile\DashboardController::class, 'allRequests'])->name('mobile.manager.all-requests');
     Route::get('/profile', [App\Http\Controllers\Mobile\ProfileController::class, 'show'])->name('mobile.profile');
+    Route::post('/profile/update-picture', [App\Http\Controllers\Mobile\ProfileController::class, 'updatePicture'])->name('mobile.profile.update-picture');
+    Route::get('/profile/change-password', [App\Http\Controllers\Mobile\ProfileController::class, 'showChangePassword'])->name('mobile.profile.change-password');
+    Route::post('/profile/change-password', [App\Http\Controllers\Mobile\ProfileController::class, 'changePassword'])->name('mobile.profile.change-password.submit');
     // More mobile routes will be added here
 });
 

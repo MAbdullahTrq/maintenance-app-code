@@ -50,8 +50,8 @@
                     <div>
                         <a :href="'{{ url('m/ep') }}/' + dropdownProperty" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
                         <a :href="'/m/ap/' + dropdownProperty" class="block px-4 py-2 hover:bg-gray-100">View</a>
-                        <a :href="'{{ url('m/properties') }}/' + dropdownProperty + '/qrcode'" class="block px-4 py-2 hover:bg-gray-100">QR code</a>
-                        <a :href="'{{ url('request/form') }}/' + (dropdownPropertyAccessLink[dropdownProperty] || '')" class="block px-4 py-2 hover:bg-gray-100">Link</a>
+                        <a :href="'/m/ap/' + dropdownProperty + '/qrcode'" class="block px-4 py-2 hover:bg-gray-100">QR code</a>
+                        <a :href="'/request/' + (dropdownPropertyAccessLink[dropdownProperty] || '')" class="block px-4 py-2 hover:bg-gray-100">Link</a>
                     </div>
                 </template>
             </div>
