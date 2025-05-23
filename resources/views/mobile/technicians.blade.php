@@ -50,7 +50,7 @@
                                         const rect = $event.target.getBoundingClientRect();
                                         dropdownTop = rect.bottom + window.scrollY;
                                         dropdownLeft = rect.left + window.scrollX;
-                                    " class="px-2 py-1"><i class="fas fa-ellipsis-v"></i></button>
+                                    " class="px-2 py-1"><i class="fas fa-ellipsis-h"></i></button>
                                 </div>
                             </td>
                         </tr>
