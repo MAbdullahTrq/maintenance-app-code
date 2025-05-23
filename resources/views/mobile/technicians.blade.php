@@ -56,7 +56,7 @@
             <div x-show="dropdownOpen" @click.away="dropdownOpen = false" class="fixed z-[9999] bg-white rounded shadow-lg border text-xs min-w-max" x-cloak :style="'top:'+dropdownTop+'px;left:'+dropdownLeft+'px;'">
                 <template x-if="dropdownTech">
                     <div>
-                        <a :href="'{{ url('m/technicians') }}/' + dropdownTech + '/edit'" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
+                        <a :href="'{{ url('m/at') }}/' + dropdownTech + '/edit'" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
                         <a :href="'{{ url('m/technicians') }}/' + dropdownTech" class="block px-4 py-2 hover:bg-gray-100">View</a>
                         <form :action="'{{ url('m/technicians') }}/' + dropdownTech + '/deactivate'" method="POST" class="block">
                             @csrf
