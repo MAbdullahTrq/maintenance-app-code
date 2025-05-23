@@ -8,7 +8,7 @@
         <div x-data="{ showForm: false, search: '', dropdownOpen: false, dropdownTop: 0, dropdownLeft: 0, dropdownTech: null }">
             <div class="flex justify-between items-center mb-4">
                 <div class="font-bold text-lg">All Technicians</div>
-                <button @click="showForm = !showForm" class="bg-blue-600 text-white px-3 py-1 rounded text-xs">Add Technician</button>
+                <a href="{{ route('mobile.technicians.create') }}" class="bg-blue-600 text-white px-3 py-1 rounded text-xs">Add Technician</a>
             </div>
             <input type="text" x-model="search" placeholder="Search" class="w-full border rounded p-2 mb-4" />
             <form x-show="showForm" method="POST" action="{{ route('mobile.technicians.store') }}" class="mb-4 bg-gray-50 p-3 rounded border" @submit="showForm = false">

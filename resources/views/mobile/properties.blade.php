@@ -8,7 +8,7 @@
         <div x-data="{ showForm: false, dropdownOpen: false, dropdownTop: 0, dropdownLeft: 0, dropdownProperty: null }">
             <div class="flex justify-between items-center mb-4">
                 <div class="font-bold text-lg">All Properties</div>
-                <button @click="showForm = !showForm" class="bg-blue-600 text-white px-3 py-1 rounded text-xs">Add Property</button>
+                <a href="{{ route('mobile.properties.create') }}" class="bg-blue-600 text-white px-3 py-1 rounded text-xs">Add Property</a>
             </div>
             <form x-show="showForm" method="POST" action="{{ route('mobile.properties.store') }}" class="mb-4 bg-gray-50 p-3 rounded border" @submit="showForm = false">
                 @csrf
