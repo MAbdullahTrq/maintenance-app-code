@@ -9,29 +9,6 @@
 @section('content')
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
-        <div class="grid grid-cols-3 divide-x divide-gray-400 border border-gray-400 rounded mb-4 text-center">
-            <div class="py-2">
-                <a href="{{ route('mobile.properties.index') }}">
-                    <i class="fas fa-home text-3xl text-green-600"></i>
-                </a>
-                <div class="text-lg font-bold">{{ $properties->count() }}</div>
-                <div class="text-xs">+</div>
-            </div>
-            <div class="py-2">
-                <a href="{{ route('mobile.technicians.index') }}">
-                    <i class="fas fa-user-cog text-3xl text-gray-700"></i>
-                </a>
-                <div class="text-lg font-bold">{{ $technicians->count() }}</div>
-                <div class="text-xs">+</div>
-            </div>
-            <div class="py-2">
-                <a href="{{ route('mobile.manager.dashboard') }}">
-                    <i class="fas fa-file-alt text-3xl text-gray-700"></i>
-                </a>
-                <div class="text-lg font-bold">{{ $pendingRequests->count() }}</div>
-                <div class="text-xs">+</div>
-            </div>
-        </div>
         <div class="text-center font-bold text-lg mb-2">Pending Requests</div>
         @if($pendingRequests->count())
         <div class="overflow-x-auto">
