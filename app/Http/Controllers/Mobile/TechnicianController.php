@@ -65,4 +65,19 @@ class TechnicianController extends Controller
         $technician->delete();
         return redirect()->route('mobile.technicians.index')->with('success', 'Technician deleted successfully.');
     }
+
+    public function edit($id)
+    {
+        $technician = User::findOrFail($id);
+        $user = auth()->user();
+        $propertiesCount = \App\Models\Property::where('manager_id', $user->id)->count();
+        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $user->id)->pluck('id'))->count();
+        return view('mobile.edit_technician', [
+            'technician' => $technician,
+            'propertiesCount' => $propertiesCount,
+            'techniciansCount' => $techniciansCount,
+            'requestsCount' => $requestsCount,
+        ]);
+    }
 }

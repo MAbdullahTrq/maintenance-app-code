@@ -67,11 +67,16 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        Auth::logout();
-
+        $this->guard()->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        // Redirect to mobile login if the referrer or previous URL is a mobile route
+        $previous = url()->previous();
+        if (str_contains($previous, '/m/') || str_contains($previous, '/mobile')) {
+            return redirect('/m/login');
+        }
+
+        return redirect('/login'); // Default web login
     }
 } 
