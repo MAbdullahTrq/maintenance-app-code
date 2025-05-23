@@ -6,7 +6,6 @@
 <div class="flex justify-center min-h-screen items-center bg-blue-50">
     <div class="bg-white rounded-xl shadow p-6 w-full max-w-xs">
         <div class="mb-4 text-center">
-            <img src="/logo.png" alt="Logo" class="mx-auto h-12 mb-2">
             <h1 class="text-xl font-bold">Sign In</h1>
         </div>
         <form method="POST" action="{{ route('mobile.login.submit') }}">
