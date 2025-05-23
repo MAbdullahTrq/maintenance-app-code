@@ -54,17 +54,29 @@
             <div class="font-semibold mt-2">Location</div>
             <div>{{ $request->location }}</div>
         </div>
-        {{-- IMAGES SECTION --}}
-        @if($request->images && $request->images->count() > 0)
-        <div class="mb-4">
-            <div class="font-semibold mb-1">Images</div>
-            <div class="flex flex-wrap gap-2">
+        <!-- Images Section with Popup -->
+        <div x-data="{ showModal: false, modalImage: '' }">
+            <div class="flex flex-wrap gap-2 mb-2">
                 @foreach($request->images as $image)
-                    <img src="{{ asset('storage/' . $image->image_path) }}" alt="Request Image" class="w-24 h-24 object-cover rounded border">
+                    <img 
+                        src="{{ asset('storage/' . $image->image_path) }}" 
+                        alt="Request Image" 
+                        class="w-20 h-20 object-cover rounded cursor-pointer"
+                        @click="showModal = true; modalImage = '{{ asset('storage/' . $image->image_path) }}'"
+                    >
                 @endforeach
             </div>
+            <!-- Modal -->
+            <div 
+                x-show="showModal" 
+                x-transition 
+                class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
+                @click.self="showModal = false"
+                style="display: none;"
+            >
+                <img :src="modalImage" class="max-h-[80vh] max-w-[90vw] rounded shadow-lg border-4 border-white">
+            </div>
         </div>
-        @endif
         {{-- COMMENTS SECTION --}}
         @if($request->comments && $request->comments->count() > 0)
         <div class="mb-4">
