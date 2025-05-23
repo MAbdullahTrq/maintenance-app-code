@@ -28,7 +28,7 @@
                             <th class="p-1 border-r border-gray-400"> </th>
                             <th class="p-1 border-r border-gray-400">Name</th>
                             <th class="p-1 border-r border-gray-400">Address</th>
-                            <th class="p-1"></th>
+                            <th class="p-1">Actions</th>
                         </tr>
                     </thead>
                     <tbody>

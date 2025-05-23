@@ -26,6 +26,7 @@
                         <tr class="bg-gray-100 border-b border-gray-400">
                             <th class="p-1 border-r border-gray-400">Name</th>
                             <th class="p-1 border-r border-gray-400">Address</th>
+                            <th class="p-1">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,6 +39,17 @@
                                 </div>
                             </td>
                             <td class="p-1 align-top border-r border-gray-400">{{ $property->address }}</td>
+                            <td class="p-1 align-top border-r border-gray-400">
+                                <div class="relative">
+                                    <button @click.prevent="
+                                        dropdownOpen = true;
+                                        dropdownProperty = {{ $property->id }};
+                                        const rect = $event.target.getBoundingClientRect();
+                                        dropdownTop = rect.bottom + window.scrollY;
+                                        dropdownLeft = rect.left + window.scrollX;
+                                    " class="px-2 py-1"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

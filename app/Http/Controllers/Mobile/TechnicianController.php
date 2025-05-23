@@ -12,13 +12,14 @@ class TechnicianController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $properties = \App\Models\Property::where('manager_id', $user->id)->get();
-        $technicians = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->get();
-        $allRequests = \App\Models\MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->latest()->get();
+        $technicians = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->get();
+        $propertiesCount = \App\Models\Property::where('manager_id', $user->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $user->id)->pluck('id'))->count();
         return view('mobile.technicians', [
             'technicians' => $technicians,
-            'properties' => $properties,
-            'allRequests' => $allRequests,
+            'techniciansCount' => $technicians->count(),
+            'propertiesCount' => $propertiesCount,
+            'requestsCount' => $requestsCount,
         ]);
     }
 
