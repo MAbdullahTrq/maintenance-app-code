@@ -5,7 +5,7 @@
 @section('content')
 <div class="bg-white rounded-xl shadow p-4 max-w-md mx-auto">
     <h2 class="text-center text-2xl font-bold mb-4">Edit Property</h2>
-    <form method="POST" action="{{ route('mobile.properties.update', $property->id) }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('mobile.properties.update', $property->id) }}" enctype="multipart/form-data" x-data="{ imagePreview: null, showPreview: false }">
         @csrf
         <div class="mb-3">
             <label class="block font-semibold mb-1">Property name*</label>
@@ -21,10 +21,40 @@
         </div>
         <div class="mb-3">
             <label class="block font-semibold mb-1">Property image</label>
-            <div class="bg-white border rounded flex items-center justify-center py-4">
-                <input type="file" name="image" accept="image/jpeg,image/png,image/jpg,image/gif" class="">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-white border rounded p-4">
+                    <input type="file" 
+                           name="image" 
+                           accept="image/jpeg,image/png,image/jpg,image/gif" 
+                           class="w-full"
+                           @change="
+                               const file = $event.target.files[0];
+                               if (file) {
+                                   const reader = new FileReader();
+                                   reader.onload = (e) => {
+                                       imagePreview = e.target.result;
+                                       showPreview = true;
+                                   };
+                                   reader.readAsDataURL(file);
+                               }
+                           ">
+                    <div class="text-xs text-gray-500 mt-1">(JPEG, PNG, JPG, GIF, max 2MB)</div>
+                </div>
+                <div class="bg-white border rounded p-4 flex items-center justify-center">
+                    <template x-if="showPreview">
+                        <img :src="imagePreview" class="max-h-40 object-contain">
+                    </template>
+                    <template x-if="!showPreview && '{{ $property->image }}'">
+                        <img src="{{ asset('storage/' . $property->image) }}" class="max-h-40 object-contain">
+                    </template>
+                    <template x-if="!showPreview && !'{{ $property->image }}'">
+                        <div class="text-gray-400 text-center">
+                            <i class="fas fa-image text-4xl mb-2"></i>
+                            <div class="text-sm">No image</div>
+                        </div>
+                    </template>
+                </div>
             </div>
-            <div class="text-xs text-gray-500 mt-1">(JPEG, PNG, JPG, GIF, max 2MB)</div>
         </div>
         <div class="flex gap-2 mt-6">
             <a href="{{ route('mobile.properties.index') }}" class="w-1/2 bg-gray-300 text-black py-2 rounded text-center font-semibold">Cancel</a>

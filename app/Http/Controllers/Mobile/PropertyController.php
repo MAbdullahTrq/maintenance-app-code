@@ -6,9 +6,18 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Property;
 use Illuminate\Support\Facades\Auth;
+use App\Services\ImageOptimizationService;
+use Illuminate\Support\Facades\Storage;
 
 class PropertyController extends Controller
 {
+    protected $imageService;
+
+    public function __construct(ImageOptimizationService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     public function index()
     {
         $user = Auth::user();
@@ -49,14 +58,27 @@ class PropertyController extends Controller
             'special_instructions' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+        
         $property->name = $request->name;
         $property->address = $request->address;
         $property->special_instructions = $request->special_instructions;
+        
         if ($request->hasFile('image')) {
-            $property->image = $request->file('image')->store('property-images', 'public');
+            // Delete old image if exists
+            if ($property->image) {
+                Storage::delete('public/' . $property->image);
+            }
+            
+            // Optimize and store new image
+            $property->image = $this->imageService->optimizeAndResize(
+                $request->file('image'),
+                'property-images'
+            );
         }
+        
         $property->save();
-        return redirect()->route('mobile.properties.show', $property->id)->with('success', 'Property updated successfully.');
+        return redirect()->route('mobile.properties.show', $property->id)
+            ->with('success', 'Property updated successfully.');
     }
 
     public function destroy($id)

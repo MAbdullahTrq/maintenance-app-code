@@ -1,21 +1,16 @@
 @extends('mobile.layout')
 
-@section('title', 'Dash – Manager')
+@section('title', 'All Requests - Manager')
 
 @section('header-actions')
-<a href="#" class="text-sm font-medium">Manager &gt;</a>
+<a href="{{ route('mobile.manager.dashboard') }}" class="text-sm font-medium">Back to Dashboard</a>
 @endsection
 
 @section('content')
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
-        <div class="flex justify-between items-center mb-2">
-            <div class="text-center font-bold text-lg">Pending Requests</div>
-            <a href="{{ route('mobile.manager.all-requests') }}" class="text-sm text-blue-600 hover:text-blue-800">
-                View All Requests
-            </a>
-        </div>
-        @if($pendingRequests->count())
+        <div class="text-center font-bold text-lg mb-2">All Requests</div>
+        @if($allRequests->count())
         <div class="overflow-x-auto">
             <table class="min-w-full text-xs border border-gray-400 border-collapse rounded overflow-hidden">
                 <thead>
@@ -23,11 +18,12 @@
                         <th class="p-1 border-r border-gray-400">Property</th>
                         <th class="p-1 border-r border-gray-400">Priority</th>
                         <th class="p-1 border-r border-gray-400">Date</th>
+                        <th class="p-1 border-r border-gray-400">Status</th>
                         <th class="p-1"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($pendingRequests as $req)
+                    @foreach($allRequests as $req)
                     <tr class="border-b border-gray-400">
                         <td class="p-1 align-top border-r border-gray-400">
                             <span class="font-semibold">{{ $req->property->name }}</span><br>
@@ -37,6 +33,7 @@
                             {{ ucfirst($req->priority) }}
                         </td>
                         <td class="p-1 align-top border-r border-gray-400">{{ \Carbon\Carbon::parse($req->created_at)->format('d M, Y') }}</td>
+                        <td class="p-1 align-top border-r border-gray-400">{{ ucfirst($req->status) }}</td>
                         <td class="p-1 align-top">
                             <a href="{{ route('mobile.maintenance.show', $req->id) }}" class="text-blue-600 hover:text-blue-800">
                                 <i class="fas fa-eye"></i>
@@ -48,7 +45,7 @@
             </table>
         </div>
         @else
-        <div class="text-center text-gray-500 py-4">No pending requests.</div>
+        <div class="text-center text-gray-500 py-4">No requests found.</div>
         @endif
     </div>
 </div>

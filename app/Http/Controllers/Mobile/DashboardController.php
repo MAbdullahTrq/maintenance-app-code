@@ -21,11 +21,23 @@ class DashboardController extends Controller
         $properties = Property::where('manager_id', $user->id)->get();
         $technicians = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->get();
         $pendingRequests = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->where('status', 'pending')->get();
-        $allRequests = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->latest()->get();
         return view('mobile.dashboard', [
             'properties' => $properties,
             'technicians' => $technicians,
             'pendingRequests' => $pendingRequests,
+        ]);
+    }
+
+    public function allRequests()
+    {
+        $user = Auth::user();
+        // Only allow property managers
+        if (!$user || !$user->isPropertyManager()) {
+            abort(403);
+        }
+        $properties = Property::where('manager_id', $user->id)->get();
+        $allRequests = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->latest()->get();
+        return view('mobile.all_requests', [
             'allRequests' => $allRequests,
         ]);
     }
