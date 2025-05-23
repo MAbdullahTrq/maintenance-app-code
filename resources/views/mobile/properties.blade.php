@@ -33,29 +33,22 @@
                         @foreach($properties as $property)
                         <tr class="border-b border-gray-400">
                             <td class="p-1 align-top border-r border-gray-400">
-                                <div x-data="{ edit: false }">
-                                    <span x-show="!edit">{{ $property->name }}</span>
-                                    <form x-show="edit" method="POST" action="{{ route('mobile.properties.update', $property->id) }}" class="flex flex-col gap-1">
-                                        @csrf
-                                        <input type="text" name="name" class="border rounded p-1 mb-1" value="{{ $property->name }}" required>
-                                        <input type="text" name="address" class="border rounded p-1 mb-1" value="{{ $property->address }}" required>
-                                        <input type="text" name="special_instructions" class="border rounded p-1 mb-1" value="{{ $property->special_instructions }}">
-                                        <div class="flex gap-1">
-                                            <button type="submit" class="w-1/2 bg-blue-700 text-white py-1 rounded text-xs">Save</button>
-                                            <button type="button" @click="edit = false" class="w-1/2 bg-gray-300 text-black py-1 rounded text-xs">Cancel</button>
-                                        </div>
-                                    </form>
-                                    <div class="flex gap-1 mt-1" x-show="!edit">
-                                        <button @click="edit = true" class="bg-yellow-400 text-black px-2 py-1 rounded text-xs">Edit</button>
-                                        <form method="POST" action="{{ route('mobile.properties.destroy', $property->id) }}" onsubmit="return confirm('Are you sure you want to delete this property?');">
-                                            @csrf
-                                            <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded text-xs">Delete</button>
-                                        </form>
-                                    </div>
+                                <div class="flex items-center gap-2">
+                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($property->name) }}&background=eee&color=555&size=32" class="rounded-full w-7 h-7" alt="Profile">
+                                    <a href="{{ route('mobile.properties.show', $property->id) }}" class="font-semibold text-blue-700">{{ $property->name }}</a>
                                 </div>
                             </td>
                             <td class="p-1 align-top border-r border-gray-400">{{ $property->address }}</td>
-                            <td class="p-1 align-top">{{ $property->special_instructions }}</td>
+                            <td class="p-1 align-top">
+                                <div x-data="{ open: false }" class="relative">
+                                    <button @click="open = !open" class="px-2 py-1"><i class="fas fa-ellipsis-v"></i></button>
+                                    <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-32 bg-white rounded shadow-lg z-10 border text-xs">
+                                        <a href="{{ route('mobile.properties.qrcode', $property->id) }}" class="block px-4 py-2 hover:bg-gray-100">QR Code</a>
+                                        <a href="{{ route('guest.request.form', $property->access_link) }}" class="block px-4 py-2 hover:bg-gray-100">Link</a>
+                                        <a href="{{ route('mobile.properties.edit', $property->id) }}" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

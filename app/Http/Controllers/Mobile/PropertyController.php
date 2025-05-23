@@ -35,17 +35,21 @@ class PropertyController extends Controller
 
     public function update(Request $request, $id)
     {
+        $property = Property::findOrFail($id);
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
             'special_instructions' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        $property = Property::findOrFail($id);
         $property->name = $request->name;
         $property->address = $request->address;
         $property->special_instructions = $request->special_instructions;
+        if ($request->hasFile('image')) {
+            $property->image = $request->file('image')->store('property-images', 'public');
+        }
         $property->save();
-        return redirect()->route('mobile.properties.index')->with('success', 'Property updated successfully.');
+        return redirect()->route('mobile.properties.show', $property->id)->with('success', 'Property updated successfully.');
     }
 
     public function destroy($id)
@@ -53,5 +57,27 @@ class PropertyController extends Controller
         $property = Property::findOrFail($id);
         $property->delete();
         return redirect()->route('mobile.properties.index')->with('success', 'Property deleted successfully.');
+    }
+
+    public function show($id)
+    {
+        $property = Property::with('maintenanceRequests')->findOrFail($id);
+        return view('mobile.property_show', compact('property'));
+    }
+
+    public function edit($id)
+    {
+        $property = Property::findOrFail($id);
+        return view('mobile.edit_property', compact('property'));
+    }
+
+    public function qrcode($id)
+    {
+        $property = Property::findOrFail($id);
+        if (!$property->qr_code) {
+            // Generate QR code if not exists
+            $property->generateQrCode();
+        }
+        return response()->file(storage_path('app/public/' . $property->qr_code));
     }
 }

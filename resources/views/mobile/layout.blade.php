@@ -32,6 +32,21 @@
         </div>
         @endauth
     </header>
+    @auth
+    <nav class="bg-white shadow mb-2 rounded-b-xl">
+        <div class="grid grid-cols-3 divide-x divide-gray-200 text-center">
+            <a href="{{ route('mobile.properties.index') }}" class="block py-2">
+                <i class="fas fa-home text-2xl text-green-600"></i>
+            </a>
+            <a href="{{ route('mobile.technicians.index') }}" class="block py-2">
+                <i class="fas fa-user-cog text-2xl text-gray-700"></i>
+            </a>
+            <a href="{{ route('mobile.manager.dashboard') }}" class="block py-2">
+                <i class="fas fa-file-alt text-2xl text-gray-700"></i>
+            </a>
+        </div>
+    </nav>
+    @endauth
     <main class="p-2">
         @yield('content')
     </main>

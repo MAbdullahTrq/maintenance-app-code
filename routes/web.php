@@ -187,6 +187,10 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::post('/ap/add', [MobilePropertyController::class, 'store'])->name('mobile.properties.store');
     Route::post('/ap/{id}/edit', [MobilePropertyController::class, 'update'])->name('mobile.properties.update');
     Route::post('/ap/{id}/delete', [MobilePropertyController::class, 'destroy'])->name('mobile.properties.destroy');
+    Route::get('/ap/{id}', [MobilePropertyController::class, 'show'])->name('mobile.properties.show');
+    Route::get('/ep/{id}', [MobilePropertyController::class, 'edit'])->name('mobile.properties.edit');
+    Route::post('/ep/{id}', [MobilePropertyController::class, 'update'])->name('mobile.properties.update');
+    Route::get('/ap/{id}/qrcode', [MobilePropertyController::class, 'qrcode'])->name('mobile.properties.qrcode');
     // More mobile routes will be added here
 });
 
