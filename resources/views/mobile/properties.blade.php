@@ -46,7 +46,7 @@
                                         dropdownProperty = {{ $property->id }};
                                         const rect = $event.target.getBoundingClientRect();
                                         dropdownTop = rect.bottom + window.scrollY;
-                                        dropdownLeft = rect.right + window.scrollX - 140;
+                                        dropdownLeft = rect.left + window.scrollX;
                                     " class="px-2 py-1"><i class="fas fa-ellipsis-v"></i></button>
                                 </div>
                             </td>
