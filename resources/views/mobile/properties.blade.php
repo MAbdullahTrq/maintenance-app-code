@@ -20,7 +20,7 @@
                     <button type="button" @click="showForm = false" class="w-1/2 bg-gray-300 text-black py-2 rounded">Cancel</button>
                 </div>
             </form>
-            <div class="overflow-x-auto">
+            <div class="overflow-x-visible">
                 <table class="min-w-full text-xs border border-gray-400 border-collapse rounded overflow-hidden">
                     <thead>
                         <tr class="bg-gray-100 border-b border-gray-400">
@@ -42,7 +42,7 @@
                             <td class="p-1 align-top">
                                 <div x-data="{ open: false }" class="relative">
                                     <button @click="open = !open" class="px-2 py-1"><i class="fas fa-ellipsis-v"></i></button>
-                                    <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-32 bg-white rounded shadow-lg z-10 border text-xs">
+                                    <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-32 bg-white rounded shadow-lg z-50 border text-xs">
                                         <a href="{{ route('mobile.properties.qrcode', $property->id) }}" class="block px-4 py-2 hover:bg-gray-100">QR Code</a>
                                         <a href="{{ route('guest.request.form', $property->access_link) }}" class="block px-4 py-2 hover:bg-gray-100">Link</a>
                                         <a href="{{ route('mobile.properties.edit', $property->id) }}" class="block px-4 py-2 hover:bg-gray-100">Edit</a>

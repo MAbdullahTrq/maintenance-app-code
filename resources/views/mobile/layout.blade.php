@@ -10,7 +10,7 @@
 </head>
 <body class="bg-gray-50 min-h-screen">
     <header class="bg-white shadow p-4 flex items-center justify-between">
-        <div class="font-extrabold text-xl"><span class="text-blue-700">Maintain</span><span class="text-black">Xtra</span></div>
+        <a href="{{ route('mobile.manager.dashboard') }}" class="font-extrabold text-xl"><span class="text-blue-700">Maintain</span><span class="text-black">Xtra</span></a>
         @auth
         <div x-data="{ open: false }" class="relative">
             <button @click="open = !open" @click.away="open = false" class="text-sm font-medium flex items-center focus:outline-none">
