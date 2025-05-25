@@ -11,7 +11,11 @@ class ProfileController extends Controller
     public function show()
     {
         $user = Auth::user();
-        return view('mobile.profile', compact('user'));
+        // Stats for nav bar
+        $propertiesCount = \App\Models\Property::where('manager_id', $user->id)->count();
+        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $user->id)->pluck('id'))->count();
+        return view('mobile.profile', compact('user', 'propertiesCount', 'techniciansCount', 'requestsCount'));
     }
 
     public function updatePicture(Request $request)
