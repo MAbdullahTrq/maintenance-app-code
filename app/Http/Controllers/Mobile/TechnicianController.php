@@ -80,4 +80,14 @@ class TechnicianController extends Controller
             'requestsCount' => $requestsCount,
         ]);
     }
+
+    public function show($id)
+    {
+        $technician = User::findOrFail($id);
+        // Optionally, check if the user is a technician
+        if (!$technician->role || $technician->role->slug !== 'technician') {
+            abort(404);
+        }
+        return view('mobile.technician_show', compact('technician'));
+    }
 }
