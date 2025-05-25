@@ -184,6 +184,7 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::get('/at/{id}/edit', [App\Http\Controllers\Mobile\TechnicianController::class, 'edit'])->name('mobile.technicians.edit');
     Route::post('/at/{id}/delete', [MobileTechnicianController::class, 'destroy'])->name('mobile.technicians.destroy');
     Route::post('/at/{id}/edit', [App\Http\Controllers\Mobile\TechnicianController::class, 'update'])->name('mobile.technicians.update');
+    Route::get('/at/{id}', [App\Http\Controllers\Mobile\TechnicianController::class, 'show'])->name('mobile.technicians.show');
     Route::get('/ap', [MobilePropertyController::class, 'index'])->name('mobile.properties.index');
     Route::post('/ap/add', [MobilePropertyController::class, 'store'])->name('mobile.properties.store');
     Route::post('/ap/{id}/edit', [MobilePropertyController::class, 'update'])->name('mobile.properties.update');
