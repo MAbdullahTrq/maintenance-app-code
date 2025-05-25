@@ -3,8 +3,8 @@
 @section('title', 'Mobile Login')
 
 @section('content')
-<div class="flex justify-center min-h-screen bg-blue-50">
-    <div class="flex flex-col justify-center w-full max-w-xs mx-auto" style="min-height: 70vh;">
+<div class="flex bg-blue-50">
+    <div class="flex flex-col w-full max-w-xs mx-auto mt-10">
         <div class="bg-white rounded-xl shadow p-6 w-full">
             <div class="mb-4 text-center">
                 <h1 class="text-xl font-bold">Sign In</h1>
@@ -27,7 +27,7 @@
                 <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded font-semibold">Login</button>
             </form>
             <div class="mt-4 flex flex-col gap-2 text-center">
-                <a href="/" class="text-blue-700 underline text-sm">&larr; Back to homepage</a>
+                <a href="/mobile" class="text-blue-700 underline text-sm">&larr; Back to homepage</a>
                 <span class="text-xs text-gray-500">Don't have an account?
                     <a href="{{ route('mobile.register') }}" class="text-blue-700 underline">Sign up</a>
                 </span>
