@@ -206,3 +206,9 @@ Route::get('/m/login', [App\Http\Controllers\Mobile\LoginController::class, 'sho
 Route::post('/m/login', [App\Http\Controllers\Mobile\LoginController::class, 'login'])->name('mobile.login.submit');
 Route::get('/m/register', [App\Http\Controllers\Mobile\RegisterController::class, 'showRegistrationForm'])->name('mobile.register');
 Route::post('/m/register', [App\Http\Controllers\Mobile\RegisterController::class, 'register'])->name('mobile.register.submit');
+
+// Technician mobile dashboard routes
+Route::prefix('t')->middleware(['auth', 'technician'])->group(function () {
+    Route::get('/', [App\Http\Controllers\Mobile\TechnicianController::class, 'dashboard'])->name('mobile.technician.dashboard');
+    // More technician routes will be added here (assigned, accepted, started, etc.)
+});

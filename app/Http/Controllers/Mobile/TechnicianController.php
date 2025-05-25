@@ -103,4 +103,32 @@ class TechnicianController extends Controller
             'requestsCount' => $requestsCount,
         ]);
     }
+
+    public function dashboard()
+    {
+        $user = Auth::user();
+        // Assigned: status = 'assigned'
+        $assignedRequests = \App\Models\MaintenanceRequest::where('assigned_to', $user->id)
+            ->where('status', 'assigned')
+            ->with('property')
+            ->get();
+        // Accepted: status = 'accepted' or 'started'
+        $acceptedRequests = \App\Models\MaintenanceRequest::where('assigned_to', $user->id)
+            ->whereIn('status', ['accepted', 'started'])
+            ->with('property')
+            ->get();
+        // Completed: status = 'completed'
+        $completedRequests = \App\Models\MaintenanceRequest::where('assigned_to', $user->id)
+            ->where('status', 'completed')
+            ->with('property')
+            ->get();
+        return view('mobile.technician_dashboard', [
+            'assignedRequests' => $assignedRequests,
+            'acceptedRequests' => $acceptedRequests,
+            'completedRequests' => $completedRequests,
+            'assignedCount' => $assignedRequests->count(),
+            'acceptedCount' => $acceptedRequests->count(),
+            'completedCount' => $completedRequests->count(),
+        ]);
+    }
 }
