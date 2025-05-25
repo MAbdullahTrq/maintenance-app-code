@@ -24,7 +24,13 @@
         <form method="POST" action="{{ route('mobile.profile.update-picture') }}" enctype="multipart/form-data" class="w-full flex flex-col items-center mb-4">
             @csrf
             <label class="block w-full text-center mb-2 font-semibold">Change Profile Picture</label>
-            <input type="file" name="image" accept="image/jpeg,image/png,image/jpg,image/gif" class="w-full mb-2 border rounded p-2">
+            <div class="w-full flex items-center gap-2 mb-2">
+                <label class="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer font-semibold" for="profile-image-input">
+                    Choose File
+                </label>
+                <span id="file-chosen" class="text-gray-700 text-sm truncate">No file chosen</span>
+                <input id="profile-image-input" type="file" name="image" accept="image/jpeg,image/png,image/jpg,image/gif" class="hidden" onchange="document.getElementById('file-chosen').textContent = this.files[0] ? this.files[0].name : 'No file chosen'">
+            </div>
             <button type="submit" class="bg-blue-600 text-white px-4 py-1 rounded font-semibold w-full">Upload</button>
         </form>
         <a href="{{ route('mobile.profile.change-password') }}" class="block w-full bg-yellow-500 text-white py-2 rounded font-semibold text-center mb-2">Change Password</a>
