@@ -5,7 +5,7 @@
 @section('content')
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
-        <div x-data="{ showForm: false, dropdownOpen: false, dropdownTop: 0, dropdownLeft: 0, dropdownProperty: null }">
+        <div x-data="{ showForm: false, dropdownOpen: false, dropdownTop: 0, dropdownLeft: 0, dropdownProperty: null, dropdownAccessLink: '' }">
             <div class="flex justify-between items-center mb-4">
                 <div class="font-bold text-lg">All Properties</div>
             </div>
@@ -33,6 +33,7 @@
                                     <button @click.prevent="
                                         dropdownOpen = true;
                                         dropdownProperty = {{ $property->id }};
+                                        dropdownAccessLink = '{{ $property->access_link }}';
                                         const rect = $event.target.getBoundingClientRect();
                                         dropdownTop = rect.bottom + window.scrollY;
                                         dropdownLeft = rect.left + window.scrollX;
@@ -51,7 +52,7 @@
                         <a :href="'{{ url('m/ep') }}/' + dropdownProperty" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
                         <a :href="'/m/ap/' + dropdownProperty" class="block px-4 py-2 hover:bg-gray-100">View</a>
                         <a :href="'/m/ap/' + dropdownProperty + '/qrcode'" class="block px-4 py-2 hover:bg-gray-100">QR code</a>
-                        <a :href="'/request/' + (dropdownPropertyAccessLink[dropdownProperty] || '')" class="block px-4 py-2 hover:bg-gray-100">Link</a>
+                        <a :href="'/request/' + dropdownAccessLink" class="block px-4 py-2 hover:bg-gray-100">Link</a>
                     </div>
                 </template>
             </div>
