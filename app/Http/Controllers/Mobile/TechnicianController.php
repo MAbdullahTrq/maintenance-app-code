@@ -84,10 +84,23 @@ class TechnicianController extends Controller
     public function show($id)
     {
         $technician = User::findOrFail($id);
-        // Optionally, check if the user is a technician
-        if (!$technician->role || $technician->role->slug !== 'technician') {
-            abort(404);
-        }
-        return view('mobile.technician_show', compact('technician'));
+        // Get all properties managed by the current manager
+        $user = auth()->user();
+        $properties = \App\Models\Property::where('manager_id', $user->id)->get();
+        // Get maintenance requests assigned to this technician for these properties
+        $maintenanceRequests = \App\Models\MaintenanceRequest::where('assigned_to', $technician->id)
+            ->whereIn('property_id', $properties->pluck('id'))
+            ->with('property')
+            ->get();
+        $propertiesCount = $properties->count();
+        $techniciansCount = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->count();
+        return view('mobile.technician_show', [
+            'technician' => $technician,
+            'maintenanceRequests' => $maintenanceRequests,
+            'propertiesCount' => $propertiesCount,
+            'techniciansCount' => $techniciansCount,
+            'requestsCount' => $requestsCount,
+        ]);
     }
 }
