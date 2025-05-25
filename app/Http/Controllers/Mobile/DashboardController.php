@@ -37,8 +37,14 @@ class DashboardController extends Controller
         }
         $properties = Property::where('manager_id', $user->id)->get();
         $allRequests = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->latest()->get();
+        $propertiesCount = $properties->count();
+        $techniciansCount = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
+        $requestsCount = $allRequests->count();
         return view('mobile.all_requests', [
             'allRequests' => $allRequests,
+            'propertiesCount' => $propertiesCount,
+            'techniciansCount' => $techniciansCount,
+            'requestsCount' => $requestsCount,
         ]);
     }
 }
