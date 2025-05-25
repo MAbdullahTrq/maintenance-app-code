@@ -2,6 +2,12 @@
 
 @section('title', 'Mobile Home')
 
+@section('header-actions')
+    @guest
+        <a href="{{ route('mobile.login') }}" class="text-blue-700 font-semibold px-4 py-2 rounded hover:underline">Login</a>
+    @endguest
+@endsection
+
 @section('content')
 <div class="bg-blue-700 text-white text-center py-8 rounded-b-3xl shadow">
     <h1 class="text-2xl font-bold mb-2">
