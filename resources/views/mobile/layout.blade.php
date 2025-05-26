@@ -10,7 +10,19 @@
 </head>
 <body class="bg-gray-50 min-h-screen">
     <header class="bg-white shadow p-4 flex items-center justify-between">
-        <a href="{{ route('mobile.manager.dashboard') }}" class="font-extrabold text-xl"><span class="text-blue-700">Maintain</span><span class="text-black">Xtra</span></a>
+        <a href="@auth
+            @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
+                {{ route('mobile.manager.dashboard') }}
+            @elseif(Auth::user() && method_exists(Auth::user(), 'isTechnician') && Auth::user()->isTechnician())
+                {{ route('mobile.technician.dashboard') }}
+            @else
+                /mobile
+            @endif
+        @else
+            /mobile
+        @endauth" class="font-extrabold text-xl">
+            <span class="text-blue-700">Maintain</span><span class="text-black">Xtra</span>
+        </a>
         @guest
             @yield('header-actions')
         @endguest
