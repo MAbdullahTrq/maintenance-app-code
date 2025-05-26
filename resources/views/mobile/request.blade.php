@@ -126,12 +126,12 @@
                         </div>
                     </form>
                 </div>
-            @elseif($request->status === 'assigned')
+            @elseif($request->status === 'assigned' && auth()->user() && auth()->user()->isTechnician())
                 <form method="POST" action="{{ route('mobile.request.start', $request->id) }}" class="mb-2">
                     @csrf
                     <button type="submit" class="w-full bg-green-500 text-white py-2 rounded">Start</button>
                 </form>
-            @elseif($request->status === 'started')
+            @elseif($request->status === 'started' && auth()->user() && auth()->user()->isTechnician())
                 <form method="POST" action="{{ route('mobile.request.finish', $request->id) }}" class="mb-2">
                     @csrf
                     <button type="submit" class="w-full bg-green-500 text-white py-2 rounded">Finish</button>
@@ -157,7 +157,7 @@
                 </form>
             @endif
             {{-- Always show Mark as Complete if eligible --}}
-            @if(in_array($request->status, ['assigned', 'started', 'acknowledged', 'accepted']))
+            @if(auth()->user() && auth()->user()->isPropertyManager() && in_array($request->status, ['assigned', 'started', 'acknowledged', 'accepted']))
             <form method="POST" action="{{ route('mobile.request.complete', $request->id) }}" class="mb-2">
                 @csrf
                 <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded">Mark as Complete</button>
