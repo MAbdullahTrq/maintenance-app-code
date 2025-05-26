@@ -42,11 +42,22 @@ class DashboardController extends Controller
         $propertiesCount = $properties->count();
         $techniciansCount = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
         $requestsCount = $allRequests->count();
+        // Count by status
+        $declinedCount = $allRequests->where('status', 'declined')->count();
+        $assignedCount = $allRequests->where('status', 'assigned')->count();
+        $acceptedCount = $allRequests->where('status', 'accepted')->count();
+        $startedCount = $allRequests->where('status', 'started')->count();
+        $completedCount = $allRequests->where('status', 'completed')->count();
         return view('mobile.all_requests', [
             'allRequests' => $allRequests,
             'propertiesCount' => $propertiesCount,
             'techniciansCount' => $techniciansCount,
             'requestsCount' => $requestsCount,
+            'declinedCount' => $declinedCount,
+            'assignedCount' => $assignedCount,
+            'acceptedCount' => $acceptedCount,
+            'startedCount' => $startedCount,
+            'completedCount' => $completedCount,
         ]);
     }
 }

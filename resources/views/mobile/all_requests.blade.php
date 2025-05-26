@@ -10,6 +10,28 @@
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
         <div class="text-center font-bold text-lg mb-2">All Requests</div>
+        <div class="grid grid-cols-5 gap-0 mb-4 border border-gray-400 rounded overflow-hidden">
+            <div class="text-center p-2 border-r border-gray-400">
+                <div class="font-semibold text-xs">Declined</div>
+                <div class="text-lg font-bold">{{ $declinedCount }}</div>
+            </div>
+            <div class="text-center p-2 border-r border-gray-400">
+                <div class="font-semibold text-xs">Assigned</div>
+                <div class="text-lg font-bold">{{ $assignedCount }}</div>
+            </div>
+            <div class="text-center p-2 border-r border-gray-400">
+                <div class="font-semibold text-xs">Accepted</div>
+                <div class="text-lg font-bold">{{ $acceptedCount }}</div>
+            </div>
+            <div class="text-center p-2 border-r border-gray-400">
+                <div class="font-semibold text-xs">Started</div>
+                <div class="text-lg font-bold">{{ $startedCount }}</div>
+            </div>
+            <div class="text-center p-2">
+                <div class="font-semibold text-xs">Completed</div>
+                <div class="text-lg font-bold">{{ $completedCount }}</div>
+            </div>
+        </div>
         @if($allRequests->count())
         <div class="overflow-x-auto">
             <table class="min-w-full text-xs border border-gray-400 border-collapse rounded overflow-hidden">
