@@ -141,6 +141,20 @@
                     @csrf
                     <button type="submit" class="w-full bg-gray-500 text-white py-2 rounded">Close Request</button>
                 </form>
+            @elseif($request->status === 'accepted' && !$request->assignedTechnician)
+                <form method="POST" action="{{ route('mobile.request.assign', $request->id) }}" class="mb-2 flex flex-col gap-2">
+                    @csrf
+                    <div class="mb-2">
+                        <label class="block font-semibold mb-1">Assign Technician*</label>
+                        <select name="technician_id" class="w-full border rounded p-2" required>
+                            <option value="">Select Technician</option>
+                            @foreach(App\Models\User::whereHas('role', function($q){$q->where('slug','technician');})->where('invited_by', auth()->id())->get() as $tech)
+                                <option value="{{ $tech->id }}">{{ $tech->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded">Assign Technician</button>
+                </form>
             @endif
             {{-- Always show Mark as Complete if eligible --}}
             @if(in_array($request->status, ['assigned', 'started', 'acknowledged', 'accepted']))

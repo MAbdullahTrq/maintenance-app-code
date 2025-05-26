@@ -179,6 +179,7 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::post('/r/{id}/finish', [RequestController::class, 'finish'])->name('mobile.request.finish');
     Route::post('/r/{id}/complete', [RequestController::class, 'complete'])->name('mobile.request.complete');
     Route::post('/r/{id}/close', [RequestController::class, 'close'])->name('mobile.request.close');
+    Route::post('/r/{id}/assign', [RequestController::class, 'assignTechnician'])->name('mobile.request.assign');
     Route::get('/at', [MobileTechnicianController::class, 'index'])->name('mobile.technicians.index');
     Route::post('/at/add', [MobileTechnicianController::class, 'store'])->name('mobile.technicians.store');
     Route::get('/at/{id}/edit', [App\Http\Controllers\Mobile\TechnicianController::class, 'edit'])->name('mobile.technicians.edit');

@@ -75,4 +75,18 @@ class RequestController extends Controller
         $maintenance->save();
         return redirect()->route('mobile.request.show', $id)->with('success', 'Request closed.');
     }
+
+    public function assignTechnician(Request $request, $id)
+    {
+        $maintenance = MaintenanceRequest::findOrFail($id);
+        $request->validate([
+            'technician_id' => 'required|exists:users,id',
+        ]);
+        $maintenance->assigned_to = $request->input('technician_id');
+        if ($maintenance->status === 'accepted') {
+            $maintenance->status = 'assigned';
+        }
+        $maintenance->save();
+        return redirect()->route('mobile.request.show', $id)->with('success', 'Technician assigned successfully.');
+    }
 }
