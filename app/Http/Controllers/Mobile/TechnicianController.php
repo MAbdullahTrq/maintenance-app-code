@@ -112,9 +112,9 @@ class TechnicianController extends Controller
             ->where('status', 'assigned')
             ->with('property')
             ->get();
-        // Accepted: status = 'accepted' or 'started'
+        // Accepted: status = 'accepted', 'acknowledged', or 'started'
         $acceptedRequests = \App\Models\MaintenanceRequest::where('assigned_to', $user->id)
-            ->whereIn('status', ['accepted', 'started'])
+            ->whereIn('status', ['accepted', 'acknowledged', 'started'])
             ->with('property')
             ->get();
         // Completed: status = 'completed'
