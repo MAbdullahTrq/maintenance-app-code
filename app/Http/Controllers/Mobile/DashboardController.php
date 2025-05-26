@@ -30,7 +30,7 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function allRequests()
+    public function allRequests(Request $request)
     {
         $user = Auth::user();
         // Only allow property managers
@@ -38,16 +38,22 @@ class DashboardController extends Controller
             abort(403);
         }
         $properties = Property::where('manager_id', $user->id)->get();
-        $allRequests = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->latest()->get();
+        $status = $request->query('status');
+        $query = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'));
+        if ($status && in_array($status, ['declined', 'assigned', 'accepted', 'started', 'completed'])) {
+            $query->where('status', $status);
+        }
+        $allRequests = $query->latest()->get();
         $propertiesCount = $properties->count();
         $techniciansCount = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
         $requestsCount = $allRequests->count();
-        // Count by status
-        $declinedCount = $allRequests->where('status', 'declined')->count();
-        $assignedCount = $allRequests->where('status', 'assigned')->count();
-        $acceptedCount = $allRequests->where('status', 'accepted')->count();
-        $startedCount = $allRequests->where('status', 'started')->count();
-        $completedCount = $allRequests->where('status', 'completed')->count();
+        // Count by status (for tabs)
+        $allRequestsForCount = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->get();
+        $declinedCount = $allRequestsForCount->where('status', 'declined')->count();
+        $assignedCount = $allRequestsForCount->where('status', 'assigned')->count();
+        $acceptedCount = $allRequestsForCount->where('status', 'accepted')->count();
+        $startedCount = $allRequestsForCount->where('status', 'started')->count();
+        $completedCount = $allRequestsForCount->where('status', 'completed')->count();
         return view('mobile.all_requests', [
             'allRequests' => $allRequests,
             'propertiesCount' => $propertiesCount,
@@ -58,6 +64,7 @@ class DashboardController extends Controller
             'acceptedCount' => $acceptedCount,
             'startedCount' => $startedCount,
             'completedCount' => $completedCount,
+            'selectedStatus' => $status,
         ]);
     }
 }

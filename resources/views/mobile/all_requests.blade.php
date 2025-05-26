@@ -11,27 +11,32 @@
     <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
         <div class="text-center font-bold text-lg mb-2">All Requests</div>
         <div class="grid grid-cols-5 gap-0 mb-4 border border-gray-400 rounded overflow-hidden">
-            <div class="text-center p-2 border-r border-gray-400">
+            <a href="?status=declined" class="text-center p-2 border-r border-gray-400 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'declined') ? 'bg-blue-100 font-bold' : '' }}">
                 <div class="font-semibold text-xs">Declined</div>
                 <div class="text-lg font-bold">{{ $declinedCount }}</div>
-            </div>
-            <div class="text-center p-2 border-r border-gray-400">
+            </a>
+            <a href="?status=assigned" class="text-center p-2 border-r border-gray-400 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'assigned') ? 'bg-blue-100 font-bold' : '' }}">
                 <div class="font-semibold text-xs">Assigned</div>
                 <div class="text-lg font-bold">{{ $assignedCount }}</div>
-            </div>
-            <div class="text-center p-2 border-r border-gray-400">
+            </a>
+            <a href="?status=accepted" class="text-center p-2 border-r border-gray-400 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'accepted') ? 'bg-blue-100 font-bold' : '' }}">
                 <div class="font-semibold text-xs">Accepted</div>
                 <div class="text-lg font-bold">{{ $acceptedCount }}</div>
-            </div>
-            <div class="text-center p-2 border-r border-gray-400">
+            </a>
+            <a href="?status=started" class="text-center p-2 border-r border-gray-400 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'started') ? 'bg-blue-100 font-bold' : '' }}">
                 <div class="font-semibold text-xs">Started</div>
                 <div class="text-lg font-bold">{{ $startedCount }}</div>
-            </div>
-            <div class="text-center p-2">
+            </a>
+            <a href="?status=completed" class="text-center p-2 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'completed') ? 'bg-blue-100 font-bold' : '' }}">
                 <div class="font-semibold text-xs">Completed</div>
                 <div class="text-lg font-bold">{{ $completedCount }}</div>
-            </div>
+            </a>
         </div>
+        @if(isset($selectedStatus) && $selectedStatus)
+            <div class="mb-2 text-right">
+                <a href="{{ route('mobile.manager.all-requests') }}" class="inline-block px-3 py-1 bg-gray-200 rounded text-xs font-semibold hover:bg-gray-300">Clear Filter</a>
+            </div>
+        @endif
         @if($allRequests->count())
         <div class="overflow-x-auto">
             <table class="min-w-full text-xs border border-gray-400 border-collapse rounded overflow-hidden">
