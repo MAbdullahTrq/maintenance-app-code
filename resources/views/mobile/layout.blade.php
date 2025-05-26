@@ -39,6 +39,7 @@
         @endauth
     </header>
     @auth
+    @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
     <nav class="bg-white shadow mb-2 rounded-b-xl">
         <div class="grid grid-cols-3 divide-x divide-gray-200 text-center">
             <a href="{{ route('mobile.properties.index') }}" class="block py-2">
@@ -61,6 +62,7 @@
             </a>
         </div>
     </nav>
+    @endif
     @endauth
     <main class="p-2">
         @yield('content')

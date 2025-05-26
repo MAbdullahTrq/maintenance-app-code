@@ -22,7 +22,15 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended(route('mobile.manager.dashboard'));
+            $user = Auth::user();
+            if (method_exists($user, 'isPropertyManager') && $user->isPropertyManager()) {
+                return redirect()->intended(route('mobile.manager.dashboard'));
+            } elseif (method_exists($user, 'isTechnician') && $user->isTechnician()) {
+                return redirect()->intended(route('mobile.technician.dashboard'));
+            } else {
+                // fallback or admin
+                return redirect('/');
+            }
         }
 
         return back()->withErrors([
