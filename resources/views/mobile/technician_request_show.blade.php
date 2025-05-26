@@ -15,7 +15,7 @@
         <div class="text-center mb-2">
             <span class="inline-block bg-gray-200 px-3 py-1 rounded text-xs font-semibold mb-2">{{ ucfirst($request->status) }}</span>
             <div class="font-bold text-xl">Maintenance Request</div>
-            <div class="text-sm text-gray-700">({{ $request->property->name ?? '' }})</div>
+            <div class="text-sm text-gray-700">({{ $property->name ?? '' }})</div>
             <div class="text-xs text-gray-500 mb-2">{{ $request->created_at ? date('d M, Y', strtotime($request->created_at)) : '' }}<br>{{ $request->created_at ? date('H:i', strtotime($request->created_at)) : '' }}</div>
         </div>
         <div class="grid grid-cols-2 gap-2 mb-2">
@@ -29,24 +29,12 @@
         </div>
         <div class="grid grid-cols-2 gap-2 mb-4">
             @if($request->status === 'assigned')
-                <form method="POST" action="#">
-                    @csrf
-                    <button type="submit" class="w-full bg-gray-300 text-black py-2 rounded font-semibold">Decline</button>
-                </form>
-                <form method="POST" action="#">
-                    @csrf
-                    <button type="submit" class="w-full bg-green-500 text-white py-2 rounded font-semibold">Accept</button>
-                </form>
-            @elseif($request->status === 'accepted')
-                <form method="POST" action="#">
-                    @csrf
-                    <button type="submit" class="w-full bg-green-600 text-white py-2 rounded font-semibold">Start</button>
-                </form>
+                <form method="POST" action="{{ route('mobile.technician.request.decline', $request->id) }}">@csrf<button type="submit" class="w-full bg-gray-300 text-black py-2 rounded font-semibold">Decline</button></form>
+                <form method="POST" action="{{ route('mobile.technician.request.accept', $request->id) }}">@csrf<button type="submit" class="w-full bg-green-500 text-white py-2 rounded font-semibold">Accept</button></form>
+            @elseif($request->status === 'accepted' || $request->status === 'acknowledged')
+                <form method="POST" action="{{ route('mobile.technician.request.start', $request->id) }}">@csrf<button type="submit" class="w-full bg-green-600 text-white py-2 rounded font-semibold">Start</button></form>
             @elseif($request->status === 'started')
-                <form method="POST" action="#">
-                    @csrf
-                    <button type="submit" class="w-full bg-yellow-500 text-black py-2 rounded font-semibold">Finish</button>
-                </form>
+                <form method="POST" action="{{ route('mobile.technician.request.finish', $request->id) }}">@csrf<button type="submit" class="w-full bg-yellow-500 text-black py-2 rounded font-semibold">Finish</button></form>
             @endif
         </div>
         <div class="mb-2">
@@ -70,6 +58,37 @@
                     </a>
                 @endforeach
             </div>
+        </div>
+        @if(in_array($request->status, ['accepted', 'acknowledged', 'started', 'completed']))
+        <div class="mb-4">
+            <div class="font-bold text-lg mb-2">Comments</div>
+            <div class="bg-gray-50 border rounded p-2 text-sm">
+                @forelse($comments as $comment)
+                    <div class="mb-2">{!! nl2br(e($comment->comment)) !!}</div>
+                @empty
+                    <div class="text-gray-400">No comments yet.</div>
+                @endforelse
+            </div>
+        </div>
+        @endif
+        <div class="mb-4">
+            <div class="font-bold text-lg mb-2">Property Details</div>
+            <div class="mb-1"><span class="font-semibold">Property name</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $property->name ?? '' }}</div></div>
+            <div class="mb-1"><span class="font-semibold">Property address</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $property->address ?? '' }}</div></div>
+            <div class="mb-1"><span class="font-semibold">Special instructions</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $property->special_instructions ?? '' }}</div></div>
+            <div class="mb-1"><span class="font-semibold">Property image</span>
+                @if(!empty($property->image))
+                    <img src="{{ asset('storage/' . $property->image) }}" class="w-full h-32 object-cover rounded border" alt="Property Image">
+                @else
+                    <div class="border rounded p-2 text-xs text-gray-400">No image</div>
+                @endif
+            </div>
+        </div>
+        <div class="mb-4">
+            <div class="font-bold text-lg mb-2">Requester Info</div>
+            <div class="mb-1"><span class="font-semibold">Requester name</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $requester['name'] ?? '' }}</div></div>
+            <div class="mb-1"><span class="font-semibold">Email</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $requester['email'] ?? '' }}</div></div>
+            <div class="mb-1"><span class="font-semibold">Phone</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $requester['phone'] ?? '' }}</div></div>
         </div>
     </div>
 </div>

@@ -211,5 +211,8 @@ Route::post('/m/register', [App\Http\Controllers\Mobile\RegisterController::clas
 Route::prefix('t')->middleware(['auth', 'technician'])->group(function () {
     Route::get('/', [App\Http\Controllers\Mobile\TechnicianController::class, 'dashboard'])->name('mobile.technician.dashboard');
     Route::get('/r/{id}', [App\Http\Controllers\Mobile\TechnicianController::class, 'showRequest'])->name('mobile.technician.request.show');
-    // More technician routes will be added here (assigned, accepted, started, etc.)
+    Route::post('/r/{id}/accept', [App\Http\Controllers\Mobile\TechnicianController::class, 'acceptRequest'])->name('mobile.technician.request.accept');
+    Route::post('/r/{id}/decline', [App\Http\Controllers\Mobile\TechnicianController::class, 'declineRequest'])->name('mobile.technician.request.decline');
+    Route::post('/r/{id}/start', [App\Http\Controllers\Mobile\TechnicianController::class, 'startRequest'])->name('mobile.technician.request.start');
+    Route::post('/r/{id}/finish', [App\Http\Controllers\Mobile\TechnicianController::class, 'finishRequest'])->name('mobile.technician.request.finish');
 });

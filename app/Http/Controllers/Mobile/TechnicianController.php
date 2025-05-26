@@ -135,12 +135,57 @@ class TechnicianController extends Controller
     public function showRequest($id)
     {
         $user = Auth::user();
-        $request = \App\Models\MaintenanceRequest::with(['property', 'images'])
+        $request = \App\Models\MaintenanceRequest::with(['property', 'images', 'comments', 'property.manager'])
             ->where('id', $id)
             ->where('assigned_to', $user->id)
             ->firstOrFail();
         return view('mobile.technician_request_show', [
             'request' => $request,
+            'property' => $request->property,
+            'requester' => [
+                'name' => $request->requester_name,
+                'email' => $request->requester_email,
+                'phone' => $request->requester_phone,
+            ],
+            'comments' => $request->comments,
         ]);
+    }
+
+    public function acceptRequest($id)
+    {
+        $user = Auth::user();
+        $request = \App\Models\MaintenanceRequest::where('id', $id)->where('assigned_to', $user->id)->firstOrFail();
+        $request->status = 'accepted';
+        $request->save();
+        return redirect()->route('mobile.technician.request.show', $id)->with('success', 'Request accepted.');
+    }
+
+    public function declineRequest($id)
+    {
+        $user = Auth::user();
+        $request = \App\Models\MaintenanceRequest::where('id', $id)->where('assigned_to', $user->id)->firstOrFail();
+        $request->status = 'declined';
+        $request->save();
+        return redirect()->route('mobile.technician.dashboard')->with('success', 'Request declined.');
+    }
+
+    public function startRequest($id)
+    {
+        $user = Auth::user();
+        $request = \App\Models\MaintenanceRequest::where('id', $id)->where('assigned_to', $user->id)->firstOrFail();
+        $request->status = 'started';
+        $request->started_at = now();
+        $request->save();
+        return redirect()->route('mobile.technician.request.show', $id)->with('success', 'Work started.');
+    }
+
+    public function finishRequest($id)
+    {
+        $user = Auth::user();
+        $request = \App\Models\MaintenanceRequest::where('id', $id)->where('assigned_to', $user->id)->firstOrFail();
+        $request->status = 'completed';
+        $request->completed_at = now();
+        $request->save();
+        return redirect()->route('mobile.technician.request.show', $id)->with('success', 'Work finished.');
     }
 }
