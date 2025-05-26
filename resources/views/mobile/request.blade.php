@@ -83,9 +83,14 @@
             <div class="font-semibold mb-1">Comments</div>
             <div class="space-y-2">
                 @foreach($request->comments as $comment)
-                    <div class="bg-gray-100 rounded p-2">
-                        <div class="text-xs text-gray-600 mb-1">{{ $comment->user->name ?? 'User' }} &middot; {{ \Carbon\Carbon::parse($comment->created_at)->diffForHumans() }}</div>
-                        <div class="text-sm">{{ $comment->comment }}</div>
+                    @php $isOwn = auth()->check() && $comment->user_id === auth()->id(); @endphp
+                    <div class="flex {{ $isOwn ? 'justify-end' : 'justify-start' }}">
+                        <div class="rounded p-2 max-w-[75%] {{ $isOwn ? 'bg-blue-500 text-white text-right' : 'bg-gray-100 text-gray-900 text-left' }}">
+                            <div class="text-xs {{ $isOwn ? 'text-blue-100' : 'text-gray-600' }} mb-1">
+                                {{ $comment->user->name ?? 'User' }} &middot; {{ \Carbon\Carbon::parse($comment->created_at)->diffForHumans() }}
+                            </div>
+                            <div class="text-sm">{{ $comment->comment }}</div>
+                        </div>
                     </div>
                 @endforeach
             </div>
