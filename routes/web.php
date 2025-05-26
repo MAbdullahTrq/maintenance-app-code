@@ -210,5 +210,6 @@ Route::post('/m/register', [App\Http\Controllers\Mobile\RegisterController::clas
 // Technician mobile dashboard routes
 Route::prefix('t')->middleware(['auth', 'technician'])->group(function () {
     Route::get('/', [App\Http\Controllers\Mobile\TechnicianController::class, 'dashboard'])->name('mobile.technician.dashboard');
+    Route::get('/r/{id}', [App\Http\Controllers\Mobile\TechnicianController::class, 'showRequest'])->name('mobile.technician.request.show');
     // More technician routes will be added here (assigned, accepted, started, etc.)
 });

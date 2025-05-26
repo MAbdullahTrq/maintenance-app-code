@@ -131,4 +131,16 @@ class TechnicianController extends Controller
             'completedCount' => $completedRequests->count(),
         ]);
     }
+
+    public function showRequest($id)
+    {
+        $user = Auth::user();
+        $request = \App\Models\MaintenanceRequest::with(['property', 'images'])
+            ->where('id', $id)
+            ->where('assigned_to', $user->id)
+            ->firstOrFail();
+        return view('mobile.technician_request_show', [
+            'request' => $request,
+        ]);
+    }
 }
