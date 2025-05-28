@@ -89,4 +89,37 @@ class RequestController extends Controller
         $maintenance->save();
         return redirect()->route('mobile.request.show', $id)->with('success', 'Technician assigned successfully.');
     }
+
+    public function create()
+    {
+        $properties = \App\Models\Property::where('manager_id', auth()->id())->get();
+        return view('mobile.request_create', compact('properties'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'property_id' => 'required|exists:properties,id',
+            'title' => 'required',
+            'description' => 'required',
+            'location' => 'required',
+            'priority' => 'required',
+        ]);
+        $req = new \App\Models\MaintenanceRequest();
+        $req->property_id = $request->property_id;
+        $req->title = $request->title;
+        $req->description = $request->description;
+        $req->location = $request->location;
+        $req->priority = $request->priority;
+        $req->status = 'pending';
+        $req->created_by = auth()->id();
+        $req->save();
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('requests', 'public');
+                $req->images()->create(['image_path' => $path]);
+            }
+        }
+        return redirect()->route('mobile.manager.all-requests')->with('success', 'Request submitted!');
+    }
 }

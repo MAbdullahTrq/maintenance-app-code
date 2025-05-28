@@ -52,4 +52,19 @@
         @endif
     </div>
 </div>
+
+<div class="flex justify-center mt-4 gap-8">
+    <a href="{{ route('mobile.properties.create') }}" class="flex flex-col items-center">
+        <span class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-2xl mb-1">+</span>
+        <span class="text-xs">Add Property</span>
+    </a>
+    <a href="{{ route('mobile.technicians.create') }}" class="flex flex-col items-center">
+        <span class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-2xl mb-1">+</span>
+        <span class="text-xs">Add Technician</span>
+    </a>
+    <a href="{{ route('mobile.requests.create') }}" class="flex flex-col items-center">
+        <span class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-2xl mb-1">+</span>
+        <span class="text-xs">New Request</span>
+    </a>
+</div>
 @endsection 

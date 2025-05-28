@@ -23,25 +23,27 @@ class TechnicianController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        return view('mobile.technician_create');
+    }
+
     public function store(Request $request)
     {
-        $user = Auth::user();
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required',
             'email' => 'required|email|unique:users,email',
-            'phone' => 'required|string|max:20',
+            'phone' => 'required',
         ]);
-        $technician = new User();
-        $technician->name = $request->name;
-        $technician->email = $request->email;
-        $technician->phone = $request->phone;
-        $technician->invited_by = $user->id;
-        $technician->password = bcrypt('password'); // Default password, should be changed
-        $technician->save();
-        // Assign technician role
-        $technician->role_id = \App\Models\Role::where('slug', 'technician')->first()->id;
-        $technician->save();
-        return redirect()->route('mobile.technicians.index')->with('success', 'Technician added successfully.');
+        $user = new \App\Models\User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->password = bcrypt('password');
+        $user->invited_by = auth()->id();
+        $user->save();
+        $user->assignRole('technician');
+        return redirect()->route('mobile.technicians.index')->with('success', 'Technician added!');
     }
 
     public function update(Request $request, $id)

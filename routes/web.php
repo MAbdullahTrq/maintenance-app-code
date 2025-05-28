@@ -200,6 +200,14 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::post('/profile/update-picture', [App\Http\Controllers\Mobile\ProfileController::class, 'updatePicture'])->name('mobile.profile.update-picture');
     Route::get('/profile/change-password', [App\Http\Controllers\Mobile\ProfileController::class, 'showChangePassword'])->name('mobile.profile.change-password');
     Route::post('/profile/change-password', [App\Http\Controllers\Mobile\ProfileController::class, 'changePassword'])->name('mobile.profile.change-password.submit');
+    Route::get('/ap/create', [MobilePropertyController::class, 'create'])->name('mobile.properties.create');
+    Route::post('/ap/add', [MobilePropertyController::class, 'store'])->name('mobile.properties.store');
+    Route::get('/at/create', [MobileTechnicianController::class, 'create'])->name('mobile.technicians.create');
+    Route::post('/at/add', [MobileTechnicianController::class, 'store'])->name('mobile.technicians.store');
+    Route::middleware('can:isManager')->group(function () {
+        Route::get('/requests/create', [RequestController::class, 'create'])->name('mobile.requests.create');
+        Route::post('/requests/add', [RequestController::class, 'store'])->name('mobile.requests.store');
+    });
     // More mobile routes will be added here
 });
 

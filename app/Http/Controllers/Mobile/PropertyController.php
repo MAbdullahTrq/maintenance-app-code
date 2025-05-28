@@ -32,21 +32,24 @@ class PropertyController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        return view('mobile.property_create');
+    }
+
     public function store(Request $request)
     {
-        $user = Auth::user();
         $request->validate([
-            'name' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'special_instructions' => 'nullable|string|max:255',
+            'name' => 'required',
+            'address' => 'required',
         ]);
-        $property = new Property();
+        $property = new \App\Models\Property();
         $property->name = $request->name;
         $property->address = $request->address;
         $property->special_instructions = $request->special_instructions;
-        $property->manager_id = $user->id;
+        $property->manager_id = auth()->id();
         $property->save();
-        return redirect()->route('mobile.properties.index')->with('success', 'Property added successfully.');
+        return redirect()->route('mobile.properties.index')->with('success', 'Property added!');
     }
 
     public function update(Request $request, $id)

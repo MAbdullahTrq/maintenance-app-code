@@ -58,4 +58,7 @@
         </div>
     </div>
 </div>
+<a href="{{ route('mobile.properties.create') }}" class="fixed bottom-6 right-6 bg-blue-600 text-white rounded-full w-14 h-14 flex items-center justify-center text-3xl shadow-lg z-50">
+    +
+</a>
 @endsection 
