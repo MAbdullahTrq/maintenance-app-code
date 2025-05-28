@@ -9,6 +9,37 @@
 @section('content')
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
+        <!-- Icon grid (add your icon grid here if not present) -->
+        <div class="flex justify-center gap-8 mb-4">
+            <div class="flex flex-col items-center">
+                <i class="fas fa-home text-3xl text-green-600"></i>
+                <span class="text-lg font-bold mt-1">{{ $propertiesCount ?? 0 }}</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <i class="fas fa-user-cog text-3xl text-gray-700"></i>
+                <span class="text-lg font-bold mt-1">{{ $techniciansCount ?? 0 }}</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <i class="fas fa-file-alt text-3xl text-blue-700"></i>
+                <span class="text-lg font-bold mt-1">{{ $requestsCount ?? 0 }}</span>
+            </div>
+        </div>
+        <!-- Add buttons below the icon grid -->
+        <div class="flex justify-center gap-8 mb-4">
+            <a href="{{ route('mobile.properties.create') }}" class="flex flex-col items-center">
+                <span class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-2xl mb-1">+</span>
+                <span class="text-xs">Add Property</span>
+            </a>
+            <a href="{{ route('mobile.technicians.create') }}" class="flex flex-col items-center">
+                <span class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-2xl mb-1">+</span>
+                <span class="text-xs">Add Technician</span>
+            </a>
+            <a href="{{ route('mobile.requests.create') }}" class="flex flex-col items-center">
+                <span class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-2xl mb-1">+</span>
+                <span class="text-xs">New Request</span>
+            </a>
+        </div>
+        <!-- Pending Requests section follows -->
         <div class="flex justify-between items-center mb-2">
             <div class="text-center font-bold text-lg">Pending Requests</div>
             <a href="{{ route('mobile.manager.all-requests') }}" class="text-sm text-blue-600 hover:text-blue-800">
@@ -51,20 +82,5 @@
         <div class="text-center text-gray-500 py-4">No pending requests.</div>
         @endif
     </div>
-</div>
-
-<div class="flex justify-center mt-4 gap-8">
-    <a href="{{ route('mobile.properties.create') }}" class="flex flex-col items-center">
-        <span class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-2xl mb-1">+</span>
-        <span class="text-xs">Add Property</span>
-    </a>
-    <a href="{{ route('mobile.technicians.create') }}" class="flex flex-col items-center">
-        <span class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-2xl mb-1">+</span>
-        <span class="text-xs">Add Technician</span>
-    </a>
-    <a href="{{ route('mobile.requests.create') }}" class="flex flex-col items-center">
-        <span class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-2xl mb-1">+</span>
-        <span class="text-xs">New Request</span>
-    </a>
 </div>
 @endsection 
