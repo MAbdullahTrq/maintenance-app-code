@@ -171,15 +171,8 @@ Route::get('/mobile', [App\Http\Controllers\Mobile\HomeController::class, 'index
 
 // Protect mobile routes with auth middleware
 Route::prefix('m')->middleware('auth')->group(function () {
-    Route::get('/dash', [MobileDashboardController::class, 'index'])->name('mobile.manager.dashboard');
-    Route::get('/r/{id}', [RequestController::class, 'show'])->name('mobile.request.show');
-    Route::post('/r/{id}/approve', [RequestController::class, 'approve'])->name('mobile.request.approve');
-    Route::post('/r/{id}/decline', [RequestController::class, 'decline'])->name('mobile.request.decline');
-    Route::post('/r/{id}/start', [RequestController::class, 'start'])->name('mobile.request.start');
-    Route::post('/r/{id}/finish', [RequestController::class, 'finish'])->name('mobile.request.finish');
-    Route::post('/r/{id}/complete', [RequestController::class, 'complete'])->name('mobile.request.complete');
-    Route::post('/r/{id}/close', [RequestController::class, 'close'])->name('mobile.request.close');
-    Route::post('/r/{id}/assign', [RequestController::class, 'assignTechnician'])->name('mobile.request.assign');
+    Route::get('/ap/create', [MobilePropertyController::class, 'create'])->name('mobile.properties.create');
+    Route::get('/at/create', [MobileTechnicianController::class, 'create'])->name('mobile.technicians.create');
     Route::get('/at', [MobileTechnicianController::class, 'index'])->name('mobile.technicians.index');
     Route::post('/at/add', [MobileTechnicianController::class, 'store'])->name('mobile.technicians.store');
     Route::get('/at/{id}/edit', [App\Http\Controllers\Mobile\TechnicianController::class, 'edit'])->name('mobile.technicians.edit');
@@ -200,10 +193,6 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::post('/profile/update-picture', [App\Http\Controllers\Mobile\ProfileController::class, 'updatePicture'])->name('mobile.profile.update-picture');
     Route::get('/profile/change-password', [App\Http\Controllers\Mobile\ProfileController::class, 'showChangePassword'])->name('mobile.profile.change-password');
     Route::post('/profile/change-password', [App\Http\Controllers\Mobile\ProfileController::class, 'changePassword'])->name('mobile.profile.change-password.submit');
-    Route::get('/ap/create', [MobilePropertyController::class, 'create'])->name('mobile.properties.create');
-    Route::post('/ap/add', [MobilePropertyController::class, 'store'])->name('mobile.properties.store');
-    Route::get('/at/create', [MobileTechnicianController::class, 'create'])->name('mobile.technicians.create');
-    Route::post('/at/add', [MobileTechnicianController::class, 'store'])->name('mobile.technicians.store');
     Route::middleware('can:property_manager')->group(function () {
         Route::get('/requests/create', [RequestController::class, 'create'])->name('mobile.requests.create');
         Route::post('/requests/add', [RequestController::class, 'store'])->name('mobile.requests.store');
