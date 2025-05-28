@@ -34,6 +34,7 @@ class TechnicianController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'phone' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         $user = new \App\Models\User();
         $user->name = $request->name;
@@ -41,6 +42,10 @@ class TechnicianController extends Controller
         $user->phone = $request->phone;
         $user->password = bcrypt('password');
         $user->invited_by = auth()->id();
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('technician-profiles', 'public');
+            $user->image = $path;
+        }
         $user->save();
         $user->assignRole('technician');
         return redirect()->route('mobile.technicians.index')->with('success', 'Technician added!');
