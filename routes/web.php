@@ -204,7 +204,7 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::post('/ap/add', [MobilePropertyController::class, 'store'])->name('mobile.properties.store');
     Route::get('/at/create', [MobileTechnicianController::class, 'create'])->name('mobile.technicians.create');
     Route::post('/at/add', [MobileTechnicianController::class, 'store'])->name('mobile.technicians.store');
-    Route::middleware('can:isManager')->group(function () {
+    Route::middleware('can:property_manager')->group(function () {
         Route::get('/requests/create', [RequestController::class, 'create'])->name('mobile.requests.create');
         Route::post('/requests/add', [RequestController::class, 'store'])->name('mobile.requests.store');
     });
