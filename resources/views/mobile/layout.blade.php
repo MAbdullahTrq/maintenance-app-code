@@ -54,28 +54,7 @@
     </header>
     @auth
     @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
-    <nav class="bg-white shadow mb-2 rounded-b-xl">
-        <div class="grid grid-cols-3 divide-x divide-gray-200 text-center">
-            <a href="{{ route('mobile.properties.index') }}" class="block py-2">
-                <div class="flex flex-col items-center">
-                    <i class="fas fa-home text-2xl text-green-600"></i>
-                    <span class="text-xs font-bold text-gray-600 mt-1">{{ isset($properties) ? $properties->count() : (isset($propertiesCount) ? $propertiesCount : 0) }}</span>
-                </div>
-            </a>
-            <a href="{{ route('mobile.technicians.index') }}" class="block py-2">
-                <div class="flex flex-col items-center">
-                    <i class="fas fa-user-cog text-2xl text-gray-700"></i>
-                    <span class="text-xs font-bold text-gray-600 mt-1">{{ isset($technicians) ? $technicians->count() : (isset($techniciansCount) ? $techniciansCount : 0) }}</span>
-                </div>
-            </a>
-            <a href="{{ route('mobile.manager.all-requests') }}" class="block py-2">
-                <div class="flex flex-col items-center">
-                    <i class="fas fa-file-alt text-2xl text-gray-700"></i>
-                    <span class="text-xs font-bold text-gray-600 mt-1">{{ isset($allRequests) ? $allRequests->count() : (isset($requestsCount) ? $requestsCount : 0) }}</span>
-                </div>
-            </a>
-        </div>
-    </nav>
+    {{-- Removed icon grid nav bar to avoid duplicate icons on dashboard --}}
     @endif
     @endauth
     <main class="p-2">
