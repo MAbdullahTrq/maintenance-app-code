@@ -171,6 +171,7 @@ Route::get('/mobile', [App\Http\Controllers\Mobile\HomeController::class, 'index
 
 // Protect mobile routes with auth middleware
 Route::prefix('m')->middleware('auth')->group(function () {
+    Route::get('/dash', [App\Http\Controllers\Mobile\DashboardController::class, 'index'])->name('mobile.manager.dashboard');
     Route::get('/ap/create', [MobilePropertyController::class, 'create'])->name('mobile.properties.create');
     Route::get('/at/create', [MobileTechnicianController::class, 'create'])->name('mobile.technicians.create');
     Route::get('/at', [MobileTechnicianController::class, 'index'])->name('mobile.technicians.index');
@@ -187,7 +188,6 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::get('/ep/{id}', [MobilePropertyController::class, 'edit'])->name('mobile.properties.edit');
     Route::post('/ep/{id}', [MobilePropertyController::class, 'update'])->name('mobile.properties.update');
     Route::get('/ap/{id}/qrcode', [MobilePropertyController::class, 'qrcode'])->name('mobile.properties.qrcode');
-    Route::get('/manager/dashboard', [App\Http\Controllers\Mobile\DashboardController::class, 'index'])->name('mobile.manager.dashboard');
     Route::get('/manager/all-requests', [App\Http\Controllers\Mobile\DashboardController::class, 'allRequests'])->name('mobile.manager.all-requests');
     Route::get('/profile', [App\Http\Controllers\Mobile\ProfileController::class, 'show'])->name('mobile.profile');
     Route::post('/profile/update-picture', [App\Http\Controllers\Mobile\ProfileController::class, 'updatePicture'])->name('mobile.profile.update-picture');
