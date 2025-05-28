@@ -8,24 +8,24 @@
 
 @section('content')
 <div class="flex justify-center">
-    <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
-        <!-- Icon grid (add your icon grid here if not present) -->
-        <div class="flex justify-center gap-8 mb-4">
-            <div class="flex flex-col items-center">
+    <div class="bg-white rounded-xl shadow p-4 max-w-md w-full mb-4">
+        <!-- Icon grid -->
+        <div class="grid grid-cols-3 text-center mb-2">
+            <div>
                 <i class="fas fa-home text-3xl text-green-600"></i>
-                <span class="text-lg font-bold mt-1">{{ $propertiesCount ?? 0 }}</span>
+                <div class="font-bold">{{ $propertiesCount ?? 0 }}</div>
             </div>
-            <div class="flex flex-col items-center">
+            <div>
                 <i class="fas fa-user-cog text-3xl text-gray-700"></i>
-                <span class="text-lg font-bold mt-1">{{ $techniciansCount ?? 0 }}</span>
+                <div class="font-bold">{{ $techniciansCount ?? 0 }}</div>
             </div>
-            <div class="flex flex-col items-center">
+            <div>
                 <i class="fas fa-file-alt text-3xl text-blue-700"></i>
-                <span class="text-lg font-bold mt-1">{{ $requestsCount ?? 0 }}</span>
+                <div class="font-bold">{{ $requestsCount ?? 0 }}</div>
             </div>
         </div>
-        <!-- Add buttons below the icon grid -->
-        <div class="flex justify-center gap-8 mb-4">
+        <!-- Add buttons directly below the icons, in the same card -->
+        <div class="flex justify-center gap-8">
             <a href="{{ route('mobile.properties.create') }}" class="flex flex-col items-center">
                 <span class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-2xl mb-1">+</span>
                 <span class="text-xs">Add Property</span>
@@ -39,7 +39,12 @@
                 <span class="text-xs">New Request</span>
             </a>
         </div>
-        <!-- Pending Requests section follows -->
+    </div>
+</div>
+
+<!-- Pending Requests card below -->
+<div class="flex justify-center">
+    <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
         <div class="flex justify-between items-center mb-2">
             <div class="text-center font-bold text-lg">Pending Requests</div>
             <a href="{{ route('mobile.manager.all-requests') }}" class="text-sm text-blue-600 hover:text-blue-800">
