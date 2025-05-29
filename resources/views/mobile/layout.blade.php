@@ -46,14 +46,20 @@
                 if (open) {
                     $nextTick(() => {
                         const dropdown = $el.querySelector('[x-ref=dropdownMenu]');
-                        if (dropdown) {
-                            const rect = dropdown.getBoundingClientRect();
-                            const overflowsBottom = rect.bottom > window.innerHeight;
-                            const overflowsTop = rect.top < 0;
-                            if (overflowsBottom && !overflowsTop) {
+                        const button = $el.querySelector('button');
+                        if (dropdown && button) {
+                            const buttonRect = button.getBoundingClientRect();
+                            const dropdownHeight = dropdown.offsetHeight;
+                            const spaceBelow = window.innerHeight - buttonRect.bottom;
+                            const spaceAbove = buttonRect.top;
+                            if (spaceBelow >= dropdownHeight) {
+                                dropdownDirection = 'down';
+                            } else if (spaceAbove >= dropdownHeight) {
                                 dropdownDirection = 'up';
                             } else {
-                                dropdownDirection = 'down';
+                                // Pick the direction with more space and make dropdown scrollable
+                                dropdownDirection = spaceBelow > spaceAbove ? 'down' : 'up';
+                                // Set max height dynamically (handled by class below)
                             }
                         }
                     });
@@ -66,7 +72,7 @@
                 x-transition
                 x-ref="dropdownMenu"
                 :class="dropdownDirection === 'down' ? 'absolute right-0 mt-2' : 'absolute right-0 mb-2 bottom-full'"
-                class="w-44 bg-white rounded-lg shadow-lg py-2 z-50 border"
+                class="w-44 bg-white rounded-lg shadow-lg py-2 z-50 border max-h-[60vh] overflow-y-auto"
                 style="min-width: 11rem;"
             >
                 @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
