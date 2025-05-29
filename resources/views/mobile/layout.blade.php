@@ -86,31 +86,33 @@
             >
                 {{ Auth::user()->name }} <i class="fas fa-chevron-down ml-1"></i>
             </button>
-            <div
-                x-show="open"
-                x-transition
-                x-ref="dropdownMenu"
-                class="w-44 bg-white rounded-lg shadow-lg py-2 z-[9999] border max-h-[40vh] overflow-y-auto fixed"
-                x-cloak
-                style="min-width: 11rem; display: none;"
-            >
-                @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
-                    <a href="/m/at" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-users text-blue-600 mr-2"></i> Technicians
-                    </a>
-                    <a href="/m/ap" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-building text-purple-600 mr-2"></i> Properties
-                    </a>
-                    <a href="{{ route('mobile.manager.all-requests') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-file-alt text-gray-700 mr-2"></i> Requests
-                    </a>
-                @endif
-                <a href="/m/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
-                </form>
-            </div>
+            <template x-teleport="body">
+                <div
+                    x-show="open"
+                    x-transition
+                    x-ref="dropdownMenu"
+                    class="w-44 bg-white rounded-lg shadow-lg py-2 z-[9999] border max-h-[40vh] overflow-y-auto fixed"
+                    x-cloak
+                    style="min-width: 11rem; display: none;"
+                >
+                    @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
+                        <a href="/m/at" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-users text-blue-600 mr-2"></i> Technicians
+                        </a>
+                        <a href="/m/ap" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-building text-purple-600 mr-2"></i> Properties
+                        </a>
+                        <a href="{{ route('mobile.manager.all-requests') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-file-alt text-gray-700 mr-2"></i> Requests
+                        </a>
+                    @endif
+                    <a href="/m/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+                    </form>
+                </div>
+            </template>
         </div>
         @endauth
     </header>
