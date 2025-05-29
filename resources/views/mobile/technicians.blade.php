@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="flex justify-center">
-    <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
+    <div class="bg-white rounded-xl shadow p-4 w-full max-w-4xl mx-auto">
         <div x-data="{ showForm: false, search: '', dropdownOpen: false, dropdownTop: 0, dropdownLeft: 0, dropdownTech: null }">
             <div class="flex justify-between items-center mb-4">
                 <div class="font-bold text-lg">All Technicians</div>

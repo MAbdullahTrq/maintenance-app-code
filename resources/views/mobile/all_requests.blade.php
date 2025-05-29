@@ -8,7 +8,7 @@
 
 @section('content')
 <div class="flex justify-center">
-    <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
+    <div class="bg-white rounded-xl shadow p-4 w-full max-w-4xl mx-auto">
         <div class="text-center font-bold text-lg mb-2">All Requests</div>
         <div class="grid grid-cols-5 gap-0 mb-4 border border-gray-400 rounded overflow-hidden">
             <a href="?status=declined" class="text-center p-2 border-r border-gray-400 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'declined') ? 'bg-blue-100 font-bold' : '' }}">
