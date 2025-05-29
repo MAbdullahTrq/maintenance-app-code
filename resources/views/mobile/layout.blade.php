@@ -31,7 +31,7 @@
             @php $isDashboard = request()->routeIs('mobile.manager.dashboard'); @endphp
             @if(!$isDashboard)
                 <a href="{{ route('mobile.manager.dashboard') }}" class="mr-2" title="Dashboard">
-                    <img src="public\icons\dash.png" alt="Dashboard" class="inline-block align-middle" style="height:28px;width:auto;vertical-align:middle;" />
+                    <img src="/icons/dash.png" alt="Dashboard" class="inline-block align-middle" style="height:28px;width:auto;vertical-align:middle;" />
                 </a>
             @endif
             <button @click="open = !open" @click.away="open = false" class="text-sm font-medium flex items-center focus:outline-none">
