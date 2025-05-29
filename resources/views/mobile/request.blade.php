@@ -162,7 +162,7 @@
                 </form>
             @endif
             {{-- Always show Mark as Complete if eligible --}}
-            @if(auth()->user() && auth()->user()->isPropertyManager() && in_array($request->status, ['assigned', 'started', 'acknowledged', 'accepted']))
+            @if(auth()->user() && auth()->user()->isPropertyManager() && in_array($request->status, ['pending', 'assigned', 'started', 'acknowledged', 'accepted']))
             <form method="POST" action="{{ route('mobile.request.complete', $request->id) }}" class="mb-2">
                 @csrf
                 <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded">Mark as Complete</button>
