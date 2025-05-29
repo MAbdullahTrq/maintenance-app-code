@@ -27,7 +27,38 @@
             @yield('header-actions')
         @endguest
         @auth
-        <div x-data="{ open: false, dropdownDirection: 'down' }" class="relative flex items-center gap-2">
+        <div
+            x-data="{
+                open: false,
+                dropdownDirection: 'down',
+                updateDirection() {
+                    this.$nextTick(() => {
+                        const dropdown = this.$refs.dropdownMenu;
+                        const button = this.$refs.dropdownButton;
+                        if (dropdown && button) {
+                            // Temporarily show dropdown to measure
+                            dropdown.style.visibility = 'hidden';
+                            dropdown.style.display = 'block';
+                            const dropdownHeight = dropdown.offsetHeight;
+                            dropdown.style.removeProperty('visibility');
+                            dropdown.style.display = '';
+                            const buttonRect = button.getBoundingClientRect();
+                            const spaceBelow = window.innerHeight - buttonRect.bottom;
+                            const spaceAbove = buttonRect.top;
+                            if (spaceBelow >= dropdownHeight) {
+                                this.dropdownDirection = 'down';
+                            } else if (spaceAbove >= dropdownHeight) {
+                                this.dropdownDirection = 'up';
+                            } else {
+                                this.dropdownDirection = spaceBelow > spaceAbove ? 'down' : 'up';
+                            }
+                        }
+                    });
+                }
+            }"
+            class="relative flex items-center gap-2"
+            @resize.window="updateDirection()"
+        >
             @php
                 $isManagerDashboard = request()->routeIs('mobile.manager.dashboard');
                 $isTechnicianDashboard = request()->routeIs('mobile.technician.dashboard');
@@ -41,30 +72,12 @@
                     <img src="/icons/dash.png" alt="Dashboard" class="inline-block align-middle" style="height:28px;width:auto;vertical-align:middle;" />
                 </a>
             @endif
-            <button @click="
-                open = !open;
-                if (open) {
-                    $nextTick(() => {
-                        const dropdown = $el.querySelector('[x-ref=dropdownMenu]');
-                        const button = $el.querySelector('button');
-                        if (dropdown && button) {
-                            const buttonRect = button.getBoundingClientRect();
-                            const dropdownHeight = dropdown.offsetHeight;
-                            const spaceBelow = window.innerHeight - buttonRect.bottom;
-                            const spaceAbove = buttonRect.top;
-                            if (spaceBelow >= dropdownHeight) {
-                                dropdownDirection = 'down';
-                            } else if (spaceAbove >= dropdownHeight) {
-                                dropdownDirection = 'up';
-                            } else {
-                                // Pick the direction with more space and make dropdown scrollable
-                                dropdownDirection = spaceBelow > spaceAbove ? 'down' : 'up';
-                                // Set max height dynamically (handled by class below)
-                            }
-                        }
-                    });
-                }
-            " @click.away="open = false" class="text-sm font-medium flex items-center focus:outline-none">
+            <button
+                x-ref="dropdownButton"
+                @click="open = !open; if (open) updateDirection();"
+                @click.away="open = false"
+                class="text-sm font-medium flex items-center focus:outline-none"
+            >
                 {{ Auth::user()->name }} <i class="fas fa-chevron-down ml-1"></i>
             </button>
             <div
@@ -72,7 +85,8 @@
                 x-transition
                 x-ref="dropdownMenu"
                 :class="dropdownDirection === 'down' ? 'absolute right-0 mt-2' : 'absolute right-0 mb-2 bottom-full'"
-                class="w-44 bg-white rounded-lg shadow-lg py-2 z-50 border max-h-[60vh] overflow-y-auto"
+                class="w-44 bg-white rounded-lg shadow-lg py-2 z-50 border max-h-[40vh] overflow-y-auto"
+                x-cloak
                 style="min-width: 11rem;"
             >
                 @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
