@@ -112,7 +112,6 @@ class RequestController extends Controller
         $req->location = $request->location;
         $req->priority = $request->priority;
         $req->status = 'pending';
-        $req->created_by = auth()->id();
         $req->save();
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
