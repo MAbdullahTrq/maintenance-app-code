@@ -203,11 +203,12 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::post('/profile/update-picture', [App\Http\Controllers\Mobile\ProfileController::class, 'updatePicture'])->name('mobile.profile.update-picture');
     Route::get('/profile/change-password', [App\Http\Controllers\Mobile\ProfileController::class, 'showChangePassword'])->name('mobile.profile.change-password');
     Route::post('/profile/change-password', [App\Http\Controllers\Mobile\ProfileController::class, 'changePassword'])->name('mobile.profile.change-password.submit');
-    Route::middleware('can:property_manager')->group(function () {
+    
+    // Property manager specific routes
+    Route::middleware(['property_manager'])->group(function () {
         Route::get('/requests/create', [RequestController::class, 'create'])->name('mobile.requests.create');
         Route::post('/requests/add', [RequestController::class, 'store'])->name('mobile.requests.store');
     });
-    // More mobile routes will be added here
 });
 
 Route::get('/m/login', [App\Http\Controllers\Mobile\LoginController::class, 'showLoginForm'])->name('mobile.login');

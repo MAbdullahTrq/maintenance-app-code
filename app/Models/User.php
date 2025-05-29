@@ -41,6 +41,20 @@ class User extends Authenticatable
     ];
 
     /**
+     * Boot the model.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::retrieved(function ($user) {
+            if (!$user->relationLoaded('role')) {
+                $user->load('role');
+            }
+        });
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Log;
 
 class PropertyManagerMiddleware
 {
@@ -15,7 +16,27 @@ class PropertyManagerMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->user() || !$request->user()->isPropertyManager()) {
+        $user = $request->user();
+        
+        if (!$user) {
+            Log::debug('PropertyManagerMiddleware: No user found');
+            abort(403, 'Unauthorized action.');
+        }
+
+        if (!$user->relationLoaded('role')) {
+            $user->load('role');
+        }
+
+        $isPropertyManager = $user->hasRole('property_manager');
+        
+        Log::debug('PropertyManagerMiddleware check', [
+            'user_id' => $user->id,
+            'role_id' => $user->role_id,
+            'role_slug' => $user->role->slug ?? null,
+            'is_property_manager' => $isPropertyManager
+        ]);
+
+        if (!$isPropertyManager) {
             abort(403, 'Unauthorized action.');
         }
 
