@@ -26,8 +26,8 @@
             <label class="block font-semibold mb-1">Property image</label>
             <div class="grid grid-cols-2 gap-4">
                 <div class="bg-white border rounded p-4 flex flex-col items-center">
-                    <label for="property-image-upload" class="cursor-pointer flex flex-col items-center">
-                        <img src="/icons/icon_upload.png" alt="Upload" class="w-10 h-10 mb-2">
+                    <label for="property-image-upload" class="cursor-pointer flex flex-col items-center justify-center h-full w-full">
+                        <img src="/icons/icon_upload.png" alt="Upload" class="w-full h-auto max-h-32 object-contain mb-2">
                         <span class="text-xs text-gray-500">(JPEG, PNG, JPG, GIF, max 2MB)</span>
                         <input id="property-image-upload" type="file" name="image" accept="image/jpeg,image/png,image/jpg,image/gif" class="w-full hidden"
                             @change="
