@@ -37,6 +37,9 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('property_manager', function ($user) {
+            if (!$user->relationLoaded('role')) {
+                $user->load('role');
+            }
             return $user->isPropertyManager();
         });
 
