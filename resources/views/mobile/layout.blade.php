@@ -80,8 +80,28 @@
             @endif
             <button
                 x-ref="dropdownButton"
-                @click="open = !open; initPopper();"
-                @click.away="open = false; if (popperInstance) { popperInstance.destroy(); popperInstance = null; if (dropdownEl) { dropdownEl.style.display = 'none'; } }"
+                @click="
+                    open = !open;
+                    $nextTick(() => {
+                        if (open) {
+                            if (popperInstance) popperInstance.destroy();
+                            popperInstance = Popper.createPopper($refs.dropdownButton, $refs.dropdownMenu, {
+                                placement: 'bottom-end',
+                                modifiers: [
+                                    { name: 'flip', options: { fallbackPlacements: ['top-end', 'bottom-end'] } },
+                                    { name: 'preventOverflow', options: { boundary: 'viewport' } },
+                                ],
+                            });
+                        } else if (popperInstance) {
+                            popperInstance.destroy();
+                            popperInstance = null;
+                        }
+                    });
+                "
+                @click.away="
+                    open = false;
+                    if (popperInstance) { popperInstance.destroy(); popperInstance = null; }
+                "
                 class="text-sm font-medium flex items-center focus:outline-none"
             >
                 {{ Auth::user()->name }} <i class="fas fa-chevron-down ml-1"></i>
@@ -91,9 +111,9 @@
                     x-show="open"
                     x-transition
                     x-ref="dropdownMenu"
-                    class="w-44 bg-white rounded-lg shadow-lg py-2 z-[9999] border max-h-[40vh] overflow-y-auto fixed"
+                    class="w-44 bg-white rounded-lg shadow-lg py-2 z-[9999] border max-h-[40vh] overflow-y-auto absolute"
                     x-cloak
-                    style="min-width: 11rem; display: none;"
+                    style="min-width: 11rem;"
                 >
                     @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
                         <a href="/m/at" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
