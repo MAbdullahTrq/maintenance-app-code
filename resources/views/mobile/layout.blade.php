@@ -27,7 +27,13 @@
             @yield('header-actions')
         @endguest
         @auth
-        <div x-data="{ open: false }" class="relative">
+        <div x-data="{ open: false }" class="relative flex items-center gap-2">
+            @php $isDashboard = request()->routeIs('mobile.manager.dashboard'); @endphp
+            @if(!$isDashboard)
+                <a href="{{ route('mobile.manager.dashboard') }}" class="mr-2" title="Dashboard">
+                    <img src="/path/to/your/dashboard-icon.png" alt="Dashboard" class="inline-block align-middle" style="height:28px;width:auto;vertical-align:middle;" />
+                </a>
+            @endif
             <button @click="open = !open" @click.away="open = false" class="text-sm font-medium flex items-center focus:outline-none">
                 {{ Auth::user()->name }} <i class="fas fa-chevron-down ml-1"></i>
             </button>
