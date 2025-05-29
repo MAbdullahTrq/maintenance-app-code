@@ -28,43 +28,7 @@
             @yield('header-actions')
         @endguest
         @auth
-        <div
-            x-data="{
-                open: false,
-                popperInstance: null,
-                dropdownEl: null,
-                initPopper() {
-                    this.$nextTick(() => {
-                        if (this.open) {
-                            if (this.popperInstance) {
-                                this.popperInstance.destroy();
-                            }
-                            // Move dropdown to body as a portal
-                            if (!this.dropdownEl) {
-                                this.dropdownEl = this.$refs.dropdownMenu;
-                            }
-                            document.body.appendChild(this.dropdownEl);
-                            this.dropdownEl.style.display = 'block';
-                            this.popperInstance = Popper.createPopper(this.$refs.dropdownButton, this.dropdownEl, {
-                                placement: 'bottom-end',
-                                modifiers: [
-                                    { name: 'flip', options: { fallbackPlacements: ['top-end', 'bottom-end'] } },
-                                    { name: 'preventOverflow', options: { boundary: 'viewport' } },
-                                ],
-                            });
-                        } else if (this.popperInstance) {
-                            this.popperInstance.destroy();
-                            this.popperInstance = null;
-                            if (this.dropdownEl) {
-                                this.dropdownEl.style.display = 'none';
-                                // Optionally, move it back to the original parent if needed
-                            }
-                        }
-                    });
-                }
-            }"
-            class="relative flex items-center gap-2"
-        >
+        <div x-data="dropdownMenu()" class="relative flex items-center gap-2">
             @php
                 $isManagerDashboard = request()->routeIs('mobile.manager.dashboard');
                 $isTechnicianDashboard = request()->routeIs('mobile.technician.dashboard');
@@ -80,40 +44,20 @@
             @endif
             <button
                 x-ref="dropdownButton"
-                @click="
-                    open = !open;
-                    $nextTick(() => {
-                        if (open) {
-                            if (popperInstance) popperInstance.destroy();
-                            popperInstance = Popper.createPopper($refs.dropdownButton, $refs.dropdownMenu, {
-                                placement: 'bottom-end',
-                                modifiers: [
-                                    { name: 'flip', options: { fallbackPlacements: ['top-end', 'bottom-end'] } },
-                                    { name: 'preventOverflow', options: { boundary: 'viewport' } },
-                                ],
-                            });
-                        } else if (popperInstance) {
-                            popperInstance.destroy();
-                            popperInstance = null;
-                        }
-                    });
-                "
-                @click.away="
-                    open = false;
-                    if (popperInstance) { popperInstance.destroy(); popperInstance = null; }
-                "
+                @click="toggle()"
                 class="text-sm font-medium flex items-center focus:outline-none"
             >
                 {{ Auth::user()->name }} <i class="fas fa-chevron-down ml-1"></i>
             </button>
             <template x-teleport="body">
                 <div
+                    x-ref="dropdownMenu"
                     x-show="open"
                     x-transition
-                    x-ref="dropdownMenu"
                     class="w-44 bg-white rounded-lg shadow-lg py-2 z-[9999] border max-h-[40vh] overflow-y-auto absolute"
                     x-cloak
                     style="min-width: 11rem;"
+                    @click.away="close()"
                 >
                     @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
                         <a href="/m/at" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
@@ -180,5 +124,42 @@
     <main class="p-2">
         @yield('content')
     </main>
+    <script>
+    function dropdownMenu() {
+        return {
+            open: false,
+            popperInstance: null,
+            toggle() {
+                this.open = !this.open;
+                this.$nextTick(() => {
+                    if (this.open) {
+                        if (this.popperInstance) this.popperInstance.destroy();
+                        this.popperInstance = Popper.createPopper(
+                            this.$refs.dropdownButton,
+                            this.$refs.dropdownMenu,
+                            {
+                                placement: 'bottom-end',
+                                modifiers: [
+                                    { name: 'flip', options: { fallbackPlacements: ['top-end', 'bottom-end'] } },
+                                    { name: 'preventOverflow', options: { boundary: 'viewport' } },
+                                ],
+                            }
+                        );
+                    } else if (this.popperInstance) {
+                        this.popperInstance.destroy();
+                        this.popperInstance = null;
+                    }
+                });
+            },
+            close() {
+                this.open = false;
+                if (this.popperInstance) {
+                    this.popperInstance.destroy();
+                    this.popperInstance = null;
+                }
+            }
+        }
+    }
+    </script>
 </body>
 </html> 
