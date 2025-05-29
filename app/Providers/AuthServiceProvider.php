@@ -40,7 +40,13 @@ class AuthServiceProvider extends ServiceProvider
             if (!$user->relationLoaded('role')) {
                 $user->load('role');
             }
-            return $user->isPropertyManager();
+            $result = $user->isPropertyManager();
+            \Log::info('Gate check', [
+                'user_id' => $user->id,
+                'role_slug' => $user->role->slug ?? null,
+                'result' => $result,
+            ]);
+            return $result;
         });
 
         Gate::define('technician', function ($user) {
