@@ -182,6 +182,7 @@ Route::get('/mobile', [App\Http\Controllers\Mobile\HomeController::class, 'index
 Route::prefix('m')->middleware('auth')->group(function () {
     Route::get('/dash', [App\Http\Controllers\Mobile\DashboardController::class, 'index'])->name('mobile.manager.dashboard');
     Route::get('/r/{id}', [App\Http\Controllers\Mobile\RequestController::class, 'show'])->name('mobile.request.show');
+    Route::post('/r/{id}/approve', [App\Http\Controllers\Mobile\RequestController::class, 'approve'])->name('mobile.request.approve');
     Route::get('/ap/create', [MobilePropertyController::class, 'create'])->name('mobile.properties.create');
     Route::get('/at/create', [MobileTechnicianController::class, 'create'])->name('mobile.technicians.create');
     Route::get('/at', [MobileTechnicianController::class, 'index'])->name('mobile.technicians.index');
