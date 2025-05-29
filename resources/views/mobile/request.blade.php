@@ -8,9 +8,9 @@
 
 @section('content')
 <div class="flex justify-center">
-    <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
+    <div class="bg-white rounded-xl shadow p-4 w-full max-w-4xl mx-auto">
         <div class="mb-2 flex items-center">
-            <a href="/m/dash" class="mr-2 text-blue-700 hover:underline flex items-center"><i class="fas fa-arrow-left mr-1"></i> Back</a>
+            <a href="#" onclick="window.history.back(); return false;" class="mr-2 text-blue-700 hover:underline flex items-center"><i class="fas fa-arrow-left mr-1"></i> Back</a>
         </div>
         <div class="mb-2 text-center">
             <span class="inline-block bg-gray-200 px-2 py-1 rounded text-xs font-semibold mb-1">{{ ucfirst($request->status) }}</span>
