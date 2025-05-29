@@ -3,7 +3,7 @@
 @section('title', 'View Property - Manager')
 
 @section('content')
-<div class="bg-white rounded-xl shadow p-4 max-w-md mx-auto">
+<div class="bg-white rounded-xl shadow p-4 w-full max-w-4xl mx-auto">
     <h2 class="text-center text-2xl font-bold mb-2 text-yellow-600">{{ $property->name }}</h2>
     <div class="flex gap-2 mb-4">
         <a href="{{ route('mobile.properties.qrcode', $property->id) }}" class="flex-1 bg-blue-100 text-blue-800 font-semibold py-2 rounded-lg shadow hover:bg-blue-200 transition text-center">QR Code</a>
@@ -34,8 +34,8 @@
     </div>
     <div>
         <h3 class="text-center text-lg font-bold mb-2">Maintenance requests</h3>
-        <div class="overflow-x-auto">
-            <table class="min-w-full text-xs border border-gray-400 border-collapse rounded overflow-hidden">
+        <div class="overflow-x-auto w-full">
+            <table class="min-w-full text-xs md:text-sm border border-gray-400 border-collapse rounded overflow-hidden">
                 <thead>
                     <tr class="bg-gray-100 border-b border-gray-400">
                         <th class="p-1 border-r border-gray-400">Title</th>

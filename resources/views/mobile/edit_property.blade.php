@@ -3,7 +3,7 @@
 @section('title', 'Edit Property - Manager')
 
 @section('content')
-<div class="bg-white rounded-xl shadow p-4 max-w-md mx-auto">
+<div class="bg-white rounded-xl shadow p-4 w-full max-w-4xl mx-auto">
     <h2 class="text-center text-2xl font-bold mb-4">Edit Property</h2>
     <form method="POST" action="{{ route('mobile.properties.update', $property->id) }}" enctype="multipart/form-data" x-data="{ imagePreview: null, showPreview: false }">
         @csrf
