@@ -24,7 +24,11 @@
                         @foreach($technicians as $tech)
                         <tr class="border-b border-gray-400" x-show="!search || '{{ strtolower($tech->name) }}'.includes(search.toLowerCase()) || '{{ strtolower($tech->email) }}'.includes(search.toLowerCase()) || '{{ strtolower($tech->phone) }}'.includes(search.toLowerCase())">
                             <td class="p-1 md:p-2 align-top border-r border-gray-400">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($tech->name) }}&background=eee&color=555&size=32" class="rounded-full w-7 h-7" alt="Profile">
+                                @if($tech->image)
+                                    <img src="{{ asset('storage/' . $tech->image) }}" class="rounded-full w-7 h-7 object-cover" alt="Profile">
+                                @else
+                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($tech->name) }}&background=eee&color=555&size=32" class="rounded-full w-7 h-7" alt="Profile">
+                                @endif
                             </td>
                             <td class="p-1 md:p-2 align-top border-r border-gray-400">{{ $tech->name }}</td>
                             <td class="p-1 md:p-2 align-top border-r border-gray-400">
