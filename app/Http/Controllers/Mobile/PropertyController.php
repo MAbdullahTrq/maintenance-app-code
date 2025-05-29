@@ -34,7 +34,11 @@ class PropertyController extends Controller
 
     public function create()
     {
-        return view('mobile.property_create');
+        $user = auth()->user();
+        $propertiesCount = \App\Models\Property::where('manager_id', $user->id)->count();
+        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $user->id)->pluck('id'))->count();
+        return view('mobile.property_create', compact('propertiesCount', 'techniciansCount', 'requestsCount'));
     }
 
     public function store(Request $request)

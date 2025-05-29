@@ -92,8 +92,12 @@ class RequestController extends Controller
 
     public function create()
     {
-        $properties = \App\Models\Property::where('manager_id', auth()->id())->get();
-        return view('mobile.request_create', compact('properties'));
+        $user = auth()->user();
+        $properties = \App\Models\Property::where('manager_id', $user->id)->get();
+        $propertiesCount = $properties->count();
+        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->count();
+        return view('mobile.request_create', compact('properties', 'propertiesCount', 'techniciansCount', 'requestsCount'));
     }
 
     public function store(Request $request)
