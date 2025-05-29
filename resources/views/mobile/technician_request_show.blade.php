@@ -8,18 +8,18 @@
 
 @section('content')
 <div class="flex justify-center">
-    <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
+    <div class="bg-white rounded-xl shadow p-6 w-full max-w-4xl mx-auto">
         <div class="mb-2">
             <a href="{{ route('mobile.technician.dashboard') }}" class="text-blue-700 text-sm hover:underline flex items-center mb-2"><i class="fas fa-arrow-left mr-1"></i> Back</a>
         </div>
-        <div class="text-center mb-2">
+        <div class="text-center mb-4">
             <span class="inline-block bg-gray-200 px-3 py-1 rounded text-xs font-semibold mb-2">{{ ucfirst($request->status) }}</span>
-            <div class="font-bold text-xl">Maintenance Request</div>
-            <div class="text-sm text-gray-700">({{ $property->name ?? '' }})</div>
+            <div class="font-bold text-2xl md:text-3xl mb-1">Maintenance Request</div>
+            <div class="text-base text-gray-700">({{ $property->name ?? '' }})</div>
             <div class="text-xs text-gray-500 mb-2">{{ $request->created_at ? date('d M, Y', strtotime($request->created_at)) : '' }}<br>{{ $request->created_at ? date('H:i', strtotime($request->created_at)) : '' }}</div>
         </div>
-        <div class="grid grid-cols-2 gap-2 mb-2">
-            <div class="text-center {{ strtolower($request->priority) == 'high' ? 'bg-red-500 text-white' : (strtolower($request->priority) == 'low' ? 'bg-yellow-200' : (strtolower($request->priority) == 'medium' ? 'bg-yellow-100' : 'bg-gray-100')) }} font-bold py-2 rounded">
+        <div class="grid grid-cols-2 gap-2 mb-4">
+            <div class="text-center {{ strtolower($request->priority) == 'high' ? 'bg-red-500 text-white' : (strtolower($request->priority) == 'low' ? 'bg-yellow-200' : (strtolower($request->priority) == 'medium' ? 'bg-yellow-100' : 'bg-gray-100')) }} font-bold py-3 rounded text-lg">
                 {{ ucfirst($request->priority) }}
             </div>
             <div class="text-xs text-left">

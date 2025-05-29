@@ -8,26 +8,26 @@
 
 @section('content')
 <div class="flex justify-center">
-    <div class="bg-white rounded-xl shadow p-4 max-w-md w-full" x-data="{ activeTab: 'assigned', search: '' }">
-        <div class="grid grid-cols-3 gap-2 mb-4">
-            <button :class="activeTab === 'assigned' ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-700'" class="text-center rounded py-2 font-bold focus:outline-none" @click="activeTab = 'assigned'">
-                <div class="text-xs">Assigned</div>
-                <div class="text-2xl">{{ $assignedCount }}</div>
+    <div class="bg-white rounded-xl shadow p-6 w-full max-w-4xl mx-auto" x-data="{ activeTab: 'assigned', search: '' }">
+        <div class="grid grid-cols-3 gap-4 mb-6">
+            <button :class="activeTab === 'assigned' ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-700'" class="text-center rounded py-3 font-bold focus:outline-none transition" @click="activeTab = 'assigned'">
+                <div class="text-xs md:text-sm">Assigned</div>
+                <div class="text-2xl md:text-3xl">{{ $assignedCount }}</div>
             </button>
-            <button :class="activeTab === 'accepted' ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-700'" class="text-center rounded py-2 font-bold focus:outline-none" @click="activeTab = 'accepted'">
-                <div class="text-xs">Accepted</div>
-                <div class="text-2xl">{{ $acceptedCount }}</div>
+            <button :class="activeTab === 'accepted' ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-700'" class="text-center rounded py-3 font-bold focus:outline-none transition" @click="activeTab = 'accepted'">
+                <div class="text-xs md:text-sm">Accepted</div>
+                <div class="text-2xl md:text-3xl">{{ $acceptedCount }}</div>
             </button>
-            <button :class="activeTab === 'completed' ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-700'" class="text-center rounded py-2 font-bold focus:outline-none" @click="activeTab = 'completed'">
-                <div class="text-xs">Completed</div>
-                <div class="text-2xl">{{ $completedCount }}</div>
+            <button :class="activeTab === 'completed' ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-700'" class="text-center rounded py-3 font-bold focus:outline-none transition" @click="activeTab = 'completed'">
+                <div class="text-xs md:text-sm">Completed</div>
+                <div class="text-2xl md:text-3xl">{{ $completedCount }}</div>
             </button>
         </div>
-        <div class="text-center font-bold text-lg mb-2" x-text="activeTab.charAt(0).toUpperCase() + activeTab.slice(1)"></div>
-        <div class="mb-2">
-            <input type="text" placeholder="Search" class="w-full border rounded p-2 text-xs" x-model="search">
+        <div class="text-center font-bold text-xl md:text-2xl mb-4" x-text="activeTab.charAt(0).toUpperCase() + activeTab.slice(1)"></div>
+        <div class="mb-4">
+            <input type="text" placeholder="Search" class="w-full border rounded p-3 text-sm md:text-base" x-model="search">
         </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto w-full">
             <template x-if="activeTab === 'assigned'">
                 <table class="min-w-full text-xs border border-gray-400 border-collapse rounded overflow-hidden">
                     <thead>
