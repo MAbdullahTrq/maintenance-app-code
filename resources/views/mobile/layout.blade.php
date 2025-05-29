@@ -6,6 +6,7 @@
     <title>@yield('title', 'MaintainXtra Mobile')</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     @vite('resources/css/app.css')
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybBogGzS3lA4KuTk5dB1vhC1U4CfskS5xWl5p2Qp6Xh/2v5sw" crossorigin="anonymous" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -30,34 +31,28 @@
         <div
             x-data="{
                 open: false,
-                dropdownDirection: 'down',
-                updateDirection() {
+                popperInstance: null,
+                initPopper() {
                     this.$nextTick(() => {
-                        const dropdown = this.$refs.dropdownMenu;
-                        const button = this.$refs.dropdownButton;
-                        if (dropdown && button) {
-                            // Temporarily show dropdown to measure
-                            dropdown.style.visibility = 'hidden';
-                            dropdown.style.display = 'block';
-                            const dropdownHeight = dropdown.offsetHeight;
-                            dropdown.style.removeProperty('visibility');
-                            dropdown.style.display = '';
-                            const buttonRect = button.getBoundingClientRect();
-                            const spaceBelow = window.innerHeight - buttonRect.bottom;
-                            const spaceAbove = buttonRect.top;
-                            if (spaceBelow >= dropdownHeight) {
-                                this.dropdownDirection = 'down';
-                            } else if (spaceAbove >= dropdownHeight) {
-                                this.dropdownDirection = 'up';
-                            } else {
-                                this.dropdownDirection = spaceBelow > spaceAbove ? 'down' : 'up';
+                        if (this.open) {
+                            if (this.popperInstance) {
+                                this.popperInstance.destroy();
                             }
+                            this.popperInstance = Popper.createPopper(this.$refs.dropdownButton, this.$refs.dropdownMenu, {
+                                placement: 'bottom-end',
+                                modifiers: [
+                                    { name: 'flip', options: { fallbackPlacements: ['top-end', 'bottom-end'] } },
+                                    { name: 'preventOverflow', options: { boundary: 'viewport' } },
+                                ],
+                            });
+                        } else if (this.popperInstance) {
+                            this.popperInstance.destroy();
+                            this.popperInstance = null;
                         }
                     });
                 }
             }"
             class="relative flex items-center gap-2"
-            @resize.window="updateDirection()"
         >
             @php
                 $isManagerDashboard = request()->routeIs('mobile.manager.dashboard');
@@ -74,8 +69,8 @@
             @endif
             <button
                 x-ref="dropdownButton"
-                @click="open = !open; if (open) updateDirection();"
-                @click.away="open = false"
+                @click="open = !open; initPopper();"
+                @click.away="open = false; if (popperInstance) { popperInstance.destroy(); popperInstance = null; }"
                 class="text-sm font-medium flex items-center focus:outline-none"
             >
                 {{ Auth::user()->name }} <i class="fas fa-chevron-down ml-1"></i>
@@ -84,7 +79,6 @@
                 x-show="open"
                 x-transition
                 x-ref="dropdownMenu"
-                :class="dropdownDirection === 'down' ? 'absolute right-0 mt-2' : 'absolute right-0 mb-2 bottom-full'"
                 class="w-44 bg-white rounded-lg shadow-lg py-2 z-50 border max-h-[40vh] overflow-y-auto"
                 x-cloak
                 style="min-width: 11rem;"
