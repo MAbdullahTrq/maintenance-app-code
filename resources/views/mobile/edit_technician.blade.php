@@ -4,6 +4,9 @@
 
 @section('content')
 <div class="bg-white rounded-xl shadow p-4 w-full max-w-4xl mx-auto">
+    <div class="mb-2 flex items-center">
+        <a href="#" onclick="window.history.back(); return false;" class="mr-2 text-blue-700 hover:underline flex items-center"><i class="fas fa-arrow-left mr-1"></i> Back</a>
+    </div>
     <h2 class="text-center text-2xl font-bold mb-4">Edit Technician</h2>
     <form method="POST" action="{{ route('mobile.technicians.update', $technician->id) }}" enctype="multipart/form-data">
         @csrf

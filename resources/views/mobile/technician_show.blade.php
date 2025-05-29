@@ -5,6 +5,9 @@
 @section('content')
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-4 w-full max-w-4xl mx-auto">
+        <div class="mb-2 flex items-center">
+            <a href="#" onclick="window.history.back(); return false;" class="mr-2 text-blue-700 hover:underline flex items-center"><i class="fas fa-arrow-left mr-1"></i> Back</a>
+        </div>
         <div class="mb-4 text-center">
             @if($technician->image)
                 <img src="{{ asset('storage/' . $technician->image) }}" class="rounded-full w-24 h-24 object-cover mx-auto mb-2" alt="Profile">
