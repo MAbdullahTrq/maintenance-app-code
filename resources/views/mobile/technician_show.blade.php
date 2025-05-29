@@ -4,9 +4,14 @@
 
 @section('content')
 <div class="flex justify-center">
-    <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
+    <div class="bg-white rounded-xl shadow p-4 w-full max-w-4xl mx-auto">
         <div class="mb-4 text-center">
-            <span class="block font-bold text-xl bg-yellow-300 py-2 rounded">{{ explode(' ', $technician->name)[0] }}</span>
+            @if($technician->image)
+                <img src="{{ asset('storage/' . $technician->image) }}" class="rounded-full w-24 h-24 object-cover mx-auto mb-2" alt="Profile">
+            @else
+                <img src="https://ui-avatars.com/api/?name={{ urlencode($technician->name) }}&background=eee&color=555&size=96" class="rounded-full w-24 h-24 object-cover mx-auto mb-2" alt="Profile">
+            @endif
+            <span class="block font-bold text-xl bg-yellow-300 py-2 rounded mt-2">{{ explode(' ', $technician->name)[0] }}</span>
         </div>
         <div class="mb-4 p-4 border rounded bg-gray-50">
             <div class="mb-2 font-semibold">Property name</div>
@@ -15,13 +20,10 @@
             <div class="mb-2">{{ $technician->email }}</div>
             <div class="font-semibold">Phone</div>
             <div class="mb-2">{{ $technician->phone }}</div>
-            <div class="my-2 flex justify-center">
-                <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=facearea&w=400&h=200&q=80" class="rounded w-48 h-28 object-cover" alt="Technician Photo">
-            </div>
         </div>
         <div class="text-lg font-bold text-center mb-2">Maintenance requests</div>
-        <div class="overflow-x-auto">
-            <table class="min-w-full text-xs border border-gray-400 border-collapse rounded overflow-hidden mb-4">
+        <div class="overflow-x-auto w-full">
+            <table class="min-w-full text-xs md:text-sm border border-gray-400 border-collapse rounded overflow-hidden mb-4">
                 <thead>
                     <tr class="bg-gray-100 border-b border-gray-400">
                         <th class="p-1 border-r border-gray-400">Property</th>
