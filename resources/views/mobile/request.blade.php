@@ -96,7 +96,7 @@
             </div>
         </div>
         @endif
-        <form method="POST" action="{{ route('maintenance.comment', $request->id) }}" class="mb-4">
+        <form method="POST" action="{{ route('mobile.request.comment', $request->id) }}" class="mb-4">
             @csrf
             <textarea name="comment" class="w-full border rounded p-2 mb-2" placeholder="Add a comment..." required></textarea>
             <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded">Add Comment</button>

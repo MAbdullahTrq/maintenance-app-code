@@ -141,4 +141,17 @@ class RequestController extends Controller
         }
         return redirect()->route('mobile.manager.all-requests')->with('success', 'Request submitted!');
     }
+
+    public function comment(Request $request, $id)
+    {
+        $request->validate([
+            'comment' => 'required|string',
+        ]);
+        $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);
+        $maintenance->comments()->create([
+            'user_id' => auth()->id(),
+            'comment' => $request->comment,
+        ]);
+        return redirect()->route('mobile.request.show', $id)->with('success', 'Comment added.');
+    }
 }

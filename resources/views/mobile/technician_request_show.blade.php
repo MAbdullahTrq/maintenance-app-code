@@ -59,18 +59,21 @@
                 @endforeach
             </div>
         </div>
-        @if(in_array($request->status, ['accepted', 'acknowledged', 'started', 'completed']))
         <div class="mb-4">
             <div class="font-bold text-lg mb-2">Comments</div>
             <div class="bg-gray-50 border rounded p-2 text-sm">
-                @forelse($comments as $comment)
+                @forelse($request->comments as $comment)
                     <div class="mb-2">{!! nl2br(e($comment->comment)) !!}</div>
                 @empty
                     <div class="text-gray-400">No comments yet.</div>
                 @endforelse
             </div>
         </div>
-        @endif
+        <form method="POST" action="{{ route('mobile.request.comment', $request->id) }}" class="mb-4">
+            @csrf
+            <textarea name="comment" class="w-full border rounded p-2 mb-2" placeholder="Add a comment..." required></textarea>
+            <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded">Add Comment</button>
+        </form>
         <div class="mb-4">
             <div class="font-bold text-lg mb-2">Property Details</div>
             <div class="mb-1"><span class="font-semibold">Property name</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $property->name ?? '' }}</div></div>
