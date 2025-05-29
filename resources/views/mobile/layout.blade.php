@@ -32,13 +32,20 @@
             x-data="{
                 open: false,
                 popperInstance: null,
+                dropdownEl: null,
                 initPopper() {
                     this.$nextTick(() => {
                         if (this.open) {
                             if (this.popperInstance) {
                                 this.popperInstance.destroy();
                             }
-                            this.popperInstance = Popper.createPopper(this.$refs.dropdownButton, this.$refs.dropdownMenu, {
+                            // Move dropdown to body as a portal
+                            if (!this.dropdownEl) {
+                                this.dropdownEl = this.$refs.dropdownMenu;
+                            }
+                            document.body.appendChild(this.dropdownEl);
+                            this.dropdownEl.style.display = 'block';
+                            this.popperInstance = Popper.createPopper(this.$refs.dropdownButton, this.dropdownEl, {
                                 placement: 'bottom-end',
                                 modifiers: [
                                     { name: 'flip', options: { fallbackPlacements: ['top-end', 'bottom-end'] } },
@@ -48,6 +55,10 @@
                         } else if (this.popperInstance) {
                             this.popperInstance.destroy();
                             this.popperInstance = null;
+                            if (this.dropdownEl) {
+                                this.dropdownEl.style.display = 'none';
+                                // Optionally, move it back to the original parent if needed
+                            }
                         }
                     });
                 }
@@ -70,7 +81,7 @@
             <button
                 x-ref="dropdownButton"
                 @click="open = !open; initPopper();"
-                @click.away="open = false; if (popperInstance) { popperInstance.destroy(); popperInstance = null; }"
+                @click.away="open = false; if (popperInstance) { popperInstance.destroy(); popperInstance = null; if (dropdownEl) { dropdownEl.style.display = 'none'; } }"
                 class="text-sm font-medium flex items-center focus:outline-none"
             >
                 {{ Auth::user()->name }} <i class="fas fa-chevron-down ml-1"></i>
@@ -79,9 +90,9 @@
                 x-show="open"
                 x-transition
                 x-ref="dropdownMenu"
-                class="w-44 bg-white rounded-lg shadow-lg py-2 z-50 border max-h-[40vh] overflow-y-auto"
+                class="w-44 bg-white rounded-lg shadow-lg py-2 z-[9999] border max-h-[40vh] overflow-y-auto fixed"
                 x-cloak
-                style="min-width: 11rem;"
+                style="min-width: 11rem; display: none;"
             >
                 @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
                     <a href="/m/at" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
