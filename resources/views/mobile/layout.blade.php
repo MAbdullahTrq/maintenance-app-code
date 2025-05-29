@@ -6,7 +6,7 @@
     <title>@yield('title', 'MaintainXtra Mobile')</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     @vite('resources/css/app.css')
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybBogGzS3lA4KuTk5dB1vhC1U4CfskS5xWl5p2Qp6Xh/2v5sw" crossorigin="anonymous" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
