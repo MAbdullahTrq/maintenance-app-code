@@ -12,12 +12,13 @@
         <div class="mb-2 flex items-center">
             <a href="#" onclick="window.history.back(); return false;" class="mr-2 text-blue-700 hover:underline flex items-center"><i class="fas fa-arrow-left mr-1"></i> Back</a>
         </div>
-        <div class="mb-2 text-center">
+        <div class="mb-4 text-center">
             <span class="inline-block bg-gray-200 px-2 py-1 rounded text-xs font-semibold mb-1">{{ ucfirst($request->status) }}</span>
             <div class="font-bold text-lg">Maintenance Request</div>
             <div class="text-xs text-gray-500">({{ $request->property->name }})</div>
             <div class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($request->created_at)->format('d M, Y H:i') }}</div>
         </div>
+        <hr class="my-4 border-gray-300">
         <div class="grid grid-cols-2 border border-gray-400 rounded mb-4 text-center">
             <div class="py-2 border-r border-gray-400 {{ $request->priority == 'high' ? 'bg-red-500 text-white' : ($request->priority == 'low' ? 'bg-yellow-200' : ($request->priority == 'medium' ? 'bg-yellow-100' : '')) }}">
                 {{ ucfirst($request->priority) }}
@@ -29,7 +30,8 @@
                 <div class="text-sm">{{ $request->completed_at ? \Carbon\Carbon::parse($request->completed_at)->format('d M, Y H:i') : '-' }}</div>
             </div>
         </div>
-        <div class="mb-2">
+        <hr class="my-4 border-gray-300">
+        <div class="mb-4">
             <div class="font-semibold">Property name</div>
             <div>{{ $request->property->name }}</div>
             <div class="font-semibold mt-2">Property address</div>
@@ -39,14 +41,16 @@
                 <div>{{ $request->property->special_instructions }}</div>
             @endif
         </div>
+        <hr class="my-4 border-gray-300">
         @if($request->assignedTechnician)
-        <div class="mb-2">
+        <div class="mb-4">
             <div class="font-semibold">Assigned Technician</div>
             <div>{{ $request->assignedTechnician->name }}</div>
             <div class="text-xs text-gray-500">{{ $request->assignedTechnician->email }}</div>
         </div>
+        <hr class="my-4 border-gray-300">
         @endif
-        <div class="mb-2">
+        <div class="mb-4">
             <div class="font-semibold">Request title</div>
             <div>{{ $request->title }}</div>
             <div class="font-semibold mt-2">Description</div>
@@ -54,8 +58,9 @@
             <div class="font-semibold mt-2">Location</div>
             <div>{{ $request->location }}</div>
         </div>
+        <hr class="my-4 border-gray-300">
         <!-- Images Section with Popup -->
-        <div x-data="{ showModal: false, modalImage: '' }">
+        <div x-data="{ showModal: false, modalImage: '' }" class="mb-4">
             <div class="flex flex-wrap gap-2 mb-2">
                 @foreach($request->images as $image)
                     <img 
@@ -77,6 +82,7 @@
                 <img :src="modalImage" class="max-h-[80vh] max-w-[90vw] rounded shadow-lg border-4 border-white">
             </div>
         </div>
+        <hr class="my-4 border-gray-300">
         {{-- COMMENTS SECTION --}}
         @if($request->comments && $request->comments->count() > 0)
         <div class="mb-4">
@@ -95,12 +101,13 @@
                 @endforeach
             </div>
         </div>
-        @endif
+        <hr class="my-4 border-gray-300">
         <form method="POST" action="{{ route('mobile.request.comment', $request->id) }}" class="mb-4">
             @csrf
             <textarea name="comment" class="w-full border rounded p-2 mb-2" placeholder="Add a comment..." required></textarea>
             <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded">Add Comment</button>
         </form>
+        <hr class="my-4 border-gray-300">
         {{-- ACTIONS SECTION --}}
         <div class="mb-2">
             @if($request->status === 'pending' && auth()->user() && auth()->user()->isPropertyManager())
