@@ -83,7 +83,6 @@
             </div>
         </div>
         <hr class="my-4 border-gray-300">
-        {{-- COMMENTS SECTION --}}
         @if($request->comments && $request->comments->count() > 0)
         <div class="mb-4">
             <div class="font-semibold mb-1">Comments</div>
@@ -101,6 +100,7 @@
                 @endforeach
             </div>
         </div>
+        @endif
         <hr class="my-4 border-gray-300">
         <form method="POST" action="{{ route('mobile.request.comment', $request->id) }}" class="mb-4">
             @csrf

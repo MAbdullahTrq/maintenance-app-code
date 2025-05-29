@@ -18,6 +18,7 @@
             <div class="text-base text-gray-700">({{ $property->name ?? '' }})</div>
             <div class="text-xs text-gray-500 mb-2">{{ $request->created_at ? date('d M, Y', strtotime($request->created_at)) : '' }}<br>{{ $request->created_at ? date('H:i', strtotime($request->created_at)) : '' }}</div>
         </div>
+        <hr class="my-4 border-gray-300">
         <div class="grid grid-cols-2 gap-2 mb-4">
             <div class="text-center {{ strtolower($request->priority) == 'high' ? 'bg-red-500 text-white' : (strtolower($request->priority) == 'low' ? 'bg-yellow-200' : (strtolower($request->priority) == 'medium' ? 'bg-yellow-100' : 'bg-gray-100')) }} font-bold py-3 rounded text-lg">
                 {{ ucfirst($request->priority) }}
@@ -37,19 +38,21 @@
                 <form method="POST" action="{{ route('mobile.technician.request.finish', $request->id) }}">@csrf<button type="submit" class="w-full bg-yellow-500 text-black py-2 rounded font-semibold">Finish</button></form>
             @endif
         </div>
-        <div class="mb-2">
+        <hr class="my-4 border-gray-300">
+        <div class="mb-4">
             <div class="font-semibold">Request title</div>
             <div class="border rounded p-2 text-sm bg-gray-50">{{ $request->title ?? '' }}</div>
         </div>
-        <div class="mb-2">
+        <div class="mb-4">
             <div class="font-semibold">Description</div>
             <div class="border rounded p-2 text-sm bg-gray-50">{{ $request->description ?? '' }}</div>
         </div>
-        <div class="mb-2">
+        <div class="mb-4">
             <div class="font-semibold">Location</div>
             <div class="border rounded p-2 text-sm bg-gray-50">{{ $request->location ?? '' }}</div>
         </div>
-        <div class="mb-2">
+        <hr class="my-4 border-gray-300">
+        <div class="mb-4">
             <div class="font-semibold">Images</div>
             <div class="flex gap-2 flex-wrap">
                 @foreach($request->images as $img)
@@ -59,6 +62,7 @@
                 @endforeach
             </div>
         </div>
+        <hr class="my-4 border-gray-300">
         <div class="mb-4">
             <div class="font-bold text-lg mb-2">Comments</div>
             <div class="space-y-2">
@@ -80,6 +84,7 @@
             <textarea name="comment" class="w-full border rounded p-2 mb-2" placeholder="Add a comment..." required></textarea>
             <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded">Add Comment</button>
         </form>
+        <hr class="my-4 border-gray-300">
         <div class="mb-4">
             <div class="font-bold text-lg mb-2">Property Details</div>
             <div class="mb-1"><span class="font-semibold">Property name</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $property->name ?? '' }}</div></div>

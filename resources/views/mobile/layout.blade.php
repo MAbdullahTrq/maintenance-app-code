@@ -28,9 +28,16 @@
         @endguest
         @auth
         <div x-data="{ open: false }" class="relative flex items-center gap-2">
-            @php $isDashboard = request()->routeIs('mobile.manager.dashboard'); @endphp
-            @if(!$isDashboard)
+            @php
+                $isManagerDashboard = request()->routeIs('mobile.manager.dashboard');
+                $isTechnicianDashboard = request()->routeIs('mobile.technician.dashboard');
+            @endphp
+            @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager() && !$isManagerDashboard)
                 <a href="{{ route('mobile.manager.dashboard') }}" class="mr-2" title="Dashboard">
+                    <img src="/icons/dash.png" alt="Dashboard" class="inline-block align-middle" style="height:28px;width:auto;vertical-align:middle;" />
+                </a>
+            @elseif(Auth::user() && method_exists(Auth::user(), 'isTechnician') && Auth::user()->isTechnician() && !$isTechnicianDashboard)
+                <a href="{{ route('mobile.technician.dashboard') }}" class="mr-2" title="Dashboard">
                     <img src="/icons/dash.png" alt="Dashboard" class="inline-block align-middle" style="height:28px;width:auto;vertical-align:middle;" />
                 </a>
             @endif
