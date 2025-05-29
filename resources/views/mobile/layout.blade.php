@@ -53,7 +53,7 @@
                 <div
                     x-ref="dropdownMenu"
                     x-show="open"
-                    x-transition
+                    x-transition.opacity.duration.100ms
                     class="w-44 bg-white rounded-lg shadow-lg py-2 z-[9999] border max-h-[40vh] overflow-y-auto absolute"
                     x-cloak
                     style="min-width: 11rem;"
@@ -140,7 +140,6 @@
                             {
                                 placement: 'bottom-end',
                                 modifiers: [
-                                    { name: 'flip', options: { fallbackPlacements: ['top-end', 'bottom-end'] } },
                                     { name: 'preventOverflow', options: { boundary: 'viewport' } },
                                 ],
                             }
