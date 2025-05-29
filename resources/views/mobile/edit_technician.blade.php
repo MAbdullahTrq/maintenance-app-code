@@ -28,18 +28,14 @@
                 <div class="bg-white border rounded p-4 flex items-center justify-center">
                     <input type="file" name="image" accept="image/jpeg,image/png,image/jpg,image/gif" class="w-full">
                 </div>
-                <div class="bg-white border rounded p-4 flex items-center justify-center">
-                    @if($technician->image)
-                        <img src="{{ asset('storage/' . $technician->image) }}" class="max-h-20 object-contain">
-                    @else
-                        <div class="text-gray-400 text-center">
-                            <i class="fas fa-user text-4xl mb-2"></i>
-                            <div class="text-sm">No image</div>
-                        </div>
-                    @endif
+                <div class="bg-white border rounded p-4 flex flex-col items-center">
+                    <label for="technician-image-upload" class="cursor-pointer flex flex-col items-center">
+                        <img src="/icons/icon_upload.png" alt="Upload" class="w-10 h-10 mb-2">
+                        <span class="text-xs text-gray-500">(JPEG, PNG, JPG, GIF, max 2MB)</span>
+                        <input id="technician-image-upload" type="file" name="image" accept="image/jpeg,image/png,image/jpg,image/gif" class="w-full hidden">
+                    </label>
                 </div>
             </div>
-            <div class="text-xs text-gray-500 mt-1">(JPEG, PNG, JPG, GIF, max 2MB)</div>
         </div>
         <div class="flex gap-2 mt-6">
             <a href="{{ route('mobile.technicians.index') }}" class="w-1/2 bg-gray-300 text-black py-2 rounded text-center font-semibold">Cancel</a>
