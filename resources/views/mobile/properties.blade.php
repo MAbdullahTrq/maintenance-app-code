@@ -23,7 +23,11 @@
                         <tr class="border-b border-gray-400">
                             <td class="p-1 md:p-2 align-top border-r border-gray-400">
                                 <div class="flex items-center gap-2">
-                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($property->name) }}&background=eee&color=555&size=32" class="rounded-full w-7 h-7" alt="Profile">
+                                    @if($property->image)
+                                        <img src="{{ asset('storage/' . $property->image) }}" class="rounded-full w-7 h-7 object-cover" alt="Property Image">
+                                    @else
+                                        <img src="https://ui-avatars.com/api/?name={{ urlencode($property->name) }}&background=eee&color=555&size=32" class="rounded-full w-7 h-7" alt="Profile">
+                                    @endif
                                     <a href="{{ route('mobile.properties.show', $property->id) }}" class="font-semibold text-blue-700">{{ $property->name }}</a>
                                 </div>
                             </td>
