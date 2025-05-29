@@ -64,7 +64,7 @@
                     <span class="text-xs text-gray-700">Add Property</span>
                 </a>
                 <a href="{{ route('mobile.properties.create') }}">
-                    <span class="bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center text-lg my-1">+</span>
+                    <span class="bg-white border border-black text-black rounded-full w-7 h-7 flex items-center justify-center text-lg my-1">+</span>
                 </a>
             </div>
             <!-- Technician -->
@@ -75,7 +75,7 @@
                     <span class="text-xs text-gray-700">Add Technician</span>
                 </a>
                 <a href="{{ route('mobile.technicians.create') }}">
-                    <span class="bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center text-lg my-1">+</span>
+                    <span class="bg-white border border-black text-black rounded-full w-7 h-7 flex items-center justify-center text-lg my-1">+</span>
                 </a>
             </div>
             <!-- Request -->
@@ -86,7 +86,7 @@
                     <span class="text-xs text-gray-700">New Request</span>
                 </a>
                 <a href="{{ route('mobile.requests.create') }}">
-                    <span class="bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center text-lg my-1">+</span>
+                    <span class="bg-white border border-black text-black rounded-full w-7 h-7 flex items-center justify-center text-lg my-1">+</span>
                 </a>
             </div>
         </div>
