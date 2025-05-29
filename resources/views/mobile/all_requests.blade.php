@@ -39,14 +39,14 @@
         @endif
         @if($allRequests->count())
         <div class="overflow-x-auto w-full">
-            <table class="min-w-full text-xs border border-gray-400 border-collapse rounded overflow-hidden">
+            <table class="min-w-full text-xs md:text-sm border border-gray-400 border-collapse rounded overflow-hidden">
                 <thead>
                     <tr class="bg-gray-100 border-b border-gray-400">
-                        <th class="p-1 md:p-2 text-xs md:text-sm border-r border-gray-400">Property</th>
-                        <th class="p-1 md:p-2 text-xs md:text-sm border-r border-gray-400">Priority</th>
-                        <th class="p-1 md:p-2 text-xs md:text-sm border-r border-gray-400">Date</th>
-                        <th class="p-1 md:p-2 text-xs md:text-sm border-r border-gray-400 hidden md:table-cell">Status</th>
-                        <th class="p-1 md:p-2 text-xs md:text-sm hidden md:table-cell"></th>
+                        <th class="p-1 md:p-2 border-r border-gray-400">Property</th>
+                        <th class="p-1 md:p-2 border-r border-gray-400">Priority</th>
+                        <th class="p-1 md:p-2 border-r border-gray-400">Date</th>
+                        <th class="p-1 md:p-2 border-r border-gray-400">Status</th>
+                        <th class="p-1 md:p-2"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,8 +60,8 @@
                             {{ ucfirst($req->priority) }}
                         </td>
                         <td class="p-1 md:p-2 align-top border-r border-gray-400">{{ \Carbon\Carbon::parse($req->created_at)->format('d M, Y') }}</td>
-                        <td class="p-1 md:p-2 align-top border-r border-gray-400 hidden md:table-cell">{{ ucfirst($req->status) }}</td>
-                        <td class="p-1 md:p-2 align-top border-r border-gray-400 hidden md:table-cell">
+                        <td class="p-1 md:p-2 align-top border-r border-gray-400">{{ ucfirst($req->status) }}</td>
+                        <td class="p-1 md:p-2 align-top">
                             <a href="{{ route('mobile.request.show', $req->id) }}" class="text-blue-600 hover:text-blue-800">
                                 <i class="fas fa-eye"></i>
                             </a>
