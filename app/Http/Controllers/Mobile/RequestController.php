@@ -26,10 +26,10 @@ class RequestController extends Controller
     public function approve(Request $request, $id)
     {
         $maintenance = MaintenanceRequest::findOrFail($id);
-        $maintenance->status = 'accepted';
+        $maintenance->status = 'assigned';
         $maintenance->assigned_to = $request->input('technician_id');
         $maintenance->save();
-        return redirect()->route('mobile.request.show', $id)->with('success', 'Request assigned and accepted.');
+        return redirect()->route('mobile.request.show', $id)->with('success', 'Request assigned to technician.');
     }
 
     public function accept($id)
@@ -66,10 +66,13 @@ class RequestController extends Controller
     public function finish($id)
     {
         $maintenance = MaintenanceRequest::findOrFail($id);
-        $maintenance->status = 'completed';
-        $maintenance->completed_at = now();
-        $maintenance->save();
-        return redirect()->route('mobile.request.show', $id)->with('success', 'Work finished.');
+        if ($maintenance->status === 'started' && $maintenance->assigned_to == auth()->id()) {
+            $maintenance->status = 'completed';
+            $maintenance->completed_at = now();
+            $maintenance->save();
+            return redirect()->route('mobile.request.show', $id)->with('success', 'Work finished.');
+        }
+        return redirect()->route('mobile.request.show', $id)->with('error', 'Cannot finish this request.');
     }
 
     public function complete($id)
