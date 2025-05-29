@@ -26,10 +26,20 @@ class RequestController extends Controller
     public function approve(Request $request, $id)
     {
         $maintenance = MaintenanceRequest::findOrFail($id);
-        $maintenance->status = 'assigned';
+        $maintenance->status = 'accepted';
         $maintenance->assigned_to = $request->input('technician_id');
         $maintenance->save();
-        return redirect()->route('mobile.request.show', $id)->with('success', 'Request approved and technician assigned.');
+        return redirect()->route('mobile.request.show', $id)->with('success', 'Request assigned and accepted.');
+    }
+
+    public function accept($id)
+    {
+        $maintenance = MaintenanceRequest::findOrFail($id);
+        if ($maintenance->status === 'assigned' && $maintenance->assigned_to == auth()->id()) {
+            $maintenance->status = 'accepted';
+            $maintenance->save();
+        }
+        return redirect()->route('mobile.request.show', $id)->with('success', 'Request accepted.');
     }
 
     public function decline(Request $request, $id)
@@ -44,10 +54,13 @@ class RequestController extends Controller
     public function start($id)
     {
         $maintenance = MaintenanceRequest::findOrFail($id);
-        $maintenance->status = 'started';
-        $maintenance->started_at = now();
-        $maintenance->save();
-        return redirect()->route('mobile.request.show', $id)->with('success', 'Work started.');
+        if ($maintenance->status === 'accepted' && $maintenance->assigned_to == auth()->id()) {
+            $maintenance->status = 'started';
+            $maintenance->started_at = now();
+            $maintenance->save();
+            return redirect()->route('mobile.request.show', $id)->with('success', 'Work started.');
+        }
+        return redirect()->route('mobile.request.show', $id)->with('error', 'Cannot start this request.');
     }
 
     public function finish($id)

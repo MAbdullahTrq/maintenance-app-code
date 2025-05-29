@@ -103,12 +103,12 @@
         </form>
         {{-- ACTIONS SECTION --}}
         <div class="mb-2">
-            @if($request->status === 'pending')
-                <form method="POST" action="{{ route('mobile.request.approve', $request->id) }}" class="mb-2 flex flex-col gap-2">
+            @if($request->status === 'pending' && auth()->user() && auth()->user()->isPropertyManager())
+                <form method="POST" action="{{ route('mobile.request.approve', $request->id) }}" class="mb-2 flex flex-col gap-2" x-data="{ tech: '' }">
                     @csrf
                     <div class="mb-2">
                         <label class="block font-semibold mb-1">Assign Technician*</label>
-                        <select name="technician_id" class="w-full border rounded p-2">
+                        <select name="technician_id" class="w-full border rounded p-2" x-model="tech">
                             <option value="">Select Technician</option>
                             @foreach(App\Models\User::whereHas('role', function($q){$q->where('slug','technician');})->get() as $tech)
                                 <option value="{{ $tech->id }}">{{ $tech->name }}</option>
@@ -116,7 +116,7 @@
                         </select>
                     </div>
                     <div class="flex gap-2">
-                        <button type="submit" class="w-1/2 bg-green-500 text-white py-2 rounded">Approve</button>
+                        <button type="submit" class="w-1/2 bg-green-500 text-white py-2 rounded" :disabled="!tech">Assign & Accept</button>
                         <button type="button" onclick="document.getElementById('declineModal').classList.remove('hidden')" class="w-1/2 bg-gray-300 text-black py-2 rounded">Decline</button>
                     </div>
                 </form>
@@ -131,12 +131,17 @@
                         </div>
                     </form>
                 </div>
-            @elseif($request->status === 'assigned' && auth()->user() && auth()->user()->isTechnician())
+            @elseif($request->status === 'assigned' && auth()->user() && auth()->user()->isTechnician() && $request->assigned_to == auth()->id())
+                <form method="POST" action="{{ route('mobile.request.accept', $request->id) }}" class="mb-2">
+                    @csrf
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded">Accept</button>
+                </form>
+            @elseif($request->status === 'accepted' && auth()->user() && auth()->user()->isTechnician() && $request->assigned_to == auth()->id())
                 <form method="POST" action="{{ route('mobile.request.start', $request->id) }}" class="mb-2">
                     @csrf
                     <button type="submit" class="w-full bg-green-500 text-white py-2 rounded">Start</button>
                 </form>
-            @elseif($request->status === 'started' && auth()->user() && auth()->user()->isTechnician())
+            @elseif($request->status === 'started' && auth()->user() && auth()->user()->isTechnician() && $request->assigned_to == auth()->id())
                 <form method="POST" action="{{ route('mobile.request.finish', $request->id) }}" class="mb-2">
                     @csrf
                     <button type="submit" class="w-full bg-green-500 text-white py-2 rounded">Finish</button>
@@ -145,20 +150,6 @@
                 <form method="POST" action="{{ route('mobile.request.close', $request->id) }}" class="mb-2">
                     @csrf
                     <button type="submit" class="w-full bg-gray-500 text-white py-2 rounded">Close Request</button>
-                </form>
-            @elseif($request->status === 'accepted' && !$request->assignedTechnician)
-                <form method="POST" action="{{ route('mobile.request.assign', $request->id) }}" class="mb-2 flex flex-col gap-2">
-                    @csrf
-                    <div class="mb-2">
-                        <label class="block font-semibold mb-1">Assign Technician*</label>
-                        <select name="technician_id" class="w-full border rounded p-2" required>
-                            <option value="">Select Technician</option>
-                            @foreach(App\Models\User::whereHas('role', function($q){$q->where('slug','technician');})->where('invited_by', auth()->id())->get() as $tech)
-                                <option value="{{ $tech->id }}">{{ $tech->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded">Assign Technician</button>
                 </form>
             @endif
             {{-- Always show Mark as Complete if eligible --}}
