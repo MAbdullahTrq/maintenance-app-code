@@ -9,35 +9,34 @@
 @section('content')
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-4 max-w-md w-full mb-4">
-        <!-- Icon grid -->
-        <div class="grid grid-cols-3 text-center mb-2">
+        <div class="grid grid-cols-3 text-center">
+            <!-- Property -->
             <div>
                 <i class="fas fa-home text-3xl text-green-600"></i>
                 <div class="font-bold">{{ $propertiesCount ?? 0 }}</div>
+                <a href="{{ route('mobile.properties.create') }}">
+                    <span class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-xl mx-auto my-1">+</span>
+                </a>
+                <div class="text-xs">Add Property</div>
             </div>
+            <!-- Technician -->
             <div>
                 <i class="fas fa-user-cog text-3xl text-gray-700"></i>
                 <div class="font-bold">{{ $techniciansCount ?? 0 }}</div>
+                <a href="{{ route('mobile.technicians.create') }}">
+                    <span class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-xl mx-auto my-1">+</span>
+                </a>
+                <div class="text-xs">Add Technician</div>
             </div>
+            <!-- Request -->
             <div>
                 <i class="fas fa-file-alt text-3xl text-blue-700"></i>
                 <div class="font-bold">{{ $requestsCount ?? 0 }}</div>
+                <a href="{{ route('mobile.requests.create') }}">
+                    <span class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-xl mx-auto my-1">+</span>
+                </a>
+                <div class="text-xs">New Request</div>
             </div>
-        </div>
-        <!-- Add buttons directly below the icons, in the same card -->
-        <div class="flex justify-center gap-8">
-            <a href="{{ route('mobile.properties.create') }}" class="flex flex-col items-center">
-                <span class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-2xl mb-1">+</span>
-                <span class="text-xs">Add Property</span>
-            </a>
-            <a href="{{ route('mobile.technicians.create') }}" class="flex flex-col items-center">
-                <span class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-2xl mb-1">+</span>
-                <span class="text-xs">Add Technician</span>
-            </a>
-            <a href="{{ route('mobile.requests.create') }}" class="flex flex-col items-center">
-                <span class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-2xl mb-1">+</span>
-                <span class="text-xs">New Request</span>
-            </a>
         </div>
     </div>
 </div>
