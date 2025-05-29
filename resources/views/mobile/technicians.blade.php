@@ -10,28 +10,28 @@
                 <div class="font-bold text-lg">All Technicians</div>
             </div>
             <input type="text" x-model="search" placeholder="Search" class="w-full border rounded p-2 mb-4" />
-            <div class="overflow-x-visible">
+            <div class="overflow-x-auto w-full">
                 <table class="min-w-full text-xs border border-gray-400 border-collapse rounded overflow-hidden">
                     <thead>
                         <tr class="bg-gray-100 border-b border-gray-400">
-                            <th class="p-1 border-r border-gray-400"> </th>
-                            <th class="p-1 border-r border-gray-400">Name</th>
-                            <th class="p-1 border-r border-gray-400">Address</th>
-                            <th class="p-1">Actions</th>
+                            <th class="p-1 md:p-2 text-xs md:text-sm border-r border-gray-400"> </th>
+                            <th class="p-1 md:p-2 text-xs md:text-sm border-r border-gray-400">Name</th>
+                            <th class="p-1 md:p-2 text-xs md:text-sm border-r border-gray-400">Address</th>
+                            <th class="p-1 md:p-2 text-xs md:text-sm hidden md:table-cell">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($technicians as $tech)
                         <tr class="border-b border-gray-400" x-show="!search || '{{ strtolower($tech->name) }}'.includes(search.toLowerCase()) || '{{ strtolower($tech->email) }}'.includes(search.toLowerCase()) || '{{ strtolower($tech->phone) }}'.includes(search.toLowerCase())">
-                            <td class="p-1 align-top border-r border-gray-400">
+                            <td class="p-1 md:p-2 align-top border-r border-gray-400">
                                 <img src="https://ui-avatars.com/api/?name={{ urlencode($tech->name) }}&background=eee&color=555&size=32" class="rounded-full w-7 h-7" alt="Profile">
                             </td>
-                            <td class="p-1 align-top border-r border-gray-400">{{ $tech->name }}</td>
-                            <td class="p-1 align-top border-r border-gray-400">
+                            <td class="p-1 md:p-2 align-top border-r border-gray-400">{{ $tech->name }}</td>
+                            <td class="p-1 md:p-2 align-top border-r border-gray-400">
                                 <a href="mailto:{{ $tech->email }}" class="text-blue-700 underline">{{ $tech->email }}</a><br>
                                 <a href="tel:{{ $tech->phone }}" class="text-gray-700">{{ $tech->phone }}</a>
                             </td>
-                            <td class="p-1 align-top border-r border-gray-400">
+                            <td class="p-1 md:p-2 align-top border-r border-gray-400 hidden md:table-cell">
                                 <div class="relative">
                                     <button @click.prevent="
                                         dropdownOpen = true;

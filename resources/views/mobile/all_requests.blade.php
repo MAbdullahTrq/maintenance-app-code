@@ -38,30 +38,30 @@
             </div>
         @endif
         @if($allRequests->count())
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto w-full">
             <table class="min-w-full text-xs border border-gray-400 border-collapse rounded overflow-hidden">
                 <thead>
                     <tr class="bg-gray-100 border-b border-gray-400">
-                        <th class="p-1 border-r border-gray-400">Property</th>
-                        <th class="p-1 border-r border-gray-400">Priority</th>
-                        <th class="p-1 border-r border-gray-400">Date</th>
-                        <th class="p-1 border-r border-gray-400">Status</th>
-                        <th class="p-1"></th>
+                        <th class="p-1 md:p-2 text-xs md:text-sm border-r border-gray-400">Property</th>
+                        <th class="p-1 md:p-2 text-xs md:text-sm border-r border-gray-400">Priority</th>
+                        <th class="p-1 md:p-2 text-xs md:text-sm border-r border-gray-400">Date</th>
+                        <th class="p-1 md:p-2 text-xs md:text-sm border-r border-gray-400 hidden md:table-cell">Status</th>
+                        <th class="p-1 md:p-2 text-xs md:text-sm hidden md:table-cell"></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($allRequests as $req)
                     <tr class="border-b border-gray-400">
-                        <td class="p-1 align-top border-r border-gray-400">
+                        <td class="p-1 md:p-2 align-top border-r border-gray-400">
                             <span class="font-semibold">{{ $req->property->name }}</span><br>
                             <span class="text-gray-500 text-xs">{{ $req->property->address }}</span>
                         </td>
-                        <td class="p-1 align-top border-r border-gray-400 {{ $req->priority == 'high' ? 'bg-red-500 text-white' : ($req->priority == 'low' ? 'bg-yellow-200' : ($req->priority == 'medium' ? 'bg-yellow-100' : '')) }}">
+                        <td class="p-1 md:p-2 align-top border-r border-gray-400 {{ $req->priority == 'high' ? 'bg-red-500 text-white' : ($req->priority == 'low' ? 'bg-yellow-200' : ($req->priority == 'medium' ? 'bg-yellow-100' : '')) }}">
                             {{ ucfirst($req->priority) }}
                         </td>
-                        <td class="p-1 align-top border-r border-gray-400">{{ \Carbon\Carbon::parse($req->created_at)->format('d M, Y') }}</td>
-                        <td class="p-1 align-top border-r border-gray-400">{{ ucfirst($req->status) }}</td>
-                        <td class="p-1 align-top">
+                        <td class="p-1 md:p-2 align-top border-r border-gray-400">{{ \Carbon\Carbon::parse($req->created_at)->format('d M, Y') }}</td>
+                        <td class="p-1 md:p-2 align-top border-r border-gray-400 hidden md:table-cell">{{ ucfirst($req->status) }}</td>
+                        <td class="p-1 md:p-2 align-top border-r border-gray-400 hidden md:table-cell">
                             <a href="{{ route('mobile.request.show', $req->id) }}" class="text-blue-600 hover:text-blue-800">
                                 <i class="fas fa-eye"></i>
                             </a>

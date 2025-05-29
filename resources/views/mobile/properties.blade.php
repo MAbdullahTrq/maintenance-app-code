@@ -9,26 +9,26 @@
             <div class="flex justify-between items-center mb-4">
                 <div class="font-bold text-lg">All Properties</div>
             </div>
-            <div class="overflow-x-visible">
+            <div class="overflow-x-auto w-full">
                 <table class="min-w-full text-xs border border-gray-400 border-collapse rounded overflow-hidden">
                     <thead>
                         <tr class="bg-gray-100 border-b border-gray-400">
-                            <th class="p-1 border-r border-gray-400">Name</th>
-                            <th class="p-1 border-r border-gray-400">Address</th>
-                            <th class="p-1">Actions</th>
+                            <th class="p-1 md:p-2 text-xs md:text-sm border-r border-gray-400">Name</th>
+                            <th class="p-1 md:p-2 text-xs md:text-sm border-r border-gray-400">Address</th>
+                            <th class="p-1 md:p-2 text-xs md:text-sm hidden md:table-cell">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($properties as $property)
                         <tr class="border-b border-gray-400">
-                            <td class="p-1 align-top border-r border-gray-400">
+                            <td class="p-1 md:p-2 align-top border-r border-gray-400">
                                 <div class="flex items-center gap-2">
                                     <img src="https://ui-avatars.com/api/?name={{ urlencode($property->name) }}&background=eee&color=555&size=32" class="rounded-full w-7 h-7" alt="Profile">
                                     <a href="{{ route('mobile.properties.show', $property->id) }}" class="font-semibold text-blue-700">{{ $property->name }}</a>
                                 </div>
                             </td>
-                            <td class="p-1 align-top border-r border-gray-400">{{ $property->address }}</td>
-                            <td class="p-1 align-top border-r border-gray-400">
+                            <td class="p-1 md:p-2 align-top border-r border-gray-400">{{ $property->address }}</td>
+                            <td class="p-1 md:p-2 align-top border-r border-gray-400 hidden md:table-cell">
                                 <div class="relative">
                                     <button @click.prevent="
                                         dropdownOpen = true;
