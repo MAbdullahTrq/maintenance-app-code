@@ -54,7 +54,7 @@
     </header>
     @auth
     @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
-    {{-- Removed nav summary grid for dashboard page to avoid duplicate grids --}}
+    {{-- Removed nav grid for property manager to avoid duplicate summary grid on dashboard --}}
     @endif
     @endauth
     <main class="p-2">
