@@ -56,36 +56,33 @@
     @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
     <nav class="bg-white shadow mb-2 rounded-b-xl">
         <div class="grid grid-cols-3 divide-x divide-gray-200 text-center">
-            <a href="{{ route('mobile.properties.index') }}" class="block py-2">
-                <div class="flex flex-col items-center">
-                    <i class="fas fa-home text-2xl text-green-600"></i>
-                    <span class="text-xs font-bold text-gray-600 mt-1">{{ isset($properties) ? $properties->count() : (isset($propertiesCount) ? $propertiesCount : 0) }}</span>
-                    <a href="{{ route('mobile.properties.create') }}">
-                        <span class="bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center text-lg mx-auto my-1">+</span>
-                    </a>
-                    <span class="text-[10px] text-gray-500">Add Property</span>
-                </div>
-            </a>
-            <a href="{{ route('mobile.technicians.index') }}" class="block py-2">
-                <div class="flex flex-col items-center">
-                    <i class="fas fa-user-cog text-2xl text-gray-700"></i>
-                    <span class="text-xs font-bold text-gray-600 mt-1">{{ isset($technicians) ? $technicians->count() : (isset($techniciansCount) ? $techniciansCount : 0) }}</span>
-                    <a href="{{ route('mobile.technicians.create') }}">
-                        <span class="bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center text-lg mx-auto my-1">+</span>
-                    </a>
-                    <span class="text-[10px] text-gray-500">Add Technician</span>
-                </div>
-            </a>
-            <a href="{{ route('mobile.manager.all-requests') }}" class="block py-2">
-                <div class="flex flex-col items-center">
-                    <i class="fas fa-file-alt text-2xl text-gray-700"></i>
-                    <span class="text-xs font-bold text-gray-600 mt-1">{{ isset($allRequests) ? $allRequests->count() : (isset($requestsCount) ? $requestsCount : 0) }}</span>
-                    <a href="{{ route('mobile.requests.create') }}">
-                        <span class="bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center text-lg mx-auto my-1">+</span>
-                    </a>
-                    <span class="text-[10px] text-gray-500">New Request</span>
-                </div>
-            </a>
+            <!-- Property -->
+            <div class="flex flex-col items-center py-3">
+                <i class="fas fa-home text-3xl text-green-600"></i>
+                <div class="font-bold text-lg mt-1">{{ isset($properties) ? $properties->count() : (isset($propertiesCount) ? $propertiesCount : 0) }}</div>
+                <a href="{{ route('mobile.properties.create') }}">
+                    <span class="bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center text-lg my-1">+</span>
+                </a>
+                <span class="text-xs text-gray-700">Add Property</span>
+            </div>
+            <!-- Technician -->
+            <div class="flex flex-col items-center py-3">
+                <i class="fas fa-user-cog text-3xl text-gray-700"></i>
+                <div class="font-bold text-lg mt-1">{{ isset($technicians) ? $technicians->count() : (isset($techniciansCount) ? $techniciansCount : 0) }}</div>
+                <a href="{{ route('mobile.technicians.create') }}">
+                    <span class="bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center text-lg my-1">+</span>
+                </a>
+                <span class="text-xs text-gray-700">Add Technician</span>
+            </div>
+            <!-- Request -->
+            <div class="flex flex-col items-center py-3">
+                <i class="fas fa-file-alt text-3xl text-gray-700"></i>
+                <div class="font-bold text-lg mt-1">{{ isset($allRequests) ? $allRequests->count() : (isset($requestsCount) ? $requestsCount : 0) }}</div>
+                <a href="{{ route('mobile.requests.create') }}">
+                    <span class="bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center text-lg my-1">+</span>
+                </a>
+                <span class="text-xs text-gray-700">New Request</span>
+            </div>
         </div>
     </nav>
     @endif
