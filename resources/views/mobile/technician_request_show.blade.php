@@ -61,12 +61,18 @@
         </div>
         <div class="mb-4">
             <div class="font-bold text-lg mb-2">Comments</div>
-            <div class="bg-gray-50 border rounded p-2 text-sm">
-                @forelse($request->comments as $comment)
-                    <div class="mb-2">{!! nl2br(e($comment->comment)) !!}</div>
-                @empty
-                    <div class="text-gray-400">No comments yet.</div>
-                @endforelse
+            <div class="space-y-2">
+                @foreach($request->comments as $comment)
+                    @php $isOwn = auth()->check() && $comment->user_id === auth()->id(); @endphp
+                    <div class="flex {{ $isOwn ? 'justify-end' : 'justify-start' }}">
+                        <div class="rounded p-2 max-w-[75%] {{ $isOwn ? 'bg-blue-500 text-white text-right' : 'bg-gray-100 text-gray-900 text-left' }}">
+                            <div class="text-xs {{ $isOwn ? 'text-blue-100' : 'text-gray-600' }} mb-1">
+                                {{ $comment->user->name ?? 'User' }} &middot; {{ \Carbon\Carbon::parse($comment->created_at)->diffForHumans() }}
+                            </div>
+                            <div class="text-sm">{{ $comment->comment }}</div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
         <form method="POST" action="{{ route('mobile.request.comment', $request->id) }}" class="mb-4">
