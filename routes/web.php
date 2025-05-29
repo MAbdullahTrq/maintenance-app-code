@@ -164,6 +164,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/debug/roles', function () {
             return ['status' => 'success', 'roles' => \App\Models\Role::all()];
         });
+        Route::get('/debug/user', function () {
+            $user = auth()->user();
+            return [
+                'user' => $user,
+                'role' => $user?->role,
+                'is_property_manager' => $user?->isPropertyManager(),
+                'gate_check' => \Illuminate\Support\Facades\Gate::allows('property_manager'),
+            ];
+        });
     }
 });
 
