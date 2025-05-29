@@ -187,7 +187,7 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::post('/ap/{id}/delete', [MobilePropertyController::class, 'destroy'])->name('mobile.properties.destroy');
     Route::get('/ap/{id}', [MobilePropertyController::class, 'show'])->name('mobile.properties.show');
     Route::get('/ep/{id}', [MobilePropertyController::class, 'edit'])->name('mobile.properties.edit');
-    Route::post('/ep/{id}', [MobilePropertyController::class, 'update'])->name('mobile.properties.update');
+    Route::post('/ep/{id}', [MobilePropertyController::class, 'update'])->name('mobile.properties.ep.update');
     Route::get('/ap/{id}/qrcode', [MobilePropertyController::class, 'qrcode'])->name('mobile.properties.qrcode');
     Route::get('/manager/all-requests', [App\Http\Controllers\Mobile\DashboardController::class, 'allRequests'])->name('mobile.manager.all-requests');
     Route::get('/profile', [App\Http\Controllers\Mobile\ProfileController::class, 'show'])->name('mobile.profile');
