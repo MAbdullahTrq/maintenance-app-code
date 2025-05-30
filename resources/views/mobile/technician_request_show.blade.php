@@ -40,21 +40,21 @@
         </div>
         <hr class="my-4 border-gray-300">
         <div class="mb-4">
-            <div class="font-semibold">Request title</div>
-            <div class="border rounded p-2 text-sm bg-gray-50">{{ $request->title ?? '' }}</div>
+            <div class="font-semibold text-gray-600">Request title</div>
+            <div class="font-medium text-gray-900 text-base mb-2">{{ $request->title ?? '' }}</div>
         </div>
         <div class="mb-4">
-            <div class="font-semibold">Description</div>
-            <div class="border rounded p-2 text-sm bg-gray-50">{{ $request->description ?? '' }}</div>
+            <div class="font-semibold text-gray-600">Description</div>
+            <div class="font-medium text-gray-900 text-base mb-2">{{ $request->description ?? '' }}</div>
         </div>
         <div class="mb-4">
-            <div class="font-semibold">Location</div>
-            <div class="border rounded p-2 text-sm bg-gray-50">{{ $request->location ?? '' }}</div>
+            <div class="font-semibold text-gray-600">Location</div>
+            <div class="font-medium text-gray-900 text-base mb-2">{{ $request->location ?? '' }}</div>
         </div>
         <hr class="my-4 border-gray-300">
         <div class="mb-4">
-            <div class="font-semibold">Images</div>
-            <div class="flex gap-2 flex-wrap">
+            <div class="font-semibold text-gray-600">Images</div>
+            <div class="flex gap-2 flex-wrap mb-2">
                 @foreach($request->images as $img)
                     <a href="{{ asset('storage/' . $img->path) }}" target="_blank">
                         <img src="{{ asset('storage/' . $img->path) }}" class="w-24 h-16 object-cover rounded border" alt="Request Image">
@@ -64,23 +64,23 @@
         </div>
         <hr class="my-4 border-gray-300">
         <div class="mb-4">
-            <div class="font-bold text-lg mb-2">Property Details</div>
-            <div class="mb-1"><span class="font-semibold">Property name</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $property->name ?? '' }}</div></div>
-            <div class="mb-1"><span class="font-semibold">Property address</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $property->address ?? '' }}</div></div>
-            <div class="mb-1"><span class="font-semibold">Special instructions</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $property->special_instructions ?? '' }}</div></div>
-            <div class="mb-1"><span class="font-semibold">Property image</span>
+            <div class="font-bold text-lg mb-2 text-gray-800">Property Details</div>
+            <div class="mb-1"><span class="font-semibold text-gray-600">Property name</span><div class="font-medium text-gray-900 text-base mb-2">{{ $property->name ?? '' }}</div></div>
+            <div class="mb-1"><span class="font-semibold text-gray-600">Property address</span><div class="font-medium text-gray-900 text-base mb-2">{{ $property->address ?? '' }}</div></div>
+            <div class="mb-1"><span class="font-semibold text-gray-600">Special instructions</span><div class="font-medium text-gray-900 text-base mb-2">{{ $property->special_instructions ?? '' }}</div></div>
+            <div class="mb-1"><span class="font-semibold text-gray-600">Property image</span>
                 @if(!empty($property->image))
-                    <img src="{{ asset('storage/' . $property->image) }}" class="w-full h-32 object-cover rounded border" alt="Property Image">
+                    <img src="{{ asset('storage/' . $property->image) }}" class="w-full h-32 object-cover rounded border mb-2" alt="Property Image">
                 @else
-                    <div class="border rounded p-2 text-xs text-gray-400">No image</div>
+                    <div class="text-xs text-gray-400 mb-2">No image</div>
                 @endif
             </div>
         </div>
         <div class="mb-4">
-            <div class="font-bold text-lg mb-2">Requester Info</div>
-            <div class="mb-1"><span class="font-semibold">Requester name</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $requester['name'] ?? '' }}</div></div>
-            <div class="mb-1"><span class="font-semibold">Email</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $requester['email'] ?? '' }}</div></div>
-            <div class="mb-1"><span class="font-semibold">Phone</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $requester['phone'] ?? '' }}</div></div>
+            <div class="font-bold text-lg mb-2 text-gray-800">Requester Info</div>
+            <div class="mb-1"><span class="font-semibold text-gray-600">Requester name</span><div class="font-medium text-gray-900 text-base mb-2">{{ $requester['name'] ?? '' }}</div></div>
+            <div class="mb-1"><span class="font-semibold text-gray-600">Email</span><div class="font-medium text-gray-900 text-base mb-2">{{ $requester['email'] ?? '' }}</div></div>
+            <div class="mb-1"><span class="font-semibold text-gray-600">Phone</span><div class="font-medium text-gray-900 text-base mb-2">{{ $requester['phone'] ?? '' }}</div></div>
         </div>
         <hr class="my-4 border-gray-300">
         <div class="mb-4">
