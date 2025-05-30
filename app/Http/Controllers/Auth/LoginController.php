@@ -72,16 +72,11 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        // Redirect based on user role if available
-        if ($user && method_exists($user, 'isTechnician') && $user->isTechnician()) {
-            return redirect('/m/login');
-        }
-        if ($user && method_exists($user, 'isPropertyManager') && $user->isPropertyManager()) {
-            return redirect('/m/login');
-        }
-        // Fallback: check referrer for mobile
+        // Determine if the request is from mobile or web
         $previous = url()->previous();
-        if (str_contains($previous, '/m/') || str_contains($previous, '/mobile')) {
+        $isMobile = str_contains($previous, '/m/') || str_contains($previous, '/mobile') || str_contains($request->path(), '/m/') || str_contains($request->path(), '/mobile');
+
+        if ($isMobile) {
             return redirect('/m/login');
         }
         return redirect('/login'); // Default web login
