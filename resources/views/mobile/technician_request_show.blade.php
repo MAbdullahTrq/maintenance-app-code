@@ -68,9 +68,15 @@
             <div class="mb-1"><span class="font-semibold text-gray-600">Property name</span><div class="font-medium text-gray-900 text-base mb-2">{{ $property->name ?? '' }}</div></div>
             <div class="mb-1"><span class="font-semibold text-gray-600">Property address</span><div class="font-medium text-gray-900 text-base mb-2">{{ $property->address ?? '' }}</div></div>
             <div class="mb-1"><span class="font-semibold text-gray-600">Special instructions</span><div class="font-medium text-gray-900 text-base mb-2">{{ $property->special_instructions ?? '' }}</div></div>
-            <div class="mb-1"><span class="font-semibold text-gray-600">Property image</span>
+            <div class="mb-1" x-data="{ showModal: false }">
+                <span class="font-semibold text-gray-600">Property image</span>
                 @if(!empty($property->image))
-                    <img src="{{ asset('storage/' . $property->image) }}" class="w-full h-32 object-cover rounded border mb-2" alt="Property Image">
+                    <img src="{{ asset('storage/' . $property->image) }}" class="w-full h-32 object-cover rounded border mb-2 cursor-pointer" alt="Property Image" @click="showModal = true">
+                    <template x-if="showModal">
+                        <div class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50" @click.self="showModal = false">
+                            <img src="{{ asset('storage/' . $property->image) }}" class="max-h-[80vh] max-w-[90vw] rounded shadow-lg border-4 border-white cursor-pointer" @click="showModal = false">
+                        </div>
+                    </template>
                 @else
                     <div class="text-xs text-gray-400 mb-2">No image</div>
                 @endif
