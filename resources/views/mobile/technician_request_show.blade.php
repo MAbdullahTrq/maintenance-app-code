@@ -64,6 +64,26 @@
         </div>
         <hr class="my-4 border-gray-300">
         <div class="mb-4">
+            <div class="font-bold text-lg mb-2">Property Details</div>
+            <div class="mb-1"><span class="font-semibold">Property name</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $property->name ?? '' }}</div></div>
+            <div class="mb-1"><span class="font-semibold">Property address</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $property->address ?? '' }}</div></div>
+            <div class="mb-1"><span class="font-semibold">Special instructions</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $property->special_instructions ?? '' }}</div></div>
+            <div class="mb-1"><span class="font-semibold">Property image</span>
+                @if(!empty($property->image))
+                    <img src="{{ asset('storage/' . $property->image) }}" class="w-full h-32 object-cover rounded border" alt="Property Image">
+                @else
+                    <div class="border rounded p-2 text-xs text-gray-400">No image</div>
+                @endif
+            </div>
+        </div>
+        <div class="mb-4">
+            <div class="font-bold text-lg mb-2">Requester Info</div>
+            <div class="mb-1"><span class="font-semibold">Requester name</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $requester['name'] ?? '' }}</div></div>
+            <div class="mb-1"><span class="font-semibold">Email</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $requester['email'] ?? '' }}</div></div>
+            <div class="mb-1"><span class="font-semibold">Phone</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $requester['phone'] ?? '' }}</div></div>
+        </div>
+        <hr class="my-4 border-gray-300">
+        <div class="mb-4">
             <div class="font-bold text-lg mb-2">Comments</div>
             <div class="space-y-2">
                 @foreach($request->comments as $comment)
@@ -84,26 +104,6 @@
             <textarea name="comment" class="w-full border rounded p-2 mb-2" placeholder="Add a comment..." required></textarea>
             <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded">Add Comment</button>
         </form>
-        <hr class="my-4 border-gray-300">
-        <div class="mb-4">
-            <div class="font-bold text-lg mb-2">Property Details</div>
-            <div class="mb-1"><span class="font-semibold">Property name</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $property->name ?? '' }}</div></div>
-            <div class="mb-1"><span class="font-semibold">Property address</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $property->address ?? '' }}</div></div>
-            <div class="mb-1"><span class="font-semibold">Special instructions</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $property->special_instructions ?? '' }}</div></div>
-            <div class="mb-1"><span class="font-semibold">Property image</span>
-                @if(!empty($property->image))
-                    <img src="{{ asset('storage/' . $property->image) }}" class="w-full h-32 object-cover rounded border" alt="Property Image">
-                @else
-                    <div class="border rounded p-2 text-xs text-gray-400">No image</div>
-                @endif
-            </div>
-        </div>
-        <div class="mb-4">
-            <div class="font-bold text-lg mb-2">Requester Info</div>
-            <div class="mb-1"><span class="font-semibold">Requester name</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $requester['name'] ?? '' }}</div></div>
-            <div class="mb-1"><span class="font-semibold">Email</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $requester['email'] ?? '' }}</div></div>
-            <div class="mb-1"><span class="font-semibold">Phone</span><div class="border rounded p-2 text-sm bg-gray-50">{{ $requester['phone'] ?? '' }}</div></div>
-        </div>
     </div>
 </div>
 @endsection 
