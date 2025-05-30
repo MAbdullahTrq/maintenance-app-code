@@ -74,7 +74,14 @@ class LoginController extends Controller
 
         // Determine if the request is from mobile or web
         $previous = url()->previous();
-        $isMobile = str_contains($previous, '/m/') || str_contains($previous, '/mobile') || str_contains($request->path(), '/m/') || str_contains($request->path(), '/mobile');
+        $isMobile = (
+            str_contains($previous, '/m/') ||
+            str_contains($previous, '/mobile') ||
+            str_contains($previous, '/t/') ||
+            str_contains($request->path(), '/m/') ||
+            str_contains($request->path(), '/mobile') ||
+            str_contains($request->path(), '/t/')
+        );
 
         if ($isMobile) {
             return redirect('/m/login');
