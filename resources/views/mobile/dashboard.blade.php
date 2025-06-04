@@ -39,7 +39,7 @@
                         </td>
                         <td class="p-1 md:p-2 align-top border-r border-gray-400">{{ \Carbon\Carbon::parse($req->created_at)->format('d M, Y') }}</td>
                         <td class="p-1 md:p-2 align-top">
-                            <a href="{{ route('mobile.maintenance.show', $req->id) }}" class="text-blue-600 hover:text-blue-800">
+                            <a href="{{ route('mobile.request.show', $req->id) }}" class="text-blue-600 hover:text-blue-800">
                                 <i class="fas fa-eye"></i>
                             </a>
                         </td>
