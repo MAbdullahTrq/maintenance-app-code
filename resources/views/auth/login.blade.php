@@ -9,7 +9,7 @@
             <div class="px-6 py-8">
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Login to Your Account</h2>
                 
-                <form method="POST" action="{{ route('login') }}">
+                <form method="POST" action="{{ route('web.login') }}">
                     @csrf
                     
                     <div class="mb-4">
@@ -49,7 +49,7 @@
             
             <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
                 <div class="text-center text-sm text-gray-600">
-                    Don't have an account? <a href="{{ route('mobile.login') }}" class="text-blue-600 hover:text-blue-800">Login</a>
+                    Don't have an account? <a href="{{ route('login') }}" class="text-blue-600 hover:text-blue-800">Login</a>
                 </div>
             </div>
         </div>

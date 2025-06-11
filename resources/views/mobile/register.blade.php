@@ -37,7 +37,7 @@
             <div class="mt-4 flex flex-col gap-2 text-center">
                 <a href="/mobile" class="text-blue-700 underline text-sm">&larr; Back to homepage</a>
                 <span class="text-xs text-gray-500">Already have an account?
-                    <a href="{{ route('mobile.login') }}" class="text-blue-700 underline">Login</a>
+                    <a href="{{ route('login') }}" class="text-blue-700 underline">Login</a>
                 </span>
             </div>
         </div>

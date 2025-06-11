@@ -20,7 +20,7 @@
            
             <div class="mt-10 flex justify-center space-x-4">
                 <div class="inline-flex rounded-md shadow">
-                    <a href="{{ route('mobile.login') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
+                    <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
                         <i class="fas fa-sign-in-alt mr-2"></i>Login
                     </a>
                 </div>
@@ -229,7 +229,7 @@
                     </p>
                     <div class="mt-8 flex justify-center">
                         <div class="inline-flex rounded-md shadow">
-                            <a href="{{ route('mobile.login') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
+                            <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
                                 Get Started Today
                             </a>
                     </div>

@@ -1,6 +1,6 @@
 @extends('mobile.layout')
 
-@section('title', 'Mobile Login')
+@section('title', 'Login')
 
 @section('content')
 <div class="flex bg-blue-50">
@@ -9,7 +9,7 @@
             <div class="mb-4 text-center">
                 <h1 class="text-xl font-bold">Sign In</h1>
             </div>
-            <form method="POST" action="{{ route('mobile.login.submit') }}">
+            <form method="POST" action="{{ route('login.submit') }}">
                 @csrf
                 <div class="mb-3">
                     <input type="email" name="email" class="w-full border rounded p-2" placeholder="Email" value="{{ old('email') }}" required autofocus>

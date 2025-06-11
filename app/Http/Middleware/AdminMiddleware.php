@@ -54,14 +54,14 @@ class AdminMiddleware
             'user_id' => $user->id,
             'email' => $user->email,
             'role_slug' => $roleSlug,
-            'redirect_to' => $roleSlug ? route($roleSlug === 'property_manager' ? 'manager.dashboard' : 'technician.dashboard') : route('login')
+            'redirect_to' => $roleSlug ? route($roleSlug === 'property_manager' ? 'manager.dashboard' : 'technician.dashboard') : route('web.login')
         ]);
 
         // Determine the appropriate dashboard route based on user's role
         $dashboardRoute = match($roleSlug) {
             'property_manager' => 'manager.dashboard',
             'technician' => 'technician.dashboard',
-            default => 'login'
+            default => 'web.login'
         };
 
         // If not an admin, redirect with error message
