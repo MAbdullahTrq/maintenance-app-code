@@ -41,8 +41,8 @@ Route::get('/request/{accessLink}/status/{requestId}', [GuestRequestController::
 Route::middleware('guest')->group(function () {
     Route::get('/web/login', [LoginController::class, 'showLoginForm'])->name('web.login');
     Route::post('/web/login', [LoginController::class, 'login']);
-    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [RegisterController::class, 'register']);
+    Route::get('/web/register', [RegisterController::class, 'showRegistrationForm'])->name('web.register');
+    Route::post('/web/register', [RegisterController::class, 'register']);
 });
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -219,8 +219,8 @@ Route::prefix('m')->middleware('auth')->group(function () {
 
 Route::get('/login', [App\Http\Controllers\Mobile\LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [App\Http\Controllers\Mobile\LoginController::class, 'login'])->name('login.submit');
-Route::get('/m/register', [App\Http\Controllers\Mobile\RegisterController::class, 'showRegistrationForm'])->name('mobile.register');
-Route::post('/m/register', [App\Http\Controllers\Mobile\RegisterController::class, 'register'])->name('mobile.register.submit');
+Route::get('/register', [App\Http\Controllers\Mobile\RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [App\Http\Controllers\Mobile\RegisterController::class, 'register'])->name('register.submit');
 
 // Technician mobile dashboard routes
 Route::prefix('t')->middleware(['auth', 'technician'])->group(function () {

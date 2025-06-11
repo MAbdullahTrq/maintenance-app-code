@@ -9,7 +9,7 @@
             <div class="px-6 py-8">
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Create an Account</h2>
                 
-                <form method="POST" action="{{ route('register') }}">
+                <form method="POST" action="{{ route('web.register') }}">
                     @csrf
                     
                     <div class="mb-4">

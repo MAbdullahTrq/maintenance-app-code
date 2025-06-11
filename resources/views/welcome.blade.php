@@ -25,7 +25,7 @@
                     </a>
                 </div>
                 <div class="inline-flex rounded-md shadow">
-                    <a href="{{ route('mobile.register') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-800 hover:bg-blue-700">
+                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-800 hover:bg-blue-700">
                         <i class="fas fa-user-plus mr-2"></i>Sign Up
                     </a>
                 </div>

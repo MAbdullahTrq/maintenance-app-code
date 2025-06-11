@@ -23,7 +23,7 @@
             <a href="{{ route('mobile.manager.dashboard') }}" class="bg-white text-blue-700 font-semibold px-6 py-2 rounded shadow">Go to Dashboard</a>
         @else
             <a href="{{ route('login') }}" class="bg-white text-blue-700 font-semibold px-6 py-2 rounded shadow">Login</a>
-            <a href="{{ route('mobile.register') }}" class="bg-blue-900 text-white font-semibold px-6 py-2 rounded shadow">Register</a>
+            <a href="{{ route('register') }}" class="bg-blue-900 text-white font-semibold px-6 py-2 rounded shadow">Register</a>
         @endauth
     </div>
 </div>

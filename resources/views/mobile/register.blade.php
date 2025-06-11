@@ -1,6 +1,6 @@
 @extends('mobile.layout')
 
-@section('title', 'Mobile Register')
+@section('title', 'Register')
 
 @section('content')
 <div class="flex bg-blue-50">
@@ -9,7 +9,7 @@
             <div class="mb-4 text-center">
                 <h1 class="text-xl font-bold">Register</h1>
             </div>
-            <form method="POST" action="{{ route('mobile.register.submit') }}">
+            <form method="POST" action="{{ route('register.submit') }}">
                 @csrf
                 <div class="mb-3">
                     <input type="text" name="name" class="w-full border rounded p-2" placeholder="Name" value="{{ old('name') }}" required autofocus>
@@ -35,7 +35,7 @@
                 <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded font-semibold">Register</button>
             </form>
             <div class="mt-4 flex flex-col gap-2 text-center">
-                <a href="/mobile" class="text-blue-700 underline text-sm">&larr; Back to homepage</a>
+                <a href="/" class="text-blue-700 underline text-sm">&larr; Back to homepage</a>
                 <span class="text-xs text-gray-500">Already have an account?
                     <a href="{{ route('login') }}" class="text-blue-700 underline">Login</a>
                 </span>

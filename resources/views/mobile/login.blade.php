@@ -27,9 +27,9 @@
                 <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded font-semibold">Login</button>
             </form>
             <div class="mt-4 flex flex-col gap-2 text-center">
-                <a href="/mobile" class="text-blue-700 underline text-sm">&larr; Back to homepage</a>
+                <a href="/" class="text-blue-700 underline text-sm">&larr; Back to homepage</a>
                 <span class="text-xs text-gray-500">Don't have an account?
-                    <a href="{{ route('mobile.register') }}" class="text-blue-700 underline">Sign up</a>
+                    <a href="{{ route('register') }}" class="text-blue-700 underline">Sign up</a>
                 </span>
             </div>
         </div>
