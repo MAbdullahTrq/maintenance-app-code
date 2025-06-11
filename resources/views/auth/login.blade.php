@@ -49,7 +49,7 @@
             
             <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
                 <div class="text-center text-sm text-gray-600">
-                    Don't have an account? <a href="{{ route('register') }}" class="text-blue-600 hover:text-blue-800">Register now</a>
+                    Don't have an account? <a href="{{ route('mobile.login') }}" class="text-blue-600 hover:text-blue-800">Login</a>
                 </div>
             </div>
         </div>

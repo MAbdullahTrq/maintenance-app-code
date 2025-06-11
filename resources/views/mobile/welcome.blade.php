@@ -20,7 +20,7 @@
     <div class="mobile-section">
         <h2 style="font-size:1.3rem; font-weight:600;">Welcome!</h2>
         <p style="margin-top:0.5rem;">Submit requests, track progress, and stay updated—all from your phone.</p>
-        <a href="{{ route('register') }}" class="mobile-btn">Get Started</a>
+        <a href="{{ route('mobile.login') }}" class="mobile-btn">Login</a>
     </div>
     <div class="mobile-section">
         <h3 style="font-size:1.1rem; font-weight:500;">Features</h3>

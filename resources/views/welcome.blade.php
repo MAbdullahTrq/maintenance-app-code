@@ -12,51 +12,18 @@
         <!-- Content -->
         <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
-                @auth
-                    Welcome back, {{ Auth::user()->name }}!
-                @else
-                    Simplify Your Maintenance Management
-                @endauth
+                Simplify Your Maintenance Management
             </h1>
             <p class="mt-6 text-xl md:text-2xl text-white max-w-3xl mx-auto font-medium" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
                 Simplify your maintenance workflow
             </p>
            
             <div class="mt-10 flex justify-center">
-                @auth
-                    <div class="inline-flex rounded-md shadow">
-                        @if(Auth::user()->isAdmin())
-                            <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
-                                <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
-                            </a>
-                        @elseif(Auth::user()->isPropertyManager())
-                            @if(Auth::user()->hasActiveSubscription())
-                                <a href="{{ route('manager.dashboard') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
-                                    <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
-                                </a>
-                            @else
-                                <a href="{{ route('subscription.plans') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
-                                    <i class="fas fa-crown mr-2"></i>View Subscription Plans
-                                </a>
-                            @endif
-                        @else
-                            <a href="{{ route('technician.dashboard') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
-                                <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
-                            </a>
-                        @endif
-                    </div>
-                @else
-                    <div class="inline-flex rounded-md shadow">
-                        <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
-                            Get Started
-                        </a>
-                    </div>
-                    <div class="ml-3 inline-flex">
-                        <a href="#how-it-works" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-800 hover:bg-blue-700">
-                            Learn more
-                        </a>
-                    </div>
-                @endauth
+                <div class="inline-flex rounded-md shadow">
+                    <a href="{{ route('mobile.login') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -257,7 +224,7 @@
                     </p>
                     <div class="mt-8 flex justify-center">
                         <div class="inline-flex rounded-md shadow">
-                            <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
+                            <a href="{{ route('mobile.login') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
                                 Get Started Today
                             </a>
                     </div>
