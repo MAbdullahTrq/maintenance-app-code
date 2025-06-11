@@ -82,22 +82,26 @@
                                         {{ $user->email }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        @if($user->role->slug == 'admin')
+                                        @if($user->role && $user->role->slug == 'admin')
                                             <span class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
                                                 Admin
                                             </span>
-                                        @elseif($user->role->slug == 'property_manager')
+                                        @elseif($user->role && $user->role->slug == 'property_manager')
                                             <span class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
                                                 {{ $user->role->name }}
                                             </span>
-                                        @else
+                                        @elseif($user->role)
                                             <span class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                                 {{ $user->role->name }}
+                                            </span>
+                                        @else
+                                            <span class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                No Role
                                             </span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        @if($user->role->slug == 'property_manager')
+                                        @if($user->role && $user->role->slug == 'property_manager')
                                             <div class="flex space-x-2">
                                                 <a href="{{ route('admin.users.show', $user) }}" class="text-blue-600 hover:text-blue-900">View</a>
                                                 <a href="{{ route('admin.users.grant-subscription.create', $user) }}" class="text-green-600 hover:text-green-900">Grant Subscription</a>
