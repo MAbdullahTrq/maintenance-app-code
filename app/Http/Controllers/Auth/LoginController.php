@@ -72,20 +72,7 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        // Determine if the request is from mobile or web
-        $previous = url()->previous();
-        $isMobile = (
-            str_contains($previous, '/m/') ||
-            str_contains($previous, '/mobile') ||
-            str_contains($previous, '/t/') ||
-            str_contains($request->path(), '/m/') ||
-            str_contains($request->path(), '/mobile') ||
-            str_contains($request->path(), '/t/')
-        );
-
-        if ($isMobile) {
-            return redirect('/m/login');
-        }
-        return redirect('/login'); // Default web login
+        // Redirect all users to the main login page
+        return redirect('/login');
     }
 } 
