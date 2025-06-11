@@ -18,10 +18,15 @@
                 Simplify your maintenance workflow
             </p>
            
-            <div class="mt-10 flex justify-center">
+            <div class="mt-10 flex justify-center space-x-4">
                 <div class="inline-flex rounded-md shadow">
                     <a href="{{ route('mobile.login') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
                         <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </a>
+                </div>
+                <div class="inline-flex rounded-md shadow">
+                    <a href="{{ route('mobile.register') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-800 hover:bg-blue-700">
+                        <i class="fas fa-user-plus mr-2"></i>Sign Up
                     </a>
                 </div>
             </div>

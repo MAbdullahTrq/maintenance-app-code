@@ -23,12 +23,24 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
             $user = Auth::user();
-            if (method_exists($user, 'isPropertyManager') && $user->isPropertyManager()) {
+            
+            // Check if user is active
+            if (!$user->is_active) {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Your account has been deactivated. Please contact the administrator.',
+                ]);
+            }
+            
+            // Redirect based on user role
+            if (method_exists($user, 'isAdmin') && $user->isAdmin()) {
+                return redirect()->intended('/admin/dashboard');
+            } elseif (method_exists($user, 'isPropertyManager') && $user->isPropertyManager()) {
                 return redirect()->intended(route('mobile.manager.dashboard'));
             } elseif (method_exists($user, 'isTechnician') && $user->isTechnician()) {
                 return redirect()->intended(route('mobile.technician.dashboard'));
             } else {
-                // fallback or admin
+                // fallback
                 return redirect('/');
             }
         }

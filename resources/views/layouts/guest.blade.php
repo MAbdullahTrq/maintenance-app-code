@@ -54,7 +54,6 @@
                             </form>
                         @else
                             <a href="{{ route('mobile.login') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Login</a>
-                            <a href="{{ route('mobile.login') }}" class="ml-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">Login</a>
                         @endauth
                     </div>
                 </div>
