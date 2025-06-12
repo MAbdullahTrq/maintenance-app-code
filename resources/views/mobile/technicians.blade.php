@@ -22,7 +22,7 @@
                     </thead>
                     <tbody>
                         @foreach($technicians as $tech)
-                        <tr class="border-b border-gray-400 hover:bg-gray-50" x-show="!search || '{{ strtolower($tech->name) }}'.includes(search.toLowerCase()) || '{{ strtolower($tech->email) }}'.includes(search.toLowerCase()) || '{{ strtolower($tech->phone) }}'.includes(search.toLowerCase())">
+                        <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" x-show="!search || '{{ strtolower($tech->name) }}'.includes(search.toLowerCase()) || '{{ strtolower($tech->email) }}'.includes(search.toLowerCase()) || '{{ strtolower($tech->phone) }}'.includes(search.toLowerCase())" onclick="window.location.href='{{ route('mobile.technicians.show', $tech->id) }}'">
                             <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">
                                 @if($tech->image)
                                     <img src="{{ asset('storage/' . $tech->image) }}" class="rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 object-cover mx-auto" alt="Profile">

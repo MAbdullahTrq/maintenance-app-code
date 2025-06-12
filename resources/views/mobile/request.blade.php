@@ -8,37 +8,37 @@
 
 @section('content')
 <div class="flex justify-center">
-    <div class="bg-white rounded-xl shadow p-6 w-full max-w-4xl mx-auto">
+    <div class="bg-white rounded-xl shadow p-3 md:p-4 lg:p-6 w-full max-w-6xl mx-auto">
         <div class="mb-2 flex items-center">
             <a href="#" onclick="window.history.back(); return false;" class="mr-2 text-blue-700 hover:underline flex items-center"><i class="fas fa-arrow-left mr-1"></i> Back</a>
         </div>
-        <div class="mb-4 text-center">
-            <span class="inline-block bg-gray-200 px-2 py-1 rounded text-xs font-semibold mb-1">{{ ucfirst($request->status) }}</span>
-            <div class="font-bold text-lg">Maintenance Request</div>
-            <div class="text-xs text-gray-500">({{ $request->property->name }})</div>
-            <div class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($request->created_at)->format('d M, Y H:i') }}</div>
+        <div class="mb-4 md:mb-6 text-center">
+            <span class="inline-block bg-gray-200 px-2 md:px-3 py-1 md:py-2 rounded text-xs md:text-sm font-semibold mb-1 md:mb-2">{{ ucfirst($request->status) }}</span>
+            <div class="font-bold text-lg md:text-xl lg:text-2xl">Maintenance Request</div>
+            <div class="text-xs md:text-sm text-gray-500">({{ $request->property->name }})</div>
+            <div class="text-xs md:text-sm text-gray-500">{{ \Carbon\Carbon::parse($request->created_at)->format('d M, Y H:i') }}</div>
         </div>
         <hr class="my-4 border-gray-300">
-        <div class="grid grid-cols-2 border border-gray-400 rounded mb-4 text-center">
-            <div class="py-2 border-r border-gray-400 {{ $request->priority == 'high' ? 'bg-red-500 text-white' : ($request->priority == 'low' ? 'bg-yellow-200' : ($request->priority == 'medium' ? 'bg-yellow-100' : '')) }}">
+        <div class="grid grid-cols-2 border border-gray-400 rounded mb-4 md:mb-6 text-center">
+            <div class="py-2 md:py-3 lg:py-4 border-r border-gray-400 text-sm md:text-base lg:text-lg font-semibold {{ $request->priority == 'high' ? 'bg-red-500 text-white' : ($request->priority == 'low' ? 'bg-yellow-200' : ($request->priority == 'medium' ? 'bg-yellow-100' : '')) }}">
                 {{ ucfirst($request->priority) }}
             </div>
-            <div class="py-2">
-                <div class="text-xs">Started:</div>
-                <div class="text-sm">{{ $request->started_at ? \Carbon\Carbon::parse($request->started_at)->format('d M, Y H:i') : '-' }}</div>
-                <div class="text-xs">Finished:</div>
-                <div class="text-sm">{{ $request->completed_at ? \Carbon\Carbon::parse($request->completed_at)->format('d M, Y H:i') : '-' }}</div>
+            <div class="py-2 md:py-3 lg:py-4">
+                <div class="text-xs md:text-sm font-semibold">Started:</div>
+                <div class="text-xs md:text-sm lg:text-base">{{ $request->started_at ? \Carbon\Carbon::parse($request->started_at)->format('d M, Y H:i') : '-' }}</div>
+                <div class="text-xs md:text-sm font-semibold mt-1">Finished:</div>
+                <div class="text-xs md:text-sm lg:text-base">{{ $request->completed_at ? \Carbon\Carbon::parse($request->completed_at)->format('d M, Y H:i') : '-' }}</div>
             </div>
         </div>
         <hr class="my-4 border-gray-300">
-        <div class="mb-4">
-            <div class="font-semibold">Property name</div>
-            <div>{{ $request->property->name }}</div>
-            <div class="font-semibold mt-2">Property address</div>
-            <div>{{ $request->property->address }}</div>
+        <div class="mb-4 md:mb-6">
+            <div class="font-semibold text-sm md:text-base">Property name</div>
+            <div class="text-sm md:text-base lg:text-lg">{{ $request->property->name }}</div>
+            <div class="font-semibold mt-2 md:mt-3 text-sm md:text-base">Property address</div>
+            <div class="text-sm md:text-base lg:text-lg">{{ $request->property->address }}</div>
             @if($request->property->special_instructions)
-                <div class="font-semibold mt-2">Special instructions</div>
-                <div>{{ $request->property->special_instructions }}</div>
+                <div class="font-semibold mt-2 md:mt-3 text-sm md:text-base">Special instructions</div>
+                <div class="text-sm md:text-base lg:text-lg">{{ $request->property->special_instructions }}</div>
             @endif
         </div>
         <hr class="my-4 border-gray-300">
@@ -59,21 +59,21 @@
             <div>{{ $request->location }}</div>
         </div>
         <hr class="my-4 border-gray-300">
-        <div class="mb-4">
-            <div class="font-bold text-lg mb-2">Requester Info</div>
-            <div class="mb-1"><span class="font-semibold">Requester name:</span> {{ $request->requester_name ?? 'Not provided' }}</div>
-            <div class="mb-1"><span class="font-semibold">Email:</span> {{ $request->requester_email ?? 'Not provided' }}</div>
-            <div class="mb-1"><span class="font-semibold">Phone:</span> {{ $request->requester_phone ?? 'Not provided' }}</div>
+        <div class="mb-4 md:mb-6">
+            <div class="font-bold text-lg md:text-xl lg:text-2xl mb-2 md:mb-3">Requester Info</div>
+            <div class="mb-2"><span class="font-semibold text-sm md:text-base">Requester name:</span> <span class="text-sm md:text-base lg:text-lg">{{ $request->requester_name ?? 'Not provided' }}</span></div>
+            <div class="mb-2"><span class="font-semibold text-sm md:text-base">Email:</span> <span class="text-sm md:text-base lg:text-lg">{{ $request->requester_email ?? 'Not provided' }}</span></div>
+            <div class="mb-1"><span class="font-semibold text-sm md:text-base">Phone:</span> <span class="text-sm md:text-base lg:text-lg">{{ $request->requester_phone ?? 'Not provided' }}</span></div>
         </div>
         <hr class="my-4 border-gray-300">
         <!-- Images Section with Popup -->
-        <div x-data="{ showModal: false, modalImage: '' }" class="mb-4">
-            <div class="flex flex-wrap gap-2 mb-2">
+        <div x-data="{ showModal: false, modalImage: '' }" class="mb-4 md:mb-6">
+            <div class="flex flex-wrap gap-2 md:gap-3 mb-2">
                 @foreach($request->images as $image)
                     <img 
                         src="{{ asset('storage/' . $image->image_path) }}" 
                         alt="Request Image" 
-                        class="w-20 h-20 object-cover rounded cursor-pointer"
+                        class="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity"
                         @click="showModal = true; modalImage = '{{ asset('storage/' . $image->image_path) }}'"
                     >
                 @endforeach

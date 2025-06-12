@@ -20,7 +20,7 @@
                     </thead>
                     <tbody>
                         @foreach($properties as $property)
-                        <tr class="border-b border-gray-400 hover:bg-gray-50">
+                        <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" onclick="window.location.href='{{ route('mobile.properties.show', $property->id) }}'">
                             <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
                                 <div class="flex items-center gap-2 md:gap-3">
                                     @if($property->image)
@@ -28,7 +28,7 @@
                                     @else
                                         <img src="https://ui-avatars.com/api/?name={{ urlencode($property->name) }}&background=eee&color=555&size=48" class="rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12" alt="Profile">
                                     @endif
-                                    <a href="{{ route('mobile.properties.show', $property->id) }}" class="font-semibold text-blue-700 hover:text-blue-900">{{ $property->name }}</a>
+                                    <span class="font-semibold text-blue-700">{{ $property->name }}</span>
                                 </div>
                             </td>
                             <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">{{ $property->address }}</td>
