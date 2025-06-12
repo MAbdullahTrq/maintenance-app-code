@@ -43,7 +43,7 @@ class DashboardController extends Controller
         $sortDirection = $request->query('direction', 'desc'); // Default descending
         
         // Validate sort parameters
-        $allowedSortColumns = ['created_at', 'status'];
+        $allowedSortColumns = ['created_at', 'priority'];
         $allowedDirections = ['asc', 'desc'];
         
         if (!in_array($sortBy, $allowedSortColumns)) {
@@ -58,7 +58,20 @@ class DashboardController extends Controller
         if ($status && in_array($status, ['declined', 'assigned', 'accepted', 'started', 'completed'])) {
             $query->where('status', $status);
         }
-        $allRequests = $query->orderBy($sortBy, $sortDirection)->get();
+        
+        // Handle priority sorting with custom order
+        if ($sortBy === 'priority') {
+            $allRequests = $query->get()->sortBy(function($request) {
+                $priorityOrder = ['high' => 3, 'medium' => 2, 'low' => 1];
+                return $priorityOrder[strtolower($request->priority)] ?? 0;
+            });
+            if ($sortDirection === 'desc') {
+                $allRequests = $allRequests->reverse();
+            }
+            $allRequests = $allRequests->values(); // Reset keys
+        } else {
+            $allRequests = $query->orderBy($sortBy, $sortDirection)->get();
+        }
         $propertiesCount = $properties->count();
         $techniciansCount = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
         $requestsCount = $allRequests->count();

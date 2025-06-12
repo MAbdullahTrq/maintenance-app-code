@@ -43,7 +43,16 @@
                 <thead>
                     <tr class="bg-gray-100 border-b border-gray-400">
                         <th class="p-1 md:p-2 border-r border-gray-400">Property</th>
-                        <th class="p-1 md:p-2 border-r border-gray-400">Priority</th>
+                        <th class="p-1 md:p-2 border-r border-gray-400">
+                            <a href="?{{ request('status') ? 'status=' . request('status') . '&' : '' }}sort=priority&direction={{ $sortBy === 'priority' && $sortDirection === 'desc' ? 'asc' : 'desc' }}" class="flex items-center justify-center hover:text-blue-600">
+                                Priority
+                                @if($sortBy === 'priority')
+                                    <span class="ml-1">{{ $sortDirection === 'desc' ? '↓' : '↑' }}</span>
+                                @else
+                                    <span class="ml-1">↓</span>
+                                @endif
+                            </a>
+                        </th>
                         <th class="p-1 md:p-2 border-r border-gray-400">
                             <a href="?{{ request('status') ? 'status=' . request('status') . '&' : '' }}sort=created_at&direction={{ $sortBy === 'created_at' && $sortDirection === 'desc' ? 'asc' : 'desc' }}" class="flex items-center justify-center hover:text-blue-600">
                                 Date

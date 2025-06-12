@@ -11,20 +11,50 @@
     <div class="bg-white rounded-xl shadow p-6 w-full max-w-4xl mx-auto" x-data="{ 
         activeTab: 'assigned', 
         search: '',
-        sortBy: '{{ $sortBy }}',
-        sortDirection: '{{ $sortDirection }}',
+        sortBy: 'created_at',
+        sortDirection: 'desc',
         
-        sortRequests(requests, sortBy, sortDirection) {
-            return requests.sort((a, b) => {
-                let aVal = sortBy === 'created_at' ? new Date(a.created_at) : a.status;
-                let bVal = sortBy === 'created_at' ? new Date(b.created_at) : b.status;
+        assignedRequests: @js($assignedRequests->toArray()),
+        acceptedRequests: @js($acceptedRequests->toArray()),
+        completedRequests: @js($completedRequests->toArray()),
+        
+        getPriorityValue(priority) {
+            const priorityOrder = { 'high': 3, 'medium': 2, 'low': 1 };
+            return priorityOrder[priority?.toLowerCase()] || 0;
+        },
+        
+        getSortedRequests(requests) {
+            let sorted = [...requests];
+            return sorted.sort((a, b) => {
+                let aVal, bVal;
                 
-                if (sortDirection === 'desc') {
+                if (this.sortBy === 'created_at') {
+                    aVal = new Date(a.created_at);
+                    bVal = new Date(b.created_at);
+                } else if (this.sortBy === 'priority') {
+                    aVal = this.getPriorityValue(a.priority);
+                    bVal = this.getPriorityValue(b.priority);
+                }
+                
+                if (this.sortDirection === 'desc') {
                     return aVal > bVal ? -1 : 1;
                 } else {
                     return aVal > bVal ? 1 : -1;
                 }
             });
+        },
+        
+        getFilteredRequests(requests) {
+            if (!this.search) return this.getSortedRequests(requests);
+            
+            const filtered = requests.filter(req => {
+                const propertyName = req.property?.name?.toLowerCase() || '';
+                const propertyAddress = req.property?.address?.toLowerCase() || '';
+                const searchTerm = this.search.toLowerCase();
+                return propertyName.includes(searchTerm) || propertyAddress.includes(searchTerm);
+            });
+            
+            return this.getSortedRequests(filtered);
         },
         
         toggleSort(column) {
@@ -76,23 +106,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($assignedRequests as $req)
-                        <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" x-show="!search || '{{ strtolower($req->property->name ?? '') }}'.includes(search.toLowerCase()) || '{{ strtolower($req->property->address ?? '') }}'.includes(search.toLowerCase())" onclick="window.location.href='{{ url('/t/r/'.$req->id) }}'">
-                            <td class="p-1 align-top border-r border-gray-400">
-                                <div class="font-semibold">{{ $req->property->name ?? '' }}</div>
-                                <div class="text-xs text-blue-700 underline">{{ $req->property->address ?? '' }}</div>
-                            </td>
-                            <td class="p-1 align-top border-r border-gray-400 {{ strtolower($req->priority) == 'high' ? 'bg-red-500 text-white' : (strtolower($req->priority) == 'low' ? 'bg-yellow-200' : (strtolower($req->priority) == 'medium' ? 'bg-yellow-100' : '')) }}">
-                                {{ ucfirst($req->priority) }}
-                            </td>
-                            <td class="p-1 align-top border-r border-gray-400">
-                                {{ $req->created_at ? date('d M, Y H:i', strtotime($req->created_at)) : '-' }}
-                            </td>
-                            <td class="p-1 align-top">
-                                <a href="{{ url('/t/r/'.$req->id) }}" class="inline-block text-blue-600" onclick="event.stopPropagation();"><i class="fas fa-eye"></i></a>
-                            </td>
-                        </tr>
-                        @endforeach
+                        <template x-for="req in getFilteredRequests(assignedRequests)" :key="req.id">
+                            <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" @click="window.location.href='/t/r/' + req.id">
+                                <td class="p-1 align-top border-r border-gray-400">
+                                    <div class="font-semibold" x-text="req.property?.name || ''"></div>
+                                    <div class="text-xs text-blue-700 underline" x-text="req.property?.address || ''"></div>
+                                </td>
+                                <td class="p-1 align-top border-r border-gray-400" 
+                                    :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-500 text-white' : (req.priority?.toLowerCase() === 'low' ? 'bg-yellow-200' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-100' : ''))">
+                                    <span x-text="req.priority ? req.priority.charAt(0).toUpperCase() + req.priority.slice(1) : ''"></span>
+                                </td>
+                                <td class="p-1 align-top border-r border-gray-400">
+                                    <span x-text="req.created_at ? new Date(req.created_at).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) + ' ' + new Date(req.created_at).toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'}) : '-'"></span>
+                                </td>
+                                <td class="p-1 align-top">
+                                    <a :href="'/t/r/' + req.id" class="inline-block text-blue-600" @click.stop><i class="fas fa-eye"></i></a>
+                                </td>
+                            </tr>
+                        </template>
                     </tbody>
                 </table>
             </template>
@@ -117,23 +148,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($acceptedRequests as $req)
-                        <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" x-show="!search || '{{ strtolower($req->property->name ?? '') }}'.includes(search.toLowerCase()) || '{{ strtolower($req->property->address ?? '') }}'.includes(search.toLowerCase())" onclick="window.location.href='{{ url('/t/r/'.$req->id) }}'">
-                            <td class="p-1 align-top border-r border-gray-400">
-                                <div class="font-semibold">{{ $req->property->name ?? '' }}</div>
-                                <div class="text-xs text-blue-700 underline">{{ $req->property->address ?? '' }}</div>
-                            </td>
-                            <td class="p-1 align-top border-r border-gray-400 {{ strtolower($req->priority) == 'high' ? 'bg-red-500 text-white' : (strtolower($req->priority) == 'low' ? 'bg-yellow-200' : (strtolower($req->priority) == 'medium' ? 'bg-yellow-100' : '')) }}">
-                                {{ ucfirst($req->priority) }}
-                            </td>
-                            <td class="p-1 align-top border-r border-gray-400">
-                                {{ $req->created_at ? date('d M, Y H:i', strtotime($req->created_at)) : '-' }}
-                            </td>
-                            <td class="p-1 align-top">
-                                <a href="{{ url('/t/r/'.$req->id) }}" class="inline-block text-blue-600" onclick="event.stopPropagation();"><i class="fas fa-eye"></i></a>
-                            </td>
-                        </tr>
-                        @endforeach
+                        <template x-for="req in getFilteredRequests(acceptedRequests)" :key="req.id">
+                            <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" @click="window.location.href='/t/r/' + req.id">
+                                <td class="p-1 align-top border-r border-gray-400">
+                                    <div class="font-semibold" x-text="req.property?.name || ''"></div>
+                                    <div class="text-xs text-blue-700 underline" x-text="req.property?.address || ''"></div>
+                                </td>
+                                <td class="p-1 align-top border-r border-gray-400" 
+                                    :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-500 text-white' : (req.priority?.toLowerCase() === 'low' ? 'bg-yellow-200' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-100' : ''))">
+                                    <span x-text="req.priority ? req.priority.charAt(0).toUpperCase() + req.priority.slice(1) : ''"></span>
+                                </td>
+                                <td class="p-1 align-top border-r border-gray-400">
+                                    <span x-text="req.created_at ? new Date(req.created_at).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) + ' ' + new Date(req.created_at).toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'}) : '-'"></span>
+                                </td>
+                                <td class="p-1 align-top">
+                                    <a :href="'/t/r/' + req.id" class="inline-block text-blue-600" @click.stop><i class="fas fa-eye"></i></a>
+                                </td>
+                            </tr>
+                        </template>
                     </tbody>
                 </table>
             </template>
@@ -158,23 +190,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($completedRequests as $req)
-                        <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" x-show="!search || '{{ strtolower($req->property->name ?? '') }}'.includes(search.toLowerCase()) || '{{ strtolower($req->property->address ?? '') }}'.includes(search.toLowerCase())" onclick="window.location.href='{{ url('/t/r/'.$req->id) }}'">
-                            <td class="p-1 align-top border-r border-gray-400">
-                                <div class="font-semibold">{{ $req->property->name ?? '' }}</div>
-                                <div class="text-xs text-blue-700 underline">{{ $req->property->address ?? '' }}</div>
-                            </td>
-                            <td class="p-1 align-top border-r border-gray-400 {{ strtolower($req->priority) == 'high' ? 'bg-red-500 text-white' : (strtolower($req->priority) == 'low' ? 'bg-yellow-200' : (strtolower($req->priority) == 'medium' ? 'bg-yellow-100' : '')) }}">
-                                {{ ucfirst($req->priority) }}
-                            </td>
-                            <td class="p-1 align-top border-r border-gray-400">
-                                {{ $req->created_at ? date('d M, Y H:i', strtotime($req->created_at)) : '-' }}
-                            </td>
-                            <td class="p-1 align-top">
-                                <a href="{{ url('/t/r/'.$req->id) }}" class="inline-block text-blue-600" onclick="event.stopPropagation();"><i class="fas fa-eye"></i></a>
-                            </td>
-                        </tr>
-                        @endforeach
+                        <template x-for="req in getFilteredRequests(completedRequests)" :key="req.id">
+                            <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" @click="window.location.href='/t/r/' + req.id">
+                                <td class="p-1 align-top border-r border-gray-400">
+                                    <div class="font-semibold" x-text="req.property?.name || ''"></div>
+                                    <div class="text-xs text-blue-700 underline" x-text="req.property?.address || ''"></div>
+                                </td>
+                                <td class="p-1 align-top border-r border-gray-400" 
+                                    :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-500 text-white' : (req.priority?.toLowerCase() === 'low' ? 'bg-yellow-200' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-100' : ''))">
+                                    <span x-text="req.priority ? req.priority.charAt(0).toUpperCase() + req.priority.slice(1) : ''"></span>
+                                </td>
+                                <td class="p-1 align-top border-r border-gray-400">
+                                    <span x-text="req.created_at ? new Date(req.created_at).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) + ' ' + new Date(req.created_at).toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'}) : '-'"></span>
+                                </td>
+                                <td class="p-1 align-top">
+                                    <a :href="'/t/r/' + req.id" class="inline-block text-blue-600" @click.stop><i class="fas fa-eye"></i></a>
+                                </td>
+                            </tr>
+                        </template>
                     </tbody>
                 </table>
             </template>

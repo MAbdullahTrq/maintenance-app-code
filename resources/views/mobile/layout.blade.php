@@ -108,36 +108,36 @@
     <nav class="bg-white shadow mb-2 rounded-b-xl">
         <div class="grid grid-cols-3 divide-x divide-gray-200 text-center md:py-2">
             <!-- Property -->
-            <div class="flex flex-col items-center py-3">
+            <div class="flex flex-col items-center py-3 md:py-4">
                 <a href="{{ route('mobile.properties.index') }}" class="flex flex-col items-center group">
-                    <i class="fas fa-home text-3xl text-green-600 group-hover:underline"></i>
-                    <div class="font-bold text-lg mt-1">{{ isset($properties) ? $properties->count() : (isset($propertiesCount) ? $propertiesCount : 0) }}</div>
+                    <i class="fas fa-home text-2xl md:text-3xl lg:text-4xl text-green-600 group-hover:underline"></i>
+                    <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ isset($properties) ? $properties->count() : (isset($propertiesCount) ? $propertiesCount : 0) }}</div>
                 </a>
                 <a href="{{ route('mobile.properties.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative">
-                    <span class="text-black text-2xl font-bold leading-none">+</span>
-                    <span x-show="show" x-transition class="absolute left-1/2 -translate-x-1/2 mt-2 bg-white text-black text-xs px-2 py-1 rounded shadow border border-gray-200 z-10">New Property</span>
+                    <span class="text-black text-xl md:text-2xl lg:text-3xl font-bold leading-none">+</span>
+                    <span x-show="show" x-transition class="absolute left-1/2 -translate-x-1/2 mt-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10">New Property</span>
                 </a>
             </div>
             <!-- Technician -->
-            <div class="flex flex-col items-center py-3">
+            <div class="flex flex-col items-center py-3 md:py-4">
                 <a href="{{ route('mobile.technicians.index') }}" class="flex flex-col items-center group">
-                    <i class="fas fa-user-cog text-3xl text-gray-700 group-hover:underline"></i>
-                    <div class="font-bold text-lg mt-1">{{ isset($technicians) ? $technicians->count() : (isset($techniciansCount) ? $techniciansCount : 0) }}</div>
+                    <i class="fas fa-user-cog text-2xl md:text-3xl lg:text-4xl text-gray-700 group-hover:underline"></i>
+                    <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ isset($technicians) ? $technicians->count() : (isset($techniciansCount) ? $techniciansCount : 0) }}</div>
                 </a>
                 <a href="{{ route('mobile.technicians.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative">
-                    <span class="text-black text-2xl font-bold leading-none">+</span>
-                    <span x-show="show" x-transition class="absolute left-1/2 -translate-x-1/2 mt-2 bg-white text-black text-xs px-2 py-1 rounded shadow border border-gray-200 z-10">New Technician</span>
+                    <span class="text-black text-xl md:text-2xl lg:text-3xl font-bold leading-none">+</span>
+                    <span x-show="show" x-transition class="absolute left-1/2 -translate-x-1/2 mt-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10">New Technician</span>
                 </a>
             </div>
             <!-- Request -->
-            <div class="flex flex-col items-center py-3">
+            <div class="flex flex-col items-center py-3 md:py-4">
                 <a href="{{ route('mobile.manager.all-requests') }}" class="flex flex-col items-center group">
-                    <i class="fas fa-file-alt text-3xl text-gray-700 group-hover:underline"></i>
-                    <div class="font-bold text-lg mt-1">{{ isset($allRequests) ? $allRequests->count() : (isset($requestsCount) ? $requestsCount : 0) }}</div>
+                    <i class="fas fa-file-alt text-2xl md:text-3xl lg:text-4xl text-gray-700 group-hover:underline"></i>
+                    <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ isset($allRequests) ? $allRequests->count() : (isset($requestsCount) ? $requestsCount : 0) }}</div>
                 </a>
                 <a href="{{ route('mobile.requests.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative">
-                    <span class="text-black text-2xl font-bold leading-none">+</span>
-                    <span x-show="show" x-transition class="absolute left-1/2 -translate-x-1/2 mt-2 bg-white text-black text-xs px-2 py-1 rounded shadow border border-gray-200 z-10">New Request</span>
+                    <span class="text-black text-xl md:text-2xl lg:text-3xl font-bold leading-none">+</span>
+                    <span x-show="show" x-transition class="absolute left-1/2 -translate-x-1/2 mt-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10">New Request</span>
                 </a>
             </div>
         </div>
