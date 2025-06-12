@@ -118,20 +118,38 @@ class TechnicianController extends Controller
     public function dashboard()
     {
         $user = Auth::user();
+        $sortBy = request('sort', 'created_at'); // Default sort by date
+        $sortDirection = request('direction', 'desc'); // Default descending
+        
+        // Validate sort parameters
+        $allowedSortColumns = ['created_at', 'status'];
+        $allowedDirections = ['asc', 'desc'];
+        
+        if (!in_array($sortBy, $allowedSortColumns)) {
+            $sortBy = 'created_at';
+        }
+        
+        if (!in_array($sortDirection, $allowedDirections)) {
+            $sortDirection = 'desc';
+        }
+        
         // Assigned: status = 'assigned'
         $assignedRequests = \App\Models\MaintenanceRequest::where('assigned_to', $user->id)
             ->where('status', 'assigned')
             ->with('property')
+            ->orderBy($sortBy, $sortDirection)
             ->get();
         // Accepted: status = 'accepted', 'acknowledged', or 'started'
         $acceptedRequests = \App\Models\MaintenanceRequest::where('assigned_to', $user->id)
             ->whereIn('status', ['accepted', 'acknowledged', 'started'])
             ->with('property')
+            ->orderBy($sortBy, $sortDirection)
             ->get();
         // Completed: status = 'completed'
         $completedRequests = \App\Models\MaintenanceRequest::where('assigned_to', $user->id)
             ->where('status', 'completed')
             ->with('property')
+            ->orderBy($sortBy, $sortDirection)
             ->get();
         return view('mobile.technician_dashboard', [
             'assignedRequests' => $assignedRequests,
@@ -140,6 +158,8 @@ class TechnicianController extends Controller
             'assignedCount' => $assignedRequests->count(),
             'acceptedCount' => $acceptedRequests->count(),
             'completedCount' => $completedRequests->count(),
+            'sortBy' => $sortBy,
+            'sortDirection' => $sortDirection,
         ]);
     }
 

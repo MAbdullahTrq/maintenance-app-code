@@ -33,14 +33,23 @@
                     <thead>
                         <tr class="bg-gray-100 border-b border-gray-400">
                             <th class="p-1 border-r border-gray-400">Property</th>
-                            <th class="p-1 border-r border-gray-400">Priority &gt;</th>
-                            <th class="p-1 border-r border-gray-400">Date &gt;</th>
+                            <th class="p-1 border-r border-gray-400">Priority</th>
+                            <th class="p-1 border-r border-gray-400">
+                                <a href="?sort=created_at&direction={{ $sortBy === 'created_at' && $sortDirection === 'desc' ? 'asc' : 'desc' }}" class="flex items-center justify-center hover:text-blue-600">
+                                    Date
+                                    @if($sortBy === 'created_at')
+                                        <span class="ml-1">{{ $sortDirection === 'desc' ? '↓' : '↑' }}</span>
+                                    @else
+                                        <span class="ml-1">↓</span>
+                                    @endif
+                                </a>
+                            </th>
                             <th class="p-1"></th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($assignedRequests as $req)
-                        <tr class="border-b border-gray-400" x-show="!search || '{{ strtolower($req->property->name ?? '') }}'.includes(search.toLowerCase()) || '{{ strtolower($req->property->address ?? '') }}'.includes(search.toLowerCase())">
+                        <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" x-show="!search || '{{ strtolower($req->property->name ?? '') }}'.includes(search.toLowerCase()) || '{{ strtolower($req->property->address ?? '') }}'.includes(search.toLowerCase())" onclick="window.location.href='{{ url('/t/r/'.$req->id) }}'">
                             <td class="p-1 align-top border-r border-gray-400">
                                 <div class="font-semibold">{{ $req->property->name ?? '' }}</div>
                                 <div class="text-xs text-blue-700 underline">{{ $req->property->address ?? '' }}</div>
@@ -52,7 +61,7 @@
                                 {{ $req->created_at ? date('d M, Y H:i', strtotime($req->created_at)) : '-' }}
                             </td>
                             <td class="p-1 align-top">
-                                <a href="{{ url('/t/r/'.$req->id) }}" class="inline-block"><i class="fas fa-eye"></i></a>
+                                <a href="{{ url('/t/r/'.$req->id) }}" class="inline-block text-blue-600" onclick="event.stopPropagation();"><i class="fas fa-eye"></i></a>
                             </td>
                         </tr>
                         @endforeach
@@ -64,14 +73,23 @@
                     <thead>
                         <tr class="bg-gray-100 border-b border-gray-400">
                             <th class="p-1 border-r border-gray-400">Property</th>
-                            <th class="p-1 border-r border-gray-400">Priority &gt;</th>
-                            <th class="p-1 border-r border-gray-400">Date &gt;</th>
+                            <th class="p-1 border-r border-gray-400">Priority</th>
+                            <th class="p-1 border-r border-gray-400">
+                                <a href="?sort=created_at&direction={{ $sortBy === 'created_at' && $sortDirection === 'desc' ? 'asc' : 'desc' }}" class="flex items-center justify-center hover:text-blue-600">
+                                    Date
+                                    @if($sortBy === 'created_at')
+                                        <span class="ml-1">{{ $sortDirection === 'desc' ? '↓' : '↑' }}</span>
+                                    @else
+                                        <span class="ml-1">↓</span>
+                                    @endif
+                                </a>
+                            </th>
                             <th class="p-1"></th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($acceptedRequests as $req)
-                        <tr class="border-b border-gray-400" x-show="!search || '{{ strtolower($req->property->name ?? '') }}'.includes(search.toLowerCase()) || '{{ strtolower($req->property->address ?? '') }}'.includes(search.toLowerCase())">
+                        <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" x-show="!search || '{{ strtolower($req->property->name ?? '') }}'.includes(search.toLowerCase()) || '{{ strtolower($req->property->address ?? '') }}'.includes(search.toLowerCase())" onclick="window.location.href='{{ url('/t/r/'.$req->id) }}'">
                             <td class="p-1 align-top border-r border-gray-400">
                                 <div class="font-semibold">{{ $req->property->name ?? '' }}</div>
                                 <div class="text-xs text-blue-700 underline">{{ $req->property->address ?? '' }}</div>
@@ -83,7 +101,7 @@
                                 {{ $req->created_at ? date('d M, Y H:i', strtotime($req->created_at)) : '-' }}
                             </td>
                             <td class="p-1 align-top">
-                                <a href="{{ url('/t/r/'.$req->id) }}" class="inline-block"><i class="fas fa-eye"></i></a>
+                                <a href="{{ url('/t/r/'.$req->id) }}" class="inline-block text-blue-600" onclick="event.stopPropagation();"><i class="fas fa-eye"></i></a>
                             </td>
                         </tr>
                         @endforeach
@@ -95,14 +113,23 @@
                     <thead>
                         <tr class="bg-gray-100 border-b border-gray-400">
                             <th class="p-1 border-r border-gray-400">Property</th>
-                            <th class="p-1 border-r border-gray-400">Priority &gt;</th>
-                            <th class="p-1 border-r border-gray-400">Date &gt;</th>
+                            <th class="p-1 border-r border-gray-400">Priority</th>
+                            <th class="p-1 border-r border-gray-400">
+                                <a href="?sort=created_at&direction={{ $sortBy === 'created_at' && $sortDirection === 'desc' ? 'asc' : 'desc' }}" class="flex items-center justify-center hover:text-blue-600">
+                                    Date
+                                    @if($sortBy === 'created_at')
+                                        <span class="ml-1">{{ $sortDirection === 'desc' ? '↓' : '↑' }}</span>
+                                    @else
+                                        <span class="ml-1">↓</span>
+                                    @endif
+                                </a>
+                            </th>
                             <th class="p-1"></th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($completedRequests as $req)
-                        <tr class="border-b border-gray-400" x-show="!search || '{{ strtolower($req->property->name ?? '') }}'.includes(search.toLowerCase()) || '{{ strtolower($req->property->address ?? '') }}'.includes(search.toLowerCase())">
+                        <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" x-show="!search || '{{ strtolower($req->property->name ?? '') }}'.includes(search.toLowerCase()) || '{{ strtolower($req->property->address ?? '') }}'.includes(search.toLowerCase())" onclick="window.location.href='{{ url('/t/r/'.$req->id) }}'">
                             <td class="p-1 align-top border-r border-gray-400">
                                 <div class="font-semibold">{{ $req->property->name ?? '' }}</div>
                                 <div class="text-xs text-blue-700 underline">{{ $req->property->address ?? '' }}</div>
@@ -114,7 +141,7 @@
                                 {{ $req->created_at ? date('d M, Y H:i', strtotime($req->created_at)) : '-' }}
                             </td>
                             <td class="p-1 align-top">
-                                <a href="{{ url('/t/r/'.$req->id) }}" class="inline-block"><i class="fas fa-eye"></i></a>
+                                <a href="{{ url('/t/r/'.$req->id) }}" class="inline-block text-blue-600" onclick="event.stopPropagation();"><i class="fas fa-eye"></i></a>
                             </td>
                         </tr>
                         @endforeach

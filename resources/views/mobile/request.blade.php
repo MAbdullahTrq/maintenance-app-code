@@ -59,6 +59,13 @@
             <div>{{ $request->location }}</div>
         </div>
         <hr class="my-4 border-gray-300">
+        <div class="mb-4">
+            <div class="font-bold text-lg mb-2">Requester Info</div>
+            <div class="mb-1"><span class="font-semibold">Requester name:</span> {{ $request->requester_name ?? 'Not provided' }}</div>
+            <div class="mb-1"><span class="font-semibold">Email:</span> {{ $request->requester_email ?? 'Not provided' }}</div>
+            <div class="mb-1"><span class="font-semibold">Phone:</span> {{ $request->requester_phone ?? 'Not provided' }}</div>
+        </div>
+        <hr class="my-4 border-gray-300">
         <!-- Images Section with Popup -->
         <div x-data="{ showModal: false, modalImage: '' }" class="mb-4">
             <div class="flex flex-wrap gap-2 mb-2">
@@ -153,11 +160,7 @@
                     @csrf
                     <button type="submit" class="w-full bg-green-500 text-white py-2 rounded">Finish</button>
                 </form>
-            @elseif($request->status === 'completed')
-                <form method="POST" action="{{ route('mobile.request.close', $request->id) }}" class="mb-2">
-                    @csrf
-                    <button type="submit" class="w-full bg-gray-500 text-white py-2 rounded">Close Request</button>
-                </form>
+
             @endif
             {{-- Always show Mark as Complete if eligible --}}
             @if(auth()->user() && auth()->user()->isPropertyManager() && in_array($request->status, ['pending', 'assigned', 'started', 'acknowledged', 'accepted']))

@@ -217,10 +217,12 @@ Route::prefix('m')->middleware('auth')->group(function () {
     });
 });
 
-Route::get('/login', [App\Http\Controllers\Mobile\LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [App\Http\Controllers\Mobile\LoginController::class, 'login'])->name('login.submit');
-Route::get('/register', [App\Http\Controllers\Mobile\RegisterController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [App\Http\Controllers\Mobile\RegisterController::class, 'register'])->name('register.submit');
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [App\Http\Controllers\Mobile\LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [App\Http\Controllers\Mobile\LoginController::class, 'login'])->name('login.submit');
+    Route::get('/register', [App\Http\Controllers\Mobile\RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [App\Http\Controllers\Mobile\RegisterController::class, 'register'])->name('register.submit');
+});
 
 // Technician mobile dashboard routes
 Route::prefix('t')->middleware(['auth', 'technician'])->group(function () {

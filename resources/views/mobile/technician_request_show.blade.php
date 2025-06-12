@@ -52,14 +52,16 @@
             <div class="font-medium text-gray-900 text-base mb-2">{{ $request->location ?? '' }}</div>
         </div>
         <hr class="my-4 border-gray-300">
-        <div class="mb-4">
+        <div class="mb-4" x-data="{ showModal: false, modalImage: '' }">
             <div class="font-semibold text-gray-600">Images</div>
             <div class="flex gap-2 flex-wrap mb-2">
                 @foreach($request->images as $img)
-                    <a href="{{ asset('storage/' . $img->path) }}" target="_blank">
-                        <img src="{{ asset('storage/' . $img->path) }}" class="w-24 h-16 object-cover rounded border" alt="Request Image">
-                    </a>
+                    <img src="{{ asset('storage/' . $img->image_path) }}" class="w-24 h-16 object-cover rounded border cursor-pointer" alt="Request Image" @click="showModal = true; modalImage = '{{ asset('storage/' . $img->image_path) }}'">
                 @endforeach
+            </div>
+            <!-- Modal for image preview -->
+            <div x-show="showModal" x-transition class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50" @click.self="showModal = false" style="display: none;">
+                <img :src="modalImage" class="max-h-[80vh] max-w-[90vw] rounded shadow-lg border-4 border-white cursor-pointer" @click="showModal = false">
             </div>
         </div>
         <hr class="my-4 border-gray-300">

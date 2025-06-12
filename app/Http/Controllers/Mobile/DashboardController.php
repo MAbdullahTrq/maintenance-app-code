@@ -39,11 +39,26 @@ class DashboardController extends Controller
         }
         $properties = Property::where('manager_id', $user->id)->get();
         $status = $request->query('status');
+        $sortBy = $request->query('sort', 'created_at'); // Default sort by date
+        $sortDirection = $request->query('direction', 'desc'); // Default descending
+        
+        // Validate sort parameters
+        $allowedSortColumns = ['created_at', 'status'];
+        $allowedDirections = ['asc', 'desc'];
+        
+        if (!in_array($sortBy, $allowedSortColumns)) {
+            $sortBy = 'created_at';
+        }
+        
+        if (!in_array($sortDirection, $allowedDirections)) {
+            $sortDirection = 'desc';
+        }
+        
         $query = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'));
         if ($status && in_array($status, ['declined', 'assigned', 'accepted', 'started', 'completed'])) {
             $query->where('status', $status);
         }
-        $allRequests = $query->latest()->get();
+        $allRequests = $query->orderBy($sortBy, $sortDirection)->get();
         $propertiesCount = $properties->count();
         $techniciansCount = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
         $requestsCount = $allRequests->count();
@@ -65,6 +80,8 @@ class DashboardController extends Controller
             'startedCount' => $startedCount,
             'completedCount' => $completedCount,
             'selectedStatus' => $status,
+            'sortBy' => $sortBy,
+            'sortDirection' => $sortDirection,
         ]);
     }
 }
