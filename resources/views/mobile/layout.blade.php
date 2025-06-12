@@ -21,7 +21,7 @@
             @endif
         @else
             /
-        @endauth" class="font-extrabold text-xl">
+        @endauth" class="font-extrabold text-xl md:text-2xl lg:text-3xl">
             <span class="text-blue-700">Maintain</span><span class="text-black">Xtra</span>
         </a>
         @guest
@@ -59,45 +59,45 @@
                 $isTechnicianDashboard = request()->routeIs('mobile.technician.dashboard');
             @endphp
             @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager() && !$isManagerDashboard)
-                <a href="{{ route('mobile.manager.dashboard') }}" class="mr-2" title="Dashboard">
-                    <img src="/icons/dash.png" alt="Dashboard" class="inline-block align-middle" style="height:28px;width:auto;vertical-align:middle;" />
+                <a href="{{ route('mobile.manager.dashboard') }}" class="mr-2 md:mr-3 lg:mr-4" title="Dashboard">
+                    <img src="/icons/dash.png" alt="Dashboard" class="inline-block align-middle w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10" />
                 </a>
             @elseif(Auth::user() && method_exists(Auth::user(), 'isTechnician') && Auth::user()->isTechnician() && !$isTechnicianDashboard)
-                <a href="{{ route('mobile.technician.dashboard') }}" class="mr-2" title="Dashboard">
-                    <img src="/icons/dash.png" alt="Dashboard" class="inline-block align-middle" style="height:28px;width:auto;vertical-align:middle;" />
+                <a href="{{ route('mobile.technician.dashboard') }}" class="mr-2 md:mr-3 lg:mr-4" title="Dashboard">
+                    <img src="/icons/dash.png" alt="Dashboard" class="inline-block align-middle w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10" />
                 </a>
             @endif
             <button
                 x-ref="dropdownButton"
                 @click="open = !open; initPopper();"
                 @click.away="open = false; if (popperInstance) { popperInstance.destroy(); popperInstance = null; }"
-                class="text-sm font-medium flex items-center focus:outline-none"
+                class="text-sm md:text-base lg:text-lg font-medium flex items-center focus:outline-none"
             >
-                {{ Auth::user()->name }} <i class="fas fa-chevron-down ml-1"></i>
+                {{ Auth::user()->name }} <i class="fas fa-chevron-down ml-1 md:ml-2"></i>
             </button>
             <div
                 x-show="open"
                 x-transition
                 x-ref="dropdownMenu"
-                class="absolute right-0 w-44 bg-white rounded-lg shadow-lg py-2 z-50 border max-h-[40vh] overflow-y-auto"
+                class="absolute right-0 w-44 md:w-48 lg:w-52 bg-white rounded-lg shadow-lg py-2 z-50 border max-h-[40vh] overflow-y-auto"
                 x-cloak
                 style="min-width: 11rem;"
             >
                 @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
-                    <a href="/m/at" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <a href="/m/at" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
                         <i class="fas fa-users text-blue-600 mr-2"></i> Technicians
                     </a>
-                    <a href="/m/ap" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <a href="/m/ap" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
                         <i class="fas fa-building text-purple-600 mr-2"></i> Properties
                     </a>
-                    <a href="{{ route('mobile.manager.all-requests') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <a href="{{ route('mobile.manager.all-requests') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
                         <i class="fas fa-file-alt text-gray-700 mr-2"></i> Requests
                     </a>
                 @endif
-                <a href="/m/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                <a href="/m/profile" class="block px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">Profile</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+                    <button type="submit" class="w-full text-left px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">Logout</button>
                 </form>
             </div>
         </div>

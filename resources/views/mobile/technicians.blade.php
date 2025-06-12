@@ -4,38 +4,38 @@
 
 @section('content')
 <div class="flex justify-center">
-    <div class="bg-white rounded-xl shadow p-4 w-full max-w-4xl mx-auto">
+    <div class="bg-white rounded-xl shadow p-2 md:p-3 lg:p-4 w-full max-w-6xl mx-auto">
         <div x-data="{ showForm: false, search: '', dropdownOpen: false, dropdownTop: 0, dropdownLeft: 0, dropdownTech: null }">
             <div class="flex justify-between items-center mb-4">
-                <div class="font-bold text-lg">All Technicians</div>
+                <div class="font-bold text-lg md:text-xl lg:text-2xl">All Technicians</div>
             </div>
-            <input type="text" x-model="search" placeholder="Search" class="w-full border rounded p-2 mb-4" />
+            <input type="text" x-model="search" placeholder="Search" class="w-full border rounded p-2 md:p-3 lg:p-4 mb-4 text-sm md:text-base" />
             <div class="overflow-x-auto w-full">
-                <table class="min-w-full text-xs md:text-sm border border-gray-400 border-collapse rounded overflow-hidden">
+                <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-hidden">
                     <thead>
                         <tr class="bg-gray-100 border-b border-gray-400">
-                            <th class="p-1 md:p-2 border-r border-gray-400"> </th>
-                            <th class="p-1 md:p-2 border-r border-gray-400">Name</th>
-                            <th class="p-1 md:p-2 border-r border-gray-400">Address</th>
-                            <th class="p-1 md:p-2">Actions</th>
+                            <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-center">Photo</th>
+                            <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Name</th>
+                            <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Contact</th>
+                            <th class="p-2 md:p-3 lg:p-4 text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($technicians as $tech)
-                        <tr class="border-b border-gray-400" x-show="!search || '{{ strtolower($tech->name) }}'.includes(search.toLowerCase()) || '{{ strtolower($tech->email) }}'.includes(search.toLowerCase()) || '{{ strtolower($tech->phone) }}'.includes(search.toLowerCase())">
-                            <td class="p-1 md:p-2 align-top border-r border-gray-400">
+                        <tr class="border-b border-gray-400 hover:bg-gray-50" x-show="!search || '{{ strtolower($tech->name) }}'.includes(search.toLowerCase()) || '{{ strtolower($tech->email) }}'.includes(search.toLowerCase()) || '{{ strtolower($tech->phone) }}'.includes(search.toLowerCase())">
+                            <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">
                                 @if($tech->image)
-                                    <img src="{{ asset('storage/' . $tech->image) }}" class="rounded-full w-7 h-7 object-cover" alt="Profile">
+                                    <img src="{{ asset('storage/' . $tech->image) }}" class="rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 object-cover mx-auto" alt="Profile">
                                 @else
-                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($tech->name) }}&background=eee&color=555&size=32" class="rounded-full w-7 h-7" alt="Profile">
+                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($tech->name) }}&background=eee&color=555&size=48" class="rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 mx-auto" alt="Profile">
                                 @endif
                             </td>
-                            <td class="p-1 md:p-2 align-top border-r border-gray-400">{{ $tech->name }}</td>
-                            <td class="p-1 md:p-2 align-top border-r border-gray-400">
-                                <a href="mailto:{{ $tech->email }}" class="text-blue-700 underline">{{ $tech->email }}</a><br>
-                                <a href="tel:{{ $tech->phone }}" class="text-gray-700">{{ $tech->phone }}</a>
+                            <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 font-semibold">{{ $tech->name }}</td>
+                            <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
+                                <a href="mailto:{{ $tech->email }}" class="text-blue-700 underline hover:text-blue-900 block">{{ $tech->email }}</a>
+                                <a href="tel:{{ $tech->phone }}" class="text-gray-700 hover:text-gray-900">{{ $tech->phone }}</a>
                             </td>
-                            <td class="p-1 md:p-2 align-top border-r border-gray-400">
+                            <td class="p-2 md:p-3 lg:p-4 align-top text-center">
                                 <div class="relative">
                                     <button @click.prevent="
                                         dropdownOpen = true;
@@ -48,7 +48,7 @@
                                             left = window.innerWidth - menuWidth - 8;
                                         }
                                         dropdownLeft = left;
-                                    " class="px-2 py-1"><i class="fas fa-ellipsis-h"></i></button>
+                                    " class="px-2 py-1 text-gray-600 hover:text-gray-800 text-lg md:text-xl"><i class="fas fa-ellipsis-h"></i></button>
                                 </div>
                             </td>
                         </tr>
