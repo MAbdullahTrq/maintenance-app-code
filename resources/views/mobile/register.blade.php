@@ -3,7 +3,8 @@
 @section('title', 'Register')
 
 @section('content')
-<div class="min-h-screen flex items-center justify-center bg-blue-50 py-12 px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen bg-blue-50 px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-center" style="padding-top: min(25vh, 120px)">
     <div class="w-full max-w-md space-y-8">
         <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8">
             <div class="mb-6 text-center">
@@ -49,6 +50,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </div>
 @endsection 
