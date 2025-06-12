@@ -73,7 +73,9 @@
             <div class="mb-1" x-data="{ showModal: false }">
                 <span class="font-semibold text-gray-600">Property image</span>
                 @if(!empty($property->image))
-                    <img src="{{ asset('storage/' . $property->image) }}" class="w-full h-32 object-cover rounded border mb-2 cursor-pointer" alt="Property Image" @click="showModal = true">
+                    <div class="w-48 h-32 mx-auto">
+                        <img src="{{ asset('storage/' . $property->image) }}" class="w-full h-full object-cover rounded border cursor-pointer" alt="Property Image" @click="showModal = true">
+                    </div>
                     <template x-if="showModal">
                         <div class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50" @click.self="showModal = false">
                             <img src="{{ asset('storage/' . $property->image) }}" class="max-h-[80vh] max-w-[90vw] rounded shadow-lg border-4 border-white cursor-pointer" @click="showModal = false">

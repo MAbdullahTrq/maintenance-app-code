@@ -54,16 +54,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th class="p-1 md:p-2 border-r border-gray-400">
-                            <a href="?{{ request('status') ? 'status=' . request('status') . '&' : '' }}sort=status&direction={{ $sortBy === 'status' && $sortDirection === 'desc' ? 'asc' : 'desc' }}" class="flex items-center justify-center hover:text-blue-600">
-                                Status
-                                @if($sortBy === 'status')
-                                    <span class="ml-1">{{ $sortDirection === 'desc' ? '↓' : '↑' }}</span>
-                                @else
-                                    <span class="ml-1">↓</span>
-                                @endif
-                            </a>
-                        </th>
+                        <th class="p-1 md:p-2 border-r border-gray-400">Status</th>
                         <th class="p-1 md:p-2"></th>
                     </tr>
                 </thead>

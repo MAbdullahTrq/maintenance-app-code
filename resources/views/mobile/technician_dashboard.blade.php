@@ -8,7 +8,34 @@
 
 @section('content')
 <div class="flex justify-center">
-    <div class="bg-white rounded-xl shadow p-6 w-full max-w-4xl mx-auto" x-data="{ activeTab: 'assigned', search: '' }">
+    <div class="bg-white rounded-xl shadow p-6 w-full max-w-4xl mx-auto" x-data="{ 
+        activeTab: 'assigned', 
+        search: '',
+        sortBy: '{{ $sortBy }}',
+        sortDirection: '{{ $sortDirection }}',
+        
+        sortRequests(requests, sortBy, sortDirection) {
+            return requests.sort((a, b) => {
+                let aVal = sortBy === 'created_at' ? new Date(a.created_at) : a.status;
+                let bVal = sortBy === 'created_at' ? new Date(b.created_at) : b.status;
+                
+                if (sortDirection === 'desc') {
+                    return aVal > bVal ? -1 : 1;
+                } else {
+                    return aVal > bVal ? 1 : -1;
+                }
+            });
+        },
+        
+        toggleSort(column) {
+            if (this.sortBy === column) {
+                this.sortDirection = this.sortDirection === 'desc' ? 'asc' : 'desc';
+            } else {
+                this.sortBy = column;
+                this.sortDirection = 'desc';
+            }
+        }
+    }">
         <div class="grid grid-cols-3 gap-4 mb-6">
             <button :class="activeTab === 'assigned' ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-700'" class="text-center rounded py-3 font-bold focus:outline-none transition" @click="activeTab = 'assigned'">
                 <div class="text-xs md:text-sm">Assigned</div>
@@ -33,16 +60,17 @@
                     <thead>
                         <tr class="bg-gray-100 border-b border-gray-400">
                             <th class="p-1 border-r border-gray-400">Property</th>
-                            <th class="p-1 border-r border-gray-400">Priority</th>
                             <th class="p-1 border-r border-gray-400">
-                                <a href="?sort=created_at&direction={{ $sortBy === 'created_at' && $sortDirection === 'desc' ? 'asc' : 'desc' }}" class="flex items-center justify-center hover:text-blue-600">
+                                <button @click="toggleSort('priority')" class="flex items-center justify-center hover:text-blue-600 w-full">
+                                    Priority
+                                    <span class="ml-1" x-text="sortBy === 'priority' ? (sortDirection === 'desc' ? '↓' : '↑') : '↓'"></span>
+                                </button>
+                            </th>
+                            <th class="p-1 border-r border-gray-400">
+                                <button @click="toggleSort('created_at')" class="flex items-center justify-center hover:text-blue-600 w-full">
                                     Date
-                                    @if($sortBy === 'created_at')
-                                        <span class="ml-1">{{ $sortDirection === 'desc' ? '↓' : '↑' }}</span>
-                                    @else
-                                        <span class="ml-1">↓</span>
-                                    @endif
-                                </a>
+                                    <span class="ml-1" x-text="sortBy === 'created_at' ? (sortDirection === 'desc' ? '↓' : '↑') : '↓'"></span>
+                                </button>
                             </th>
                             <th class="p-1"></th>
                         </tr>
@@ -73,16 +101,17 @@
                     <thead>
                         <tr class="bg-gray-100 border-b border-gray-400">
                             <th class="p-1 border-r border-gray-400">Property</th>
-                            <th class="p-1 border-r border-gray-400">Priority</th>
                             <th class="p-1 border-r border-gray-400">
-                                <a href="?sort=created_at&direction={{ $sortBy === 'created_at' && $sortDirection === 'desc' ? 'asc' : 'desc' }}" class="flex items-center justify-center hover:text-blue-600">
+                                <button @click="toggleSort('priority')" class="flex items-center justify-center hover:text-blue-600 w-full">
+                                    Priority
+                                    <span class="ml-1" x-text="sortBy === 'priority' ? (sortDirection === 'desc' ? '↓' : '↑') : '↓'"></span>
+                                </button>
+                            </th>
+                            <th class="p-1 border-r border-gray-400">
+                                <button @click="toggleSort('created_at')" class="flex items-center justify-center hover:text-blue-600 w-full">
                                     Date
-                                    @if($sortBy === 'created_at')
-                                        <span class="ml-1">{{ $sortDirection === 'desc' ? '↓' : '↑' }}</span>
-                                    @else
-                                        <span class="ml-1">↓</span>
-                                    @endif
-                                </a>
+                                    <span class="ml-1" x-text="sortBy === 'created_at' ? (sortDirection === 'desc' ? '↓' : '↑') : '↓'"></span>
+                                </button>
                             </th>
                             <th class="p-1"></th>
                         </tr>
@@ -113,16 +142,17 @@
                     <thead>
                         <tr class="bg-gray-100 border-b border-gray-400">
                             <th class="p-1 border-r border-gray-400">Property</th>
-                            <th class="p-1 border-r border-gray-400">Priority</th>
                             <th class="p-1 border-r border-gray-400">
-                                <a href="?sort=created_at&direction={{ $sortBy === 'created_at' && $sortDirection === 'desc' ? 'asc' : 'desc' }}" class="flex items-center justify-center hover:text-blue-600">
+                                <button @click="toggleSort('priority')" class="flex items-center justify-center hover:text-blue-600 w-full">
+                                    Priority
+                                    <span class="ml-1" x-text="sortBy === 'priority' ? (sortDirection === 'desc' ? '↓' : '↑') : '↓'"></span>
+                                </button>
+                            </th>
+                            <th class="p-1 border-r border-gray-400">
+                                <button @click="toggleSort('created_at')" class="flex items-center justify-center hover:text-blue-600 w-full">
                                     Date
-                                    @if($sortBy === 'created_at')
-                                        <span class="ml-1">{{ $sortDirection === 'desc' ? '↓' : '↑' }}</span>
-                                    @else
-                                        <span class="ml-1">↓</span>
-                                    @endif
-                                </a>
+                                    <span class="ml-1" x-text="sortBy === 'created_at' ? (sortDirection === 'desc' ? '↓' : '↑') : '↓'"></span>
+                                </button>
                             </th>
                             <th class="p-1"></th>
                         </tr>

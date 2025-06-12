@@ -10,7 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
-    <header class="bg-white shadow p-4 flex items-center justify-between">
+    <header class="bg-white shadow p-4 md:p-6 lg:p-8 flex items-center justify-between">
         <a href="@auth
             @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
                 {{ route('mobile.manager.dashboard') }}
@@ -106,7 +106,7 @@
     @auth
     @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
     <nav class="bg-white shadow mb-2 rounded-b-xl">
-        <div class="grid grid-cols-3 divide-x divide-gray-200 text-center">
+        <div class="grid grid-cols-3 divide-x divide-gray-200 text-center md:py-2">
             <!-- Property -->
             <div class="flex flex-col items-center py-3">
                 <a href="{{ route('mobile.properties.index') }}" class="flex flex-col items-center group">
