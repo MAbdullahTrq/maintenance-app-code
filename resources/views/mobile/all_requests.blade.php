@@ -8,28 +8,28 @@
 
 @section('content')
 <div class="flex justify-center">
-    <div class="bg-white rounded-xl shadow p-4 w-full max-w-4xl mx-auto">
-        <div class="text-center font-bold text-lg mb-2">All Requests</div>
+    <div class="bg-white rounded-xl shadow p-4 md:p-6 lg:p-8 w-full max-w-6xl mx-auto">
+        <div class="text-center font-bold text-lg md:text-xl lg:text-2xl mb-2">All Requests</div>
         <div class="grid grid-cols-5 gap-0 mb-4 border border-gray-400 rounded overflow-hidden">
-            <a href="?status=declined{{ request('sort') ? '&sort=' . request('sort') : '' }}{{ request('direction') ? '&direction=' . request('direction') : '' }}" class="text-center p-2 border-r border-gray-400 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'declined') ? 'bg-blue-100 font-bold' : '' }}">
-                <div class="font-semibold text-xs">Declined</div>
-                <div class="text-lg font-bold">{{ $declinedCount }}</div>
+            <a href="?status=declined{{ request('sort') ? '&sort=' . request('sort') : '' }}{{ request('direction') ? '&direction=' . request('direction') : '' }}" class="text-center p-2 md:p-3 border-r border-gray-400 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'declined') ? 'bg-blue-100 font-bold' : '' }}">
+                <div class="font-semibold text-xs md:text-sm">Declined</div>
+                <div class="text-sm md:text-lg lg:text-xl font-bold">{{ $declinedCount }}</div>
             </a>
-            <a href="?status=assigned{{ request('sort') ? '&sort=' . request('sort') : '' }}{{ request('direction') ? '&direction=' . request('direction') : '' }}" class="text-center p-2 border-r border-gray-400 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'assigned') ? 'bg-blue-100 font-bold' : '' }}">
-                <div class="font-semibold text-xs">Assigned</div>
-                <div class="text-lg font-bold">{{ $assignedCount }}</div>
+            <a href="?status=assigned{{ request('sort') ? '&sort=' . request('sort') : '' }}{{ request('direction') ? '&direction=' . request('direction') : '' }}" class="text-center p-2 md:p-3 border-r border-gray-400 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'assigned') ? 'bg-blue-100 font-bold' : '' }}">
+                <div class="font-semibold text-xs md:text-sm">Assigned</div>
+                <div class="text-sm md:text-lg lg:text-xl font-bold">{{ $assignedCount }}</div>
             </a>
-            <a href="?status=accepted{{ request('sort') ? '&sort=' . request('sort') : '' }}{{ request('direction') ? '&direction=' . request('direction') : '' }}" class="text-center p-2 border-r border-gray-400 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'accepted') ? 'bg-blue-100 font-bold' : '' }}">
-                <div class="font-semibold text-xs">Accepted</div>
-                <div class="text-lg font-bold">{{ $acceptedCount }}</div>
+            <a href="?status=accepted{{ request('sort') ? '&sort=' . request('sort') : '' }}{{ request('direction') ? '&direction=' . request('direction') : '' }}" class="text-center p-2 md:p-3 border-r border-gray-400 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'accepted') ? 'bg-blue-100 font-bold' : '' }}">
+                <div class="font-semibold text-xs md:text-sm">Accepted</div>
+                <div class="text-sm md:text-lg lg:text-xl font-bold">{{ $acceptedCount }}</div>
             </a>
-            <a href="?status=started{{ request('sort') ? '&sort=' . request('sort') : '' }}{{ request('direction') ? '&direction=' . request('direction') : '' }}" class="text-center p-2 border-r border-gray-400 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'started') ? 'bg-blue-100 font-bold' : '' }}">
-                <div class="font-semibold text-xs">Started</div>
-                <div class="text-lg font-bold">{{ $startedCount }}</div>
+            <a href="?status=started{{ request('sort') ? '&sort=' . request('sort') : '' }}{{ request('direction') ? '&direction=' . request('direction') : '' }}" class="text-center p-2 md:p-3 border-r border-gray-400 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'started') ? 'bg-blue-100 font-bold' : '' }}">
+                <div class="font-semibold text-xs md:text-sm">Started</div>
+                <div class="text-sm md:text-lg lg:text-xl font-bold">{{ $startedCount }}</div>
             </a>
-            <a href="?status=completed{{ request('sort') ? '&sort=' . request('sort') : '' }}{{ request('direction') ? '&direction=' . request('direction') : '' }}" class="text-center p-2 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'completed') ? 'bg-blue-100 font-bold' : '' }}">
-                <div class="font-semibold text-xs">Completed</div>
-                <div class="text-lg font-bold">{{ $completedCount }}</div>
+            <a href="?status=completed{{ request('sort') ? '&sort=' . request('sort') : '' }}{{ request('direction') ? '&direction=' . request('direction') : '' }}" class="text-center p-2 md:p-3 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'completed') ? 'bg-blue-100 font-bold' : '' }}">
+                <div class="font-semibold text-xs md:text-sm">Completed</div>
+                <div class="text-sm md:text-lg lg:text-xl font-bold">{{ $completedCount }}</div>
             </a>
         </div>
         @if(isset($selectedStatus) && $selectedStatus)
@@ -39,11 +39,11 @@
         @endif
         @if($allRequests->count())
         <div class="overflow-x-auto w-full">
-            <table class="min-w-full text-xs md:text-sm border border-gray-400 border-collapse rounded overflow-hidden">
+            <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-hidden">
                 <thead>
                     <tr class="bg-gray-100 border-b border-gray-400">
-                        <th class="p-1 md:p-2 border-r border-gray-400">Property</th>
-                        <th class="p-1 md:p-2 border-r border-gray-400">
+                        <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Property</th>
+                        <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400">
                             <a href="?{{ request('status') ? 'status=' . request('status') . '&' : '' }}sort=priority&direction={{ $sortBy === 'priority' && $sortDirection === 'desc' ? 'asc' : 'desc' }}" class="flex items-center justify-center hover:text-blue-600">
                                 Priority
                                 @if($sortBy === 'priority')
@@ -53,7 +53,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th class="p-1 md:p-2 border-r border-gray-400">
+                        <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400">
                             <a href="?{{ request('status') ? 'status=' . request('status') . '&' : '' }}sort=created_at&direction={{ $sortBy === 'created_at' && $sortDirection === 'desc' ? 'asc' : 'desc' }}" class="flex items-center justify-center hover:text-blue-600">
                                 Date
                                 @if($sortBy === 'created_at')
@@ -63,24 +63,24 @@
                                 @endif
                             </a>
                         </th>
-                        <th class="p-1 md:p-2 border-r border-gray-400">Status</th>
-                        <th class="p-1 md:p-2"></th>
+                        <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400">Status</th>
+                        <th class="p-2 md:p-3 lg:p-4">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($allRequests as $req)
                     <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" onclick="window.location.href='{{ route('mobile.request.show', $req->id) }}'">
-                        <td class="p-1 md:p-2 align-top border-r border-gray-400">
+                        <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
                             <span class="font-semibold">{{ $req->property->name }}</span><br>
-                            <span class="text-gray-500 text-xs">{{ $req->property->address }}</span>
+                            <span class="text-gray-500 text-xs md:text-sm">{{ $req->property->address }}</span>
                         </td>
-                        <td class="p-1 md:p-2 align-top border-r border-gray-400 {{ $req->priority == 'high' ? 'bg-red-500 text-white' : ($req->priority == 'low' ? 'bg-yellow-200' : ($req->priority == 'medium' ? 'bg-yellow-100' : '')) }}">
+                        <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center {{ $req->priority == 'high' ? 'bg-red-500 text-white' : ($req->priority == 'low' ? 'bg-yellow-200' : ($req->priority == 'medium' ? 'bg-yellow-100' : '')) }}">
                             {{ ucfirst($req->priority) }}
                         </td>
-                        <td class="p-1 md:p-2 align-top border-r border-gray-400">{{ \Carbon\Carbon::parse($req->created_at)->format('d M, Y') }}</td>
-                        <td class="p-1 md:p-2 align-top border-r border-gray-400">{{ ucfirst($req->status) }}</td>
-                        <td class="p-1 md:p-2 align-top">
-                            <a href="{{ route('mobile.request.show', $req->id) }}" class="text-blue-600 hover:text-blue-800" onclick="event.stopPropagation();">
+                        <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">{{ \Carbon\Carbon::parse($req->created_at)->format('d M, Y') }}</td>
+                        <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">{{ ucfirst($req->status) }}</td>
+                        <td class="p-2 md:p-3 lg:p-4 align-top text-center">
+                            <a href="{{ route('mobile.request.show', $req->id) }}" class="text-blue-600 hover:text-blue-800 text-lg md:text-xl" onclick="event.stopPropagation();">
                                 <i class="fas fa-eye"></i>
                             </a>
                         </td>

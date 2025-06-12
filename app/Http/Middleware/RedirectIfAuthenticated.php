@@ -24,16 +24,18 @@ class RedirectIfAuthenticated
                 $user = Auth::guard($guard)->user();
                 
                 // Redirect based on user role
-                if ($user->isAdmin()) {
+                if (method_exists($user, 'hasRole') && $user->hasRole('admin')) {
                     return redirect()->route('admin.dashboard');
-                } elseif ($user->isPropertyManager()) {
+                } elseif (method_exists($user, 'isPropertyManager') && $user->isPropertyManager()) {
                     // Check if property manager has an active subscription
-                    if (!$user->hasActiveSubscription()) {
+                    if (method_exists($user, 'hasActiveSubscription') && !$user->hasActiveSubscription()) {
                         return redirect()->route('subscription.plans');
                     }
-                    return redirect()->route('manager.dashboard');
+                    return redirect()->route('mobile.manager.dashboard');
+                } elseif (method_exists($user, 'isTechnician') && $user->isTechnician()) {
+                    return redirect()->route('mobile.technician.dashboard');
                 } else {
-                    return redirect()->route('technician.dashboard');
+                    return redirect('/dashboard');
                 }
             }
         }

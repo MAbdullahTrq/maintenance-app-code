@@ -15,21 +15,45 @@
                 Simplify Your Maintenance Management
             </h1>
             <p class="mt-6 text-xl md:text-2xl text-white max-w-3xl mx-auto font-medium" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
-                Simplify your maintenance workflow
+                Simplify task tracking, reporting, and technician cordination<br>All in one place.
             </p>
            
-            <div class="mt-10 flex justify-center space-x-4">
-                <div class="inline-flex rounded-md shadow">
-                    <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
-                        <i class="fas fa-sign-in-alt mr-2"></i>Login
-                    </a>
+            @auth
+                <div class="mt-10 flex justify-center">
+                    <div class="inline-flex rounded-md shadow">
+                        @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
+                            <a href="{{ route('mobile.manager.dashboard') }}" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                                <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
+                            </a>
+                        @elseif(Auth::user() && method_exists(Auth::user(), 'isTechnician') && Auth::user()->isTechnician())
+                            <a href="{{ route('mobile.technician.dashboard') }}" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                                <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
+                            </a>
+                        @elseif(Auth::user() && Auth::user()->hasRole('admin'))
+                            <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                                <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
+                            </a>
+                        @else
+                            <a href="/dashboard" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                                <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
+                            </a>
+                        @endif
+                    </div>
                 </div>
-                <div class="inline-flex rounded-md shadow">
-                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-800 hover:bg-blue-700">
-                        <i class="fas fa-user-plus mr-2"></i>Sign Up
-                    </a>
+            @else
+                <div class="mt-10 flex justify-center space-x-4">
+                    <div class="inline-flex rounded-md shadow">
+                        <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Login
+                        </a>
+                    </div>
+                    <div class="inline-flex rounded-md shadow">
+                        <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-800 hover:bg-blue-700">
+                            <i class="fas fa-user-plus mr-2"></i>Sign Up
+                        </a>
+                    </div>
                 </div>
-            </div>
+            @endauth
         </div>
     </div>
 
@@ -143,7 +167,7 @@
                         <div class="ml-16">
                             <h3 class="text-xl font-medium text-gray-900">Review & Approve</h3>
                             <p class="mt-2 text-base text-gray-500">
-                                The Property Manager reviews and approves the request, assigns a due date, and selects the right technician for the job.
+                                The Property Manager reviews and approves the request, and selects the right technician for the job.
                             </p>
                         </div>
                     </div>
@@ -155,7 +179,7 @@
                         <div class="ml-16">
                             <h3 class="text-xl font-medium text-gray-900">Complete the Work</h3>
                             <p class="mt-2 text-base text-gray-500">
-                                The assigned technician receives a notification, completes the work, and uploads photos and notes. The manager verifies completion.
+                                The assigned technician receives a notification, completes the work, and uploads photos and notes.
                             </p>
                         </div>
                     </div>
@@ -225,7 +249,7 @@
                         Ready to streamline your maintenance process?
                     </h2>
                     <p class="mt-4 text-lg md:text-xl text-white font-medium" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.6);">
-                        Simplify your maintenance workflow
+                        Every request, task, and update easy to find, in one place.
                     </p>
                     <div class="mt-8 flex justify-center">
                         <div class="inline-flex rounded-md shadow">
