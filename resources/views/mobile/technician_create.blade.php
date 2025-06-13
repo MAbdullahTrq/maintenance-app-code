@@ -4,6 +4,15 @@
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
         <h2 class="text-center text-lg font-bold mb-4">Add Technician</h2>
+        @if ($errors->any())
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
+                <ul class="list-disc pl-5">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <form method="POST" action="{{ route('mobile.technicians.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="mb-3">
