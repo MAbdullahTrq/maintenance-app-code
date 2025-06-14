@@ -37,7 +37,7 @@
                             </td>
                             <td class="p-2 md:p-3 lg:p-4 align-top text-center">
                                 <div class="relative">
-                                    <button @click.prevent="
+                                    <button @click.prevent.stop="
                                         dropdownOpen = true;
                                         dropdownTech = {{ $tech->id }};
                                         const rect = $event.target.getBoundingClientRect();
