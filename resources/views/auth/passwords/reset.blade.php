@@ -12,16 +12,18 @@
                     @csrf
                     <input type="hidden" name="token" value="{{ $token }}">
                     <div class="mb-4">
-                        <label for="email" class="block text-gray-700 text-sm font-medium mb-2">Email Address</label>
-                        <input id="email" type="email" name="email" value="{{ $email ?? old('email') }}" required autofocus
-                            class="appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 @error('email') border-red-500 @enderror">
+                        <label class="block text-gray-700 text-sm font-medium mb-2">Email Address</label>
+                        <div class="bg-gray-50 border rounded-md w-full py-2 px-3 text-gray-700">
+                            {{ $email ?? old('email') }}
+                        </div>
+                        <input type="hidden" name="email" value="{{ $email ?? old('email') }}">
                         @error('email')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                     <div class="mb-4">
                         <label for="password" class="block text-gray-700 text-sm font-medium mb-2">New Password</label>
-                        <input id="password" type="password" name="password" required
+                        <input id="password" type="password" name="password" required autofocus
                             class="appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 @error('password') border-red-500 @enderror">
                         @error('password')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
