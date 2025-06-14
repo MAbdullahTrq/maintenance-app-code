@@ -5,7 +5,7 @@
 @section('content')
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-2 md:p-3 lg:p-4 w-full max-w-6xl mx-auto">
-        <div x-data="{ showForm: false, search: '', dropdownOpen: false, dropdownTop: 0, dropdownLeft: 0, dropdownTech: null }">
+        <div x-data="{ showForm: false, search: '', dropdownOpen: false, dropdownTop: 0, dropdownLeft: 0, dropdownTech: null, showDeactivateConfirm: false, deactivateForm: null }">
             <div class="flex justify-between items-center mb-4">
                 <div class="font-bold text-lg md:text-xl lg:text-2xl">All Technicians</div>
             </div>
@@ -62,7 +62,7 @@
                     <div>
                         <a :href="'{{ url('m/at') }}/' + dropdownTech + '/edit'" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
                         <a :href="'{{ url('m/at') }}/' + dropdownTech" class="block px-4 py-2 hover:bg-gray-100">View</a>
-                        <form :action="'{{ url('m/technicians') }}/' + dropdownTech + '/deactivate'" method="POST" class="block">
+                        <form :action="'{{ url('m/at') }}/' + dropdownTech + '/deactivate'" method="POST" class="block" @submit.prevent="showDeactivateConfirm = true; deactivateForm = $event.target;">
                             @csrf
                             <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-100">Deactivate</button>
                         </form>
@@ -72,6 +72,17 @@
                         </form>
                     </div>
                 </template>
+            </div>
+            <!-- Confirmation Modal -->
+            <div x-show="showDeactivateConfirm" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+                <div class="bg-white rounded shadow-lg p-6 max-w-sm w-full">
+                    <div class="font-bold text-lg mb-2">Deactivate Technician?</div>
+                    <div class="mb-4 text-gray-700">Are you sure you want to deactivate this technician? They will no longer be able to access the system.</div>
+                    <div class="flex justify-end gap-2">
+                        <button @click="showDeactivateConfirm = false" class="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+                        <button @click="deactivateForm.submit(); showDeactivateConfirm = false;" class="px-4 py-2 bg-red-600 text-white rounded">Deactivate</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

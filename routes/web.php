@@ -233,3 +233,5 @@ Route::prefix('t')->middleware(['auth', 'technician'])->group(function () {
     Route::post('/r/{id}/start', [App\Http\Controllers\Mobile\TechnicianController::class, 'startRequest'])->name('mobile.technician.request.start');
     Route::post('/r/{id}/finish', [App\Http\Controllers\Mobile\TechnicianController::class, 'finishRequest'])->name('mobile.technician.request.finish');
 });
+
+Route::post('/at/{id}/deactivate', [App\Http\Controllers\Mobile\TechnicianController::class, 'deactivate'])->name('mobile.technicians.deactivate');
