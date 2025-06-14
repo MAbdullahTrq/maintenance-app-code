@@ -5,7 +5,7 @@
 @section('content')
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-2 md:p-3 lg:p-4 w-full max-w-6xl mx-auto">
-        <div x-data="{ showForm: false, dropdownOpen: false, dropdownTop: 0, dropdownLeft: 0, dropdownProperty: null, dropdownAccessLink: '' }">
+        <div>
             <div class="flex justify-between items-center mb-4">
                 <div class="font-bold text-lg md:text-xl lg:text-2xl">All Properties</div>
             </div>
@@ -20,7 +20,7 @@
                     </thead>
                     <tbody>
                         @foreach($properties as $property)
-                        <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" onclick="window.location.href='{{ route('mobile.properties.show', $property->id) }}'">
+                        <tr class="border-b border-gray-400 hover:bg-gray-50">
                             <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
                                 <div class="flex items-center gap-2 md:gap-3">
                                     @if($property->image)
@@ -28,20 +28,33 @@
                                     @else
                                         <img src="https://ui-avatars.com/api/?name={{ urlencode($property->name) }}&background=eee&color=555&size=48" class="rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12" alt="Profile">
                                     @endif
-                                    <span class="font-semibold text-blue-700">{{ $property->name }}</span>
+                                    <a href="{{ route('mobile.properties.show', $property->id) }}" class="font-semibold text-blue-700 hover:text-blue-900 cursor-pointer">{{ $property->name }}</a>
                                 </div>
                             </td>
                             <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">{{ $property->address }}</td>
                             <td class="p-2 md:p-3 lg:p-4 align-top text-center">
-                                <div class="relative">
-                                    <button @click.prevent="
-                                        dropdownOpen = true;
-                                        dropdownProperty = {{ $property->id }};
-                                        dropdownAccessLink = '{{ $property->access_link }}';
-                                        const rect = $event.target.getBoundingClientRect();
-                                        dropdownTop = rect.bottom + window.scrollY;
-                                        dropdownLeft = rect.left + window.scrollX;
-                                    " class="px-2 py-1 text-gray-600 hover:text-gray-800 text-lg md:text-xl"><i class="fas fa-ellipsis-v"></i></button>
+                                <div class="relative" x-data="{ open: false }">
+                                    <button @click="open = !open" class="px-2 py-1 text-gray-600 hover:text-gray-800 text-lg md:text-xl">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border z-50" x-cloak>
+                                        <div class="py-1">
+                                            <a href="{{ route('mobile.properties.show', $property->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                <i class="fas fa-eye mr-2"></i>View
+                                            </a>
+                                            <a href="{{ route('mobile.properties.edit', $property->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                <i class="fas fa-edit mr-2"></i>Edit
+                                            </a>
+                                            <a href="{{ route('mobile.properties.qrcode', $property->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                <i class="fas fa-qrcode mr-2"></i>QR Code
+                                            </a>
+                                            @if($property->access_link)
+                                            <a href="{{ route('guest.request.form', $property->access_link) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                <i class="fas fa-link mr-2"></i>Public Link
+                                            </a>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -49,69 +62,10 @@
                     </tbody>
                 </table>
             </div>
-            <!-- Single dropdown menu rendered outside the table -->
-            <div x-show="dropdownOpen" @click.away="dropdownOpen = false" class="fixed z-[9999] bg-white rounded shadow-lg border text-xs min-w-max" x-cloak :style="'top:'+dropdownTop+'px;left:'+dropdownLeft+'px;'">
-                <template x-if="dropdownProperty">
-                    <div>
-                        <a :href="'{{ url('m/ep') }}/' + dropdownProperty" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
-                        <a :href="'/m/ap/' + dropdownProperty" class="block px-4 py-2 hover:bg-gray-100">View</a>
-                        <a :href="'/m/ap/' + dropdownProperty + '/qrcode'" class="block px-4 py-2 hover:bg-gray-100">QR code</a>
-                        <a :href="'/request/' + dropdownAccessLink" class="block px-4 py-2 hover:bg-gray-100">Link</a>
-                    </div>
-                </template>
-            </div>
-            <script>
-                document.addEventListener('alpine:init', () => {
-                    Alpine.data('dropdownPropertyAccessLink', () => ({
-                        @foreach($properties as $property)
-                            {{ $property->id }}: "{{ $property->access_link }}",
-                        @endforeach
-                    }));
-                });
-            </script>
+
         </div>
     </div>
 </div>
 @endsection
 
-@push('scripts')
-<script>
-function dropdownPortal() {
-    return {
-        open: false,
-        top: 0,
-        left: 0,
-        toggle(e) {
-            this.open = !this.open;
-            if (this.open) {
-                const rect = e.target.getBoundingClientRect();
-                this.top = rect.bottom + window.scrollY;
-                this.left = rect.right + window.scrollX - 140; // adjust for menu width
-                this.$nextTick(() => {
-                    document.getElementById('dropdown-menu-'+this._uid).style.display = 'block';
-                });
-            } else {
-                document.getElementById('dropdown-menu-'+this._uid).style.display = 'none';
-            }
-        },
-        close() {
-            this.open = false;
-            document.getElementById('dropdown-menu-'+this._uid).style.display = 'none';
-        }
-    }
-}
-</script>
-@endpush
-
-@if (!isset($__dropdown_menu_rendered))
-    @php($__dropdown_menu_rendered = true)
-    <div x-data="{}" x-init="window.addEventListener('click', function(e) { if (!e.target.closest('.dropdown-portal')) { document.querySelectorAll('.dropdown-portal-menu').forEach(el => el.style.display = 'none'); } })"></div>
-@endif
-
-@foreach($properties as $property)
-    <div x-show="open" :id="'dropdown-menu-'+$id" class="dropdown-portal-menu fixed z-[9999] bg-white rounded shadow-lg border text-xs min-w-max" x-cloak style="display:none;" :style="'top:'+top+'px;left:'+left+'px;'">
-        <a href="{{ route('mobile.properties.qrcode', $property->id) }}" class="block px-4 py-2 hover:bg-gray-100">QR Code</a>
-        <a href="{{ route('guest.request.form', $property->access_link) }}" class="block px-4 py-2 hover:bg-gray-100">Link</a>
-        <a :href="'{{ url('m/ep') }}/' + dropdownProperty" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
-    </div>
-@endforeach 
+ 
