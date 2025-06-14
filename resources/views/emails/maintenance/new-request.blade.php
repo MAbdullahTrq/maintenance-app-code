@@ -21,7 +21,7 @@ A new maintenance request has been submitted for your property:
 **Description:**
 {{ $maintenance_request->description }}
 
-@component('mail::button', ['url' => route('maintenance.show', $maintenance_request)])
+@component('mail::button', ['url' => route('mobile.request.show', $maintenance_request)])
 View Request
 @endcomponent
 

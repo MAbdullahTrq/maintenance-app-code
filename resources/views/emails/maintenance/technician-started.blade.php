@@ -11,7 +11,7 @@ The maintenance request has been started by {{ $maintenance_request->assignedTec
 - Priority: {{ ucfirst($maintenance_request->priority) }}
 - Started At: {{ now()->format('M d, Y H:i') }}
 
-@component('mail::button', ['url' => route('maintenance.show', $maintenance_request)])
+@component('mail::button', ['url' => route('mobile.request.show', $maintenance_request)])
 View Request
 @endcomponent
 
