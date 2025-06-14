@@ -30,7 +30,7 @@ class Smtp2goServiceProvider extends ServiceProvider
 
         // Extend the mail manager to use SMTP2GO API
         $this->app->make(MailManager::class)->extend('smtp2go', function ($app) {
-            $config = $app['config']->get('smtp2go');
+            $config = config('smtp2go');
             
             return new class($config) extends \Illuminate\Mail\Transport\Transport
             {
