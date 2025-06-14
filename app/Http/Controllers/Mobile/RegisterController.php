@@ -29,6 +29,15 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        // Assign property manager role
+        if (method_exists($user, 'assignRole')) {
+            $user->assignRole('property_manager');
+        } elseif (property_exists($user, 'role_id')) {
+            // If using a role_id column
+            $user->role_id = /* property manager role id */ 2;
+            $user->save();
+        }
+
         Auth::login($user);
         return redirect()->route('mobile.manager.dashboard');
     }

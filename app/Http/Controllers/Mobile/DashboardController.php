@@ -18,6 +18,7 @@ class DashboardController extends Controller
         if (!$user || !$user->isPropertyManager()) {
             abort(403);
         }
+        $hasActiveSubscription = method_exists($user, 'hasActiveSubscription') ? $user->hasActiveSubscription() : false;
         $properties = Property::where('manager_id', $user->id)->get();
         $technicians = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->get();
         $pendingRequests = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->where('status', 'pending')->get();
@@ -27,6 +28,7 @@ class DashboardController extends Controller
             'technicians' => $technicians,
             'pendingRequests' => $pendingRequests,
             'requestsCount' => $requestsCount,
+            'hasActiveSubscription' => $hasActiveSubscription,
         ]);
     }
 
