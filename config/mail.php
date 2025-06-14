@@ -95,6 +95,10 @@ return [
             ],
         ],
 
+        'smtp2go' => [
+            'transport' => 'smtp2go',
+        ],
+
     ],
 
     /*

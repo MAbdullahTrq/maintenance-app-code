@@ -5,6 +5,11 @@ namespace App\Http\Controllers\Mobile;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\MaintenanceRequest;
+use App\Mail\TechnicianAssignedNotification;
+use App\Mail\TechnicianStartedNotification;
+use App\Mail\TechnicianCompletedNotification;
+use App\Mail\TechnicianCommentNotification;
+use Illuminate\Support\Facades\Mail;
 
 class RequestController extends Controller
 {
@@ -29,6 +34,11 @@ class RequestController extends Controller
         $maintenance->status = 'assigned';
         $maintenance->assigned_to = $request->input('technician_id');
         $maintenance->save();
+
+        // Send notification to technician
+        $technician = \App\Models\User::findOrFail($request->input('technician_id'));
+        Mail::to($technician->email)->send(new TechnicianAssignedNotification($maintenance));
+
         return redirect()->route('mobile.request.show', $id)->with('success', 'Request assigned to technician.');
     }
 
@@ -58,6 +68,16 @@ class RequestController extends Controller
             $maintenance->status = 'started';
             $maintenance->started_at = now();
             $maintenance->save();
+
+            // Send notifications
+            Mail::to($maintenance->property->manager->email)
+                ->send(new TechnicianStartedNotification($maintenance));
+
+            if ($maintenance->requester_email) {
+                Mail::to($maintenance->requester_email)
+                    ->send(new TechnicianStartedNotification($maintenance));
+            }
+
             return redirect()->route('mobile.request.show', $id)->with('success', 'Work started.');
         }
         return redirect()->route('mobile.request.show', $id)->with('error', 'Cannot start this request.');
@@ -70,6 +90,16 @@ class RequestController extends Controller
             $maintenance->status = 'completed';
             $maintenance->completed_at = now();
             $maintenance->save();
+
+            // Send notifications
+            Mail::to($maintenance->property->manager->email)
+                ->send(new TechnicianCompletedNotification($maintenance));
+
+            if ($maintenance->requester_email) {
+                Mail::to($maintenance->requester_email)
+                    ->send(new TechnicianCompletedNotification($maintenance));
+            }
+
             return redirect()->route('mobile.request.show', $id)->with('success', 'Work finished.');
         }
         return redirect()->route('mobile.request.show', $id)->with('error', 'Cannot finish this request.');
@@ -148,10 +178,22 @@ class RequestController extends Controller
             'comment' => 'required|string',
         ]);
         $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);
-        $maintenance->comments()->create([
+        $comment = $maintenance->comments()->create([
             'user_id' => auth()->id(),
             'comment' => $request->comment,
         ]);
+
+        // Send notifications if comment is from technician
+        if (auth()->user()->isTechnician()) {
+            Mail::to($maintenance->property->manager->email)
+                ->send(new TechnicianCommentNotification($maintenance, $comment));
+
+            if ($maintenance->requester_email) {
+                Mail::to($maintenance->requester_email)
+                    ->send(new TechnicianCommentNotification($maintenance, $comment));
+            }
+        }
+
         return redirect()->route('mobile.request.show', $id)->with('success', 'Comment added.');
     }
 }

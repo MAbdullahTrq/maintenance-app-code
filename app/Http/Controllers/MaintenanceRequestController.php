@@ -10,6 +10,11 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Mail\TechnicianAssignedNotification;
+use App\Mail\TechnicianStartedNotification;
+use App\Mail\TechnicianCompletedNotification;
+use App\Mail\TechnicianCommentNotification;
+use Illuminate\Support\Facades\Mail;
 
 class MaintenanceRequestController extends Controller
 {
@@ -341,6 +346,17 @@ class MaintenanceRequestController extends Controller
             }
         }
 
+        // Send notifications if comment is from technician
+        if (Auth::user()->isTechnician()) {
+            Mail::to($maintenance->property->manager->email)
+                ->send(new TechnicianCommentNotification($maintenance, $comment));
+
+            if ($maintenance->requester_email) {
+                Mail::to($maintenance->requester_email)
+                    ->send(new TechnicianCommentNotification($maintenance, $comment));
+            }
+        }
+
         return redirect()->route('maintenance.show', $maintenance)
             ->with('success', 'Comment added successfully.');
     }
@@ -368,6 +384,9 @@ class MaintenanceRequestController extends Controller
             'user_id' => Auth::id(),
             'comment' => 'Request assigned to ' . $technician->name . '.',
         ]);
+
+        // Send notification to technician
+        Mail::to($technician->email)->send(new TechnicianAssignedNotification($maintenance));
 
         return redirect()->route('maintenance.show', $maintenance)
             ->with('success', 'Maintenance request assigned successfully.');
@@ -481,6 +500,15 @@ class MaintenanceRequestController extends Controller
             'comment' => 'Task started by technician.',
         ]);
 
+        // Send notifications
+        Mail::to($maintenance->property->manager->email)
+            ->send(new TechnicianStartedNotification($maintenance));
+
+        if ($maintenance->requester_email) {
+            Mail::to($maintenance->requester_email)
+                ->send(new TechnicianStartedNotification($maintenance));
+        }
+
         return redirect()->back()->with('success', 'Task has been started.');
     }
 
@@ -514,6 +542,15 @@ class MaintenanceRequestController extends Controller
                     'type' => 'completion',
                 ]);
             }
+        }
+
+        // Send notifications
+        Mail::to($maintenance->property->manager->email)
+            ->send(new TechnicianCompletedNotification($maintenance));
+
+        if ($maintenance->requester_email) {
+            Mail::to($maintenance->requester_email)
+                ->send(new TechnicianCompletedNotification($maintenance));
         }
 
         return redirect()->back()->with('success', 'Task has been completed.');
