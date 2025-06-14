@@ -16,6 +16,9 @@ use App\Mail\TechnicianCompletedNotification;
 use App\Mail\TechnicianCommentNotification;
 use App\Mail\ManagerCommentNotification;
 use App\Mail\NewRequestNotification;
+use App\Mail\TechnicianStartedRequesterNotification;
+use App\Mail\TechnicianCompletedRequesterNotification;
+use App\Mail\TechnicianCommentRequesterNotification;
 use Illuminate\Support\Facades\Mail;
 
 class MaintenanceRequestController extends Controller
@@ -361,7 +364,7 @@ class MaintenanceRequestController extends Controller
 
             if ($maintenance->requester_email) {
                 Mail::to($maintenance->requester_email)
-                    ->send(new TechnicianCommentNotification($maintenance, $comment));
+                    ->send(new TechnicianCommentRequesterNotification($maintenance, $comment));
             }
         } elseif (Auth::user()->isPropertyManager() || Auth::user()->isAdmin()) {
             // Manager commenting - notify technician
@@ -520,7 +523,7 @@ class MaintenanceRequestController extends Controller
 
         if ($maintenance->requester_email) {
             Mail::to($maintenance->requester_email)
-                ->send(new TechnicianStartedNotification($maintenance));
+                ->send(new TechnicianStartedRequesterNotification($maintenance));
         }
 
         return redirect()->back()->with('success', 'Task has been started.');
@@ -564,7 +567,7 @@ class MaintenanceRequestController extends Controller
 
         if ($maintenance->requester_email) {
             Mail::to($maintenance->requester_email)
-                ->send(new TechnicianCompletedNotification($maintenance));
+                ->send(new TechnicianCompletedRequesterNotification($maintenance));
         }
 
         return redirect()->back()->with('success', 'Task has been completed.');

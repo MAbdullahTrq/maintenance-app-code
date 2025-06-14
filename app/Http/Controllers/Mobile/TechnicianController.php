@@ -226,7 +226,7 @@ class TechnicianController extends Controller
 
         if ($request->requester_email) {
             Mail::to($request->requester_email)
-                ->send(new TechnicianStartedNotification($request));
+                ->send(new TechnicianStartedRequesterNotification($request));
         }
 
         return redirect()->route('mobile.technician.request.show', $id)->with('success', 'Work started.');
@@ -246,7 +246,7 @@ class TechnicianController extends Controller
 
         if ($request->requester_email) {
             Mail::to($request->requester_email)
-                ->send(new TechnicianCompletedNotification($request));
+                ->send(new TechnicianCompletedRequesterNotification($request));
         }
 
         return redirect()->route('mobile.technician.request.show', $id)->with('success', 'Work finished.');
