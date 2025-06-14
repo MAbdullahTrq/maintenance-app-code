@@ -6,7 +6,7 @@ use App\Models\MaintenanceRequest;
 use App\Models\RequestComment;
 use Illuminate\Mail\Mailables\Content;
 
-class TechnicianCommentNotification extends MaintenanceRequestNotification
+class ManagerCommentNotification extends MaintenanceRequestNotification
 {
     public function __construct(
         MaintenanceRequest $maintenance_request,
@@ -15,7 +15,7 @@ class TechnicianCommentNotification extends MaintenanceRequestNotification
         parent::__construct(
             maintenance_request: $maintenance_request,
             subject_line: "New Comment on Maintenance Request: {$maintenance_request->title}",
-            template: 'emails.maintenance.technician-comment'
+            template: 'emails.maintenance.manager-comment'
         );
     }
 

@@ -1,24 +1,23 @@
 @component('mail::message')
-# New Maintenance Request Assigned
+# New Comment on Maintenance Request
 
-Hello {{ $maintenance_request->assignedTechnician->name }},
+Hello,
 
-You have been assigned to a new maintenance request:
+A new comment has been added to maintenance request "{{ $maintenance_request->title }}":
+
+**Comment by {{ $comment->user->name }}:**
+{{ $comment->comment }}
 
 **Request Details:**
 - Title: {{ $maintenance_request->title }}
+- Property: {{ $maintenance_request->property->name }}
 - Location: {{ $maintenance_request->location }}
 - Priority: {{ ucfirst($maintenance_request->priority) }}
-- Due Date: {{ $maintenance_request->due_date ? $maintenance_request->due_date->format('M d, Y') : 'Not specified' }}
-
-**Description:**
-{{ $maintenance_request->description }}
+- Status: {{ ucfirst($maintenance_request->status) }}
 
 @component('mail::button', ['url' => route('mobile.technician.request.show', $maintenance_request)])
 View Request
 @endcomponent
-
-Please review the request and take appropriate action.
 
 Thanks,<br>
 {{ config('app.name') }}

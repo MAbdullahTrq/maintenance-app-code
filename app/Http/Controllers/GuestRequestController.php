@@ -7,6 +7,8 @@ use App\Models\Property;
 use App\Models\RequestImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewRequestNotification;
 
 class GuestRequestController extends Controller
 {
@@ -63,7 +65,8 @@ class GuestRequestController extends Controller
             }
         }
 
-        // TODO: Send notification to property manager
+        // Send notification to property manager
+        Mail::to($property->manager->email)->send(new NewRequestNotification($maintenanceRequest));
 
         return redirect()->route('guest.request.success', $accessLink);
     }

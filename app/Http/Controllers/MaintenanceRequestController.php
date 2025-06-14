@@ -14,6 +14,8 @@ use App\Mail\TechnicianAssignedNotification;
 use App\Mail\TechnicianStartedNotification;
 use App\Mail\TechnicianCompletedNotification;
 use App\Mail\TechnicianCommentNotification;
+use App\Mail\ManagerCommentNotification;
+use App\Mail\NewRequestNotification;
 use Illuminate\Support\Facades\Mail;
 
 class MaintenanceRequestController extends Controller
@@ -94,6 +96,11 @@ class MaintenanceRequestController extends Controller
                     'type' => 'request',
                 ]);
             }
+        }
+
+        // Send notification to property manager if request is created by someone else
+        if (Auth::id() !== $property->manager_id) {
+            Mail::to($property->manager->email)->send(new NewRequestNotification($maintenanceRequest));
         }
 
         return redirect()->route('maintenance.index')
@@ -346,14 +353,21 @@ class MaintenanceRequestController extends Controller
             }
         }
 
-        // Send notifications if comment is from technician
+        // Send notifications based on who is commenting
         if (Auth::user()->isTechnician()) {
+            // Technician commenting - notify manager and requester
             Mail::to($maintenance->property->manager->email)
                 ->send(new TechnicianCommentNotification($maintenance, $comment));
 
             if ($maintenance->requester_email) {
                 Mail::to($maintenance->requester_email)
                     ->send(new TechnicianCommentNotification($maintenance, $comment));
+            }
+        } elseif (Auth::user()->isPropertyManager() || Auth::user()->isAdmin()) {
+            // Manager commenting - notify technician
+            if ($maintenance->assignedTechnician) {
+                Mail::to($maintenance->assignedTechnician->email)
+                    ->send(new ManagerCommentNotification($maintenance, $comment));
             }
         }
 
