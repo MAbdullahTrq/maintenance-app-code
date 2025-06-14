@@ -46,13 +46,20 @@ class TechnicianController extends Controller
         $user->phone = $request->phone;
         $user->password = bcrypt('password');
         $user->invited_by = auth()->id();
+
+        // Set custom role_id for your app
+        $technicianRole = \App\Models\Role::where('slug', 'technician')->first();
+        if ($technicianRole) {
+            $user->role_id = $technicianRole->id;
+        }
+
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('technician-profiles', 'public');
             $user->image = $path;
         }
         $user->save();
         $user->assignRole('technician');
-        return redirect()->route('mobile.technicians.index')->with('success', 'Technician added!');
+        return redirect()->route('mobile.technicians.index')->with('success', 'Technician added! Default password is: password');
     }
 
     public function update(Request $request, $id)
