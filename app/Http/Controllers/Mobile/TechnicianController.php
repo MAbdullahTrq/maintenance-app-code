@@ -235,4 +235,13 @@ class TechnicianController extends Controller
         $technician->save();
         return redirect()->route('mobile.technicians.index')->with('success', 'Technician deactivated successfully.');
     }
+
+    public function activate($id)
+    {
+        $user = auth()->user();
+        $technician = \App\Models\User::where('id', $id)->where('invited_by', $user->id)->firstOrFail();
+        $technician->is_active = true;
+        $technician->save();
+        return redirect()->route('mobile.technicians.index')->with('success', 'Technician activated successfully.');
+    }
 }

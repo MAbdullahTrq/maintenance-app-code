@@ -217,6 +217,7 @@ Route::prefix('m')->middleware('auth')->group(function () {
     });
 
     Route::post('/at/{id}/deactivate', [App\Http\Controllers\Mobile\TechnicianController::class, 'deactivate'])->name('mobile.technicians.deactivate');
+    Route::post('/at/{id}/activate', [App\Http\Controllers\Mobile\TechnicianController::class, 'activate'])->name('mobile.technicians.activate');
 });
 
 Route::middleware('guest')->group(function () {

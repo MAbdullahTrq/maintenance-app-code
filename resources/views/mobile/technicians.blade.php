@@ -22,12 +22,15 @@
                     </thead>
                     <tbody>
                         @foreach($technicians as $tech)
-                        <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" x-show="!search || '{{ strtolower($tech->name) }}'.includes(search.toLowerCase()) || '{{ strtolower($tech->email) }}'.includes(search.toLowerCase()) || '{{ strtolower($tech->phone) }}'.includes(search.toLowerCase())" onclick="window.location.href='{{ route('mobile.technicians.show', $tech->id) }}'">
+                        <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer @if(!$tech->is_active) opacity-60 bg-gray-100 @endif" x-show="!search || '{{ strtolower($tech->name) }}'.includes(search.toLowerCase()) || '{{ strtolower($tech->email) }}'.includes(search.toLowerCase()) || '{{ strtolower($tech->phone) }}'.includes(search.toLowerCase())" onclick="window.location.href='{{ route('mobile.technicians.show', $tech->id) }}'">
                             <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">
                                 @if($tech->image)
                                     <img src="{{ asset('storage/' . $tech->image) }}" class="rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 object-cover mx-auto" alt="Profile">
                                 @else
                                     <img src="https://ui-avatars.com/api/?name={{ urlencode($tech->name) }}&background=eee&color=555&size=48" class="rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 mx-auto" alt="Profile">
+                                @endif
+                                @if(!$tech->is_active)
+                                    <span class="block text-xs text-red-600 font-bold mt-1">Deactivated</span>
                                 @endif
                             </td>
                             <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 font-semibold">{{ $tech->name }}</td>
@@ -62,10 +65,18 @@
                     <div>
                         <a :href="'{{ url('m/at') }}/' + dropdownTech + '/edit'" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
                         <a :href="'{{ url('m/at') }}/' + dropdownTech" class="block px-4 py-2 hover:bg-gray-100">View</a>
-                        <form :action="'{{ url('m/at') }}/' + dropdownTech + '/deactivate'" method="POST" class="block" @submit.prevent="showDeactivateConfirm = true; deactivateForm = $event.target; dropdownOpen = false;">
-                            @csrf
-                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-100">Deactivate</button>
-                        </form>
+                        <template x-if="$refs['row_' + dropdownTech] && $refs['row_' + dropdownTech].dataset.active === '1'">
+                            <form :action="'{{ url('m/at') }}/' + dropdownTech + '/deactivate'" method="POST" class="block" @submit.prevent="showDeactivateConfirm = true; deactivateForm = $event.target; dropdownOpen = false;">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-100">Deactivate</button>
+                            </form>
+                        </template>
+                        <template x-if="$refs['row_' + dropdownTech] && $refs['row_' + dropdownTech].dataset.active === '0'">
+                            <form :action="'{{ url('m/at') }}/' + dropdownTech + '/activate'" method="POST" class="block">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-100">Activate</button>
+                            </form>
+                        </template>
                         <form :action="'{{ url('m/technicians') }}/' + dropdownTech + '/reset-password'" method="POST" class="block">
                             @csrf
                             <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-100">Reset Password</button>
