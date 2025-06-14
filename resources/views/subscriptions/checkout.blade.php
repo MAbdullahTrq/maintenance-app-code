@@ -97,57 +97,96 @@
 @endsection
 
 @push('scripts')
-<script src="https://www.paypal.com/sdk/js?client-id={{ config('services.paypal.client_id') }}&currency=USD&intent=capture"></script>
+{{-- Load PayPal SDK with explicit components --}}
+<script src="https://www.paypal.com/sdk/js?client-id=AbhMMXUtYK-9uubp5XJw4Ky4PdQpS5-zmHeONPz0KK1ZKYmdqFjOLrPf5z2h1M1IFncSVCoDNufhEv-p&components=buttons&currency=USD&intent=capture"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        if (typeof paypal === 'undefined') {
-            // PayPal SDK failed to load
-            document.getElementById('paypal-error').textContent = 'PayPal checkout is temporarily unavailable. Please try again later.';
-            document.getElementById('paypal-error').classList.remove('hidden');
-            document.getElementById('manual-paypal-button').style.display = 'block';
-            return;
+    function showPayPalError(message) {
+        document.getElementById('paypal-error').textContent = message;
+        document.getElementById('paypal-error').classList.remove('hidden');
+        document.getElementById('manual-paypal-button').style.display = 'block';
+    }
+    
+    // Initialize when window is fully loaded
+    window.addEventListener('load', function() {
+        console.log('Window loaded, checking PayPal...');
+        
+        let attempts = 0;
+        const maxAttempts = 100; // 10 seconds max
+        
+        // Wait for PayPal to be available
+        function waitForPayPal() {
+            attempts++;
+            console.log(`Attempt ${attempts}: PayPal available:`, typeof paypal !== 'undefined');
+            
+            if (typeof paypal !== 'undefined') {
+                console.log(`Attempt ${attempts}: PayPal object:`, paypal);
+                console.log(`Attempt ${attempts}: PayPal.Buttons available:`, typeof paypal.Buttons);
+                console.log(`Attempt ${attempts}: PayPal keys:`, Object.keys(paypal));
+            }
+            
+            if (typeof paypal !== 'undefined' && typeof paypal.Buttons === 'function') {
+                console.log('PayPal is ready!');
+                initializePayPal();
+            } else if (attempts < maxAttempts) {
+                console.log('Waiting for PayPal...');
+                setTimeout(waitForPayPal, 100);
+            } else {
+                console.error('PayPal failed to load after 10 seconds');
+                console.log('Final PayPal state:', typeof paypal !== 'undefined' ? paypal : 'undefined');
+                showPayPalError('PayPal failed to load. Please refresh the page and try again.');
+            }
         }
-
+        
+        // Start checking immediately
+        waitForPayPal();
+    });
+    
+    function initializePayPal() {
+        console.log('Initializing PayPal...');
+        
         // Hide manual button if JavaScript is enabled
         document.getElementById('manual-paypal-button').style.display = 'none';
         
-        // Render the PayPal button
-        paypal.Buttons({
-            // Set up the transaction
-            createOrder: function(data, actions) {
-                document.getElementById('paypal-error').classList.add('hidden');
+        try {
+            // Render the PayPal button
+            paypal.Buttons({
+                // Set up the transaction
+                createOrder: function(data, actions) {
+                    document.getElementById('paypal-error').classList.add('hidden');
+                    
+                    return fetch('{{ route('subscription.paypal.create', $plan->id) }}', {
+                        method: 'post',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    }).then(function(response) {
+                        return response.json();
+                    }).then(function(data) {
+                        if (data.error) {
+                            document.getElementById('paypal-error').textContent = data.error;
+                            document.getElementById('paypal-error').classList.remove('hidden');
+                            return null;
+                        }
+                        return data.id;
+                    });
+                },
                 
-                return fetch('{{ route('subscription.paypal.create', $plan->id) }}', {
-                    method: 'post',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    }
-                }).then(function(response) {
-                    return response.json();
-                }).then(function(data) {
-                    if (data.error) {
-                        document.getElementById('paypal-error').textContent = data.error;
-                        document.getElementById('paypal-error').classList.remove('hidden');
-                        return null;
-                    }
-                    return data.id;
-                });
-            },
-            
-            // Finalize the transaction
-            onApprove: function(data, actions) {
-                window.location.href = '{{ route('subscription.capture', $plan->id) }}?token=' + data.orderID;
-            },
-            
-            // Handle errors
-            onError: function(err) {
-                document.getElementById('paypal-error').textContent = 'An error occurred. Please try again later.';
-                document.getElementById('paypal-error').classList.remove('hidden');
-                document.getElementById('manual-paypal-button').style.display = 'block';
-                console.error(err);
-            }
-        }).render('#paypal-button-container');
-    });
+                // Finalize the transaction
+                onApprove: function(data, actions) {
+                    window.location.href = '{{ route('subscription.capture', $plan->id) }}?token=' + data.orderID;
+                },
+                
+                // Handle errors
+                onError: function(err) {
+                    showPayPalError('An error occurred. Please try again later.');
+                    console.error(err);
+                }
+            }).render('#paypal-button-container');
+        } catch (error) {
+            console.error('Error initializing PayPal:', error);
+            showPayPalError('Failed to initialize PayPal. Please try again later.');
+        }
+    }
 </script>
 @endpush 
