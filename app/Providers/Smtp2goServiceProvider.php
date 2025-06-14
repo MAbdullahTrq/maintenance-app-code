@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Mail\MailManager;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Mail\Transport\Transport;
 
 class Smtp2goServiceProvider extends ServiceProvider
 {
