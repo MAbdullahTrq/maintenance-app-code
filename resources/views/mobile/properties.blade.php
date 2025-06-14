@@ -9,8 +9,8 @@
             <div class="flex justify-between items-center mb-4">
                 <div class="font-bold text-lg md:text-xl lg:text-2xl">All Properties</div>
             </div>
-            <div class="overflow-x-auto w-full">
-                <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-visible">
+            <div class="overflow-x-auto w-full" style="overflow: visible;">
+                <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded" style="overflow: visible;">
                     <thead>
                         <tr class="bg-gray-100 border-b border-gray-400">
                             <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Name</th>
@@ -32,12 +32,12 @@
                                 </div>
                             </td>
                             <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">{{ $property->address }}</td>
-                            <td class="p-2 md:p-3 lg:p-4 align-top text-center">
-                                <div class="relative">
+                            <td class="p-2 md:p-3 lg:p-4 align-top text-center" style="position: relative; overflow: visible;">
+                                <div class="relative" style="overflow: visible;">
                                     <button onclick="toggleDropdown(this)" class="px-2 py-1 text-gray-600 hover:text-gray-800 text-lg md:text-xl focus:outline-none dropdown-btn">
                                         <i class="fas fa-ellipsis-v"></i>
                                     </button>
-                                    <div class="dropdown-menu absolute right-0 top-full mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-[100] hidden" style="min-width: 12rem;">
+                                    <div class="dropdown-menu absolute right-0 top-full mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-[9999] hidden" style="min-width: 12rem;">
                                         <div class="py-1">
                                             <a href="{{ route('mobile.properties.show', $property->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
                                                 <i class="fas fa-eye mr-2 text-blue-500"></i>View
