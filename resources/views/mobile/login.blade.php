@@ -24,6 +24,9 @@
                     <label for="password" class="sr-only">Password</label>
                     <input type="password" name="password" id="password" class="w-full border border-gray-300 rounded-lg p-3 text-sm placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Password" required>
                 </div>
+                <div class="mb-2 text-right">
+                    <a href="{{ route('password.request') }}" class="text-sm text-blue-600 hover:text-blue-800">Forgot your password?</a>
+                </div>
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
                         <input type="checkbox" name="remember" id="remember" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
