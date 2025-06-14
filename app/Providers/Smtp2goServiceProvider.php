@@ -6,7 +6,9 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Mail\MailManager;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Mail\Transport\Transport;
+use Symfony\Component\Mailer\Transport\AbstractTransport;
+use Symfony\Component\Mailer\Envelope;
+use Symfony\Component\Mime\RawMessage;
 
 class Smtp2goServiceProvider extends ServiceProvider
 {
@@ -33,47 +35,57 @@ class Smtp2goServiceProvider extends ServiceProvider
         $this->app->make(MailManager::class)->extend('smtp2go', function ($app) {
             $config = config('smtp2go');
             
-            return new class($config) extends \Illuminate\Mail\Transport\Transport
+            return new class($config) extends AbstractTransport
             {
                 protected $config;
                 protected $apiEndpoint;
 
                 public function __construct($config)
                 {
+                    parent::__construct();
                     $this->config = $config;
                     $this->apiEndpoint = $config['api']['endpoint'] . '/email/send';
                 }
 
-                public function send(\Symfony\Component\Mailer\SentMessage $message, \Symfony\Component\Mime\Email $email): void
+                protected function doSend(RawMessage $message, Envelope $envelope): void
                 {
+                    $email = $message->toString();
+                    // Parse the email using Symfony's Email class
+                    $symfonyEmail = \Symfony\Component\Mime\Email::fromString($email);
+
                     $payload = [
                         'api_key' => $this->config['api']['key'],
-                        'to' => $this->getRecipients($email),
-                        'sender' => $this->getSender($email),
-                        'subject' => $email->getSubject(),
-                        'html_body' => $email->getHtmlBody(),
-                        'text_body' => $email->getTextBody(),
+                        'to' => $this->getRecipients($symfonyEmail),
+                        'sender' => $this->getSender($symfonyEmail),
+                        'subject' => $symfonyEmail->getSubject(),
+                        'html_body' => $symfonyEmail->getHtmlBody(),
+                        'text_body' => $symfonyEmail->getTextBody(),
                     ];
 
                     // Add custom headers
-                    foreach ($email->getHeaders()->all() as $header) {
+                    foreach ($symfonyEmail->getHeaders()->all() as $header) {
                         if (str_starts_with($header->getName(), 'X-SMTP2GO-')) {
                             $payload[strtolower(str_replace('X-SMTP2GO-', '', $header->getName()))] = $header->getBodyAsString();
                         }
                     }
 
                     // Add attachments if any
-                    if ($attachments = $email->getAttachments()) {
+                    if ($attachments = $symfonyEmail->getAttachments()) {
                         $payload['attachments'] = $this->formatAttachments($attachments);
                     }
 
-                    $response = Http::withHeaders([
+                    $response = \Illuminate\Support\Facades\Http::withHeaders([
                         'Content-Type' => 'application/json',
                     ])->post($this->apiEndpoint, $payload);
 
                     if (!$response->successful()) {
                         throw new \Exception('SMTP2GO API Error: ' . $response->body());
                     }
+                }
+
+                public function __toString(): string
+                {
+                    return 'smtp2go';
                 }
 
                 protected function getRecipients($email): array
