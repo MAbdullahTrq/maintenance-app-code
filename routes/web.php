@@ -13,6 +13,8 @@ use App\Http\Controllers\Mobile\DashboardController as MobileDashboardController
 use App\Http\Controllers\Mobile\RequestController;
 use App\Http\Controllers\Mobile\TechnicianController as MobileTechnicianController;
 use App\Http\Controllers\Mobile\PropertyController as MobilePropertyController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -236,3 +238,9 @@ Route::prefix('t')->middleware(['auth', 'technician'])->group(function () {
     Route::post('/r/{id}/start', [App\Http\Controllers\Mobile\TechnicianController::class, 'startRequest'])->name('mobile.technician.request.start');
     Route::post('/r/{id}/finish', [App\Http\Controllers\Mobile\TechnicianController::class, 'finishRequest'])->name('mobile.technician.request.finish');
 });
+
+// Password Reset Routes
+Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
