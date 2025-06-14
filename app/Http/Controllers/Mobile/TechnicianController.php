@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TechnicianStartedNotification;
 use App\Mail\TechnicianCompletedNotification;
+use App\Mail\TechnicianStartedRequesterNotification;
+use App\Mail\TechnicianCompletedRequesterNotification;
 
 class TechnicianController extends Controller
 {

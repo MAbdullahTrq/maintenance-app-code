@@ -10,6 +10,9 @@ use App\Mail\TechnicianStartedNotification;
 use App\Mail\TechnicianCompletedNotification;
 use App\Mail\TechnicianCommentNotification;
 use App\Mail\ManagerCommentNotification;
+use App\Mail\TechnicianStartedRequesterNotification;
+use App\Mail\TechnicianCompletedRequesterNotification;
+use App\Mail\TechnicianCommentRequesterNotification;
 use Illuminate\Support\Facades\Mail;
 
 class RequestController extends Controller
@@ -76,7 +79,7 @@ class RequestController extends Controller
 
             if ($maintenance->requester_email) {
                 Mail::to($maintenance->requester_email)
-                    ->send(new TechnicianStartedNotification($maintenance));
+                    ->send(new TechnicianStartedRequesterNotification($maintenance));
             }
 
             return redirect()->route('mobile.request.show', $id)->with('success', 'Work started.');
@@ -98,7 +101,7 @@ class RequestController extends Controller
 
             if ($maintenance->requester_email) {
                 Mail::to($maintenance->requester_email)
-                    ->send(new TechnicianCompletedNotification($maintenance));
+                    ->send(new TechnicianCompletedRequesterNotification($maintenance));
             }
 
             return redirect()->route('mobile.request.show', $id)->with('success', 'Work finished.');
@@ -192,7 +195,7 @@ class RequestController extends Controller
 
             if ($maintenance->requester_email) {
                 Mail::to($maintenance->requester_email)
-                    ->send(new TechnicianCommentNotification($maintenance, $comment));
+                    ->send(new TechnicianCommentRequesterNotification($maintenance, $comment));
             }
         } elseif (auth()->user()->isPropertyManager() || auth()->user()->isAdmin()) {
             // Manager commenting - notify technician
