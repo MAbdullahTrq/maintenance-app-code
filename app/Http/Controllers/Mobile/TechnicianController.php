@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TechnicianStartedNotification;
+use App\Mail\TechnicianCompletedNotification;
 
 class TechnicianController extends Controller
 {
@@ -214,6 +217,16 @@ class TechnicianController extends Controller
         $request->status = 'started';
         $request->started_at = now();
         $request->save();
+
+        // Send notifications to manager and requester
+        Mail::to($request->property->manager->email)
+            ->send(new TechnicianStartedNotification($request));
+
+        if ($request->requester_email) {
+            Mail::to($request->requester_email)
+                ->send(new TechnicianStartedNotification($request));
+        }
+
         return redirect()->route('mobile.technician.request.show', $id)->with('success', 'Work started.');
     }
 
@@ -224,6 +237,16 @@ class TechnicianController extends Controller
         $request->status = 'completed';
         $request->completed_at = now();
         $request->save();
+
+        // Send notifications to manager and requester
+        Mail::to($request->property->manager->email)
+            ->send(new TechnicianCompletedNotification($request));
+
+        if ($request->requester_email) {
+            Mail::to($request->requester_email)
+                ->send(new TechnicianCompletedNotification($request));
+        }
+
         return redirect()->route('mobile.technician.request.show', $id)->with('success', 'Work finished.');
     }
 

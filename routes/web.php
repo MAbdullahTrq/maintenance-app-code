@@ -190,6 +190,8 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::post('/r/{id}/complete', [App\Http\Controllers\Mobile\RequestController::class, 'complete'])->name('mobile.request.complete');
     Route::post('/r/{id}/close', [App\Http\Controllers\Mobile\RequestController::class, 'close'])->name('mobile.request.close');
     Route::post('/r/{id}/accept', [App\Http\Controllers\Mobile\RequestController::class, 'accept'])->name('mobile.request.accept');
+    Route::post('/r/{id}/start', [App\Http\Controllers\Mobile\RequestController::class, 'start'])->name('mobile.request.start');
+    Route::post('/r/{id}/finish', [App\Http\Controllers\Mobile\RequestController::class, 'finish'])->name('mobile.request.finish');
     Route::post('/r/{id}/comment', [App\Http\Controllers\Mobile\RequestController::class, 'comment'])->name('mobile.request.comment');
     Route::get('/ap/create', [MobilePropertyController::class, 'create'])->name('mobile.properties.create');
     Route::get('/at/create', [MobileTechnicianController::class, 'create'])->name('mobile.technicians.create');
