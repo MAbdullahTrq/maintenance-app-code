@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\WelcomeMail;
+use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends Controller
 {
@@ -39,6 +41,10 @@ class RegisterController extends Controller
         }
 
         Auth::login($user);
+
+        // Send welcome email
+        Mail::to($user->email)->send(new WelcomeMail($user));
+
         return redirect()->route('mobile.manager.dashboard');
     }
 } 
