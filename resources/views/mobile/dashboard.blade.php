@@ -7,6 +7,16 @@
 @endsection
 
 @section('content')
+@if(isset($hasActiveSubscription) && !$hasActiveSubscription)
+    <div class="flex justify-center mb-4">
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded w-full max-w-2xl">
+            <div class="flex items-center justify-between">
+                <span class="font-semibold">You need an active subscription to manage properties and requests.</span>
+                <a href="/m/subscription/plans" class="ml-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-200">Subscribe Now</a>
+            </div>
+        </div>
+    </div>
+@endif
 <!-- Pending Requests card below -->
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-2 md:p-3 lg:p-4 w-full max-w-6xl mx-auto">

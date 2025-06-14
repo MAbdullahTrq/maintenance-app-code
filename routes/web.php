@@ -15,6 +15,7 @@ use App\Http\Controllers\Mobile\TechnicianController as MobileTechnicianControll
 use App\Http\Controllers\Mobile\PropertyController as MobilePropertyController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Mobile\SubscriptionController as MobileSubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -220,6 +221,8 @@ Route::prefix('m')->middleware('auth')->group(function () {
 
     Route::post('/at/{id}/deactivate', [App\Http\Controllers\Mobile\TechnicianController::class, 'deactivate'])->name('mobile.technicians.deactivate');
     Route::post('/at/{id}/activate', [App\Http\Controllers\Mobile\TechnicianController::class, 'activate'])->name('mobile.technicians.activate');
+
+    Route::get('/m/subscription/plans', [MobileSubscriptionController::class, 'plans'])->name('mobile.subscription.plans');
 });
 
 Route::middleware('guest')->group(function () {
