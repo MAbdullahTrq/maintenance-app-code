@@ -10,7 +10,7 @@
                 <div class="font-bold text-lg md:text-xl lg:text-2xl">All Properties</div>
             </div>
             <div class="overflow-x-auto w-full">
-                <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-hidden">
+                <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-visible">
                     <thead>
                         <tr class="bg-gray-100 border-b border-gray-400">
                             <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Name</th>
@@ -33,24 +33,24 @@
                             </td>
                             <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">{{ $property->address }}</td>
                             <td class="p-2 md:p-3 lg:p-4 align-top text-center">
-                                <div class="relative" x-data="{ open: false }">
-                                    <button @click="open = !open" class="px-2 py-1 text-gray-600 hover:text-gray-800 text-lg md:text-xl">
+                                <div class="relative">
+                                    <button onclick="toggleDropdown(this)" class="px-2 py-1 text-gray-600 hover:text-gray-800 text-lg md:text-xl focus:outline-none dropdown-btn">
                                         <i class="fas fa-ellipsis-v"></i>
                                     </button>
-                                    <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border z-50" x-cloak>
+                                    <div class="dropdown-menu absolute right-0 top-full mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-[100] hidden" style="min-width: 12rem;">
                                         <div class="py-1">
-                                            <a href="{{ route('mobile.properties.show', $property->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                <i class="fas fa-eye mr-2"></i>View
+                                            <a href="{{ route('mobile.properties.show', $property->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                                                <i class="fas fa-eye mr-2 text-blue-500"></i>View
                                             </a>
-                                            <a href="{{ route('mobile.properties.edit', $property->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                <i class="fas fa-edit mr-2"></i>Edit
+                                            <a href="{{ route('mobile.properties.edit', $property->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                                                <i class="fas fa-edit mr-2 text-green-500"></i>Edit
                                             </a>
-                                            <a href="{{ route('mobile.properties.qrcode', $property->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                <i class="fas fa-qrcode mr-2"></i>QR Code
+                                            <a href="{{ route('mobile.properties.qrcode', $property->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                                                <i class="fas fa-qrcode mr-2 text-purple-500"></i>QR Code
                                             </a>
                                             @if($property->access_link)
-                                            <a href="{{ route('guest.request.form', $property->access_link) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                <i class="fas fa-link mr-2"></i>Public Link
+                                            <a href="{{ route('guest.request.form', $property->access_link) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                                                <i class="fas fa-link mr-2 text-orange-500"></i>Public Link
                                             </a>
                                             @endif
                                         </div>
@@ -68,4 +68,35 @@
 </div>
 @endsection
 
- 
+@push('scripts')
+<script>
+function toggleDropdown(button) {
+    // Close all other dropdowns first
+    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        if (menu !== button.nextElementSibling) {
+            menu.classList.add('hidden');
+        }
+    });
+    
+    // Toggle the clicked dropdown
+    const menu = button.nextElementSibling;
+    menu.classList.toggle('hidden');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('.relative')) {
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            menu.classList.add('hidden');
+        });
+    }
+});
+
+// Prevent dropdown from closing when clicking inside it
+document.querySelectorAll('.dropdown-menu').forEach(menu => {
+    menu.addEventListener('click', function(event) {
+        event.stopPropagation();
+    });
+});
+</script>
+@endpush
