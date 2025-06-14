@@ -47,30 +47,28 @@ class Smtp2goServiceProvider extends ServiceProvider
                     $this->apiEndpoint = $config['api']['endpoint'] . '/email/send';
                 }
 
-                protected function doSend(RawMessage $message, Envelope $envelope): void
+                protected function doSend(\Symfony\Component\Mailer\SentMessage $message): void
                 {
-                    $email = $message->toString();
-                    // Parse the email using Symfony's Email class
-                    $symfonyEmail = \Symfony\Component\Mime\Email::fromString($email);
+                    $email = $message->getOriginalMessage();
 
                     $payload = [
                         'api_key' => $this->config['api']['key'],
-                        'to' => $this->getRecipients($symfonyEmail),
-                        'sender' => $this->getSender($symfonyEmail),
-                        'subject' => $symfonyEmail->getSubject(),
-                        'html_body' => $symfonyEmail->getHtmlBody(),
-                        'text_body' => $symfonyEmail->getTextBody(),
+                        'to' => $this->getRecipients($email),
+                        'sender' => $this->getSender($email),
+                        'subject' => $email->getSubject(),
+                        'html_body' => $email->getHtmlBody(),
+                        'text_body' => $email->getTextBody(),
                     ];
 
                     // Add custom headers
-                    foreach ($symfonyEmail->getHeaders()->all() as $header) {
+                    foreach ($email->getHeaders()->all() as $header) {
                         if (str_starts_with($header->getName(), 'X-SMTP2GO-')) {
                             $payload[strtolower(str_replace('X-SMTP2GO-', '', $header->getName()))] = $header->getBodyAsString();
                         }
                     }
 
                     // Add attachments if any
-                    if ($attachments = $symfonyEmail->getAttachments()) {
+                    if ($attachments = $email->getAttachments()) {
                         $payload['attachments'] = $this->formatAttachments($attachments);
                     }
 
