@@ -12,8 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('verification_token')->nullable();
-            $table->timestamp('verification_token_expires_at')->nullable();
+            // Only add columns if they don't already exist
+            if (!Schema::hasColumn('users', 'verification_token')) {
+                $table->string('verification_token')->nullable();
+            }
+            if (!Schema::hasColumn('users', 'verification_token_expires_at')) {
+                $table->timestamp('verification_token_expires_at')->nullable();
+            }
         });
     }
 
@@ -23,7 +28,13 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['verification_token', 'verification_token_expires_at']);
+            // Only drop columns if they exist
+            if (Schema::hasColumn('users', 'verification_token')) {
+                $table->dropColumn('verification_token');
+            }
+            if (Schema::hasColumn('users', 'verification_token_expires_at')) {
+                $table->dropColumn('verification_token_expires_at');
+            }
         });
     }
 };
