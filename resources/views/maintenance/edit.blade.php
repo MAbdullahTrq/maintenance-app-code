@@ -6,7 +6,7 @@
 <div class="container mx-auto px-4 py-8">
     <div class="mb-6">
         <a href="{{ route('maintenance.show', $maintenance) }}" class="text-blue-500 hover:text-blue-700">
-            <i class="fas fa-arrow-left mr-2"></i>Back to Request
+            <i class="fas fa-arrow-left mr-2"></i>Back to Request Details
         </a>
     </div>
     
@@ -16,7 +16,7 @@
         </div>
         
         <div class="p-6">
-            <form action="{{ route('maintenance.update', $maintenance) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('maintenance.update', $maintenance) }}" method="POST" enctype="multipart/form-data" id="maintenance-edit-form">
                 @csrf
                 @method('PUT')
                 
@@ -26,63 +26,6 @@
                         class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         placeholder="e.g., Broken Sink">
                     @error('title')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div class="mb-6">
-                    <label for="property_id" class="block text-sm font-medium text-gray-700 mb-1">Property</label>
-                    <select name="property_id" id="property_id" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        <option value="">-- Select Property --</option>
-                        @foreach($properties as $property)
-                            <option value="{{ $property->id }}" {{ old('property_id', $maintenance->property_id) == $property->id ? 'selected' : '' }}>
-                                {{ $property->name }} - {{ $property->address }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('property_id')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div class="mb-6">
-                    <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                    <input type="text" id="location" name="location" value="{{ old('location', $maintenance->location) }}" 
-                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                        placeholder="e.g., Kitchen, Unit 101">
-                    @error('location')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div class="mb-6">
-                    <label for="priority" class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="border rounded-md p-4 cursor-pointer hover:bg-gray-50 relative">
-                            <input type="radio" id="priority-low" name="priority" value="low" class="absolute opacity-0" {{ old('priority', $maintenance->priority) == 'low' ? 'checked' : '' }}>
-                            <label for="priority-low" class="block cursor-pointer">
-                                <div class="font-medium text-blue-600 mb-1">LOW</div>
-                                <div class="text-sm text-gray-500">You can fix after we leave, just wanted to let you know.</div>
-                            </label>
-                        </div>
-                        
-                        <div class="border rounded-md p-4 cursor-pointer hover:bg-gray-50 relative">
-                            <input type="radio" id="priority-medium" name="priority" value="medium" class="absolute opacity-0" {{ old('priority', $maintenance->priority) == 'medium' ? 'checked' : '' }}>
-                            <label for="priority-medium" class="block cursor-pointer">
-                                <div class="font-medium text-yellow-600 mb-1">MEDIUM</div>
-                                <div class="text-sm text-gray-500">You can fix the next cleaning day is fine.</div>
-                            </label>
-                        </div>
-                        
-                        <div class="border rounded-md p-4 cursor-pointer hover:bg-gray-50 relative">
-                            <input type="radio" id="priority-high" name="priority" value="high" class="absolute opacity-0" {{ old('priority', $maintenance->priority) == 'high' ? 'checked' : '' }}>
-                            <label for="priority-high" class="block cursor-pointer">
-                                <div class="font-medium text-red-600 mb-1">HIGH</div>
-                                <div class="text-sm text-gray-500">Fix asap please.</div>
-                            </label>
-                        </div>
-                    </div>
-                    @error('priority')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
@@ -98,37 +41,75 @@
                 </div>
                 
                 <div class="mb-6">
-                    <label for="images" class="block text-sm font-medium text-gray-700 mb-1">Add More Images (Optional)</label>
-                    <input type="file" id="images" name="images[]" multiple 
-                        class="w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                    <p class="text-gray-500 text-xs mt-1">Upload images of the issue. Maximum 5 images. Supported formats: JPG, PNG.</p>
-                    @error('images.*')
+                    <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                    <input type="text" id="location" name="location" value="{{ old('location', $maintenance->location) }}" 
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="e.g., Kitchen, Bathroom, Living Room">
+                    @error('location')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                
+                <div class="mb-6">
+                    <label for="priority" class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+                    <select id="priority" name="priority" 
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option value="low" {{ old('priority', $maintenance->priority) == 'low' ? 'selected' : '' }}>Low</option>
+                        <option value="medium" {{ old('priority', $maintenance->priority) == 'medium' ? 'selected' : '' }}>Medium</option>
+                        <option value="high" {{ old('priority', $maintenance->priority) == 'high' ? 'selected' : '' }}>High</option>
+                    </select>
+                    @error('priority')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                
+                <div class="mb-6">
+                    <label for="property_id" class="block text-sm font-medium text-gray-700 mb-1">Property</label>
+                    <select id="property_id" name="property_id" 
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option value="">Select a property</option>
+                        @foreach($properties as $property)
+                            <option value="{{ $property->id }}" {{ old('property_id', $maintenance->property_id) == $property->id ? 'selected' : '' }}>
+                                {{ $property->name }} - {{ $property->address }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('property_id')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
                 
                 @if($maintenance->images && $maintenance->images->where('type', 'request')->count() > 0)
                     <div class="mb-6">
-                        <h3 class="block text-sm font-medium text-gray-700 mb-3">Current Images</h3>
+                        <h3 class="text-sm font-medium text-gray-700 mb-3">Current Images</h3>
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                             @foreach($maintenance->images->where('type', 'request') as $image)
                                 <div class="relative group">
-                                    <img src="{{ asset('storage/' . $image->image_path) }}" alt="Maintenance Image" class="w-full h-40 object-cover rounded-lg">
-                                    
-                                    <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <form action="{{ route('maintenance.image.delete', $image) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg" onclick="return confirm('Are you sure you want to delete this image?')">
-                                                Delete
-                                            </button>
-                                        </form>
-                                    </div>
+                                    <img src="{{ $image->getUrl() }}" alt="Request Image" class="h-24 w-full object-cover rounded border">
+                                    <form action="{{ route('maintenance.image.delete', $image) }}" method="POST" class="absolute top-1 right-1">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="bg-red-500 text-white rounded-full p-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                                                onclick="return confirm('Are you sure you want to delete this image?')">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             @endforeach
                         </div>
                     </div>
                 @endif
+                
+                <div class="mb-6">
+                    <label for="images" class="block text-sm font-medium text-gray-700 mb-1">Add More Images (Optional)</label>
+                    <input type="file" id="images" name="images[]" multiple 
+                        class="w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    <p class="text-gray-500 text-xs mt-1">Upload images of the issue. Maximum 5 images. Supported formats: JPG, PNG.</p>
+                    <div id="image-previews" class="mt-3 grid grid-cols-2 md:grid-cols-3 gap-3 hidden"></div>
+                    @error('images.*')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
                 
                 <div class="flex justify-end space-x-3">
                     <a href="{{ route('maintenance.show', $maintenance) }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
@@ -142,4 +123,90 @@
         </div>
     </div>
 </div>
+
+<script>
+// Image resize and preview functionality
+const input = document.getElementById('images');
+const form = document.getElementById('maintenance-edit-form');
+const previewContainer = document.getElementById('image-previews');
+
+input.addEventListener('change', function(e) {
+    const files = Array.from(e.target.files);
+    if (!files.length) {
+        previewContainer.classList.add('hidden');
+        return;
+    }
+    
+    previewContainer.innerHTML = '';
+    previewContainer.classList.remove('hidden');
+    
+    const resizedFiles = [];
+    let processedCount = 0;
+    
+    files.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const img = new Image();
+            img.onload = function() {
+                const MAX_SIZE = 600;
+                let width = img.width;
+                let height = img.height;
+                
+                // Calculate new dimensions
+                if (width > height) {
+                    if (width > MAX_SIZE) {
+                        height *= MAX_SIZE / width;
+                        width = MAX_SIZE;
+                    }
+                } else {
+                    if (height > MAX_SIZE) {
+                        width *= MAX_SIZE / height;
+                        height = MAX_SIZE;
+                    }
+                }
+                
+                // Create canvas and resize
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                canvas.toBlob(function(blob) {
+                    const resizedFile = new File([blob], file.name, {type: blob.type});
+                    resizedFiles[index] = resizedFile;
+                    processedCount++;
+                    
+                    // Show preview
+                    const previewDiv = document.createElement('div');
+                    previewDiv.className = 'relative';
+                    const previewImg = document.createElement('img');
+                    previewImg.src = canvas.toDataURL(file.type, 0.85);
+                    previewImg.className = 'w-full h-24 object-cover rounded border shadow-sm';
+                    previewDiv.appendChild(previewImg);
+                    
+                    // Add file name
+                    const fileName = document.createElement('p');
+                    fileName.textContent = file.name;
+                    fileName.className = 'text-xs text-gray-600 mt-1 truncate';
+                    previewDiv.appendChild(fileName);
+                    
+                    previewContainer.appendChild(previewDiv);
+                    
+                    // Update input files when all images are processed
+                    if (processedCount === files.length) {
+                        const dataTransfer = new DataTransfer();
+                        resizedFiles.forEach(file => {
+                            if (file) dataTransfer.items.add(file);
+                        });
+                        input.files = dataTransfer.files;
+                    }
+                }, file.type, 0.85);
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+});
+</script>
 @endsection 

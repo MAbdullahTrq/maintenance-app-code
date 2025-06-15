@@ -29,6 +29,8 @@ class User extends Authenticatable
         'role_id',
         'invited_by',
         'is_active',
+        'verification_token',
+        'verification_token_expires_at',
     ];
 
     /**
@@ -66,6 +68,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
+            'verification_token_expires_at' => 'datetime',
         ];
     }
 
@@ -174,5 +177,48 @@ class User extends Authenticatable
     public function isTechnician()
     {
         return $this->hasRole('technician');
+    }
+
+    /**
+     * Generate a verification token for the user.
+     *
+     * @return string
+     */
+    public function generateVerificationToken(): string
+    {
+        $token = \Illuminate\Support\Str::random(60);
+        
+        $this->update([
+            'verification_token' => $token,
+            'verification_token_expires_at' => now()->addHours(24),
+        ]);
+
+        return $token;
+    }
+
+    /**
+     * Check if the verification token is valid.
+     *
+     * @param string $token
+     * @return bool
+     */
+    public function isValidVerificationToken(string $token): bool
+    {
+        return $this->verification_token === $token 
+            && $this->verification_token_expires_at 
+            && $this->verification_token_expires_at->isFuture();
+    }
+
+    /**
+     * Clear the verification token.
+     *
+     * @return void
+     */
+    public function clearVerificationToken(): void
+    {
+        $this->update([
+            'verification_token' => null,
+            'verification_token_expires_at' => null,
+        ]);
     }
 }

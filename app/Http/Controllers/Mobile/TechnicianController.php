@@ -11,6 +11,7 @@ use App\Mail\TechnicianStartedNotification;
 use App\Mail\TechnicianCompletedNotification;
 use App\Mail\TechnicianStartedRequesterNotification;
 use App\Mail\TechnicianCompletedRequesterNotification;
+use App\Mail\TechnicianWelcomeMail;
 
 class TechnicianController extends Controller
 {
@@ -49,7 +50,7 @@ class TechnicianController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->phone = $request->phone;
-        $user->password = bcrypt('password');
+        $user->password = bcrypt('password'); // Temporary password, will be changed via verification
         $user->invited_by = auth()->id();
 
         // Set custom role_id for your app
@@ -64,7 +65,20 @@ class TechnicianController extends Controller
         }
         $user->save();
         $user->assignRole('technician');
-        return redirect()->route('mobile.technicians.index')->with('success', 'Technician added! Default password is: password');
+
+        // Generate verification token and send welcome email
+        $verificationToken = $user->generateVerificationToken();
+        $manager = auth()->user();
+        
+        try {
+            Mail::to($user->email)->send(new TechnicianWelcomeMail($user, $manager, $verificationToken));
+            $successMessage = 'Technician added successfully! A welcome email with account verification link has been sent to ' . $user->email;
+        } catch (\Exception $e) {
+            // If email fails, still show success but mention email issue
+            $successMessage = 'Technician added successfully! However, there was an issue sending the welcome email. Please contact the technician directly.';
+        }
+
+        return redirect()->route('mobile.technicians.index')->with('success', $successMessage);
     }
 
     public function update(Request $request, $id)

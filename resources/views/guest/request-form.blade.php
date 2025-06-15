@@ -11,7 +11,7 @@
                 <p class="text-gray-600 mt-2">Property: <span class="font-semibold">{{ $property->name }}</span></p>
             </div>
             
-            <form method="POST" action="{{ route('guest.request.submit', $property->access_link) }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('guest.request.submit', $property->access_link) }}" enctype="multipart/form-data" id="guest-request-form">
                 @csrf
                 
                 <div class="mb-6">
@@ -26,10 +26,21 @@
                 </div>
                 
                 <div class="mb-6">
+                    <label for="description" class="block text-gray-700 text-sm font-medium mb-2">Description <span class="text-red-500">*</span></label>
+                    <textarea id="description" name="description" rows="4" required
+                        class="appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 @error('description') border-red-500 @enderror"
+                        placeholder="Please provide detailed information about the issue...">{{ old('description') }}</textarea>
+                    
+                    @error('description')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                
+                <div class="mb-6">
                     <label for="location" class="block text-gray-700 text-sm font-medium mb-2">Location <span class="text-red-500">*</span></label>
                     <input id="location" type="text" name="location" value="{{ old('location') }}" required
                         class="appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 @error('location') border-red-500 @enderror"
-                        placeholder="Room number, area, or specific location">
+                        placeholder="e.g., Kitchen, Bathroom, Living Room">
                     
                     @error('location')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -37,26 +48,26 @@
                 </div>
                 
                 <div class="mb-6">
-                    <label class="block text-gray-700 text-sm font-medium mb-2">Priority <span class="text-red-500">*</span></label>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-                        <div class="relative border rounded-md p-4 hover:bg-gray-50 cursor-pointer priority-option {{ old('priority') == 'low' ? 'selected-priority' : '' }}">
-                            <input type="radio" id="priority-low" name="priority" value="low" class="absolute opacity-0 priority-radio" {{ old('priority') == 'low' ? 'checked' : '' }}>
+                    <label class="block text-gray-700 text-sm font-medium mb-4">Priority <span class="text-red-500">*</span></label>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="border rounded-md p-4 cursor-pointer hover:bg-gray-50 relative priority-option">
+                            <input type="radio" id="priority-low" name="priority" value="low" class="absolute opacity-0" {{ old('priority') == 'low' ? 'checked' : '' }}>
                             <label for="priority-low" class="block cursor-pointer">
                                 <div class="font-medium text-blue-600 mb-1">LOW</div>
                                 <div class="text-sm text-gray-500">You can fix after we leave, just wanted to let you know.</div>
                             </label>
                         </div>
                         
-                        <div class="relative border rounded-md p-4 hover:bg-gray-50 cursor-pointer priority-option {{ old('priority', 'medium') == 'medium' ? 'selected-priority' : '' }}">
-                            <input type="radio" id="priority-medium" name="priority" value="medium" class="absolute opacity-0 priority-radio" {{ old('priority', 'medium') == 'medium' ? 'checked' : '' }}>
+                        <div class="border rounded-md p-4 cursor-pointer hover:bg-gray-50 relative priority-option">
+                            <input type="radio" id="priority-medium" name="priority" value="medium" class="absolute opacity-0" {{ old('priority', 'medium') == 'medium' ? 'checked' : '' }}>
                             <label for="priority-medium" class="block cursor-pointer">
                                 <div class="font-medium text-yellow-600 mb-1">MEDIUM</div>
                                 <div class="text-sm text-gray-500">You can fix the next cleaning day is fine.</div>
                             </label>
                         </div>
                         
-                        <div class="relative border rounded-md p-4 hover:bg-gray-50 cursor-pointer priority-option {{ old('priority') == 'high' ? 'selected-priority' : '' }}">
-                            <input type="radio" id="priority-high" name="priority" value="high" class="absolute opacity-0 priority-radio" {{ old('priority') == 'high' ? 'checked' : '' }}>
+                        <div class="border rounded-md p-4 cursor-pointer hover:bg-gray-50 relative priority-option">
+                            <input type="radio" id="priority-high" name="priority" value="high" class="absolute opacity-0" {{ old('priority') == 'high' ? 'checked' : '' }}>
                             <label for="priority-high" class="block cursor-pointer">
                                 <div class="font-medium text-red-600 mb-1">HIGH</div>
                                 <div class="text-sm text-gray-500">Fix asap please.</div>
@@ -65,17 +76,6 @@
                     </div>
                     
                     @error('priority')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div class="mb-6">
-                    <label for="description" class="block text-gray-700 text-sm font-medium mb-2">Description <span class="text-red-500">*</span></label>
-                    <textarea id="description" name="description" rows="4" required
-                        class="appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 @error('description') border-red-500 @enderror"
-                        placeholder="Please provide detailed information about the issue">{{ old('description') }}</textarea>
-                    
-                    @error('description')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
                 </div>
@@ -99,6 +99,8 @@
                             </p>
                         </div>
                     </div>
+                    
+                    <div id="image-preview" class="mt-4 grid grid-cols-2 md:grid-cols-3 gap-3 hidden"></div>
                     
                     @error('images')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -136,7 +138,7 @@
                     
                     <div class="mt-4">
                         <label for="phone" class="block text-gray-700 text-sm font-medium mb-2">Phone Number</label>
-                        <input id="phone" type="text" name="phone" value="{{ old('phone') }}"
+                        <input id="phone" type="tel" name="phone" value="{{ old('phone') }}"
                             class="appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 @error('phone') border-red-500 @enderror">
                         
                         @error('phone')
@@ -145,8 +147,8 @@
                     </div>
                 </div>
                 
-                <div class="flex items-center justify-end">
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                         Submit Request
                     </button>
                 </div>
@@ -157,14 +159,6 @@
 @endsection
 
 @push('scripts')
-<style>
-    .selected-priority {
-        background-color: #f0f9ff;
-        border-color: #3b82f6;
-        border-width: 2px;
-    }
-</style>
-
 <script>
     // Priority selection
     document.querySelectorAll('.priority-option').forEach(option => {
@@ -183,41 +177,87 @@
         });
     });
 
-    // Preview images before upload
-    document.getElementById('images').addEventListener('change', function(event) {
-        const preview = document.createElement('div');
-        preview.className = 'grid grid-cols-2 md:grid-cols-3 gap-2 mt-2';
-        preview.id = 'image-preview';
-        
-        const oldPreview = document.getElementById('image-preview');
-        if (oldPreview) {
-            oldPreview.remove();
+    // Image resize and preview functionality
+    const input = document.getElementById('images');
+    const previewContainer = document.getElementById('image-preview');
+
+    input.addEventListener('change', function(e) {
+        const files = Array.from(e.target.files);
+        if (!files.length) {
+            previewContainer.classList.add('hidden');
+            return;
         }
         
-        const files = event.target.files;
+        previewContainer.innerHTML = '';
+        previewContainer.classList.remove('hidden');
         
-        if (files.length > 0) {
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    const div = document.createElement('div');
-                    div.className = 'relative';
+        const resizedFiles = [];
+        let processedCount = 0;
+        
+        files.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const MAX_SIZE = 600;
+                    let width = img.width;
+                    let height = img.height;
                     
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.className = 'h-24 w-full object-cover rounded';
+                    // Calculate new dimensions
+                    if (width > height) {
+                        if (width > MAX_SIZE) {
+                            height *= MAX_SIZE / width;
+                            width = MAX_SIZE;
+                        }
+                    } else {
+                        if (height > MAX_SIZE) {
+                            width *= MAX_SIZE / height;
+                            height = MAX_SIZE;
+                        }
+                    }
                     
-                    div.appendChild(img);
-                    preview.appendChild(div);
-                }
-                
-                reader.readAsDataURL(file);
-            }
-            
-            event.target.parentElement.parentElement.parentElement.parentElement.appendChild(preview);
-        }
+                    // Create canvas and resize
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    canvas.toBlob(function(blob) {
+                        const resizedFile = new File([blob], file.name, {type: blob.type});
+                        resizedFiles[index] = resizedFile;
+                        processedCount++;
+                        
+                        // Show preview
+                        const previewDiv = document.createElement('div');
+                        previewDiv.className = 'relative';
+                        const previewImg = document.createElement('img');
+                        previewImg.src = canvas.toDataURL(file.type, 0.85);
+                        previewImg.className = 'h-24 w-full object-cover rounded border shadow-sm';
+                        previewDiv.appendChild(previewImg);
+                        
+                        // Add file name
+                        const fileName = document.createElement('p');
+                        fileName.textContent = file.name;
+                        fileName.className = 'text-xs text-gray-600 mt-1 truncate';
+                        previewDiv.appendChild(fileName);
+                        
+                        previewContainer.appendChild(previewDiv);
+                        
+                        // Update input files when all images are processed
+                        if (processedCount === files.length) {
+                            const dataTransfer = new DataTransfer();
+                            resizedFiles.forEach(file => {
+                                if (file) dataTransfer.items.add(file);
+                            });
+                            input.files = dataTransfer.files;
+                        }
+                    }, file.type, 0.85);
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
     });
 </script>
 @endpush 

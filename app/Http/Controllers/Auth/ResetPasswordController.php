@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Validation\Rules;
+use App\Models\User;
 
 class ResetPasswordController extends Controller
 {
@@ -17,8 +18,21 @@ class ResetPasswordController extends Controller
      */
     public function showResetForm(Request $request, $token = null)
     {
+        // Check if this is a verification token (for new technicians)
+        if ($request->has('email') && $token) {
+            $user = User::where('email', $request->email)->first();
+            if ($user && $user->isValidVerificationToken($token)) {
+                return view('auth.passwords.reset')->with([
+                    'token' => $token, 
+                    'email' => $request->email,
+                    'is_verification' => true,
+                    'user_name' => $user->name
+                ]);
+            }
+        }
+
         return view('auth.passwords.reset')->with(
-            ['token' => $token, 'email' => $request->email]
+            ['token' => $token, 'email' => $request->email, 'is_verification' => false]
         );
     }
 
@@ -33,9 +47,12 @@ class ResetPasswordController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Here we will attempt to reset the user's password. If it is successful we
-        // will update the password on an actual user model and persist it to the
-        // database. Otherwise we will parse the error and return the response.
+        // Check if this is a verification token reset
+        if ($request->has('is_verification') && $request->is_verification) {
+            return $this->resetWithVerificationToken($request);
+        }
+
+        // Standard password reset flow
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) use ($request) {
@@ -48,12 +65,37 @@ class ResetPasswordController extends Controller
             }
         );
 
-        // If the password was successfully reset, we will redirect the user back to
-        // the application's home authenticated view. If there is an error we can
-        // redirect them back to where they came from with their error message.
         return $status == Password::PASSWORD_RESET
                     ? redirect()->route('login')->with('status', __($status))
                     : back()->withInput($request->only('email'))
                             ->withErrors(['email' => __($status)]);
+    }
+
+    /**
+     * Handle password reset with verification token (for new technicians).
+     */
+    protected function resetWithVerificationToken(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return back()->withErrors(['email' => 'User not found.']);
+        }
+
+        if (!$user->isValidVerificationToken($request->token)) {
+            return back()->withErrors(['token' => 'This verification link is invalid or has expired.']);
+        }
+
+        // Update password and clear verification token
+        $user->update([
+            'password' => Hash::make($request->password),
+            'remember_token' => Str::random(60),
+        ]);
+
+        $user->clearVerificationToken();
+
+        event(new PasswordReset($user));
+
+        return redirect()->route('login')->with('status', 'Your account has been verified and password set successfully! You can now log in.');
     }
 } 

@@ -6,7 +6,9 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use App\Mail\TechnicianWelcomeMail;
 
 class TechnicianController extends Controller
 {
@@ -34,13 +36,12 @@ class TechnicianController extends Controller
         ]);
 
         $role = Role::where('slug', 'technician')->first();
-        $password = Str::random(10);
 
         $userData = [
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'password' => Hash::make($password),
+            'password' => Hash::make('password'), // Temporary password, will be changed via verification
             'invited_by' => auth()->id(),
             'role_id' => $role->id,
             'is_active' => true,
@@ -53,9 +54,22 @@ class TechnicianController extends Controller
         }
 
         $technician = User::create($userData);
+        $technician->assignRole('technician');
+
+        // Generate verification token and send welcome email
+        $verificationToken = $technician->generateVerificationToken();
+        $manager = auth()->user();
+        
+        try {
+            Mail::to($technician->email)->send(new TechnicianWelcomeMail($technician, $manager, $verificationToken));
+            $successMessage = 'Technician created successfully! A welcome email with account verification link has been sent to ' . $technician->email;
+        } catch (\Exception $e) {
+            // If email fails, still show success but mention email issue
+            $successMessage = 'Technician created successfully! However, there was an issue sending the welcome email. Please contact the technician directly.';
+        }
 
         return redirect()->route('technicians.index')
-            ->with('success', "Technician created successfully! Their temporary password is: {$password}");
+            ->with('success', $successMessage);
     }
 
     public function edit(User $user)
