@@ -63,9 +63,9 @@ Route::middleware(['auth'])->group(function () {
             if (!$user->hasActiveSubscription()) {
                 return redirect()->route('subscription.plans');
             }
-            return redirect()->route('manager.dashboard');
+            return redirect()->route('mobile.manager.dashboard');
         } else {
-            return redirect()->route('technician.dashboard');
+            return redirect()->route('mobile.technician.dashboard');
         }
     })->name('dashboard');
     
