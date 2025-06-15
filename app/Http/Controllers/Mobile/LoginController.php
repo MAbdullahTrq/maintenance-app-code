@@ -28,7 +28,7 @@ class LoginController extends Controller
             if (!$user->is_active) {
                 Auth::logout();
                 return back()->withErrors([
-                    'email' => 'Your account has been deactivated. Please contact the administrator.',
+                    'email' => 'Your account has been deactivated. Please contact your Manager.',
                 ]);
             }
             

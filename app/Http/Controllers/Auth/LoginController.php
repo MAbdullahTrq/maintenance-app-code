@@ -38,7 +38,7 @@ class LoginController extends Controller
                 Auth::logout();
                 
                 throw ValidationException::withMessages([
-                    'email' => ['Your account has been deactivated. Please contact the administrator.'],
+                    'email' => ['Your account has been deactivated. Please contact your Manager.'],
                 ]);
             }
 
@@ -51,9 +51,9 @@ class LoginController extends Controller
                     return redirect()->route('subscription.plans');
                 }
                 
-                return redirect()->intended(route('manager.dashboard'));
+                return redirect()->intended(route('mobile.manager.dashboard'));
             } else {
-                return redirect()->intended(route('technician.dashboard'));
+                return redirect()->intended(route('mobile.technician.dashboard'));
             }
         }
 
