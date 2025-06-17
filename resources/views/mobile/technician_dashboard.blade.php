@@ -66,14 +66,9 @@
             }
         },
 
-        limitTextMobile(text) {
+        limitText(text, limit) {
             if (!text) return '';
-            return text.length > 15 ? text.substring(0, 15) + '...' : text;
-        },
-
-        limitTextDesktop(text) {
-            if (!text) return '';
-            return text.length > 30 ? text.substring(0, 30) + '...' : text;
+            return text.length > limit ? text.substring(0, limit) + '...' : text;
         }
     }">
         <div class="grid grid-cols-3 gap-4 mb-6">
@@ -126,10 +121,7 @@
                             <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" @click="window.location.href='/t/r/' + req.id">
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
                                     <div class="font-semibold" x-text="req.property?.name || ''"></div>
-                                    <div class="text-xs md:text-sm text-blue-700 underline">
-                                        <span class="md:hidden" x-text="limitTextMobile(req.property?.address || '')"></span>
-                                        <span class="hidden md:inline" x-text="limitTextDesktop(req.property?.address || '')"></span>
-                                    </div>
+                                    <div class="text-xs md:text-sm text-blue-700 underline" x-text="limitText(req.property?.address || '', 15)"></div>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center" 
                                     :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-500 text-white' : (req.priority?.toLowerCase() === 'low' ? 'bg-yellow-200' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-100' : ''))">
@@ -178,10 +170,7 @@
                             <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" @click="window.location.href='/t/r/' + req.id">
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
                                     <div class="font-semibold" x-text="req.property?.name || ''"></div>
-                                    <div class="text-xs md:text-sm text-blue-700 underline">
-                                        <span class="md:hidden" x-text="limitTextMobile(req.property?.address || '')"></span>
-                                        <span class="hidden md:inline" x-text="limitTextDesktop(req.property?.address || '')"></span>
-                                    </div>
+                                    <div class="text-xs md:text-sm text-blue-700 underline" x-text="limitText(req.property?.address || '', 15)"></div>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center" 
                                     :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-500 text-white' : (req.priority?.toLowerCase() === 'low' ? 'bg-yellow-200' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-100' : ''))">
@@ -230,10 +219,7 @@
                             <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" @click="window.location.href='/t/r/' + req.id">
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
                                     <div class="font-semibold" x-text="req.property?.name || ''"></div>
-                                    <div class="text-xs md:text-sm text-blue-700 underline">
-                                        <span class="md:hidden" x-text="limitTextMobile(req.property?.address || '')"></span>
-                                        <span class="hidden md:inline" x-text="limitTextDesktop(req.property?.address || '')"></span>
-                                    </div>
+                                    <div class="text-xs md:text-sm text-blue-700 underline" x-text="limitText(req.property?.address || '', 15)"></div>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center" 
                                     :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-500 text-white' : (req.priority?.toLowerCase() === 'low' ? 'bg-yellow-200' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-100' : ''))">

@@ -76,10 +76,9 @@ class DashboardController extends Controller
         }
         $propertiesCount = $properties->count();
         $techniciansCount = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
-        
+        $requestsCount = $allRequests->count();
         // Count by status (for tabs)
         $allRequestsForCount = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->get();
-        $requestsCount = $allRequestsForCount->count(); // Total count for navigation
         $declinedCount = $allRequestsForCount->where('status', 'declined')->count();
         $assignedCount = $allRequestsForCount->where('status', 'assigned')->count();
         $acceptedCount = $allRequestsForCount->where('status', 'accepted')->count();
