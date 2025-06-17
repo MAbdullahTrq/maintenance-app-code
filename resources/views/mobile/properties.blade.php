@@ -31,7 +31,10 @@
                                     <a href="{{ route('mobile.properties.show', $property->id) }}" class="font-semibold text-blue-700 hover:text-blue-900 cursor-pointer">{{ $property->name }}</a>
                                 </div>
                             </td>
-                            <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">{{ $property->address }}</td>
+                            <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
+                                <span class="md:hidden">{{ Str::limit($property->address, 15) }}</span>
+                                <span class="hidden md:inline">{{ Str::limit($property->address, 30) }}</span>
+                            </td>
                             <td class="p-2 md:p-3 lg:p-4 align-top text-center" style="position: relative; overflow: visible;">
                                 <div class="relative" style="overflow: visible;">
                                     <button onclick="toggleDropdown(this)" class="px-2 py-1 text-gray-600 hover:text-gray-800 text-lg md:text-xl focus:outline-none dropdown-btn">
@@ -49,9 +52,9 @@
                                                 <i class="fas fa-qrcode mr-2 text-purple-500"></i>QR Code
                                             </a>
                                             @if($property->access_link)
-                                            <a href="{{ route('guest.request.form', $property->access_link) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
-                                                <i class="fas fa-link mr-2 text-orange-500"></i>Public Link
-                                            </a>
+                                                <button onclick="copyToClipboard('{{ $property->getRequestUrl() }}')" class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                                                    <i class="fas fa-copy mr-2 text-orange-500"></i>Copy Link
+                                                </button>
                                             @endif
                                         </div>
                                     </div>
@@ -62,13 +65,13 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
     </div>
 </div>
-@endsection
+<a href="{{ route('mobile.properties.create') }}" class="fixed bottom-6 right-6 bg-blue-600 text-white rounded-full w-14 h-14 flex items-center justify-center text-3xl shadow-lg z-50">
+    +
+</a>
 
-@push('scripts')
 <script>
 function toggleDropdown(button) {
     // Close all other dropdowns first
@@ -85,18 +88,20 @@ function toggleDropdown(button) {
 
 // Close dropdown when clicking outside
 document.addEventListener('click', function(event) {
-    if (!event.target.closest('.relative')) {
+    if (!event.target.closest('.dropdown-btn') && !event.target.closest('.dropdown-menu')) {
         document.querySelectorAll('.dropdown-menu').forEach(menu => {
             menu.classList.add('hidden');
         });
     }
 });
 
-// Prevent dropdown from closing when clicking inside it
-document.querySelectorAll('.dropdown-menu').forEach(menu => {
-    menu.addEventListener('click', function(event) {
-        event.stopPropagation();
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+        // You can add a toast notification here
+        alert('Link copied to clipboard!');
+    }, function(err) {
+        console.error('Could not copy text: ', err);
     });
-});
+}
 </script>
-@endpush
+@endsection
