@@ -32,8 +32,8 @@
                                 </div>
                             </td>
                             <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
-                                <span class="block md:hidden">{{ Str::limit($property->address, 15) }}</span>
-                                <span class="hidden md:block">{{ Str::limit($property->address, 30) }}</span>
+                                <span class="md:hidden">{{ Str::limit($property->address, 15) }}</span>
+                                <span class="hidden md:inline">{{ Str::limit($property->address, 30) }}</span>
                             </td>
                             <td class="p-2 md:p-3 lg:p-4 align-top text-center" style="position: relative; overflow: visible;">
                                 <div class="relative" style="overflow: visible;">
