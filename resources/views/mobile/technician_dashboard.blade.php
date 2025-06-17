@@ -64,6 +64,11 @@
                 this.sortBy = column;
                 this.sortDirection = 'desc';
             }
+        },
+
+        limitText(text, limit) {
+            if (!text) return '';
+            return text.length > limit ? text.substring(0, limit) + '...' : text;
         }
     }">
         <div class="grid grid-cols-3 gap-4 mb-6">
@@ -86,7 +91,13 @@
         </div>
         <div class="overflow-x-auto w-full">
             <template x-if="activeTab === 'assigned'">
-                <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-hidden">
+                <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-hidden table-fixed">
+                    <colgroup>
+                        <col class="w-2/5">
+                        <col class="w-1/6">
+                        <col class="w-1/6">
+                        <col class="w-1/12">
+                    </colgroup>
                     <thead>
                         <tr class="bg-gray-100 border-b border-gray-400">
                             <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Property</th>
@@ -110,14 +121,15 @@
                             <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" @click="window.location.href='/t/r/' + req.id">
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
                                     <div class="font-semibold" x-text="req.property?.name || ''"></div>
-                                    <div class="text-xs md:text-sm text-blue-700 underline" x-text="req.property?.address || ''"></div>
+                                    <div class="text-xs md:text-sm text-blue-700 underline" x-text="limitText(req.property?.address || '', 15)"></div>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center" 
                                     :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-500 text-white' : (req.priority?.toLowerCase() === 'low' ? 'bg-yellow-200' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-100' : ''))">
                                     <span x-text="req.priority ? req.priority.charAt(0).toUpperCase() + req.priority.slice(1) : ''"></span>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">
-                                    <span x-text="req.created_at ? new Date(req.created_at).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) + ' ' + new Date(req.created_at).toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'}) : '-'"></span>
+                                    <div x-text="req.created_at ? new Date(req.created_at).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) : '-'"></div>
+                                    <div class="text-xs text-gray-500" x-text="req.created_at ? new Date(req.created_at).toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'}) : '-'"></div>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top text-center">
                                     <a :href="'/t/r/' + req.id" class="inline-block text-blue-600 text-lg md:text-xl" @click.stop><i class="fas fa-eye"></i></a>
@@ -128,7 +140,13 @@
                 </table>
             </template>
             <template x-if="activeTab === 'accepted'">
-                <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-hidden">
+                <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-hidden table-fixed">
+                    <colgroup>
+                        <col class="w-2/5">
+                        <col class="w-1/6">
+                        <col class="w-1/6">
+                        <col class="w-1/12">
+                    </colgroup>
                     <thead>
                         <tr class="bg-gray-100 border-b border-gray-400">
                             <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Property</th>
@@ -152,14 +170,15 @@
                             <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" @click="window.location.href='/t/r/' + req.id">
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
                                     <div class="font-semibold" x-text="req.property?.name || ''"></div>
-                                    <div class="text-xs md:text-sm text-blue-700 underline" x-text="req.property?.address || ''"></div>
+                                    <div class="text-xs md:text-sm text-blue-700 underline" x-text="limitText(req.property?.address || '', 15)"></div>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center" 
                                     :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-500 text-white' : (req.priority?.toLowerCase() === 'low' ? 'bg-yellow-200' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-100' : ''))">
                                     <span x-text="req.priority ? req.priority.charAt(0).toUpperCase() + req.priority.slice(1) : ''"></span>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">
-                                    <span x-text="req.created_at ? new Date(req.created_at).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) + ' ' + new Date(req.created_at).toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'}) : '-'"></span>
+                                    <div x-text="req.created_at ? new Date(req.created_at).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) : '-'"></div>
+                                    <div class="text-xs text-gray-500" x-text="req.created_at ? new Date(req.created_at).toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'}) : '-'"></div>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top text-center">
                                     <a :href="'/t/r/' + req.id" class="inline-block text-blue-600 text-lg md:text-xl" @click.stop><i class="fas fa-eye"></i></a>
@@ -170,7 +189,13 @@
                 </table>
             </template>
             <template x-if="activeTab === 'completed'">
-                <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-hidden">
+                <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-hidden table-fixed">
+                    <colgroup>
+                        <col class="w-2/5">
+                        <col class="w-1/6">
+                        <col class="w-1/6">
+                        <col class="w-1/12">
+                    </colgroup>
                     <thead>
                         <tr class="bg-gray-100 border-b border-gray-400">
                             <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Property</th>
@@ -194,14 +219,15 @@
                             <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" @click="window.location.href='/t/r/' + req.id">
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
                                     <div class="font-semibold" x-text="req.property?.name || ''"></div>
-                                    <div class="text-xs md:text-sm text-blue-700 underline" x-text="req.property?.address || ''"></div>
+                                    <div class="text-xs md:text-sm text-blue-700 underline" x-text="limitText(req.property?.address || '', 15)"></div>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center" 
                                     :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-500 text-white' : (req.priority?.toLowerCase() === 'low' ? 'bg-yellow-200' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-100' : ''))">
                                     <span x-text="req.priority ? req.priority.charAt(0).toUpperCase() + req.priority.slice(1) : ''"></span>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">
-                                    <span x-text="req.created_at ? new Date(req.created_at).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) + ' ' + new Date(req.created_at).toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'}) : '-'"></span>
+                                    <div x-text="req.created_at ? new Date(req.created_at).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) : '-'"></div>
+                                    <div class="text-xs text-gray-500" x-text="req.created_at ? new Date(req.created_at).toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'}) : '-'"></div>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top text-center">
                                     <a :href="'/t/r/' + req.id" class="inline-block text-blue-600 text-lg md:text-xl" @click.stop><i class="fas fa-eye"></i></a>

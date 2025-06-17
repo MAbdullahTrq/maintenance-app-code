@@ -28,7 +28,13 @@
         </div>
         @if($pendingRequests->count())
         <div class="overflow-x-auto w-full">
-            <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-hidden">
+            <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-hidden table-fixed">
+                <colgroup>
+                    <col class="w-2/5">
+                    <col class="w-1/6">
+                    <col class="w-1/6">
+                    <col class="w-1/12">
+                </colgroup>
                 <thead>
                     <tr class="bg-gray-100 border-b border-gray-400">
                         <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Property</th>
@@ -42,12 +48,15 @@
                     <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" onclick="window.location.href='{{ route('mobile.request.show', $req->id) }}'">
                         <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
                             <span class="font-semibold">{{ $req->property->name }}</span><br>
-                            <span class="text-gray-500 text-xs md:text-sm">{{ $req->property->address }}</span>
+                            <span class="text-gray-500 text-xs md:text-sm">{{ Str::limit($req->property->address, 15) }}</span>
                         </td>
                         <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center {{ $req->priority == 'high' ? 'bg-red-500 text-white' : ($req->priority == 'low' ? 'bg-yellow-200' : ($req->priority == 'medium' ? 'bg-yellow-100' : '')) }}">
                             {{ ucfirst($req->priority) }}
                         </td>
-                        <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">{{ \Carbon\Carbon::parse($req->created_at)->format('d M, Y') }}</td>
+                        <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">
+                            <div>{{ \Carbon\Carbon::parse($req->created_at)->format('d M, Y') }}</div>
+                            <div class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($req->created_at)->format('H:i') }}</div>
+                        </td>
                         <td class="p-2 md:p-3 lg:p-4 align-top text-center">
                             <a href="{{ route('mobile.request.show', $req->id) }}" class="text-blue-600 hover:text-blue-800 text-lg md:text-xl" onclick="event.stopPropagation();">
                                 <i class="fas fa-eye"></i>
