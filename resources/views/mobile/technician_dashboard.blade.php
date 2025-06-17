@@ -66,11 +66,21 @@
             }
         },
 
-        limitText(text, limit) {
+        limitText(text, isMobile) {
             if (!text) return '';
+            const limit = isMobile ? 15 : 30;
             return text.length > limit ? text.substring(0, limit) + '...' : text;
+        },
+
+        isMobile() {
+            return window.innerWidth < 768;
         }
-    }">
+    }" x-init="
+        window.addEventListener('resize', () => {
+            // Force re-render when window is resized
+            $nextTick(() => {});
+        });
+    ">
         <div class="grid grid-cols-3 gap-4 mb-6">
             <button :class="activeTab === 'assigned' ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-700'" class="text-center rounded py-3 md:py-4 font-bold focus:outline-none transition" @click="activeTab = 'assigned'">
                 <div class="text-xs md:text-sm lg:text-base">Assigned</div>
@@ -121,7 +131,7 @@
                             <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" @click="window.location.href='/t/r/' + req.id">
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
                                     <div class="font-semibold" x-text="req.property?.name || ''"></div>
-                                    <div class="text-xs md:text-sm text-blue-700 underline" x-text="limitText(req.property?.address || '', 15)"></div>
+                                    <div class="text-xs md:text-sm text-blue-700 underline" x-text="limitText(req.property?.address || '', isMobile())"></div>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center" 
                                     :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-500 text-white' : (req.priority?.toLowerCase() === 'low' ? 'bg-yellow-200' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-100' : ''))">
@@ -170,7 +180,7 @@
                             <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" @click="window.location.href='/t/r/' + req.id">
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
                                     <div class="font-semibold" x-text="req.property?.name || ''"></div>
-                                    <div class="text-xs md:text-sm text-blue-700 underline" x-text="limitText(req.property?.address || '', 15)"></div>
+                                    <div class="text-xs md:text-sm text-blue-700 underline" x-text="limitText(req.property?.address || '', isMobile())"></div>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center" 
                                     :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-500 text-white' : (req.priority?.toLowerCase() === 'low' ? 'bg-yellow-200' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-100' : ''))">
@@ -219,7 +229,7 @@
                             <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" @click="window.location.href='/t/r/' + req.id">
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
                                     <div class="font-semibold" x-text="req.property?.name || ''"></div>
-                                    <div class="text-xs md:text-sm text-blue-700 underline" x-text="limitText(req.property?.address || '', 15)"></div>
+                                    <div class="text-xs md:text-sm text-blue-700 underline" x-text="limitText(req.property?.address || '', isMobile())"></div>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center" 
                                     :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-500 text-white' : (req.priority?.toLowerCase() === 'low' ? 'bg-yellow-200' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-100' : ''))">
