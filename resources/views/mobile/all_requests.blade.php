@@ -81,7 +81,7 @@
                             <span class="font-semibold">{{ $req->property->name }}</span><br>
                             <span class="text-gray-500 text-xs md:text-sm">
                                 <span class="block md:hidden bg-red-100">MOBILE(15): {{ Str::limit($req->property->address, 15) }}</span>
-                                <span class="hidden md:block bg-green-100">DESKTOP(30): {{ Str::limit($req->property->address, 30) }}</span>
+                                <span class="block md:block bg-green-100">DESKTOP(30): {{ Str::limit($req->property->address, 30) }}</span>
                             </span>
                         </td>
                         <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center {{ $req->priority == 'high' ? 'bg-red-500 text-white' : ($req->priority == 'low' ? 'bg-yellow-200' : ($req->priority == 'medium' ? 'bg-yellow-100' : '')) }}">
