@@ -53,18 +53,15 @@ class TechnicianController extends Controller
         $user->password = bcrypt('password'); // Temporary password, will be changed via verification
         $user->invited_by = auth()->id();
 
-        // Set custom role_id for your app
-        $technicianRole = \App\Models\Role::where('slug', 'technician')->first();
-        if ($technicianRole) {
-            $user->role_id = $technicianRole->id;
-        }
-
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('technician-profiles', 'public');
             $user->image = $path;
         }
+        
+        // Get the technician role and assign it
+        $technicianRole = \App\Models\Role::where('slug', 'technician')->first();
+        $user->role_id = $technicianRole->id;
         $user->save();
-        $user->assignRole('technician');
 
         // Generate verification token and send welcome email
         $verificationToken = $user->generateVerificationToken();

@@ -54,7 +54,6 @@ class TechnicianController extends Controller
         }
 
         $technician = User::create($userData);
-        $technician->assignRole('technician');
 
         // Generate verification token and send welcome email
         $verificationToken = $technician->generateVerificationToken();
