@@ -133,7 +133,7 @@
             <div class="flex flex-col items-center py-3 md:py-4">
                 <a href="{{ route('mobile.manager.all-requests') }}" class="flex flex-col items-center group">
                     <i class="fas fa-file-alt text-2xl md:text-3xl lg:text-4xl text-gray-700 group-hover:underline"></i>
-                    <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ isset($allRequests) ? $allRequests->count() : (isset($requestsCount) ? $requestsCount : 0) }}</div>
+                    <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ isset($requestsCount) ? $requestsCount : 0 }}</div>
                 </a>
                 <a href="{{ route('mobile.requests.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative">
                     <span class="text-black text-xl md:text-2xl lg:text-3xl font-bold leading-none">+</span>
