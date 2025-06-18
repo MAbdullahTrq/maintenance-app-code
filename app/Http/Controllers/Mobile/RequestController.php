@@ -12,7 +12,6 @@ use App\Mail\TechnicianCommentNotification;
 use App\Mail\ManagerCommentNotification;
 use App\Mail\TechnicianStartedRequesterNotification;
 use App\Mail\TechnicianCompletedRequesterNotification;
-use App\Mail\TechnicianCommentRequesterNotification;
 use Illuminate\Support\Facades\Mail;
 
 class RequestController extends Controller
@@ -34,146 +33,126 @@ class RequestController extends Controller
 
     public function approve(Request $request, $id)
     {
-        $maintenance = MaintenanceRequest::findOrFail($id);
+        $request->validate([
+            'technician_id' => 'required|exists:users,id',
+        ]);
+        $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);
+        $technician = \App\Models\User::findOrFail($request->technician_id);
+        $maintenance->assigned_to = $technician->id;
         $maintenance->status = 'assigned';
-        $maintenance->assigned_to = $request->input('technician_id');
+        $maintenance->approved_by = auth()->id();
         $maintenance->save();
-
         // Send notification to technician
-        $technician = \App\Models\User::findOrFail($request->input('technician_id'));
         Mail::to($technician->email)->send(new TechnicianAssignedNotification($maintenance));
+        $maintenance->comments()->create([
+            'user_id' => auth()->id(),
+            'comment' => 'Request approved and assigned to ' . $technician->name . '.',
+        ]);
 
-        return redirect()->route('mobile.request.show', $id)->with('success', 'Request assigned to technician.');
-    }
-
-    public function accept($id)
-    {
-        $maintenance = MaintenanceRequest::findOrFail($id);
-        if ($maintenance->status === 'assigned' && $maintenance->assigned_to == auth()->id()) {
-            $maintenance->status = 'accepted';
-            $maintenance->save();
-        }
-        return redirect()->route('mobile.request.show', $id)->with('success', 'Request accepted.');
+        return redirect()->route('mobile.request.show', $id)->with('success', 'Request approved and technician assigned.');
     }
 
     public function decline(Request $request, $id)
     {
-        $maintenance = MaintenanceRequest::findOrFail($id);
+        $request->validate([
+            'decline_reason' => 'required|string',
+        ]);
+        $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);
         $maintenance->status = 'declined';
         $maintenance->save();
-        // Optionally, save the comment as a note or in a comments table
+        $maintenance->comments()->create([
+            'user_id' => auth()->id(),
+            'comment' => 'Request declined: ' . $request->decline_reason,
+        ]);
+
         return redirect()->route('mobile.request.show', $id)->with('success', 'Request declined.');
     }
 
-    public function start($id)
+    public function complete(Request $request, $id)
     {
-        $maintenance = MaintenanceRequest::findOrFail($id);
-        if ($maintenance->status === 'accepted' && $maintenance->assigned_to == auth()->id()) {
-            $maintenance->status = 'started';
-            $maintenance->started_at = now();
-            $maintenance->save();
-
-            // Send notifications
-            Mail::to($maintenance->property->manager->email)
-                ->send(new TechnicianStartedNotification($maintenance));
-
-            if ($maintenance->requester_email) {
-                Mail::to($maintenance->requester_email)
-                    ->send(new TechnicianStartedRequesterNotification($maintenance));
-            }
-
-            return redirect()->route('mobile.request.show', $id)->with('success', 'Work started.');
-        }
-        return redirect()->route('mobile.request.show', $id)->with('error', 'Cannot start this request.');
-    }
-
-    public function finish($id)
-    {
-        $maintenance = MaintenanceRequest::findOrFail($id);
-        if ($maintenance->status === 'started' && $maintenance->assigned_to == auth()->id()) {
-            $maintenance->status = 'completed';
-            $maintenance->completed_at = now();
-            $maintenance->save();
-
-            // Send notifications
-            Mail::to($maintenance->property->manager->email)
-                ->send(new TechnicianCompletedNotification($maintenance));
-
-            if ($maintenance->requester_email) {
-                Mail::to($maintenance->requester_email)
-                    ->send(new TechnicianCompletedRequesterNotification($maintenance));
-            }
-
-            return redirect()->route('mobile.request.show', $id)->with('success', 'Work finished.');
-        }
-        return redirect()->route('mobile.request.show', $id)->with('error', 'Cannot finish this request.');
-    }
-
-    public function complete($id)
-    {
-        $maintenance = MaintenanceRequest::findOrFail($id);
+        $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);
         $maintenance->status = 'completed';
         $maintenance->completed_at = now();
         $maintenance->save();
-        return redirect()->route('mobile.request.show', $id)->with('success', 'Request marked as complete.');
+        $maintenance->comments()->create([
+            'user_id' => auth()->id(),
+            'comment' => 'Request marked as completed by manager.',
+        ]);
+
+        return redirect()->route('mobile.request.show', $id)->with('success', 'Request marked as completed.');
     }
 
-    public function close($id)
+    public function close(Request $request, $id)
     {
-        $maintenance = MaintenanceRequest::findOrFail($id);
+        $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);
         $maintenance->status = 'closed';
         $maintenance->save();
+        $maintenance->comments()->create([
+            'user_id' => auth()->id(),
+            'comment' => 'Request closed by manager.',
+        ]);
+
         return redirect()->route('mobile.request.show', $id)->with('success', 'Request closed.');
     }
 
-    public function assignTechnician(Request $request, $id)
+    public function accept(Request $request, $id)
     {
-        $maintenance = MaintenanceRequest::findOrFail($id);
-        $request->validate([
-            'technician_id' => 'required|exists:users,id',
-        ]);
-        $maintenance->assigned_to = $request->input('technician_id');
-        if ($maintenance->status === 'accepted') {
-            $maintenance->status = 'assigned';
-        }
+        $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);
+        $maintenance->status = 'accepted';
         $maintenance->save();
-        return redirect()->route('mobile.request.show', $id)->with('success', 'Technician assigned successfully.');
+        $maintenance->comments()->create([
+            'user_id' => auth()->id(),
+            'comment' => 'Request accepted by technician.',
+        ]);
+
+        return redirect()->route('mobile.request.show', $id)->with('success', 'Request accepted.');
     }
 
-    public function create()
+    public function start(Request $request, $id)
     {
-        $user = auth()->user();
-        $properties = \App\Models\Property::where('manager_id', $user->id)->get();
-        $propertiesCount = $properties->count();
-        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
-        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->count();
-        return view('mobile.request_create', compact('properties', 'propertiesCount', 'techniciansCount', 'requestsCount'));
+        $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);
+        $maintenance->status = 'started';
+        $maintenance->started_at = now();
+        $maintenance->save();
+        // Send notifications
+        Mail::to($maintenance->property->manager->email)
+            ->send(new TechnicianStartedNotification($maintenance));
+
+        if ($maintenance->requester_email) {
+            Mail::to($maintenance->requester_email)
+                ->send(new TechnicianStartedRequesterNotification($maintenance));
+        }
+        $maintenance->comments()->create([
+            'user_id' => auth()->id(),
+            'comment' => 'Request started by technician.',
+        ]);
+
+        return redirect()->route('mobile.request.show', $id)->with('success', 'Request started.');
     }
 
-    public function store(Request $request)
+    public function finish(Request $request, $id)
     {
         $request->validate([
-            'property_id' => 'required|exists:properties,id',
-            'title' => 'required',
-            'description' => 'required',
-            'location' => 'required',
-            'priority' => 'required',
+            'completion_comment' => 'required|string',
         ]);
-        $req = new \App\Models\MaintenanceRequest();
-        $req->property_id = $request->property_id;
-        $req->title = $request->title;
-        $req->description = $request->description;
-        $req->location = $request->location;
-        $req->priority = $request->priority;
-        $req->status = 'pending';
-        $req->save();
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('requests', 'public');
-                $req->images()->create(['image_path' => $path]);
-            }
+        $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);
+        $maintenance->status = 'completed';
+        $maintenance->completed_at = now();
+        $maintenance->save();
+        // Send notifications
+        Mail::to($maintenance->property->manager->email)
+            ->send(new TechnicianCompletedNotification($maintenance));
+
+        if ($maintenance->requester_email) {
+            Mail::to($maintenance->requester_email)
+                ->send(new TechnicianCompletedRequesterNotification($maintenance));
         }
-        return redirect()->route('mobile.manager.all-requests')->with('success', 'Request submitted!');
+        $maintenance->comments()->create([
+            'user_id' => auth()->id(),
+            'comment' => 'Request completed by technician: ' . $request->completion_comment,
+        ]);
+
+        return redirect()->route('mobile.request.show', $id)->with('success', 'Request completed.');
     }
 
     public function comment(Request $request, $id)
@@ -189,14 +168,9 @@ class RequestController extends Controller
 
         // Send notifications based on who is commenting
         if (auth()->user()->isTechnician()) {
-            // Technician commenting - notify manager and requester
+            // Technician commenting - notify manager only (removed requester notification)
             Mail::to($maintenance->property->manager->email)
                 ->send(new TechnicianCommentNotification($maintenance, $comment));
-
-            if ($maintenance->requester_email) {
-                Mail::to($maintenance->requester_email)
-                    ->send(new TechnicianCommentRequesterNotification($maintenance, $comment));
-            }
         } elseif (auth()->user()->isPropertyManager() || auth()->user()->isAdmin()) {
             // Manager commenting - notify technician
             if ($maintenance->assignedTechnician) {

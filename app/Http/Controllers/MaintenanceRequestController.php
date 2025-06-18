@@ -18,7 +18,6 @@ use App\Mail\ManagerCommentNotification;
 use App\Mail\NewRequestNotification;
 use App\Mail\TechnicianStartedRequesterNotification;
 use App\Mail\TechnicianCompletedRequesterNotification;
-use App\Mail\TechnicianCommentRequesterNotification;
 use Illuminate\Support\Facades\Mail;
 
 class MaintenanceRequestController extends Controller
@@ -358,14 +357,9 @@ class MaintenanceRequestController extends Controller
 
         // Send notifications based on who is commenting
         if (Auth::user()->isTechnician()) {
-            // Technician commenting - notify manager and requester
+            // Technician commenting - notify manager only (removed requester notification)
             Mail::to($maintenance->property->manager->email)
                 ->send(new TechnicianCommentNotification($maintenance, $comment));
-
-            if ($maintenance->requester_email) {
-                Mail::to($maintenance->requester_email)
-                    ->send(new TechnicianCommentRequesterNotification($maintenance, $comment));
-            }
         } elseif (Auth::user()->isPropertyManager() || Auth::user()->isAdmin()) {
             // Manager commenting - notify technician
             if ($maintenance->assignedTechnician) {
