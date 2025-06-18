@@ -73,7 +73,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [UserController::class, 'showProfile'])->name('profile.edit');
     Route::put('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
     Route::get('/profile/password', [UserController::class, 'showChangePasswordForm'])->name('password.change');
-    Route::put('/profile/password', [UserController::class, 'changePassword'])->name('profile.password.update');
+    Route::put('/profile/password', [UserController::class, 'changePassword'])->name('password.update');
 
     // Admin routes
     Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->prefix('admin')->name('admin.')->group(function () {
