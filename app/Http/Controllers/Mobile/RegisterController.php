@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Mobile;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\WelcomeMail;
@@ -25,20 +26,15 @@ class RegisterController extends Controller
             'password' => 'required|string|min:6|confirmed',
         ]);
 
+        // Get the property manager role
+        $role = Role::where('slug', 'property_manager')->first();
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role_id' => $role->id,
         ]);
-
-        // Assign property manager role
-        if (method_exists($user, 'assignRole')) {
-            $user->assignRole('property_manager');
-        } elseif (property_exists($user, 'role_id')) {
-            // If using a role_id column
-            $user->role_id = /* property manager role id */ 2;
-            $user->save();
-        }
 
         Auth::login($user);
 
