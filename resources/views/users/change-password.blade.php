@@ -72,7 +72,7 @@
             </div>
             
             <div class="p-6">
-                <form action="{{ route('password.update') }}" method="POST">
+                <form action="{{ route('profile.password.update') }}" method="POST">
                     @csrf
                     @method('PUT')
                     
