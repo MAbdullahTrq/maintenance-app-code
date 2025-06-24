@@ -21,28 +21,54 @@ class EmailVerificationController extends Controller
     /**
      * Handle email verification.
      */
-    public function verify(Request $request)
+    public function verify(Request $request, $token)
     {
-        $request->validate([
-            'token' => 'required|string',
-            'email' => 'required|email',
+        \Log::info('Email verification attempt', [
+            'token' => $token,
+            'email' => $request->email,
+            'request_data' => $request->all()
         ]);
+
+        // Validate email parameter
+        if (!$request->has('email') || !filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
+            \Log::warning('Verification failed: Invalid email parameter', ['email' => $request->email]);
+            return redirect()->route('verification.notice')
+                ->with('error', 'Invalid verification link. Missing or invalid email parameter.');
+        }
 
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
-            return redirect()->route('login')
-                ->with('error', 'Invalid verification link.');
+            \Log::warning('Verification failed: User not found', ['email' => $request->email]);
+            return redirect()->route('verification.notice')
+                ->with('error', 'Invalid verification link. User not found.');
         }
+
+        \Log::info('User found for verification', [
+            'user_id' => $user->id,
+            'is_active' => $user->is_active,
+            'stored_token' => $user->verification_token,
+            'token_expires' => $user->verification_token_expires_at,
+            'provided_token' => $token
+        ]);
 
         if ($user->is_active) {
+            \Log::info('User already active', ['user_id' => $user->id]);
             return redirect()->route('login')
-                ->with('message', 'Email already verified. You can now log in.');
+                ->with('success', 'Email already verified. You can now log in.');
         }
 
-        if (!$user->isValidVerificationToken($request->token)) {
+        if (!$user->isValidVerificationToken($token)) {
+            \Log::warning('Invalid verification token', [
+                'user_id' => $user->id,
+                'provided_token' => $token,
+                'stored_token' => $user->verification_token,
+                'token_expires' => $user->verification_token_expires_at,
+                'is_future' => $user->verification_token_expires_at ? $user->verification_token_expires_at->isFuture() : null
+            ]);
             return redirect()->route('verification.notice')
-                ->with('error', 'Invalid or expired verification link. Please request a new verification email.');
+                ->with('error', 'Invalid or expired verification link. Please request a new verification email.')
+                ->with('email', $user->email);
         }
 
         // Activate the user account
@@ -53,6 +79,8 @@ class EmailVerificationController extends Controller
 
         // Clear the verification token
         $user->clearVerificationToken();
+
+        \Log::info('User verified successfully', ['user_id' => $user->id]);
 
         return redirect()->route('login')
             ->with('success', 'Email verified successfully! You can now log in to your account.');

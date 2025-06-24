@@ -42,17 +42,31 @@ Route::get('/request/{accessLink}/success', [GuestRequestController::class, 'sho
 Route::get('/request/{accessLink}/status/{requestId}', [GuestRequestController::class, 'showRequestStatus'])->name('guest.request.status');
 
 // Authentication routes
+// Email verification routes (accessible to both guests and authenticated users)
+Route::get('/email/verify', [EmailVerificationController::class, 'notice'])->name('verification.notice');
+Route::get('/email/verify/{token}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
+Route::get('/email/resend-form', [EmailVerificationController::class, 'showResendForm'])->name('verification.resend.form');
+Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->name('verification.resend');
+
+// Debug route to test verification
+Route::get('/debug/verify/{token}', function($token) {
+    \Log::info('Debug verification route hit', [
+        'token' => $token,
+        'email' => request('email'),
+        'all_request' => request()->all()
+    ]);
+    return response()->json([
+        'token' => $token,
+        'email' => request('email'),
+        'query_params' => request()->all()
+    ]);
+});
+
 Route::middleware('guest')->group(function () {
     Route::get('/web/login', [LoginController::class, 'showLoginForm'])->name('web.login');
     Route::post('/web/login', [LoginController::class, 'login']);
     Route::get('/web/register', [RegisterController::class, 'showRegistrationForm'])->name('web.register');
     Route::post('/web/register', [RegisterController::class, 'register']);
-    
-    // Email verification routes
-    Route::get('/email/verify', [EmailVerificationController::class, 'notice'])->name('verification.notice');
-    Route::get('/email/verify/{token}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
-    Route::get('/email/resend-form', [EmailVerificationController::class, 'showResendForm'])->name('verification.resend.form');
-    Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->name('verification.resend');
 });
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
