@@ -8,11 +8,22 @@
 
 @section('content')
 @if(isset($hasActiveSubscription) && !$hasActiveSubscription)
-    <div class="flex justify-center mb-4">
-        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded w-full max-w-2xl">
-            <div class="flex items-center justify-between">
-                <span class="font-semibold">You need an active subscription to manage properties and requests.</span>
-                <a href="/m/subscription/plans" class="ml-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-200">Subscribe Now</a>
+    <div class="mb-6 mx-4">
+        <div class="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl shadow-lg p-6 border-2 border-orange-300">
+            <div class="text-center">
+                <div class="mb-4">
+                    <div class="text-4xl mb-2">⚠️</div>
+                    <h2 class="text-xl md:text-2xl font-bold mb-2">Subscription Required</h2>
+                    <p class="text-lg md:text-xl font-medium mb-4">You need an active subscription to manage properties and maintenance requests.</p>
+                </div>
+                <div class="space-y-3">
+                    <a href="/m/subscription/plans" class="block w-full bg-white text-orange-600 font-bold py-4 px-6 rounded-lg text-lg md:text-xl hover:bg-gray-100 transition duration-200 shadow-md">
+                        🚀 Subscribe Now - Get Started!
+                    </a>
+                    <div class="text-sm opacity-90">
+                        <p>✅ Unlimited Properties • ✅ Unlimited Requests • ✅ Full Management Access</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
