@@ -43,6 +43,10 @@
                     Don't have an account?
                     <a href="{{ route('register') }}" class="text-blue-600 hover:text-blue-800 font-medium transition duration-200">Sign up</a>
                 </div>
+                <div class="text-sm text-gray-600">
+                    Need to verify your email?
+                    <a href="{{ route('verification.resend.form') }}" class="text-blue-600 hover:text-blue-800 font-medium transition duration-200">Resend verification</a>
+                </div>
             </div>
         </div>
     </div>

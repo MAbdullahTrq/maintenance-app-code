@@ -27,9 +27,17 @@ class LoginController extends Controller
             // Check if user is active
             if (!$user->is_active) {
                 Auth::logout();
-                return back()->withErrors([
-                    'email' => 'Your account has been deactivated. Please contact your Manager.',
-                ]);
+                
+                // Check if it's a newly registered user who hasn't verified email
+                if ($user->verification_token && $user->verification_token_expires_at && $user->verification_token_expires_at->isFuture()) {
+                    return redirect()->route('verification.notice')
+                        ->with('error', 'Please verify your email address before logging in. Check your inbox for the verification email.')
+                        ->with('email', $user->email);
+                } else {
+                    return back()->withErrors([
+                        'email' => 'Your account has been deactivated. Please contact your manager or support.',
+                    ]);
+                }
             }
             
             // Redirect based on user role

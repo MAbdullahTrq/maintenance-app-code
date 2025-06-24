@@ -46,17 +46,23 @@ class PropertyController extends Controller
         $request->validate([
             'name' => 'required',
             'address' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
         $property = new \App\Models\Property();
         $property->name = $request->name;
         $property->address = $request->address;
         $property->special_instructions = $request->special_instructions;
         $property->manager_id = auth()->id();
+        
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('property-images', 'public');
-            $property->image = $path;
+            $property->image = $this->imageService->optimizeAndResize(
+                $request->file('image'),
+                'property-images',
+                800,
+                600
+            );
         }
+        
         $property->save();
         return redirect()->route('mobile.properties.index')->with('success', 'Property added!');
     }

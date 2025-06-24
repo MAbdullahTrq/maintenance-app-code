@@ -12,10 +12,94 @@ use App\Mail\TechnicianCommentNotification;
 use App\Mail\ManagerCommentNotification;
 use App\Mail\TechnicianStartedRequesterNotification;
 use App\Mail\TechnicianCompletedRequesterNotification;
+use App\Mail\NewRequestNotification;
+use App\Services\ImageOptimizationService;
+use App\Models\RequestImage;
 use Illuminate\Support\Facades\Mail;
 
 class RequestController extends Controller
 {
+    protected $imageService;
+
+    public function __construct(ImageOptimizationService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
+    /**
+     * Show the form for creating a new maintenance request
+     */
+    public function create()
+    {
+        $user = auth()->user();
+        $properties = \App\Models\Property::where('manager_id', $user->id)->get();
+        $propertiesCount = $properties->count();
+        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { 
+            $q->where('slug', 'technician'); 
+        })->where('invited_by', $user->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->count();
+        
+        return view('mobile.request_create', compact('properties', 'propertiesCount', 'techniciansCount', 'requestsCount'));
+    }
+
+    /**
+     * Store a newly created maintenance request
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'location' => 'required|string|max:255',
+            'priority' => 'required|in:low,medium,high',
+            'property_id' => 'required|exists:properties,id',
+            'images.*' => 'nullable|image|max:10240', // Allow up to 10MB per image, will be resized
+        ]);
+
+        // Check if user can create request for this property
+        $property = \App\Models\Property::findOrFail($request->property_id);
+        if ($property->manager_id !== auth()->id()) {
+            abort(403, 'Unauthorized to create request for this property');
+        }
+
+        $maintenanceRequest = MaintenanceRequest::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'location' => $request->location,
+            'priority' => $request->priority,
+            'property_id' => $request->property_id,
+            'requester_name' => auth()->user()->name,
+            'requester_email' => auth()->user()->email,
+            'requester_phone' => auth()->user()->phone,
+            'status' => 'pending',
+        ]);
+
+        // Handle image uploads with resizing
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                // Use the image optimization service to resize and optimize
+                $optimizedPath = $this->imageService->optimizeAndResize(
+                    $image,
+                    'maintenance_requests',
+                    800, // width
+                    600  // height
+                );
+                
+                RequestImage::create([
+                    'maintenance_request_id' => $maintenanceRequest->id,
+                    'image_path' => $optimizedPath,
+                    'type' => 'request',
+                ]);
+            }
+        }
+
+        // Send notification to property manager
+        Mail::to($property->manager->email)->send(new NewRequestNotification($maintenanceRequest));
+
+        return redirect()->route('mobile.manager.dashboard')
+            ->with('success', 'Maintenance request created successfully.');
+    }
+
     public function show($id)
     {
         $request = MaintenanceRequest::with(['property', 'assignedTechnician', 'images'])->findOrFail($id);

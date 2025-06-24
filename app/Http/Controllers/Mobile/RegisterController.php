@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Mail\WelcomeMail;
+use App\Mail\EmailVerificationMail;
 use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends Controller
@@ -29,18 +29,23 @@ class RegisterController extends Controller
         // Get the property manager role
         $role = Role::where('slug', 'property_manager')->first();
 
+        // Create user account as inactive by default
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role_id' => $role->id,
+            'is_active' => false, // Account starts as inactive
         ]);
 
-        Auth::login($user);
+        // Generate verification token
+        $verificationToken = $user->generateVerificationToken();
 
-        // Send welcome email
-        Mail::to($user->email)->send(new WelcomeMail($user));
+        // Send verification email instead of welcome email
+        Mail::to($user->email)->send(new EmailVerificationMail($user, $verificationToken));
 
-        return redirect()->route('mobile.manager.dashboard');
+        // Redirect to verification notice instead of dashboard
+        return redirect()->route('verification.notice')
+            ->with('success', 'Registration successful! Please check your email to verify your account.');
     }
 } 

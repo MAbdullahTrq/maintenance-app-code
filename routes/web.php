@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GuestRequestController;
 use App\Http\Controllers\MaintenanceRequestController;
@@ -46,6 +47,12 @@ Route::middleware('guest')->group(function () {
     Route::post('/web/login', [LoginController::class, 'login']);
     Route::get('/web/register', [RegisterController::class, 'showRegistrationForm'])->name('web.register');
     Route::post('/web/register', [RegisterController::class, 'register']);
+    
+    // Email verification routes
+    Route::get('/email/verify', [EmailVerificationController::class, 'notice'])->name('verification.notice');
+    Route::get('/email/verify/{token}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
+    Route::get('/email/resend-form', [EmailVerificationController::class, 'showResendForm'])->name('verification.resend.form');
+    Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->name('verification.resend');
 });
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

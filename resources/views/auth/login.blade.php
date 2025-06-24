@@ -51,8 +51,13 @@
             </div>
             
             <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
-                <div class="text-center text-sm text-gray-600">
-                    Don't have an account? <a href="{{ route('login') }}" class="text-blue-600 hover:text-blue-800">Login</a>
+                <div class="text-center text-sm text-gray-600 space-y-2">
+                    <div>
+                        Don't have an account? <a href="{{ route('web.register') }}" class="text-blue-600 hover:text-blue-800">Register</a>
+                    </div>
+                    <div>
+                        Need to verify your email? <a href="{{ route('verification.resend.form') }}" class="text-blue-600 hover:text-blue-800">Resend verification</a>
+                    </div>
                 </div>
             </div>
         </div>
