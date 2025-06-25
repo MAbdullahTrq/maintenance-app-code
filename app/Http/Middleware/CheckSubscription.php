@@ -21,7 +21,12 @@ class CheckSubscription
         }
         
         if (!$request->user() || !$request->user()->hasActiveSubscription()) {
-            return redirect()->route('subscription.plans')
+            // Check if this is a mobile route request
+            $isMobileRoute = $request->is('m/*') || $request->is('mobile/*');
+            
+            $redirectRoute = $isMobileRoute ? 'mobile.subscription.plans' : 'subscription.plans';
+            
+            return redirect()->route($redirectRoute)
                 ->with('error', 'You need an active subscription to access this feature.');
         }
 

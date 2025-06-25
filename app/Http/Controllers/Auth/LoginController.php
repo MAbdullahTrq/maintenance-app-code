@@ -55,7 +55,7 @@ class LoginController extends Controller
             } elseif ($user->isPropertyManager()) {
                 // Check if property manager has an active subscription
                 if (!$user->hasActiveSubscription()) {
-                    return redirect()->route('subscription.plans');
+                    return redirect()->route('mobile.subscription.plans');
                 }
                 
                 return redirect()->intended(route('mobile.manager.dashboard'));

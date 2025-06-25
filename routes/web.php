@@ -82,7 +82,7 @@ Route::middleware(['auth'])->group(function () {
         } elseif ($user->isPropertyManager()) {
             // Check if property manager has an active subscription
             if (!$user->hasActiveSubscription()) {
-                return redirect()->route('subscription.plans');
+                return redirect()->route('mobile.subscription.plans');
             }
             return redirect()->route('mobile.manager.dashboard');
         } else {
