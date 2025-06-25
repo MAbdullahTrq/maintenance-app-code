@@ -139,18 +139,18 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/subscription/history', [SubscriptionController::class, 'history'])->name('subscription.history');
         Route::post('/subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
         
-        // Technician management routes
-        Route::get('/technicians', [TechnicianController::class, 'index'])->name('technicians.index');
-        Route::get('/technicians/create', [TechnicianController::class, 'create'])->name('technicians.create');
-        Route::post('/technicians', [TechnicianController::class, 'store'])->name('technicians.store');
-        Route::get('/technicians/{user}/edit', [TechnicianController::class, 'edit'])->name('technicians.edit');
-        Route::put('/technicians/{user}', [TechnicianController::class, 'update'])->name('technicians.update');
-        Route::delete('/technicians/{user}', [TechnicianController::class, 'destroy'])->name('technicians.destroy');
-        Route::put('/technicians/{user}/toggle-active', [TechnicianController::class, 'toggleActive'])->name('technicians.toggle-active');
-        Route::post('/technicians/{user}/reset-password', [TechnicianController::class, 'resetPassword'])->name('technicians.reset-password');
-        
         // Property manager routes with active subscription
         Route::middleware(['subscription'])->group(function () {
+            // Technician management routes
+            Route::get('/technicians', [TechnicianController::class, 'index'])->name('technicians.index');
+            Route::get('/technicians/create', [TechnicianController::class, 'create'])->name('technicians.create');
+            Route::post('/technicians', [TechnicianController::class, 'store'])->name('technicians.store');
+            Route::get('/technicians/{user}/edit', [TechnicianController::class, 'edit'])->name('technicians.edit');
+            Route::put('/technicians/{user}', [TechnicianController::class, 'update'])->name('technicians.update');
+            Route::delete('/technicians/{user}', [TechnicianController::class, 'destroy'])->name('technicians.destroy');
+            Route::put('/technicians/{user}/toggle-active', [TechnicianController::class, 'toggleActive'])->name('technicians.toggle-active');
+            Route::post('/technicians/{user}/reset-password', [TechnicianController::class, 'resetPassword'])->name('technicians.reset-password');
+            
             // Property routes for managers
             Route::get('/properties', [PropertyController::class, 'index'])->name('properties.index');
             Route::get('/properties/create', [PropertyController::class, 'create'])->name('properties.create');
@@ -214,22 +214,6 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::post('/r/{id}/start', [App\Http\Controllers\Mobile\RequestController::class, 'start'])->name('mobile.request.start');
     Route::post('/r/{id}/finish', [App\Http\Controllers\Mobile\RequestController::class, 'finish'])->name('mobile.request.finish');
     Route::post('/r/{id}/comment', [App\Http\Controllers\Mobile\RequestController::class, 'comment'])->name('mobile.request.comment');
-    Route::get('/ap/create', [MobilePropertyController::class, 'create'])->name('mobile.properties.create');
-    Route::get('/at/create', [MobileTechnicianController::class, 'create'])->name('mobile.technicians.create');
-    Route::get('/at', [MobileTechnicianController::class, 'index'])->name('mobile.technicians.index');
-    Route::post('/at/add', [MobileTechnicianController::class, 'store'])->name('mobile.technicians.store');
-    Route::get('/at/{id}/edit', [App\Http\Controllers\Mobile\TechnicianController::class, 'edit'])->name('mobile.technicians.edit');
-    Route::post('/at/{id}/delete', [MobileTechnicianController::class, 'destroy'])->name('mobile.technicians.destroy');
-    Route::post('/at/{id}/edit', [App\Http\Controllers\Mobile\TechnicianController::class, 'update'])->name('mobile.technicians.update');
-    Route::get('/at/{id}', [App\Http\Controllers\Mobile\TechnicianController::class, 'show'])->name('mobile.technicians.show');
-    Route::get('/ap', [MobilePropertyController::class, 'index'])->name('mobile.properties.index');
-    Route::post('/ap/add', [MobilePropertyController::class, 'store'])->name('mobile.properties.store');
-    Route::post('/ap/{id}/edit', [MobilePropertyController::class, 'update'])->name('mobile.properties.update');
-    Route::post('/ap/{id}/delete', [MobilePropertyController::class, 'destroy'])->name('mobile.properties.destroy');
-    Route::get('/ap/{id}', [MobilePropertyController::class, 'show'])->name('mobile.properties.show');
-    Route::get('/ep/{id}', [MobilePropertyController::class, 'edit'])->name('mobile.properties.edit');
-    Route::post('/ep/{id}', [MobilePropertyController::class, 'update'])->name('mobile.properties.ep.update');
-    Route::get('/ap/{id}/qrcode', [MobilePropertyController::class, 'qrcode'])->name('mobile.properties.qrcode');
     Route::get('/manager/all-requests', [App\Http\Controllers\Mobile\DashboardController::class, 'allRequests'])->name('mobile.manager.all-requests');
     Route::get('/profile', [App\Http\Controllers\Mobile\ProfileController::class, 'show'])->name('mobile.profile');
     Route::post('/profile/update-picture', [App\Http\Controllers\Mobile\ProfileController::class, 'updatePicture'])->name('mobile.profile.update-picture');
@@ -240,10 +224,32 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::middleware(['property_manager'])->group(function () {
         Route::get('/requests/create', [RequestController::class, 'create'])->name('mobile.requests.create');
         Route::post('/requests/add', [RequestController::class, 'store'])->name('mobile.requests.store');
+        
+        // Property manager routes with active subscription (mobile)
+        Route::middleware(['subscription'])->group(function () {
+            // Mobile technician management routes
+            Route::get('/at/create', [MobileTechnicianController::class, 'create'])->name('mobile.technicians.create');
+            Route::get('/at', [MobileTechnicianController::class, 'index'])->name('mobile.technicians.index');
+            Route::post('/at/add', [MobileTechnicianController::class, 'store'])->name('mobile.technicians.store');
+            Route::get('/at/{id}/edit', [App\Http\Controllers\Mobile\TechnicianController::class, 'edit'])->name('mobile.technicians.edit');
+            Route::post('/at/{id}/delete', [MobileTechnicianController::class, 'destroy'])->name('mobile.technicians.destroy');
+            Route::post('/at/{id}/edit', [App\Http\Controllers\Mobile\TechnicianController::class, 'update'])->name('mobile.technicians.update');
+            Route::get('/at/{id}', [App\Http\Controllers\Mobile\TechnicianController::class, 'show'])->name('mobile.technicians.show');
+            Route::post('/at/{id}/deactivate', [App\Http\Controllers\Mobile\TechnicianController::class, 'deactivate'])->name('mobile.technicians.deactivate');
+            Route::post('/at/{id}/activate', [App\Http\Controllers\Mobile\TechnicianController::class, 'activate'])->name('mobile.technicians.activate');
+            
+            // Mobile property management routes
+            Route::get('/ap/create', [MobilePropertyController::class, 'create'])->name('mobile.properties.create');
+            Route::get('/ap', [MobilePropertyController::class, 'index'])->name('mobile.properties.index');
+            Route::post('/ap/add', [MobilePropertyController::class, 'store'])->name('mobile.properties.store');
+            Route::post('/ap/{id}/edit', [MobilePropertyController::class, 'update'])->name('mobile.properties.update');
+            Route::post('/ap/{id}/delete', [MobilePropertyController::class, 'destroy'])->name('mobile.properties.destroy');
+            Route::get('/ap/{id}', [MobilePropertyController::class, 'show'])->name('mobile.properties.show');
+            Route::get('/ep/{id}', [MobilePropertyController::class, 'edit'])->name('mobile.properties.edit');
+            Route::post('/ep/{id}', [MobilePropertyController::class, 'update'])->name('mobile.properties.ep.update');
+            Route::get('/ap/{id}/qrcode', [MobilePropertyController::class, 'qrcode'])->name('mobile.properties.qrcode');
+        });
     });
-
-    Route::post('/at/{id}/deactivate', [App\Http\Controllers\Mobile\TechnicianController::class, 'deactivate'])->name('mobile.technicians.deactivate');
-    Route::post('/at/{id}/activate', [App\Http\Controllers\Mobile\TechnicianController::class, 'activate'])->name('mobile.technicians.activate');
 
     Route::get('/subscription/plans', [MobileSubscriptionController::class, 'plans'])->name('mobile.subscription.plans');
 });
