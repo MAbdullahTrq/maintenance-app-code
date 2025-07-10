@@ -237,6 +237,7 @@ Route::prefix('m')->middleware('auth')->group(function () {
             Route::get('/at/{id}', [App\Http\Controllers\Mobile\TechnicianController::class, 'show'])->name('mobile.technicians.show');
             Route::post('/at/{id}/deactivate', [App\Http\Controllers\Mobile\TechnicianController::class, 'deactivate'])->name('mobile.technicians.deactivate');
             Route::post('/at/{id}/activate', [App\Http\Controllers\Mobile\TechnicianController::class, 'activate'])->name('mobile.technicians.activate');
+            Route::post('/technicians/{id}/reset-password', [App\Http\Controllers\Mobile\TechnicianController::class, 'resetPassword'])->name('mobile.technicians.reset-password');
             
             // Mobile property management routes
             Route::get('/ap/create', [MobilePropertyController::class, 'create'])->name('mobile.properties.create');

@@ -280,4 +280,18 @@ class TechnicianController extends Controller
         $technician->save();
         return redirect()->route('mobile.technicians.index')->with('success', 'Technician activated successfully.');
     }
+
+    public function resetPassword($id)
+    {
+        $user = auth()->user();
+        $technician = \App\Models\User::where('id', $id)->where('invited_by', $user->id)->firstOrFail();
+        $password = \Illuminate\Support\Str::random(10);
+        
+        $technician->update([
+            'password' => \Illuminate\Support\Facades\Hash::make($password)
+        ]);
+
+        return redirect()->route('mobile.technicians.index')
+            ->with('password_reset', "Password reset successfully! New temporary password is: {$password}");
+    }
 }
