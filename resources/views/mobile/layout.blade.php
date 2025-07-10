@@ -114,14 +114,14 @@
                     <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ isset($properties) ? $properties->count() : (isset($propertiesCount) ? $propertiesCount : 0) }}</div>
                 </a>
                 @if(Auth::user()->hasActiveSubscription())
-                    <a href="{{ route('mobile.properties.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative">
+                    <a href="{{ route('mobile.properties.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
                         <span class="text-black text-xl md:text-2xl lg:text-3xl font-bold leading-none">+</span>
-                        <span x-show="show" x-transition class="absolute left-1/2 -translate-x-1/2 mt-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10">New Property</span>
+                        <span x-show="show" x-transition class="absolute right-full top-1/2 -translate-y-1/2 mr-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">New Property</span>
                     </a>
                 @else
-                    <a href="{{ route('mobile.subscription.plans') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative">
+                    <a href="{{ route('mobile.subscription.plans') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
                         <span class="text-gray-400 text-xl md:text-2xl lg:text-3xl font-bold leading-none">🔒</span>
-                        <span x-show="show" x-transition class="absolute left-1/2 -translate-x-1/2 mt-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10">Subscription Required</span>
+                        <span x-show="show" x-transition class="absolute right-full top-1/2 -translate-y-1/2 mr-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">Subscription Required</span>
                     </a>
                 @endif
             </div>
@@ -132,14 +132,14 @@
                     <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ isset($technicians) ? $technicians->count() : (isset($techniciansCount) ? $techniciansCount : 0) }}</div>
                 </a>
                 @if(Auth::user()->hasActiveSubscription())
-                    <a href="{{ route('mobile.technicians.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative">
+                    <a href="{{ route('mobile.technicians.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
                         <span class="text-black text-xl md:text-2xl lg:text-3xl font-bold leading-none">+</span>
-                        <span x-show="show" x-transition class="absolute left-1/2 -translate-x-1/2 mt-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10">New Technician</span>
+                        <span x-show="show" x-transition class="absolute left-full top-1/2 -translate-y-1/2 ml-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">New Technician</span>
                     </a>
                 @else
-                    <a href="{{ route('mobile.subscription.plans') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative">
+                    <a href="{{ route('mobile.subscription.plans') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
                         <span class="text-gray-400 text-xl md:text-2xl lg:text-3xl font-bold leading-none">🔒</span>
-                        <span x-show="show" x-transition class="absolute left-1/2 -translate-x-1/2 mt-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10">Subscription Required</span>
+                        <span x-show="show" x-transition class="absolute left-full top-1/2 -translate-y-1/2 ml-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">Subscription Required</span>
                     </a>
                 @endif
             </div>
@@ -149,9 +149,9 @@
                     <i class="fas fa-file-alt text-2xl md:text-3xl lg:text-4xl text-gray-700 group-hover:underline"></i>
                     <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ isset($requestsCount) ? $requestsCount : 0 }}</div>
                 </a>
-                <a href="{{ route('mobile.requests.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative">
+                <a href="{{ route('mobile.requests.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
                     <span class="text-black text-xl md:text-2xl lg:text-3xl font-bold leading-none">+</span>
-                    <span x-show="show" x-transition class="absolute left-1/2 -translate-x-1/2 mt-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10">New Request</span>
+                    <span x-show="show" x-transition class="absolute right-full top-1/2 -translate-y-1/2 mr-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">New Request</span>
                 </a>
             </div>
         </div>
