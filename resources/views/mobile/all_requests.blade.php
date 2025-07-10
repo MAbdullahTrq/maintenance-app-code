@@ -8,8 +8,10 @@
 
 @section('content')
 <div class="flex justify-center">
-    <div class="bg-white rounded-xl shadow p-4 md:p-6 lg:p-8 w-full max-w-6xl mx-auto">
-        <div class="text-center font-bold text-lg md:text-xl lg:text-2xl mb-2">All Requests</div>
+    <div class="bg-white rounded-xl shadow p-2 md:p-3 lg:p-4 w-full max-w-6xl mx-auto">
+        <div class="flex justify-between items-center mb-4">
+            <div class="font-bold text-lg md:text-xl lg:text-2xl">All Requests</div>
+        </div>
         <div class="grid grid-cols-5 gap-0 mb-4 border border-gray-400 rounded overflow-hidden">
             <a href="?status=declined{{ request('sort') ? '&sort=' . request('sort') : '' }}{{ request('direction') ? '&direction=' . request('direction') : '' }}" class="text-center p-2 md:p-3 border-r border-gray-400 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'declined') ? 'bg-blue-100 font-bold' : '' }}">
                 <div class="font-semibold text-xs md:text-sm">Declined</div>
