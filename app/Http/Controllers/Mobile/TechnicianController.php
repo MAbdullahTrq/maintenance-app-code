@@ -12,6 +12,7 @@ use App\Mail\TechnicianCompletedNotification;
 use App\Mail\TechnicianStartedRequesterNotification;
 use App\Mail\TechnicianCompletedRequesterNotification;
 use App\Mail\TechnicianWelcomeMail;
+use Illuminate\Support\Facades\Password;
 
 class TechnicianController extends Controller
 {
@@ -285,13 +286,18 @@ class TechnicianController extends Controller
     {
         $user = auth()->user();
         $technician = \App\Models\User::where('id', $id)->where('invited_by', $user->id)->firstOrFail();
-        $password = \Illuminate\Support\Str::random(10);
         
-        $technician->update([
-            'password' => \Illuminate\Support\Facades\Hash::make($password)
-        ]);
+        // Send password reset email
+        $status = Password::sendResetLink(
+            ['email' => $technician->email]
+        );
 
-        return redirect()->route('mobile.technicians.index')
-            ->with('password_reset', "Password reset successfully! New temporary password is: {$password}");
+        if ($status === Password::RESET_LINK_SENT) {
+            return redirect()->route('mobile.technicians.index')
+                ->with('success', "Password reset email sent successfully to {$technician->email}! The technician will receive an email with instructions to reset their password.");
+        } else {
+            return redirect()->route('mobile.technicians.index')
+                ->with('error', 'There was an error sending the password reset email. Please try again.');
+        }
     }
 }

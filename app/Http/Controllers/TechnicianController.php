@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Mail\TechnicianWelcomeMail;
+use Illuminate\Support\Facades\Password;
 
 class TechnicianController extends Controller
 {
@@ -132,13 +133,18 @@ class TechnicianController extends Controller
     public function resetPassword(User $user)
     {
         abort_if($user->invited_by !== auth()->id(), 403);
-        $password = Str::random(10);
         
-        $user->update([
-            'password' => Hash::make($password)
-        ]);
+        // Send password reset email
+        $status = Password::sendResetLink(
+            ['email' => $user->email]
+        );
 
-        return redirect()->route('technicians.index')
-            ->with('password_reset', "Password reset successfully! New temporary password is: {$password}");
+        if ($status === Password::RESET_LINK_SENT) {
+            return redirect()->route('technicians.index')
+                ->with('success', "Password reset email sent successfully to {$user->email}! The technician will receive an email with instructions to reset their password.");
+        } else {
+            return redirect()->route('technicians.index')
+                ->with('error', 'There was an error sending the password reset email. Please try again.');
+        }
     }
 }
