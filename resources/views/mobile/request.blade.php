@@ -22,7 +22,7 @@
             <div class="py-2 md:py-3 lg:py-4 border-r border-gray-400 text-sm md:text-base lg:text-lg font-semibold {{ $request->priority == 'high' ? 'bg-red-500 text-white' : ($request->priority == 'low' ? 'bg-yellow-200' : ($request->priority == 'medium' ? 'bg-yellow-100' : '')) }} flex items-center justify-center">
                 {{ ucfirst($request->priority) }}
             </div>
-            <div class="py-2 md:py-3 lg:py-4 text-xs md:text-sm">
+            <div class="py-2 md:py-3 lg:py-4 text-xs md:text-sm pl-3">
                 <div class="mb-1"><span class="font-semibold">Created:</span> {{ \Carbon\Carbon::parse($request->created_at)->format('d M, Y H:i') }}</div>
                 <div class="mb-1"><span class="font-semibold">Started:</span> {{ $request->started_at ? \Carbon\Carbon::parse($request->started_at)->format('d M, Y H:i') : '-' }}</div>
                 <div><span class="font-semibold">Finished:</span> {{ $request->completed_at ? \Carbon\Carbon::parse($request->completed_at)->format('d M, Y H:i') : '-' }}</div>
