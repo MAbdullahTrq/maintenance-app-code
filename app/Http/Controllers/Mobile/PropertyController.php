@@ -116,18 +116,21 @@ class PropertyController extends Controller
 
     public function show($id)
     {
-        $property = Property::with('maintenanceRequests')->findOrFail($id);
+        $property = Property::with('maintenanceRequests', 'owner')->findOrFail($id);
         $user = auth()->user();
         $propertiesCount = \App\Models\Property::where('manager_id', $user->id)->count();
         $ownersCount = $user->managedOwners()->count();
         $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $user->id)->pluck('id'))->count();
+        $owners = $user->managedOwners()->get();
+        
         return view('mobile.property_show', [
             'property' => $property,
             'propertiesCount' => $propertiesCount,
             'ownersCount' => $ownersCount,
             'techniciansCount' => $techniciansCount,
             'requestsCount' => $requestsCount,
+            'owners' => $owners,
         ]);
     }
 

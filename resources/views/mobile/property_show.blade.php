@@ -23,6 +23,26 @@
             <span class="font-semibold text-sm md:text-base">Property address</span><br>
             <span class="font-bold text-sm md:text-base lg:text-lg">{{ $property->address }}</span>
         </div>
+        <div class="mb-3 md:mb-4">
+            <span class="font-semibold text-sm md:text-base">Owner</span><br>
+            <div class="flex items-center justify-between">
+                <span class="font-bold text-sm md:text-base lg:text-lg">
+                    @if($property->owner)
+                        {{ $property->owner->name }}
+                        @if($property->owner->company)
+                            <span class="text-gray-600 text-sm">({{ $property->owner->company }})</span>
+                        @endif
+                    @else
+                        <span class="text-gray-400">No owner assigned</span>
+                    @endif
+                </span>
+                @if(Auth::user()->hasActiveSubscription())
+                    <button onclick="showChangeOwnerModal()" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition">
+                        Change Owner
+                    </button>
+                @endif
+            </div>
+        </div>
         @if($property->special_instructions)
         <div class="mb-3 md:mb-4">
             <span class="font-semibold text-sm md:text-base">Special instructions</span><br>
@@ -88,4 +108,57 @@
 @endif
     +
 </a>
+
+<!-- Change Owner Modal -->
+<div id="changeOwnerModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg p-6 max-w-md mx-4 w-full">
+        <h3 class="text-lg font-bold mb-4">Change Property Owner</h3>
+        
+        <form id="changeOwnerForm" method="POST" action="{{ route('mobile.properties.update', $property->id) }}">
+            @csrf
+            @method('POST')
+            
+            <div class="mb-4">
+                <label for="owner_id" class="block text-sm font-medium text-gray-700 mb-2">Select Owner</label>
+                <select name="owner_id" id="owner_id" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <option value="">Select an owner</option>
+                    @foreach($owners as $owner)
+                        <option value="{{ $owner->id }}" {{ $property->owner_id == $owner->id ? 'selected' : '' }}>
+                            {{ $owner->name }}
+                            @if($owner->company)
+                                ({{ $owner->company }})
+                            @endif
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div class="flex justify-end space-x-2">
+                <button type="button" onclick="hideChangeOwnerModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition">
+                    Cancel
+                </button>
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                    Update Owner
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function showChangeOwnerModal() {
+    document.getElementById('changeOwnerModal').classList.remove('hidden');
+}
+
+function hideChangeOwnerModal() {
+    document.getElementById('changeOwnerModal').classList.add('hidden');
+}
+
+// Close modal when clicking outside
+document.getElementById('changeOwnerModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        hideChangeOwnerModal();
+    }
+});
+</script>
 @endsection 

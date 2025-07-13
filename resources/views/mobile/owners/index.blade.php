@@ -3,6 +3,83 @@
 @section('title', 'Owners')
 
 @section('content')
+<!-- Navigation Grid -->
+<div class="mb-6 mx-4">
+    <div class="grid grid-cols-4 gap-4">
+        <!-- Owners -->
+        <div class="bg-white rounded-xl shadow p-4 text-center">
+            <div class="text-yellow-600 text-2xl mb-2">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="font-bold text-lg">{{ $owners->total() }}</div>
+            <div class="text-sm text-gray-600">Owners</div>
+            <div class="mt-2">
+                @if(Auth::user()->hasActiveSubscription())
+                    <a href="/m/ao/create" class="text-blue-600 hover:text-blue-800">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                @else
+                    <i class="fas fa-lock text-gray-400"></i>
+                @endif
+            </div>
+        </div>
+
+        <!-- Properties -->
+        <div class="bg-white rounded-xl shadow p-4 text-center">
+            <div class="text-green-600 text-2xl mb-2">
+                <i class="fas fa-building"></i>
+            </div>
+            <div class="font-bold text-lg">{{ $propertiesCount ?? 0 }}</div>
+            <div class="text-sm text-gray-600">Properties</div>
+            <div class="mt-2">
+                @if(Auth::user()->hasActiveSubscription())
+                    <a href="/m/ap/create" class="text-blue-600 hover:text-blue-800">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                @else
+                    <i class="fas fa-lock text-gray-400"></i>
+                @endif
+            </div>
+        </div>
+
+        <!-- Technicians -->
+        <div class="bg-white rounded-xl shadow p-4 text-center">
+            <div class="text-blue-600 text-2xl mb-2">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="font-bold text-lg">{{ $techniciansCount ?? 0 }}</div>
+            <div class="text-sm text-gray-600">Technicians</div>
+            <div class="mt-2">
+                @if(Auth::user()->hasActiveSubscription())
+                    <a href="/m/at/create" class="text-blue-600 hover:text-blue-800">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                @else
+                    <i class="fas fa-lock text-gray-400"></i>
+                @endif
+            </div>
+        </div>
+
+        <!-- Requests -->
+        <div class="bg-white rounded-xl shadow p-4 text-center">
+            <div class="text-gray-600 text-2xl mb-2">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <div class="font-bold text-lg">{{ $requestsCount ?? 0 }}</div>
+            <div class="text-sm text-gray-600">Requests</div>
+            <div class="mt-2">
+                @if(Auth::user()->hasActiveSubscription())
+                    <a href="/m/requests/create" class="text-blue-600 hover:text-blue-800">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                @else
+                    <i class="fas fa-lock text-gray-400"></i>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-2 md:p-3 lg:p-4 w-full max-w-6xl mx-auto">
         <div x-data="{ showForm: false, search: '', dropdownOpen: false, dropdownTop: 0, dropdownLeft: 0, dropdownOwner: null, showDeleteConfirm: false, deleteForm: null }" x-init="dropdownOwner = null">
