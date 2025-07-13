@@ -17,15 +17,15 @@
             </div>
             <div class="mb-3">
                 <label class="block font-semibold mb-1">Title*</label>
-                <input type="text" name="title" class="w-full border rounded p-2" required>
+                <input type="text" name="title" class="w-full border rounded p-2" placeholder="e.g., Leaky faucet in kitchen" required>
             </div>
             <div class="mb-3">
                 <label class="block font-semibold mb-1">Description*</label>
-                <textarea name="description" class="w-full border rounded p-2" required></textarea>
+                <textarea name="description" class="w-full border rounded p-2" placeholder="Please describe the issue in detail..." required></textarea>
             </div>
             <div class="mb-3">
                 <label class="block font-semibold mb-1">Location*</label>
-                <input type="text" name="location" class="w-full border rounded p-2" required>
+                <input type="text" name="location" class="w-full border rounded p-2" placeholder="e.g., Kitchen, Unit 2B, Basement" required>
             </div>
             <div class="mb-3">
                 <label class="block font-semibold mb-1">Priority*</label>
