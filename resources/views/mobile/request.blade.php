@@ -16,18 +16,16 @@
             <span class="inline-block bg-gray-200 px-2 md:px-3 py-1 md:py-2 rounded text-xs md:text-sm font-semibold mb-1 md:mb-2">{{ ucfirst($request->status) }}</span>
             <div class="font-bold text-lg md:text-xl lg:text-2xl">Maintenance Request</div>
             <div class="text-xs md:text-sm text-gray-500">({{ $request->property->name }})</div>
-            <div class="text-xs md:text-sm text-gray-500">{{ \Carbon\Carbon::parse($request->created_at)->format('d M, Y H:i') }}</div>
         </div>
         <hr class="my-4 border-gray-300">
-        <div class="grid grid-cols-2 border border-gray-400 rounded mb-4 md:mb-6 text-center">
-            <div class="py-2 md:py-3 lg:py-4 border-r border-gray-400 text-sm md:text-base lg:text-lg font-semibold {{ $request->priority == 'high' ? 'bg-red-500 text-white' : ($request->priority == 'low' ? 'bg-yellow-200' : ($request->priority == 'medium' ? 'bg-yellow-100' : '')) }}">
+        <div class="grid grid-cols-2 border border-gray-400 rounded mb-4 md:mb-6">
+            <div class="py-2 md:py-3 lg:py-4 border-r border-gray-400 text-sm md:text-base lg:text-lg font-semibold {{ $request->priority == 'high' ? 'bg-red-500 text-white' : ($request->priority == 'low' ? 'bg-yellow-200' : ($request->priority == 'medium' ? 'bg-yellow-100' : '')) }} flex items-center justify-center">
                 {{ ucfirst($request->priority) }}
             </div>
-            <div class="py-2 md:py-3 lg:py-4">
-                <div class="text-xs md:text-sm font-semibold">Started:</div>
-                <div class="text-xs md:text-sm lg:text-base">{{ $request->started_at ? \Carbon\Carbon::parse($request->started_at)->format('d M, Y H:i') : '-' }}</div>
-                <div class="text-xs md:text-sm font-semibold mt-1">Finished:</div>
-                <div class="text-xs md:text-sm lg:text-base">{{ $request->completed_at ? \Carbon\Carbon::parse($request->completed_at)->format('d M, Y H:i') : '-' }}</div>
+            <div class="py-2 md:py-3 lg:py-4 text-xs md:text-sm">
+                <div class="mb-1"><span class="font-semibold">Created:</span> {{ \Carbon\Carbon::parse($request->created_at)->format('d M, Y H:i') }}</div>
+                <div class="mb-1"><span class="font-semibold">Started:</span> {{ $request->started_at ? \Carbon\Carbon::parse($request->started_at)->format('d M, Y H:i') : '-' }}</div>
+                <div><span class="font-semibold">Finished:</span> {{ $request->completed_at ? \Carbon\Carbon::parse($request->completed_at)->format('d M, Y H:i') : '-' }}</div>
             </div>
         </div>
         <hr class="my-4 border-gray-300">
