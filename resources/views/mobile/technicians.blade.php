@@ -100,7 +100,7 @@
     </div>
 </div>
 @if(Auth::user()->hasActiveSubscription())
-    <a href="{{ route('mobile.technicians.create') }}" class="fixed bottom-6 right-6 bg-blue-600 text-white rounded-full w-14 h-14 flex items-center justify-center text-3xl shadow-lg z-50">
+<a href="{{ route('mobile.technicians.create') }}" class="fixed bottom-6 right-6 bg-blue-600 text-white rounded-full w-14 h-14 flex items-center justify-center text-3xl shadow-lg z-50">
 @else
     <a href="{{ route('mobile.subscription.plans') }}" class="fixed bottom-6 right-6 bg-gray-400 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg z-50" title="Subscription required">
         <i class="fas fa-lock text-xl"></i>
