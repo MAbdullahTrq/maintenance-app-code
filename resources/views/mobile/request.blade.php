@@ -15,7 +15,7 @@
         <div class="mb-4 md:mb-6 text-center">
             <span class="inline-block bg-gray-200 px-2 md:px-3 py-1 md:py-2 rounded text-xs md:text-sm font-semibold mb-1 md:mb-2">{{ ucfirst($request->status) }}</span>
             <div class="font-bold text-lg md:text-xl lg:text-2xl">Maintenance Request</div>
-            <div class="text-xs md:text-sm text-gray-1000">({{ $request->property->name }})</div>
+            <div class="text-xs md:text-sm text-gray-500 fs-4">({{ $request->property->name }})</div>
         </div>
         <hr class="my-4 border-gray-300">
         <div class="grid grid-cols-2 border border-gray-400 rounded mb-4 md:mb-6">
