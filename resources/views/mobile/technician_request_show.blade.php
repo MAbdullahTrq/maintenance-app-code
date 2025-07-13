@@ -16,16 +16,16 @@
             <span class="inline-block bg-gray-200 px-3 py-1 rounded text-xs font-semibold mb-2">{{ ucfirst($request->status) }}</span>
             <div class="font-bold text-2xl md:text-3xl mb-1">Maintenance Request</div>
             <div class="text-base text-gray-700">({{ $property->name ?? '' }})</div>
-            <div class="text-xs text-gray-500 mb-2">{{ $request->created_at ? date('d M, Y', strtotime($request->created_at)) : '' }}<br>{{ $request->created_at ? date('H:i', strtotime($request->created_at)) : '' }}</div>
         </div>
         <hr class="my-4 border-gray-300">
         <div class="grid grid-cols-2 gap-2 mb-4">
-            <div class="text-center {{ strtolower($request->priority) == 'high' ? 'bg-red-500 text-white' : (strtolower($request->priority) == 'low' ? 'bg-yellow-200' : (strtolower($request->priority) == 'medium' ? 'bg-yellow-100' : 'bg-gray-100')) }} font-bold py-3 rounded text-lg">
+            <div class="flex items-center justify-center {{ strtolower($request->priority) == 'high' ? 'bg-red-500 text-white' : (strtolower($request->priority) == 'low' ? 'bg-yellow-200' : (strtolower($request->priority) == 'medium' ? 'bg-yellow-100' : 'bg-gray-100')) }} font-bold py-3 rounded text-lg">
                 {{ ucfirst($request->priority) }}
             </div>
-            <div class="text-xs text-left">
-                <div><span class="font-semibold">Started:</span> {{ $request->started_at ? date('d M, Y H:i', strtotime($request->started_at)) : '' }}</div>
-                <div><span class="font-semibold">Finished:</span> {{ $request->completed_at ? date('d M, Y H:i', strtotime($request->completed_at)) : '' }}</div>
+            <div class="text-xs text-left py-1">
+                <div class="mb-1"><span class="font-semibold">Created:</span> {{ $request->created_at ? date('d M, Y H:i', strtotime($request->created_at)) : '-' }}</div>
+                <div class="mb-1"><span class="font-semibold">Started:</span> {{ $request->started_at ? date('d M, Y H:i', strtotime($request->started_at)) : '-' }}</div>
+                <div><span class="font-semibold">Finished:</span> {{ $request->completed_at ? date('d M, Y H:i', strtotime($request->completed_at)) : '-' }}</div>
             </div>
         </div>
         <div class="grid grid-cols-2 gap-2 mb-4">
