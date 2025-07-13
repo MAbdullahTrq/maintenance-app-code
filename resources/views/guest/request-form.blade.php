@@ -18,7 +18,7 @@
                     <label for="title" class="block text-gray-700 text-sm font-medium mb-2">Request Title <span class="text-red-500">*</span></label>
                     <input id="title" type="text" name="title" value="{{ old('title') }}" required
                         class="appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 @error('title') border-red-500 @enderror"
-                        placeholder="Brief description of the issue">
+                        placeholder="e.g., Leaky faucet in kitchen">
                     
                     @error('title')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -29,7 +29,7 @@
                     <label for="description" class="block text-gray-700 text-sm font-medium mb-2">Description <span class="text-red-500">*</span></label>
                     <textarea id="description" name="description" rows="4" required
                         class="appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 @error('description') border-red-500 @enderror"
-                        placeholder="Please provide detailed information about the issue...">{{ old('description') }}</textarea>
+                        placeholder="Please describe the issue in detail...">{{ old('description') }}</textarea>
                     
                     @error('description')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -40,7 +40,7 @@
                     <label for="location" class="block text-gray-700 text-sm font-medium mb-2">Location <span class="text-red-500">*</span></label>
                     <input id="location" type="text" name="location" value="{{ old('location') }}" required
                         class="appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 @error('location') border-red-500 @enderror"
-                        placeholder="e.g., Kitchen, Bathroom, Living Room">
+                        placeholder="e.g., Kitchen, Unit 2B, Basement">
                     
                     @error('location')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
