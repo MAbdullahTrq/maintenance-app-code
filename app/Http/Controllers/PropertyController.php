@@ -26,7 +26,8 @@ class PropertyController extends Controller
      */
     public function create()
     {
-        return view('properties.create');
+        $owners = Auth::user()->managedOwners()->get();
+        return view('properties.create', compact('owners'));
     }
 
     /**
@@ -37,12 +38,14 @@ class PropertyController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string',
+            'owner_id' => 'required|exists:owners,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $data = [
             'name' => $request->name,
             'address' => $request->address,
+            'owner_id' => $request->owner_id,
         ];
 
         // Handle image upload
@@ -81,7 +84,8 @@ class PropertyController extends Controller
     {
         $this->authorize('update', $property);
         
-        return view('properties.edit', compact('property'));
+        $owners = Auth::user()->managedOwners()->get();
+        return view('properties.edit', compact('property', 'owners'));
     }
 
     /**
@@ -94,12 +98,14 @@ class PropertyController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string',
+            'owner_id' => 'required|exists:owners,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $data = [
             'name' => $request->name,
             'address' => $request->address,
+            'owner_id' => $request->owner_id,
         ];
 
         // Handle image upload

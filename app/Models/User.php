@@ -105,6 +105,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the owners managed by this user.
+     */
+    public function managedOwners(): HasMany
+    {
+        return $this->hasMany(Owner::class, 'manager_id');
+    }
+
+    /**
      * Get the maintenance requests assigned to this user.
      */
     public function assignedRequests(): HasMany

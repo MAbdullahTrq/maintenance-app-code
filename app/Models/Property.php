@@ -24,6 +24,7 @@ class Property extends Model
         'qr_code',
         'access_link',
         'manager_id',
+        'owner_id',
     ];
 
     /**
@@ -38,6 +39,14 @@ class Property extends Model
                 $property->access_link = Str::random(32);
             }
         });
+    }
+
+    /**
+     * Get the owner that owns the property.
+     */
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(Owner::class);
     }
 
     /**

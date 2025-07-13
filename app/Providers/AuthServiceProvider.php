@@ -8,6 +8,8 @@ use App\Models\MaintenanceRequest;
 use App\Policies\MaintenanceRequestPolicy;
 use App\Models\Property;
 use App\Policies\PropertyPolicy;
+use App\Models\Owner;
+use App\Policies\OwnerPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -22,6 +24,7 @@ class AuthServiceProvider extends ServiceProvider
         User::class => UserPolicy::class,
         MaintenanceRequest::class => MaintenanceRequestPolicy::class,
         Property::class => PropertyPolicy::class,
+        Owner::class => OwnerPolicy::class,
     ];
 
     /**

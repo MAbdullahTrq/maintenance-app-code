@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GuestRequestController;
 use App\Http\Controllers\MaintenanceRequestController;
+use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
@@ -141,6 +142,15 @@ Route::middleware(['auth'])->group(function () {
         
         // Property manager routes with active subscription
         Route::middleware(['subscription'])->group(function () {
+            // Owner management routes
+            Route::get('/owners', [App\Http\Controllers\OwnerController::class, 'index'])->name('owners.index');
+            Route::get('/owners/create', [App\Http\Controllers\OwnerController::class, 'create'])->name('owners.create');
+            Route::post('/owners', [App\Http\Controllers\OwnerController::class, 'store'])->name('owners.store');
+            Route::get('/owners/{owner}', [App\Http\Controllers\OwnerController::class, 'show'])->name('owners.show');
+            Route::get('/owners/{owner}/edit', [App\Http\Controllers\OwnerController::class, 'edit'])->name('owners.edit');
+            Route::put('/owners/{owner}', [App\Http\Controllers\OwnerController::class, 'update'])->name('owners.update');
+            Route::delete('/owners/{owner}', [App\Http\Controllers\OwnerController::class, 'destroy'])->name('owners.destroy');
+            
             // Technician management routes
             Route::get('/technicians', [TechnicianController::class, 'index'])->name('technicians.index');
             Route::get('/technicians/create', [TechnicianController::class, 'create'])->name('technicians.create');

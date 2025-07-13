@@ -50,16 +50,20 @@
                                     </a>
                                 @endif
                                 
-                                @if(Auth::user()->isPropertyManager() && Auth::user()->hasActiveSubscription())
-                                    <a href="{{ route('technicians.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-users-cog text-blue-500 w-5 text-center"></i>
-                                        <span class="ml-2">Technicians</span>
-                                    </a>
-                                    <a href="{{ route('properties.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-building text-purple-500 w-5 text-center"></i>
-                                        <span class="ml-2">Properties</span>
-                                    </a>
-                                @endif
+                                                @if(Auth::user()->isPropertyManager() && Auth::user()->hasActiveSubscription())
+                    <a href="{{ route('owners.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-user text-yellow-500 w-5 text-center"></i>
+                        <span class="ml-2">Owners</span>
+                    </a>
+                    <a href="{{ route('properties.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-building text-purple-500 w-5 text-center"></i>
+                        <span class="ml-2">Properties</span>
+                    </a>
+                    <a href="{{ route('technicians.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-users-cog text-blue-500 w-5 text-center"></i>
+                        <span class="ml-2">Technicians</span>
+                    </a>
+                @endif
                                 
                                 <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
                                 
