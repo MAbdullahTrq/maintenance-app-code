@@ -19,7 +19,7 @@ class DashboardController extends Controller
             abort(403);
         }
         $hasActiveSubscription = method_exists($user, 'hasActiveSubscription') ? $user->hasActiveSubscription() : false;
-        $properties = Property::where('manager_id', $user->id)->get();
+        $properties = $user->managedProperties()->get();
         $owners = $user->managedOwners()->get();
         $technicians = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->get();
         $pendingRequests = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->where('status', 'pending')->get();
@@ -42,7 +42,7 @@ class DashboardController extends Controller
         if (!$user || !$user->isPropertyManager()) {
             abort(403);
         }
-        $properties = Property::where('manager_id', $user->id)->get();
+        $properties = $user->managedProperties()->get();
         $status = $request->query('status');
         $sortBy = $request->query('sort', 'created_at'); // Default sort by date
         $sortDirection = $request->query('direction', 'desc'); // Default descending

@@ -18,11 +18,11 @@ class OwnerController extends Controller
         $owners = $user->managedOwners()->latest()->paginate(10);
         
         // Get additional stats for the navigation grid
-        $propertiesCount = $user->properties()->count();
+        $propertiesCount = $user->managedProperties()->count();
         $techniciansCount = \App\Models\User::whereHas('role', function ($q) { 
             $q->where('slug', 'technician'); 
         })->where('invited_by', $user->id)->count();
-        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $user->properties()->pluck('id'))->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $user->managedProperties()->pluck('id'))->count();
         
         return view('mobile.owners.index', compact('owners', 'propertiesCount', 'techniciansCount', 'requestsCount'));
     }

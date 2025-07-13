@@ -12,9 +12,9 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         // Stats for nav bar
-        $propertiesCount = \App\Models\Property::where('manager_id', $user->id)->count();
+        $propertiesCount = $user->managedProperties()->count();
         $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
-        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $user->id)->pluck('id'))->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $user->managedProperties()->pluck('id'))->count();
         return view('mobile.profile', compact('user', 'propertiesCount', 'techniciansCount', 'requestsCount'));
     }
 
