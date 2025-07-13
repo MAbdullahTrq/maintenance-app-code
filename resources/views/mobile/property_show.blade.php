@@ -114,8 +114,8 @@
 </a>
 
 <!-- Change Owner Modal -->
-<div id="changeOwnerModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-lg p-6 max-w-md mx-4 w-full">
+<div id="changeOwnerModal" class="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg p-6 max-w-md mx-4 w-full shadow-2xl border border-gray-200">
         <h3 class="text-lg font-bold mb-4">Change Property Owner</h3>
         
         <!-- Debug info -->
@@ -173,9 +173,15 @@ function hideChangeOwnerModal() {
     document.getElementById('changeOwnerModal').classList.add('hidden');
 }
 
-// Close modal when clicking outside
+// Close modal when clicking outside or with Escape key
 document.getElementById('changeOwnerModal').addEventListener('click', function(e) {
     if (e.target === this) {
+        hideChangeOwnerModal();
+    }
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
         hideChangeOwnerModal();
     }
 });
