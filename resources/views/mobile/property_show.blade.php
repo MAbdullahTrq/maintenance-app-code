@@ -2,6 +2,10 @@
 
 @section('title', 'View Property - Manager')
 
+@section('head')
+<meta name="csrf-token" content="{{ csrf_token() }}">
+@endsection
+
 @section('content')
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-2 md:p-3 lg:p-4 w-full max-w-6xl mx-auto">
@@ -114,9 +118,21 @@
     <div class="bg-white rounded-lg p-6 max-w-md mx-4 w-full">
         <h3 class="text-lg font-bold mb-4">Change Property Owner</h3>
         
-        <form id="changeOwnerForm" method="POST" action="{{ route('mobile.properties.update', $property->id) }}">
+        <!-- Debug info -->
+        <div class="text-sm text-gray-600 mb-2">
+            Available owners: {{ $owners->count() }}
+            @if($owners->count() == 0)
+                <div class="text-red-600">No owners found. Please create an owner first.</div>
+            @endif
+        </div>
+        
+        <form id="changeOwnerForm" method="POST" action="/m/ap/{{ $property->id }}/edit">
             @csrf
-            @method('POST')
+            
+            <!-- Hidden fields to satisfy validation -->
+            <input type="hidden" name="name" value="{{ $property->name }}">
+            <input type="hidden" name="address" value="{{ $property->address }}">
+            <input type="hidden" name="special_instructions" value="{{ $property->special_instructions }}">
             
             <div class="mb-4">
                 <label for="owner_id" class="block text-sm font-medium text-gray-700 mb-2">Select Owner</label>
@@ -131,6 +147,9 @@
                         </option>
                     @endforeach
                 </select>
+                @error('owner_id')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
             </div>
             
             <div class="flex justify-end space-x-2">
@@ -159,6 +178,17 @@ document.getElementById('changeOwnerModal').addEventListener('click', function(e
     if (e.target === this) {
         hideChangeOwnerModal();
     }
+});
+
+// Add form submission debugging
+document.getElementById('changeOwnerForm').addEventListener('submit', function(e) {
+    console.log('Form submitted');
+    console.log('Owner ID:', document.getElementById('owner_id').value);
+    console.log('Form action:', this.action);
+    console.log('Form method:', this.method);
+    
+    // Don't prevent default - let the form submit normally
+    // e.preventDefault();
 });
 </script>
 @endsection 
