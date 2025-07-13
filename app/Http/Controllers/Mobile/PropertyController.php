@@ -22,11 +22,13 @@ class PropertyController extends Controller
     {
         $user = Auth::user();
         $properties = Property::where('manager_id', $user->id)->get();
+        $ownersCount = $user->managedOwners()->count();
         $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->count();
         return view('mobile.properties', [
             'properties' => $properties,
             'propertiesCount' => $properties->count(),
+            'ownersCount' => $ownersCount,
             'techniciansCount' => $techniciansCount,
             'requestsCount' => $requestsCount,
         ]);
@@ -35,10 +37,12 @@ class PropertyController extends Controller
     public function create()
     {
         $user = auth()->user();
+        $owners = $user->managedOwners()->get();
         $propertiesCount = \App\Models\Property::where('manager_id', $user->id)->count();
+        $ownersCount = $owners->count();
         $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $user->id)->pluck('id'))->count();
-        return view('mobile.property_create', compact('propertiesCount', 'techniciansCount', 'requestsCount'));
+        return view('mobile.property_create', compact('owners', 'propertiesCount', 'ownersCount', 'techniciansCount', 'requestsCount'));
     }
 
     public function store(Request $request)
@@ -46,11 +50,13 @@ class PropertyController extends Controller
         $request->validate([
             'name' => 'required',
             'address' => 'required',
+            'owner_id' => 'required|exists:owners,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
         $property = new \App\Models\Property();
         $property->name = $request->name;
         $property->address = $request->address;
+        $property->owner_id = $request->owner_id;
         $property->special_instructions = $request->special_instructions;
         $property->manager_id = auth()->id();
         
@@ -73,12 +79,14 @@ class PropertyController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
+            'owner_id' => 'required|exists:owners,id',
             'special_instructions' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         
         $property->name = $request->name;
         $property->address = $request->address;
+        $property->owner_id = $request->owner_id;
         $property->special_instructions = $request->special_instructions;
         
         if ($request->hasFile('image')) {
@@ -111,11 +119,13 @@ class PropertyController extends Controller
         $property = Property::with('maintenanceRequests')->findOrFail($id);
         $user = auth()->user();
         $propertiesCount = \App\Models\Property::where('manager_id', $user->id)->count();
+        $ownersCount = $user->managedOwners()->count();
         $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $user->id)->pluck('id'))->count();
         return view('mobile.property_show', [
             'property' => $property,
             'propertiesCount' => $propertiesCount,
+            'ownersCount' => $ownersCount,
             'techniciansCount' => $techniciansCount,
             'requestsCount' => $requestsCount,
         ]);
@@ -125,12 +135,16 @@ class PropertyController extends Controller
     {
         $property = Property::findOrFail($id);
         $user = auth()->user();
+        $owners = $user->managedOwners()->get();
         $propertiesCount = \App\Models\Property::where('manager_id', $user->id)->count();
+        $ownersCount = $owners->count();
         $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $user->id)->pluck('id'))->count();
         return view('mobile.edit_property', [
             'property' => $property,
+            'owners' => $owners,
             'propertiesCount' => $propertiesCount,
+            'ownersCount' => $ownersCount,
             'techniciansCount' => $techniciansCount,
             'requestsCount' => $requestsCount,
         ]);

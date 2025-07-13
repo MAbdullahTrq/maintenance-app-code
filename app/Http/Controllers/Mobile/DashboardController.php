@@ -20,11 +20,14 @@ class DashboardController extends Controller
         }
         $hasActiveSubscription = method_exists($user, 'hasActiveSubscription') ? $user->hasActiveSubscription() : false;
         $properties = Property::where('manager_id', $user->id)->get();
+        $owners = $user->managedOwners()->get();
         $technicians = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->get();
         $pendingRequests = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->where('status', 'pending')->get();
         $requestsCount = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->count();
         return view('mobile.dashboard', [
             'properties' => $properties,
+            'owners' => $owners,
+            'ownersCount' => $owners->count(),
             'technicians' => $technicians,
             'pendingRequests' => $pendingRequests,
             'requestsCount' => $requestsCount,
@@ -75,6 +78,7 @@ class DashboardController extends Controller
             $allRequests = $query->orderBy($sortBy, $sortDirection)->get();
         }
         $propertiesCount = $properties->count();
+        $ownersCount = $user->managedOwners()->count();
         $techniciansCount = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
         
         // Count by status (for tabs)
@@ -88,6 +92,7 @@ class DashboardController extends Controller
         return view('mobile.all_requests', [
             'allRequests' => $allRequests,
             'propertiesCount' => $propertiesCount,
+            'ownersCount' => $ownersCount,
             'techniciansCount' => $techniciansCount,
             'requestsCount' => $requestsCount,
             'declinedCount' => $declinedCount,

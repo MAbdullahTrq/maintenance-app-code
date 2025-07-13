@@ -237,6 +237,15 @@ Route::prefix('m')->middleware('auth')->group(function () {
         
         // Property manager routes with active subscription (mobile)
         Route::middleware(['subscription'])->group(function () {
+            // Mobile owner management routes
+            Route::get('/ao', [App\Http\Controllers\Mobile\OwnerController::class, 'index'])->name('mobile.owners.index');
+            Route::get('/ao/create', [App\Http\Controllers\Mobile\OwnerController::class, 'create'])->name('mobile.owners.create');
+            Route::post('/ao/add', [App\Http\Controllers\Mobile\OwnerController::class, 'store'])->name('mobile.owners.store');
+            Route::get('/ao/{id}', [App\Http\Controllers\Mobile\OwnerController::class, 'show'])->name('mobile.owners.show');
+            Route::get('/ao/{id}/edit', [App\Http\Controllers\Mobile\OwnerController::class, 'edit'])->name('mobile.owners.edit');
+            Route::post('/ao/{id}/edit', [App\Http\Controllers\Mobile\OwnerController::class, 'update'])->name('mobile.owners.update');
+            Route::post('/ao/{id}/delete', [App\Http\Controllers\Mobile\OwnerController::class, 'destroy'])->name('mobile.owners.destroy');
+            
             // Mobile technician management routes
             Route::get('/at/create', [MobileTechnicianController::class, 'create'])->name('mobile.technicians.create');
             Route::get('/at', [MobileTechnicianController::class, 'index'])->name('mobile.technicians.index');

@@ -15,6 +15,23 @@
                 <input type="text" name="address" class="w-full border rounded p-2" required>
             </div>
             <div class="mb-3">
+                <label class="block font-semibold mb-1">Property Owner*</label>
+                <select name="owner_id" class="w-full border rounded p-2" required>
+                    <option value="">Select an owner</option>
+                    @if(isset($owners))
+                        @foreach($owners as $owner)
+                            <option value="{{ $owner->id }}">{{ $owner->name }}</option>
+                        @endforeach
+                    @endif
+                </select>
+                @if(!isset($owners) || $owners->count() === 0)
+                    <div class="text-yellow-600 text-xs mt-1">
+                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                        No owners found. <a href="/m/ao/create" class="underline hover:text-yellow-800">Create an owner first</a>.
+                    </div>
+                @endif
+            </div>
+            <div class="mb-3">
                 <label class="block font-semibold mb-1">Special Instructions</label>
                 <textarea name="special_instructions" class="w-full border rounded p-2"></textarea>
             </div>
