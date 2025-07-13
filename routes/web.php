@@ -15,6 +15,7 @@ use App\Http\Controllers\Mobile\DashboardController as MobileDashboardController
 use App\Http\Controllers\Mobile\RequestController;
 use App\Http\Controllers\Mobile\TechnicianController as MobileTechnicianController;
 use App\Http\Controllers\Mobile\PropertyController as MobilePropertyController;
+use App\Http\Controllers\Mobile\OwnerController as MobileOwnerController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Mobile\SubscriptionController as MobileSubscriptionController;
@@ -238,13 +239,13 @@ Route::prefix('m')->middleware('auth')->group(function () {
         // Property manager routes with active subscription (mobile)
         Route::middleware(['subscription'])->group(function () {
             // Mobile owner management routes
-            Route::get('/ao', [App\Http\Controllers\Mobile\OwnerController::class, 'index'])->name('mobile.owners.index');
-            Route::get('/ao/create', [App\Http\Controllers\Mobile\OwnerController::class, 'create'])->name('mobile.owners.create');
-            Route::post('/ao/add', [App\Http\Controllers\Mobile\OwnerController::class, 'store'])->name('mobile.owners.store');
-            Route::get('/ao/{id}', [App\Http\Controllers\Mobile\OwnerController::class, 'show'])->name('mobile.owners.show');
-            Route::get('/ao/{id}/edit', [App\Http\Controllers\Mobile\OwnerController::class, 'edit'])->name('mobile.owners.edit');
-            Route::post('/ao/{id}/edit', [App\Http\Controllers\Mobile\OwnerController::class, 'update'])->name('mobile.owners.update');
-            Route::post('/ao/{id}/delete', [App\Http\Controllers\Mobile\OwnerController::class, 'destroy'])->name('mobile.owners.destroy');
+            Route::get('/ao', [MobileOwnerController::class, 'index'])->name('mobile.owners.index');
+            Route::get('/ao/create', [MobileOwnerController::class, 'create'])->name('mobile.owners.create');
+            Route::post('/ao/add', [MobileOwnerController::class, 'store'])->name('mobile.owners.store');
+            Route::get('/ao/{id}', [MobileOwnerController::class, 'show'])->name('mobile.owners.show');
+            Route::get('/ao/{id}/edit', [MobileOwnerController::class, 'edit'])->name('mobile.owners.edit');
+            Route::post('/ao/{id}/edit', [MobileOwnerController::class, 'update'])->name('mobile.owners.update');
+            Route::post('/ao/{id}/delete', [MobileOwnerController::class, 'destroy'])->name('mobile.owners.destroy');
             
             // Mobile technician management routes
             Route::get('/at/create', [MobileTechnicianController::class, 'create'])->name('mobile.technicians.create');
