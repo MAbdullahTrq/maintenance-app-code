@@ -42,10 +42,21 @@
                         @enderror
                     </div>
                     
-                    <div class="mb-6">
+                    <div class="mb-4">
                         <label for="password_confirmation" class="block text-gray-700 text-sm font-medium mb-2">Confirm Password</label>
                         <input id="password_confirmation" type="password" name="password_confirmation" required
                             class="appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <!-- Cloudflare Turnstile -->
+                    <div class="mb-6">
+                        <div class="cf-turnstile" 
+                             data-sitekey="{{ config('services.turnstile.site_key') }}"
+                             data-theme="light"
+                             data-size="normal"></div>
+                        @error('cf-turnstile-response')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     
                     <div>

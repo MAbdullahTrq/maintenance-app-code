@@ -15,6 +15,9 @@
     @vite('resources/css/app.css')
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    
+    <!-- Cloudflare Turnstile -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
     <header class="bg-white shadow p-4 md:p-6 lg:p-8 flex items-center justify-between">
