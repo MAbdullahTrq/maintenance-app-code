@@ -140,11 +140,11 @@
                         class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     <i class="fas fa-chart-bar mr-2"></i>Generate Web Report
                 </button>
-                <button type="submit" name="format" value="csv" 
+                <button type="button" onclick="submitForm('csv')"
                         class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                     <i class="fas fa-download mr-2"></i>Download CSV
                 </button>
-                <button type="submit" name="format" value="pdf" formtarget="_blank"
+                <button type="button" onclick="submitForm('pdf')" 
                         class="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                     <i class="fas fa-file-pdf mr-2"></i>Download PDF
                 </button>
@@ -454,5 +454,24 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+function submitForm(format) {
+    const form = document.getElementById('reportForm');
+    const newForm = form.cloneNode(true);
+    
+    // Set the correct action based on format
+    if (format === 'csv') {
+        newForm.action = '{{ route('reports.csv') }}';
+    } else if (format === 'pdf') {
+        newForm.action = '{{ route('reports.pdf') }}';
+        newForm.target = '_blank'; // Open PDF in new window
+    }
+    
+    newForm.method = 'POST';
+    newForm.style.display = 'none';
+    document.body.appendChild(newForm);
+    newForm.submit();
+    document.body.removeChild(newForm); // Clean up
+}
 </script>
 @endsection 

@@ -123,7 +123,7 @@ class ReportController extends Controller
     }
 
     /**
-     * Generate and display the report.
+     * Generate report based on form input.
      */
     public function generate(Request $request)
     {
@@ -192,6 +192,68 @@ class ReportController extends Controller
         $reportData = $this->generateReportData($requests, $request, $dateRange);
         
         return view('mobile.reports.show', $reportData);
+    }
+
+    /**
+     * Generate and download CSV report.
+     */
+    public function generateCSVReport(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required|string',
+            'owner_id' => 'nullable|exists:owners,id',
+            'property_ids' => 'nullable|array',
+            'property_ids.*' => 'exists:properties,id',
+            'technician_ids' => 'nullable|array',
+            'technician_ids.*' => 'exists:users,id',
+        ]);
+
+        $user = Auth::user();
+        
+        // Parse date range
+        $dateRange = $this->parseDateRange($request->date_range);
+        
+        // Build query based on filters
+        $query = $this->buildReportQuery($request, $user, $dateRange);
+        
+        // Get the results
+        $requests = $query->get();
+        
+        // Generate report data
+        $reportData = $this->generateReportData($requests, $request, $dateRange);
+        
+        return $this->generateCSV($reportData);
+    }
+
+    /**
+     * Generate and show PDF report.
+     */
+    public function generatePDFReport(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required|string',
+            'owner_id' => 'nullable|exists:owners,id',
+            'property_ids' => 'nullable|array',
+            'property_ids.*' => 'exists:properties,id',
+            'technician_ids' => 'nullable|array',
+            'technician_ids.*' => 'exists:users,id',
+        ]);
+
+        $user = Auth::user();
+        
+        // Parse date range
+        $dateRange = $this->parseDateRange($request->date_range);
+        
+        // Build query based on filters
+        $query = $this->buildReportQuery($request, $user, $dateRange);
+        
+        // Get the results
+        $requests = $query->get();
+        
+        // Generate report data
+        $reportData = $this->generateReportData($requests, $request, $dateRange);
+        
+        return $this->generatePDF($reportData);
     }
 
     /**

@@ -125,11 +125,11 @@
                 </button>
                 
                 <div class="grid grid-cols-2 gap-3">
-                    <button type="submit" name="format" value="csv" 
+                    <button type="button" onclick="submitForm('csv')"
                             class="bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
                         📥 Download CSV
                     </button>
-                    <button type="submit" name="format" value="pdf" formtarget="_blank"
+                    <button type="button" onclick="submitForm('pdf')"
                             class="bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
                         📄 Download PDF
                     </button>
@@ -424,5 +424,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+function submitForm(format) {
+    const form = document.getElementById('mobileReportForm');
+    const newForm = form.cloneNode(true);
+    
+    // Set the correct action based on format
+    if (format === 'csv') {
+        newForm.action = '{{ route('mobile.reports.csv') }}';
+    } else if (format === 'pdf') {
+        newForm.action = '{{ route('mobile.reports.pdf') }}';
+        newForm.target = '_blank'; // Open PDF in new window
+    }
+    
+    newForm.method = 'POST';
+    newForm.style.display = 'none';
+    document.body.appendChild(newForm);
+    newForm.submit();
+    document.body.removeChild(newForm); // Clean up
+}
 </script>
 @endsection 
