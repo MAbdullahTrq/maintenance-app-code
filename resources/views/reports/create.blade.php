@@ -457,21 +457,63 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function submitForm(format) {
     const form = document.getElementById('reportForm');
-    const newForm = form.cloneNode(true);
     
-    // Set the correct action based on format
-    if (format === 'csv') {
-        newForm.action = '/reports/csv';
-    } else if (format === 'pdf') {
-        newForm.action = '/reports/pdf';
-        newForm.target = '_blank'; // Open PDF in new window
+    // Validate form first
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
     }
     
-    newForm.method = 'POST';
-    newForm.style.display = 'none';
-    document.body.appendChild(newForm);
-    newForm.submit();
-    document.body.removeChild(newForm); // Clean up
+    // Create form data with all inputs
+    const formData = new FormData(form);
+    
+    // Set the correct URL based on format
+    let url;
+    if (format === 'csv') {
+        url = '/reports/csv';
+    } else if (format === 'pdf') {
+        url = '/reports/pdf';
+    }
+    
+    // Submit via fetch for better error handling
+    fetch(url, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        if (format === 'csv') {
+            // For CSV, trigger download
+            return response.blob().then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'maintenance_report.csv';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            });
+        } else if (format === 'pdf') {
+            // For PDF, open in new window
+            return response.text().then(html => {
+                const newWindow = window.open('', '_blank');
+                newWindow.document.write(html);
+                newWindow.document.close();
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error generating report: ' + error.message);
+    });
 }
 </script>
 @endsection 
