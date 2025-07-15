@@ -34,13 +34,17 @@
                     
                     // For flexible size, ensure proper container styling
                     if (size === 'flexible') {
-                        element.style.width = '100%';
-                        element.style.maxWidth = '100%';
-                        // Add responsive class to parent container
+                        // Let Turnstile handle sizing, just ensure container is ready
                         const parent = element.closest('.turnstile-container');
                         if (parent) {
-                            parent.style.display = 'block';
+                            parent.style.display = 'flex';
+                            parent.style.justifyContent = 'center';
                             parent.style.width = '100%';
+                        }
+                        
+                        // Mobile-specific adjustments
+                        if (window.innerWidth <= 480) {
+                            element.style.maxWidth = 'calc(100vw - 40px)';
                         }
                     }
                     

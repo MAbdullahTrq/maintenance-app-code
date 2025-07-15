@@ -4,10 +4,10 @@
 
 @section('content')
 <style>
-    /* Turnstile responsive styles for compact size (150x140px) */
+    /* Turnstile responsive styles for flexible size */
     .turnstile-container {
         width: 100%;
-        max-width: 180px;
+        max-width: 100%;
         margin: 0 auto;
         overflow: hidden;
         display: flex;
@@ -15,17 +15,34 @@
     }
     
     .cf-turnstile {
+        max-width: 100% !important;
         transform-origin: center center;
     }
     
-    /* Scale down on very small screens */
-    @media (max-width: 200px) {
+    /* Responsive sizing */
+    @media (max-width: 480px) {
+        .turnstile-container {
+            max-width: 90vw; /* 90% of viewport width */
+        }
+        .cf-turnstile {
+            width: 100% !important;
+            max-width: 280px !important;
+        }
+    }
+    
+    @media (max-width: 320px) {
         .cf-turnstile {
             transform: scale(0.85);
             transform-origin: center center;
+            max-width: 240px !important;
         }
-        .turnstile-container {
-            max-width: 150px;
+    }
+    
+    @media (max-width: 280px) {
+        .cf-turnstile {
+            transform: scale(0.75);
+            transform-origin: center center;
+            max-width: 210px !important;
         }
     }
 </style>
@@ -72,7 +89,7 @@
                         <div class="cf-turnstile" 
                              data-sitekey="{{ config('services.turnstile.site_key') }}"
                              data-theme="light"
-                             data-size="compact"></div>
+                             data-size="flexible"></div>
                     </div>
                 </div>
                 @error('cf-turnstile-response')

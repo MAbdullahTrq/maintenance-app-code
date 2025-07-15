@@ -4,38 +4,28 @@
 
 @section('content')
 <style>
-    /* Turnstile responsive styles */
+    /* Turnstile responsive styles for desktop */
     .turnstile-container {
         width: 100%;
         max-width: 300px;
         margin: 0 auto;
-        overflow: hidden;
+        overflow: visible;
+        display: flex;
+        justify-content: center;
     }
     
     .cf-turnstile {
-        width: 100% !important;
-        max-width: 100% !important;
-        transform-origin: 0 0;
+        /* Let flexible size handle its own dimensions */
     }
     
-    /* Scale down on very small screens */
+    /* Only scale on very small screens (mobile fallback) */
     @media (max-width: 320px) {
         .cf-turnstile {
             transform: scale(0.9);
-            transform-origin: 0 0;
+            transform-origin: center center;
         }
         .turnstile-container {
             max-width: 270px;
-        }
-    }
-    
-    @media (max-width: 280px) {
-        .cf-turnstile {
-            transform: scale(0.8);
-            transform-origin: 0 0;
-        }
-        .turnstile-container {
-            max-width: 240px;
         }
     }
 </style>
