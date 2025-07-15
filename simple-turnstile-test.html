@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Turnstile Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .test-container { border: 1px solid #ccc; padding: 20px; margin: 20px 0; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>Simple Turnstile Test</h1>
+    <p>This page tests Turnstile with your actual site key in a minimal environment.</p>
+    
+    <div id="status" class="status">Loading...</div>
+    
+    <div class="test-container">
+        <h2>Test Widget</h2>
+        <div id="turnstile-widget"></div>
+        <button onclick="checkResponse()">Check Response</button>
+        <div id="response-status"></div>
+    </div>
+
+    <script>
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = 'status ' + type;
+        }
+
+        let widgetId = null;
+        
+        window.onTurnstileLoad = function() {
+            updateStatus('✅ Turnstile script loaded successfully!', 'success');
+            
+            try {
+                widgetId = turnstile.render('#turnstile-widget', {
+                    sitekey: '0x4AAAAAABlGaWuOOq-13-1A', // Your actual site key
+                    callback: function(token) {
+                        updateStatus('✅ CAPTCHA solved! Token: ' + token.substring(0, 20) + '...', 'success');
+                    },
+                    'error-callback': function(error) {
+                        updateStatus('❌ CAPTCHA error: ' + error, 'error');
+                    }
+                });
+                console.log('Widget rendered with ID:', widgetId);
+            } catch (error) {
+                updateStatus('❌ Error rendering widget: ' + error.message, 'error');
+                console.error('Render error:', error);
+            }
+        };
+
+        function checkResponse() {
+            if (typeof turnstile !== 'undefined' && widgetId !== null) {
+                const response = turnstile.getResponse(widgetId);
+                document.getElementById('response-status').innerHTML = 
+                    response ? 
+                    '<strong>Response:</strong> ' + response.substring(0, 50) + '...' : 
+                    '<strong>No response</strong>';
+            } else {
+                document.getElementById('response-status').innerHTML = '<strong>Turnstile not ready</strong>';
+            }
+        }
+
+        // Timeout fallback
+        setTimeout(() => {
+            if (!window.turnstile) {
+                updateStatus('❌ Turnstile failed to load within 10 seconds', 'error');
+            }
+        }, 10000);
+
+        updateStatus('⏳ Waiting for Turnstile to load...');
+    </script>
+
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit" async defer></script>
+</body>
+</html> 

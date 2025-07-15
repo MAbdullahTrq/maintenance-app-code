@@ -64,6 +64,11 @@ Route::get('/debug/verify/{token}', function($token) {
     ]);
 });
 
+// Debug route for Turnstile testing
+Route::get('/debug/turnstile', function () {
+    return view('debug.turnstile');
+});
+
 Route::middleware('guest')->group(function () {
     Route::get('/web/login', [LoginController::class, 'showLoginForm'])->name('web.login');
     Route::post('/web/login', [LoginController::class, 'login']);

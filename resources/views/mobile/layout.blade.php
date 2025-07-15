@@ -17,7 +17,22 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     
     <!-- Cloudflare Turnstile -->
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <script>
+        window.onTurnstileLoad = function () {
+            // Auto-render all cf-turnstile elements
+            document.querySelectorAll('.cf-turnstile').forEach(function(element) {
+                if (!element.hasAttribute('data-rendered')) {
+                    turnstile.render(element, {
+                        sitekey: element.getAttribute('data-sitekey'),
+                        theme: element.getAttribute('data-theme') || 'light',
+                        size: element.getAttribute('data-size') || 'normal'
+                    });
+                    element.setAttribute('data-rendered', 'true');
+                }
+            });
+        };
+    </script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit" async defer></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
     <header class="bg-white shadow p-4 md:p-6 lg:p-8 flex items-center justify-between">

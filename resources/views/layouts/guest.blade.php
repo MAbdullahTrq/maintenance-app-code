@@ -25,7 +25,22 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Cloudflare Turnstile -->
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <script>
+        window.onTurnstileLoad = function () {
+            // Auto-render all cf-turnstile elements
+            document.querySelectorAll('.cf-turnstile').forEach(function(element) {
+                if (!element.hasAttribute('data-rendered')) {
+                    turnstile.render(element, {
+                        sitekey: element.getAttribute('data-sitekey'),
+                        theme: element.getAttribute('data-theme') || 'light',
+                        size: element.getAttribute('data-size') || 'normal'
+                    });
+                    element.setAttribute('data-rendered', 'true');
+                }
+            });
+        };
+    </script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit" async defer></script>
     
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
