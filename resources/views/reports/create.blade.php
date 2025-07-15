@@ -83,34 +83,48 @@
 
                 <!-- Property Filter -->
                 <div>
-                    <label for="property_ids" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
                         <i class="fas fa-building mr-2 text-purple-500"></i>Properties (Optional)
                     </label>
-                    <select name="property_ids[]" id="property_ids" multiple 
-                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            size="4">
-                        <option value="">All Properties</option>
-                        @foreach($properties as $property)
-                            <option value="{{ $property->id }}">{{ $property->name }} - {{ $property->address }}</option>
-                        @endforeach
-                    </select>
-                    <p class="text-sm text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple properties</p>
+                    <div class="border border-gray-300 rounded-md p-3 max-h-32 overflow-y-auto bg-gray-50">
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" id="select-all-properties" class="mr-2 text-blue-600 focus:ring-blue-500">
+                                <span class="text-sm font-medium text-gray-700">Select All Properties</span>
+                            </label>
+                            <hr class="border-gray-300">
+                            @foreach($properties as $property)
+                                <label class="flex items-center property-checkbox">
+                                    <input type="checkbox" name="property_ids[]" value="{{ $property->id }}" class="mr-2 text-blue-600 focus:ring-blue-500">
+                                    <span class="text-sm">{{ $property->name }} - {{ $property->address }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1">Select one or more properties for the report</p>
                 </div>
 
                 <!-- Technician Filter -->
                 <div class="md:col-span-2">
-                    <label for="technician_ids" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
                         <i class="fas fa-tools mr-2 text-orange-500"></i>Technicians (Optional)
                     </label>
-                    <select name="technician_ids[]" id="technician_ids" multiple 
-                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            size="3">
-                        <option value="">All Technicians</option>
-                        @foreach($technicians as $technician)
-                            <option value="{{ $technician->id }}">{{ $technician->name }} - {{ $technician->email }}</option>
-                        @endforeach
-                    </select>
-                    <p class="text-sm text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple technicians</p>
+                    <div class="border border-gray-300 rounded-md p-3 max-h-32 overflow-y-auto bg-gray-50">
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" id="select-all-technicians" class="mr-2 text-blue-600 focus:ring-blue-500">
+                                <span class="text-sm font-medium text-gray-700">Select All Technicians</span>
+                            </label>
+                            <hr class="border-gray-300">
+                            @foreach($technicians as $technician)
+                                <label class="flex items-center technician-checkbox">
+                                    <input type="checkbox" name="technician_ids[]" value="{{ $technician->id }}" class="mr-2 text-blue-600 focus:ring-blue-500">
+                                    <span class="text-sm">{{ $technician->name }} - {{ $technician->email }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1">Select one or more technicians for the report</p>
                 </div>
             </div>
 
@@ -210,10 +224,34 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateRange = document.getElementById('date_range');
     const customDateRange = document.getElementById('customDateRange');
     const ownerSelect = document.getElementById('owner_id');
-    const propertySelect = document.getElementById('property_ids');
-    const technicianSelect = document.getElementById('technician_ids');
     const reportPreview = document.getElementById('reportPreview');
     const reportDescription = document.getElementById('reportDescription');
+
+    // Select All functionality for properties
+    const selectAllProperties = document.getElementById('select-all-properties');
+    const propertyCheckboxes = document.querySelectorAll('.property-checkbox input[type="checkbox"]');
+    
+    if (selectAllProperties) {
+        selectAllProperties.addEventListener('change', function() {
+            propertyCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+            updateReportPreview();
+        });
+    }
+
+    // Select All functionality for technicians  
+    const selectAllTechnicians = document.getElementById('select-all-technicians');
+    const technicianCheckboxes = document.querySelectorAll('.technician-checkbox input[type="checkbox"]');
+    
+    if (selectAllTechnicians) {
+        selectAllTechnicians.addEventListener('change', function() {
+            technicianCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+            updateReportPreview();
+        });
+    }
 
     // Handle custom date range visibility
     dateRange.addEventListener('change', function() {
@@ -234,13 +272,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 fetch(`{{ route('api.properties-by-owner') }}?owner_id=${ownerId}`)
                     .then(response => response.json())
                     .then(properties => {
-                        propertySelect.innerHTML = '<option value="">All Properties</option>';
+                        // Clear existing property checkboxes
+                        const propertyContainer = document.querySelector('.property-checkbox').parentNode;
+                        propertyContainer.innerHTML = '';
+                        
+                        // Add select all option
+                        propertyContainer.innerHTML = `
+                            <label class="flex items-center">
+                                <input type="checkbox" id="select-all-properties" class="mr-2 text-blue-600 focus:ring-blue-500">
+                                <span class="text-sm font-medium text-gray-700">Select All Properties</span>
+                            </label>
+                            <hr class="border-gray-300">
+                        `;
+                        
+                        // Add filtered properties
                         properties.forEach(property => {
-                            const option = document.createElement('option');
-                            option.value = property.id;
-                            option.textContent = `${property.name} - ${property.address}`;
-                            propertySelect.appendChild(option);
+                            const label = document.createElement('label');
+                            label.className = 'flex items-center property-checkbox';
+                            label.innerHTML = `
+                                <input type="checkbox" name="property_ids[]" value="${property.id}" class="mr-2 text-blue-600 focus:ring-blue-500">
+                                <span class="text-sm">${property.name} - ${property.address}</span>
+                            `;
+                            propertyContainer.appendChild(label);
                         });
+                        
+                        // Reattach event listeners
+                        attachPropertyListeners();
                     });
             } else {
                 // Reset to all properties
@@ -250,33 +307,93 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Handle property change - filter technicians
-    propertySelect.addEventListener('change', function() {
-        const selectedProperties = Array.from(this.selectedOptions).map(option => option.value).filter(val => val);
+    // Handle property checkbox changes
+    function attachPropertyListeners() {
+        const newPropertyCheckboxes = document.querySelectorAll('.property-checkbox input[type="checkbox"]');
+        const newSelectAllProperties = document.getElementById('select-all-properties');
         
-        if (selectedProperties.length > 0) {
-            fetch(`{{ route('api.technicians-by-properties') }}?property_ids[]=${selectedProperties.join('&property_ids[]=')}`)
-                .then(response => response.json())
-                .then(technicians => {
-                    technicianSelect.innerHTML = '<option value="">All Technicians</option>';
-                    technicians.forEach(technician => {
-                        const option = document.createElement('option');
-                        option.value = technician.id;
-                        option.textContent = `${technician.name} - ${technician.email}`;
-                        technicianSelect.appendChild(option);
-                    });
+        if (newSelectAllProperties) {
+            newSelectAllProperties.addEventListener('change', function() {
+                newPropertyCheckboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
                 });
+                updateReportPreview();
+            });
         }
-        updateReportPreview();
-    });
+        
+        newPropertyCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const selectedProperties = Array.from(newPropertyCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
+                
+                if (selectedProperties.length > 0) {
+                    fetch(`{{ route('api.technicians-by-properties') }}?property_ids[]=${selectedProperties.join('&property_ids[]=')}`)
+                        .then(response => response.json())
+                        .then(technicians => {
+                            // Clear existing technician checkboxes
+                            const technicianContainer = document.querySelector('.technician-checkbox').parentNode;
+                            technicianContainer.innerHTML = '';
+                            
+                            // Add select all option
+                            technicianContainer.innerHTML = `
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="select-all-technicians" class="mr-2 text-blue-600 focus:ring-blue-500">
+                                    <span class="text-sm font-medium text-gray-700">Select All Technicians</span>
+                                </label>
+                                <hr class="border-gray-300">
+                            `;
+                            
+                            // Add filtered technicians
+                            technicians.forEach(technician => {
+                                const label = document.createElement('label');
+                                label.className = 'flex items-center technician-checkbox';
+                                label.innerHTML = `
+                                    <input type="checkbox" name="technician_ids[]" value="${technician.id}" class="mr-2 text-blue-600 focus:ring-blue-500">
+                                    <span class="text-sm">${technician.name} - ${technician.email}</span>
+                                `;
+                                technicianContainer.appendChild(label);
+                            });
+                            
+                            // Reattach technician listeners
+                            attachTechnicianListeners();
+                        });
+                }
+                updateReportPreview();
+            });
+        });
+    }
 
-    // Update preview when technician changes
-    technicianSelect.addEventListener('change', updateReportPreview);
+    // Handle technician checkbox changes
+    function attachTechnicianListeners() {
+        const newTechnicianCheckboxes = document.querySelectorAll('.technician-checkbox input[type="checkbox"]');
+        const newSelectAllTechnicians = document.getElementById('select-all-technicians');
+        
+        if (newSelectAllTechnicians) {
+            newSelectAllTechnicians.addEventListener('change', function() {
+                newTechnicianCheckboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                });
+                updateReportPreview();
+            });
+        }
+        
+        newTechnicianCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateReportPreview);
+        });
+    }
+
+    // Initial attachment of listeners
+    propertyCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateReportPreview);
+    });
+    
+    technicianCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateReportPreview);
+    });
 
     function updateReportPreview() {
         const owner = ownerSelect ? ownerSelect.value : '';
-        const properties = Array.from(propertySelect.selectedOptions).map(option => option.value).filter(val => val);
-        const technicians = Array.from(technicianSelect.selectedOptions).map(option => option.value).filter(val => val);
+        const properties = Array.from(document.querySelectorAll('input[name="property_ids[]"]:checked')).map(cb => cb.value);
+        const technicians = Array.from(document.querySelectorAll('input[name="technician_ids[]"]:checked')).map(cb => cb.value);
         const dateRangeValue = dateRange.value;
 
         if (!dateRangeValue) {
