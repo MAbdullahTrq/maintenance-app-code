@@ -103,17 +103,140 @@
                             <div class="text-xs {{ $isOwn ? 'text-blue-100' : 'text-gray-600' }} mb-1">
                                 {{ $comment->user->name ?? 'User' }} &middot; {{ \Carbon\Carbon::parse($comment->created_at)->diffForHumans() }}
                             </div>
-                            <div class="text-sm">{{ $comment->comment }}</div>
+                            <div class="text-sm mb-2">{{ $comment->comment }}</div>
+                            
+                            <!-- Display attached media -->
+                            @if($comment->images && $comment->images->count() > 0)
+                                <div class="mt-2 space-y-2">
+                                    @foreach($comment->images as $media)
+                                        @if($media->type === 'comment_image')
+                                            <div class="relative">
+                                                <img src="{{ asset('storage/' . $media->image_path) }}" 
+                                                     alt="Comment attachment" 
+                                                     class="max-w-full h-auto rounded cursor-pointer"
+                                                     onclick="openMediaModal('{{ asset('storage/' . $media->image_path) }}', 'image')">
+                                                <div class="absolute top-1 right-1 bg-black bg-opacity-50 rounded-full p-1">
+                                                    <i class="fas fa-image text-white text-xs"></i>
+                                                </div>
+                                            </div>
+                                        @elseif($media->type === 'comment_video')
+                                            <div class="relative">
+                                                <video controls class="max-w-full h-auto rounded">
+                                                    <source src="{{ asset('storage/' . $media->image_path) }}" type="video/mp4">
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                                <div class="absolute top-1 right-1 bg-black bg-opacity-50 rounded-full p-1">
+                                                    <i class="fas fa-video text-white text-xs"></i>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            @endif
                         </div>
                     </div>
                 @endforeach
             </div>
         </div>
-        <form method="POST" action="{{ route('mobile.request.comment', $request->id) }}" class="mb-4">
+        <form method="POST" action="{{ route('mobile.request.comment', $request->id) }}" class="mb-4" enctype="multipart/form-data" id="technician-comment-form">
             @csrf
             <textarea name="comment" class="w-full border rounded p-2 mb-2" placeholder="Add a comment..." required></textarea>
+            
+            <!-- Media Upload Section -->
+            <div class="mb-3">
+                <label class="block text-sm font-medium text-gray-700 mb-2">📎 Attach Media (Optional)</label>
+                <input type="file" name="media[]" id="technician-comment-media" class="w-full border rounded p-2 text-sm" 
+                       multiple accept="image/*,video/*" onchange="previewTechnicianMedia(this)">
+                <div class="text-xs text-gray-500 mt-1">
+                    Images: JPG, PNG, GIF (max 10MB) | Videos: MP4, MOV, AVI (max 50MB)
+                </div>
+                <div id="technician-media-preview" class="mt-2 grid grid-cols-2 gap-2 hidden"></div>
+            </div>
+            
             <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded">Add Comment</button>
         </form>
     </div>
 </div>
+
+<!-- Media Modal -->
+<div id="mediaModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+    <div class="relative max-w-[90vw] max-h-[90vh]">
+        <button onclick="closeMediaModal()" class="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-2">
+            <i class="fas fa-times"></i>
+        </button>
+        <div id="modalContent"></div>
+    </div>
+</div>
+
+<script>
+// Media preview functionality for technician
+function previewTechnicianMedia(input) {
+    const preview = document.getElementById('technician-media-preview');
+    preview.innerHTML = '';
+    preview.classList.add('hidden');
+    
+    if (input.files && input.files.length > 0) {
+        preview.classList.remove('hidden');
+        
+        Array.from(input.files).forEach((file, index) => {
+            const reader = new FileReader();
+            const isImage = file.type.startsWith('image/');
+            const isVideo = file.type.startsWith('video/');
+            
+            const previewDiv = document.createElement('div');
+            previewDiv.className = 'relative bg-gray-100 rounded p-2';
+            
+            if (isImage) {
+                reader.onload = function(e) {
+                    previewDiv.innerHTML = `
+                        <img src="${e.target.result}" class="w-full h-16 object-cover rounded">
+                        <div class="text-xs mt-1 truncate">${file.name}</div>
+                        <div class="absolute top-1 right-1 bg-blue-500 text-white rounded-full p-1">
+                            <i class="fas fa-image text-xs"></i>
+                        </div>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            } else if (isVideo) {
+                previewDiv.innerHTML = `
+                    <div class="w-full h-16 bg-gray-300 rounded flex items-center justify-center">
+                        <i class="fas fa-video text-gray-600 text-2xl"></i>
+                    </div>
+                    <div class="text-xs mt-1 truncate">${file.name}</div>
+                    <div class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1">
+                        <i class="fas fa-video text-xs"></i>
+                    </div>
+                `;
+            }
+            
+            preview.appendChild(previewDiv);
+        });
+    }
+}
+
+// Modal functionality
+function openMediaModal(src, type) {
+    const modal = document.getElementById('mediaModal');
+    const content = document.getElementById('modalContent');
+    
+    if (type === 'image') {
+        content.innerHTML = `<img src="${src}" class="max-w-full max-h-full rounded">`;
+    } else if (type === 'video') {
+        content.innerHTML = `<video controls class="max-w-full max-h-full rounded"><source src="${src}" type="video/mp4"></video>`;
+    }
+    
+    modal.classList.remove('hidden');
+}
+
+function closeMediaModal() {
+    document.getElementById('mediaModal').classList.add('hidden');
+}
+
+// Close modal on escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeMediaModal();
+    }
+});
+</script>
 @endsection 

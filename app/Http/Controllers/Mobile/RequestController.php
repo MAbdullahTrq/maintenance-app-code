@@ -217,12 +217,14 @@ class RequestController extends Controller
     public function finish(Request $request, $id)
     {
         $request->validate([
-            'completion_comment' => 'required|string',
+            'completion_comment' => 'nullable|string',
         ]);
+        
         $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);
         $maintenance->status = 'completed';
         $maintenance->completed_at = now();
         $maintenance->save();
+        
         // Send notifications
         Mail::to($maintenance->property->manager->email)
             ->send(new TechnicianCompletedNotification($maintenance));
@@ -231,9 +233,15 @@ class RequestController extends Controller
             Mail::to($maintenance->requester_email)
                 ->send(new TechnicianCompletedRequesterNotification($maintenance));
         }
+        
+        // Add automatic completion comment
+        $commentText = $request->completion_comment 
+            ? 'Request completed by technician: ' . $request->completion_comment
+            : 'Request completed by technician.';
+            
         $maintenance->comments()->create([
             'user_id' => auth()->id(),
-            'comment' => 'Request completed by technician: ' . $request->completion_comment,
+            'comment' => $commentText,
         ]);
 
         return redirect()->route('mobile.request.show', $id)->with('success', 'Request completed.');
@@ -243,12 +251,50 @@ class RequestController extends Controller
     {
         $request->validate([
             'comment' => 'required|string',
+            'media.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,mov,avi,webm|max:51200', // 50MB max
         ]);
+        
         $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);
         $comment = $maintenance->comments()->create([
             'user_id' => auth()->id(),
             'comment' => $request->comment,
         ]);
+
+        // Handle media uploads
+        if ($request->hasFile('media')) {
+            foreach ($request->file('media') as $media) {
+                $mediaType = $media->getMimeType();
+                $isImage = strpos($mediaType, 'image/') === 0;
+                $isVideo = strpos($mediaType, 'video/') === 0;
+                
+                if ($isImage) {
+                    // Optimize images using the existing service
+                    $optimizedPath = $this->imageService->optimizeAndResize(
+                        $media,
+                        'maintenance_requests/comments',
+                        800, // width
+                        600  // height
+                    );
+                    
+                    RequestImage::create([
+                        'maintenance_request_id' => $maintenance->id,
+                        'comment_id' => $comment->id,
+                        'image_path' => $optimizedPath,
+                        'type' => 'comment_image',
+                    ]);
+                } elseif ($isVideo) {
+                    // Store videos directly without optimization
+                    $path = $media->store('maintenance_requests/comments/videos', 'public');
+                    
+                    RequestImage::create([
+                        'maintenance_request_id' => $maintenance->id,
+                        'comment_id' => $comment->id,
+                        'image_path' => $path,
+                        'type' => 'comment_video',
+                    ]);
+                }
+            }
+        }
 
         // Send notifications based on who is commenting
         if (auth()->user()->isTechnician()) {
