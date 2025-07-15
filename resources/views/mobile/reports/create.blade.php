@@ -434,56 +434,24 @@ function submitForm(format) {
         return;
     }
     
-    // Create form data with all inputs
-    const formData = new FormData(form);
+    // Simple approach - modify form action and submit directly
+    const originalAction = form.action;
     
-    // Set the correct URL based on format
-    let url;
     if (format === 'csv') {
-        url = '/m/reports/csv';
+        form.action = '/m/reports/csv';
     } else if (format === 'pdf') {
-        url = '/m/reports/pdf';
+        form.action = '/m/reports/pdf';
+        form.target = '_blank';
     }
     
-    // Submit via fetch for better error handling
-    fetch(url, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        if (format === 'csv') {
-            // For CSV, trigger download
-            return response.blob().then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                a.download = 'maintenance_report.csv';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-            });
-        } else if (format === 'pdf') {
-            // For PDF, open in new window
-            return response.text().then(html => {
-                const newWindow = window.open('', '_blank');
-                newWindow.document.write(html);
-                newWindow.document.close();
-            });
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error generating report: ' + error.message);
-    });
+    // Submit the form
+    form.submit();
+    
+    // Reset form action
+    setTimeout(() => {
+        form.action = originalAction;
+        form.target = '';
+    }, 100);
 }
 </script>
 @endsection 
