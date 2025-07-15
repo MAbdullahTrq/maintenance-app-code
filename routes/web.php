@@ -69,6 +69,13 @@ Route::get('/debug/turnstile', function () {
     return view('debug.turnstile');
 });
 
+// PWA Manifest route (optional - static file should work)
+Route::get('/manifest.json', function () {
+    return response()->file(public_path('manifest.json'), [
+        'Content-Type' => 'application/manifest+json'
+    ]);
+});
+
 Route::middleware('guest')->group(function () {
     Route::get('/web/login', [LoginController::class, 'showLoginForm'])->name('web.login');
     Route::post('/web/login', [LoginController::class, 'login']);
