@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Owner;
 use App\Models\Property;
 use App\Models\MaintenanceRequest;
 use Carbon\Carbon;
@@ -26,17 +27,15 @@ class ReportController extends Controller
 
         // Get data for dropdowns
         if ($user->isAdmin()) {
-            $owners = User::whereHas('role', function($q) {
-                $q->where('slug', 'property-manager');
-            })->get();
+            $owners = Owner::all();
             $properties = Property::with('owner')->get();
             $technicians = User::whereHas('role', function($q) {
                 $q->where('slug', 'technician');
             })->get();
         } else {
-            // Property managers see only their data
-            $owners = collect([$user]); // Only themselves as owner
-            $properties = $user->managedProperties()->get();
+            // Property managers see only their managed owners and properties
+            $owners = $user->managedOwners()->get();
+            $properties = $user->managedProperties()->with('owner')->get();
             $technicians = User::whereHas('role', function($q) {
                 $q->where('slug', 'technician');
             })->where('invited_by', $user->id)->get();
@@ -59,17 +58,15 @@ class ReportController extends Controller
 
         // Get data for dropdowns
         if ($user->isAdmin()) {
-            $owners = User::whereHas('role', function($q) {
-                $q->where('slug', 'property-manager');
-            })->get();
+            $owners = Owner::all();
             $properties = Property::with('owner')->get();
             $technicians = User::whereHas('role', function($q) {
                 $q->where('slug', 'technician');
             })->get();
         } else {
-            // Property managers see only their data
-            $owners = collect([$user]); // Only themselves as owner
-            $properties = $user->managedProperties()->get();
+            // Property managers see only their managed owners and properties
+            $owners = $user->managedOwners()->get();
+            $properties = $user->managedProperties()->with('owner')->get();
             $technicians = User::whereHas('role', function($q) {
                 $q->where('slug', 'technician');
             })->where('invited_by', $user->id)->get();
@@ -89,7 +86,7 @@ class ReportController extends Controller
         if ($user->isAdmin()) {
             $properties = Property::where('owner_id', $ownerId)->get();
         } else {
-            // Property managers can only see their own properties
+            // Property managers can only see their own managed properties for the selected owner
             $properties = $user->managedProperties()
                 ->where('owner_id', $ownerId)
                 ->get();
@@ -132,7 +129,7 @@ class ReportController extends Controller
     {
         $request->validate([
             'date_range' => 'required|string',
-            'owner_id' => 'nullable|exists:users,id',
+            'owner_id' => 'nullable|exists:owners,id',
             'property_ids' => 'nullable|array',
             'property_ids.*' => 'exists:properties,id',
             'technician_ids' => 'nullable|array',
