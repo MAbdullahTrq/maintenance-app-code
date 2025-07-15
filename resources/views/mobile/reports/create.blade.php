@@ -129,7 +129,7 @@
                             class="bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
                         📥 Download CSV
                     </button>
-                    <button type="submit" name="format" value="pdf" 
+                    <button type="submit" name="format" value="pdf" formtarget="_blank"
                             class="bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
                         📄 Download PDF
                     </button>

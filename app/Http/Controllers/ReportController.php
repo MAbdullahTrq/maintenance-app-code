@@ -395,12 +395,12 @@ class ReportController extends Controller
     }
 
     /**
-     * Generate PDF report (placeholder for now).
+     * Generate PDF report.
      */
     private function generatePDF(array $reportData)
     {
-        // TODO: Implement PDF generation using something like DomPDF
-        return response()->json(['message' => 'PDF generation not implemented yet'], 501);
+        // Create a special PDF view that opens in new window and triggers print dialog
+        return view('reports.pdf', $reportData);
     }
 
     /**

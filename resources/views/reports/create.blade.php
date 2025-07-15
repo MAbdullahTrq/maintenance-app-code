@@ -144,7 +144,7 @@
                         class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                     <i class="fas fa-download mr-2"></i>Download CSV
                 </button>
-                <button type="submit" name="format" value="pdf" 
+                <button type="submit" name="format" value="pdf" formtarget="_blank"
                         class="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                     <i class="fas fa-file-pdf mr-2"></i>Download PDF
                 </button>
