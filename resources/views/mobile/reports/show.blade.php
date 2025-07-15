@@ -8,7 +8,7 @@
 
 @section('content')
 <div class="flex justify-center px-4">
-    <div class="bg-white rounded-xl shadow p-4 w-full max-w-6xl mx-auto">
+    <div class="bg-white rounded-xl shadow p-4 w-full max-w-6xl mx-auto print-content">
         <!-- Report Header -->
         <div class="mb-6">
             <h1 class="text-xl font-bold text-gray-900 mb-1">📊 Maintenance Report</h1>
@@ -261,12 +261,110 @@
 
 <style>
     @media print {
+        /* Hide everything except report content */
+        * {
+            visibility: hidden;
+        }
+        
+        /* Show only the main report container and its children */
+        .print-content, .print-content * {
+            visibility: visible;
+        }
+        
+        /* Hide specific elements */
         .no-print {
             display: none !important;
         }
         
-        body {
-            font-size: 11px;
+        /* Reset page layout for printing */
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            font-size: 10px;
+            line-height: 1.3;
+            color: #000 !important;
+            background: white !important;
+            height: auto !important;
+            overflow: visible !important;
+        }
+        
+        /* Position report content to fill page */
+        .print-content {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 15px !important;
+            max-width: none !important;
+            background: white !important;
+        }
+        
+        /* Clean up styling for print */
+        .bg-white, .bg-blue-50, .bg-green-50, .bg-yellow-50, .bg-red-50, .bg-purple-50 {
+            background: white !important;
+            box-shadow: none !important;
+            border: 1px solid #ddd !important;
+        }
+        
+        .rounded-xl, .rounded-lg {
+            border-radius: 0 !important;
+        }
+        
+        .shadow {
+            box-shadow: none !important;
+        }
+        
+        /* Grid adjustments for mobile */
+        .grid {
+            display: block !important;
+        }
+        
+        .grid > div {
+            display: block !important;
+            margin-bottom: 6px !important;
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+        
+        /* Typography for print */
+        h1 {
+            font-size: 14px !important;
+            margin-bottom: 6px !important;
+        }
+        
+        h2, h3 {
+            font-size: 12px !important;
+            margin-bottom: 4px !important;
+        }
+        
+        p {
+            margin-bottom: 3px !important;
+        }
+        
+        /* Mobile-specific print adjustments */
+        .space-y-3 > * + * {
+            margin-top: 6px !important;
+        }
+        
+        .mb-6 {
+            margin-bottom: 12px !important;
+        }
+        
+        .p-4, .p-3 {
+            padding: 6px !important;
+        }
+        
+        .text-2xl {
+            font-size: 14px !important;
+        }
+        
+        .text-xl {
+            font-size: 12px !important;
+        }
+        
+        .text-sm, .text-xs {
+            font-size: 9px !important;
         }
         
         .cursor-pointer {
@@ -281,32 +379,6 @@
         
         .transition-colors {
             transition: none !important;
-        }
-        
-        .bg-white {
-            background: white !important;
-        }
-        
-        .shadow {
-            box-shadow: none !important;
-        }
-        
-        .rounded-xl,
-        .rounded-lg {
-            border-radius: 4px !important;
-        }
-        
-        .space-y-3 > * + * {
-            margin-top: 8px !important;
-        }
-        
-        .mb-6 {
-            margin-bottom: 16px !important;
-        }
-        
-        .p-4,
-        .p-3 {
-            padding: 8px !important;
         }
         
         /* Hide tap instruction when printing */

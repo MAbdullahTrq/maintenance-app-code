@@ -3,7 +3,7 @@
 @section('title', 'Maintenance Report')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-4 py-8 print-content">
     <!-- Report Header -->
     <div class="flex justify-between items-center mb-6">
         <div>
@@ -326,25 +326,98 @@
 
 <style>
     @media print {
+        /* Hide everything except report content */
+        * {
+            visibility: hidden;
+        }
+        
+        /* Show only the main report container and its children */
+        .print-content, .print-content * {
+            visibility: visible;
+        }
+        
+        /* Hide specific elements */
         .no-print {
             display: none !important;
         }
         
-        body {
-            font-size: 12px;
+        /* Reset page layout for printing */
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            font-size: 11px;
+            line-height: 1.3;
+            color: #000 !important;
+            background: white !important;
+            height: auto !important;
+            overflow: visible !important;
         }
         
-        .container {
-            max-width: none;
-            padding: 0;
-        }
-        
-        .bg-white {
+        /* Position report content to fill page */
+        .print-content {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 15px !important;
+            max-width: none !important;
             background: white !important;
         }
         
-        .shadow-lg, .shadow {
+        /* Clean up styling for print */
+        .bg-white, .bg-blue-50, .bg-green-50, .bg-yellow-50, .bg-red-50 {
+            background: white !important;
             box-shadow: none !important;
+            border: 1px solid #ddd !important;
+        }
+        
+        .rounded-lg, .rounded-xl {
+            border-radius: 0 !important;
+        }
+        
+        .shadow, .shadow-lg {
+            box-shadow: none !important;
+        }
+        
+        /* Table styling for print */
+        table {
+            page-break-inside: avoid;
+            width: 100% !important;
+            border-collapse: collapse !important;
+        }
+        
+        th, td {
+            border: 1px solid #ddd !important;
+            padding: 4px 6px !important;
+            font-size: 10px !important;
+        }
+        
+        /* Grid adjustments */
+        .grid {
+            display: block !important;
+        }
+        
+        .grid > div {
+            display: block !important;
+            margin-bottom: 8px !important;
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+        
+        /* Typography for print */
+        h1 {
+            font-size: 16px !important;
+            margin-bottom: 8px !important;
+        }
+        
+        h2, h3 {
+            font-size: 14px !important;
+            margin-bottom: 6px !important;
+        }
+        
+        p {
+            margin-bottom: 4px !important;
         }
         
         .cursor-pointer {
@@ -353,10 +426,6 @@
         
         tr {
             break-inside: avoid;
-        }
-        
-        table {
-            break-inside: auto;
         }
         
         thead {
