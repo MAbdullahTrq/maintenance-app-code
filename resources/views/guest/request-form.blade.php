@@ -158,23 +158,75 @@
 </div>
 @endsection
 
+@push('styles')
+<style>
+    /* Priority selection styling */
+    .priority-option.selected-priority {
+        border-width: 2px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-1px);
+        transition: all 0.2s ease;
+    }
+    
+    .priority-option.selected-priority.priority-low {
+        border-color: #2563eb;
+        background-color: #eff6ff;
+    }
+    
+    .priority-option.selected-priority.priority-medium {
+        border-color: #d97706;
+        background-color: #fffbeb;
+    }
+    
+    .priority-option.selected-priority.priority-high {
+        border-color: #dc2626;
+        background-color: #fef2f2;
+    }
+    
+    .priority-option {
+        transition: all 0.2s ease;
+    }
+</style>
+@endpush
+
 @push('scripts')
 <script>
     // Priority selection
-    document.querySelectorAll('.priority-option').forEach(option => {
-        option.addEventListener('click', function() {
-            // Clear selected class from all options
-            document.querySelectorAll('.priority-option').forEach(el => {
-                el.classList.remove('selected-priority');
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize selected state on page load
+        function initializePrioritySelection() {
+            document.querySelectorAll('.priority-option').forEach(option => {
+                const radio = option.querySelector('input[type="radio"]');
+                if (radio.checked) {
+                    option.classList.add('selected-priority');
+                    // Add specific priority class for styling
+                    option.classList.add('priority-' + radio.value);
+                }
             });
-            
-            // Add selected class to clicked option
-            this.classList.add('selected-priority');
-            
-            // Check the radio button
-            const radio = this.querySelector('input[type="radio"]');
-            radio.checked = true;
+        }
+        
+        // Handle priority option clicks
+        document.querySelectorAll('.priority-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Clear selected class from all options
+                document.querySelectorAll('.priority-option').forEach(el => {
+                    el.classList.remove('selected-priority', 'priority-low', 'priority-medium', 'priority-high');
+                });
+                
+                // Add selected class to clicked option
+                this.classList.add('selected-priority');
+                
+                // Check the radio button
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+                
+                // Add specific priority class for styling
+                this.classList.add('priority-' + radio.value);
+            });
         });
+        
+        // Initialize on page load
+        initializePrioritySelection();
     });
 
     // Image resize and preview functionality
