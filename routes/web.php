@@ -254,12 +254,13 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::get('/profile/change-password', [App\Http\Controllers\Mobile\ProfileController::class, 'showChangePassword'])->name('mobile.profile.change-password');
     Route::post('/profile/change-password', [App\Http\Controllers\Mobile\ProfileController::class, 'changePassword'])->name('mobile.profile.change-password.submit');
     
-    // Mobile report routes
+    // Mobile report routes (permission check handled in controller)
     Route::get('/reports/create', [App\Http\Controllers\ReportController::class, 'createMobile'])->name('mobile.reports.create');
     Route::post('/reports/generate', [App\Http\Controllers\ReportController::class, 'generateMobile'])->name('mobile.reports.generate');
     
     // Property manager specific routes
     Route::middleware(['property_manager'])->group(function () {
+        
         Route::get('/requests/create', [RequestController::class, 'create'])->name('mobile.requests.create');
         Route::post('/requests/add', [RequestController::class, 'store'])->name('mobile.requests.store');
         
