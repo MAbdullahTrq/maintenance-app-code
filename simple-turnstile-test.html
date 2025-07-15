@@ -40,6 +40,7 @@
             try {
                 widgetId = turnstile.render('#turnstile-widget', {
                     sitekey: '0x4AAAAAABlGaWuOOq-13-1A', // Your actual site key
+                    size: 'flexible', // Responsive size
                     callback: function(token) {
                         updateStatus('✅ CAPTCHA solved! Token: ' + token.substring(0, 20) + '...', 'success');
                     },

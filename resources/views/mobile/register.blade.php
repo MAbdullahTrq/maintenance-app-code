@@ -40,11 +40,13 @@
                 </div>
                 
                 <!-- Cloudflare Turnstile -->
-                <div class="flex justify-center">
-                    <div class="cf-turnstile" 
-                         data-sitekey="{{ config('services.turnstile.site_key') }}"
-                         data-theme="light"
-                         data-size="normal"></div>
+                <div class="flex justify-center w-full">
+                    <div class="w-full max-w-sm">
+                        <div class="cf-turnstile" 
+                             data-sitekey="{{ config('services.turnstile.site_key') }}"
+                             data-theme="light"
+                             data-size="flexible"></div>
+                    </div>
                 </div>
                 @error('cf-turnstile-response')
                     <div class="text-red-500 text-xs text-center">{{ $message }}</div>

@@ -176,6 +176,7 @@
 
                 const config = {
                     sitekey: siteKey || '1x00000000000000000000AA', // Cloudflare test key as fallback
+                    size: 'flexible', // Use responsive size for testing
                     callback: function(token) {
                         log(`✅ Token received: ${token.substring(0, 20)}...`, 'success');
                         updateStatus('form-status', 'CAPTCHA solved successfully', 'success');

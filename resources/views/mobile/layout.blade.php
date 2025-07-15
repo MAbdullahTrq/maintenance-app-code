@@ -22,11 +22,19 @@
             // Auto-render all cf-turnstile elements
             document.querySelectorAll('.cf-turnstile').forEach(function(element) {
                 if (!element.hasAttribute('data-rendered')) {
-                    turnstile.render(element, {
+                    const size = element.getAttribute('data-size') || 'normal';
+                    const config = {
                         sitekey: element.getAttribute('data-sitekey'),
                         theme: element.getAttribute('data-theme') || 'light',
-                        size: element.getAttribute('data-size') || 'normal'
-                    });
+                        size: size
+                    };
+                    
+                    // For flexible size, ensure proper container sizing
+                    if (size === 'flexible') {
+                        element.style.width = '100%';
+                    }
+                    
+                    turnstile.render(element, config);
                     element.setAttribute('data-rendered', 'true');
                 }
             });
