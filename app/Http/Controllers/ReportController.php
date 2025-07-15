@@ -168,15 +168,29 @@ class ReportController extends Controller
      */
     public function generateMobile(Request $request)
     {
-        // Same logic as generate but return mobile view
-        $result = $this->generate($request);
+        // Check if requesting a download format
+        $format = $request->input('format', 'web');
         
-        if ($result instanceof \Illuminate\Http\Response) {
-            return $result; // For PDF/CSV downloads
+        if (in_array($format, ['pdf', 'csv'])) {
+            // For downloads, call generate directly and return the response
+            return $this->generate($request);
         }
         
-        // For web view, return mobile template
-        $reportData = $result->getData();
+        // For web view, build the report data and return mobile template
+        $user = Auth::user();
+        
+        // Parse date range
+        $dateRange = $this->parseDateRange($request->date_range);
+        
+        // Build query based on filters
+        $query = $this->buildReportQuery($request, $user, $dateRange);
+        
+        // Get the results
+        $requests = $query->get();
+        
+        // Generate report data
+        $reportData = $this->generateReportData($requests, $request, $dateRange);
+        
         return view('mobile.reports.show', $reportData);
     }
 
