@@ -47,6 +47,24 @@
                 </div>
             </div>
 
+            <!-- Owner Filter -->
+            @if($owners->count() > 1)
+            <div>
+                <label for="owner_id" class="block text-sm font-medium text-gray-700 mb-2">
+                    👤 Owner (Optional)
+                </label>
+                <select name="owner_id" id="owner_id" 
+                        class="w-full border border-gray-300 rounded-lg px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">All Owners</option>
+                    @foreach($owners as $owner)
+                        <option value="{{ $owner->id }}">{{ $owner->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            @else
+                <input type="hidden" name="owner_id" value="{{ $owners->first()->id ?? '' }}">
+            @endif
+
             <!-- Properties Filter -->
             <div>
                 <label for="property_ids" class="block text-sm font-medium text-gray-700 mb-2">
@@ -134,6 +152,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const dateRange = document.getElementById('date_range');
     const customDateRange = document.getElementById('customDateRange');
+    const ownerSelect = document.getElementById('owner_id');
     const propertySelect = document.getElementById('property_ids');
     const technicianSelect = document.getElementById('technician_ids');
     const reportPreview = document.getElementById('reportPreview');
@@ -148,6 +167,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         updateReportPreview();
     });
+
+    // Handle owner change - filter properties
+    if (ownerSelect) {
+        ownerSelect.addEventListener('change', function() {
+            const ownerId = this.value;
+            
+            if (ownerId) {
+                fetch(`{{ route('api.properties-by-owner') }}?owner_id=${ownerId}`)
+                    .then(response => response.json())
+                    .then(properties => {
+                        propertySelect.innerHTML = '<option value="">All Properties</option>';
+                        properties.forEach(property => {
+                            const option = document.createElement('option');
+                            option.value = property.id;
+                            option.textContent = property.name;
+                            propertySelect.appendChild(option);
+                        });
+                        // Clear technicians since properties changed
+                        technicianSelect.innerHTML = '<option value="">All Technicians</option>';
+                    })
+                    .catch(error => console.log('Error fetching properties:', error));
+            } else {
+                // Reset to all properties if no owner selected
+                location.reload();
+            }
+            updateReportPreview();
+        });
+    }
 
     // Handle property change - filter technicians
     propertySelect.addEventListener('change', function() {
@@ -173,7 +220,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update preview when technician changes
     technicianSelect.addEventListener('change', updateReportPreview);
 
+    // Update preview when owner changes (if owner select exists)
+    if (ownerSelect) {
+        ownerSelect.addEventListener('change', updateReportPreview);
+    }
+
     function updateReportPreview() {
+        const owner = ownerSelect ? ownerSelect.value : '';
+        const ownerText = ownerSelect && owner ? ownerSelect.options[ownerSelect.selectedIndex].text : '';
         const properties = Array.from(propertySelect.selectedOptions).map(option => option.value).filter(val => val);
         const technicians = Array.from(technicianSelect.selectedOptions).map(option => option.value).filter(val => val);
         const dateRangeValue = dateRange.value;
@@ -185,14 +239,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let description = '';
         
-        if (properties.length === 0 && technicians.length === 0) {
-            description = 'Full system report for all properties and technicians';
-        } else if (properties.length > 0 && technicians.length === 0) {
-            description = `Property report for ${properties.length} selected ${properties.length === 1 ? 'property' : 'properties'}`;
-        } else if (properties.length === 0 && technicians.length > 0) {
-            description = `Technician report for ${technicians.length} selected ${technicians.length === 1 ? 'technician' : 'technicians'}`;
+        // Add owner context if specified
+        if (owner && ownerText) {
+            description = `Report for ${ownerText}'s `;
         } else {
-            description = `Combined report for ${properties.length} ${properties.length === 1 ? 'property' : 'properties'} and ${technicians.length} ${technicians.length === 1 ? 'technician' : 'technicians'}`;
+            description = 'Report for ';
+        }
+        
+        if (properties.length === 0 && technicians.length === 0) {
+            description += owner ? 'all properties and technicians' : 'all properties and technicians across all owners';
+        } else if (properties.length > 0 && technicians.length === 0) {
+            description += `${properties.length} selected ${properties.length === 1 ? 'property' : 'properties'}`;
+        } else if (properties.length === 0 && technicians.length > 0) {
+            description += `${technicians.length} selected ${technicians.length === 1 ? 'technician' : 'technicians'}`;
+        } else {
+            description += `${properties.length} ${properties.length === 1 ? 'property' : 'properties'} and ${technicians.length} ${technicians.length === 1 ? 'technician' : 'technicians'}`;
         }
 
         description += ` for the selected date range.`;

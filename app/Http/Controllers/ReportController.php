@@ -52,17 +52,28 @@ class ReportController extends Controller
     {
         $user = Auth::user();
         
-        // Only allow property managers
-        if (!$user->isPropertyManager()) {
+        // Only allow property managers and admins
+        if (!$user->isPropertyManager() && !$user->isAdmin()) {
             abort(403);
         }
 
         // Get data for dropdowns
-        $owners = collect([$user]); // Only themselves as owner
-        $properties = $user->managedProperties()->get();
-        $technicians = User::whereHas('role', function($q) {
-            $q->where('slug', 'technician');
-        })->where('invited_by', $user->id)->get();
+        if ($user->isAdmin()) {
+            $owners = User::whereHas('role', function($q) {
+                $q->where('slug', 'property-manager');
+            })->get();
+            $properties = Property::with('owner')->get();
+            $technicians = User::whereHas('role', function($q) {
+                $q->where('slug', 'technician');
+            })->get();
+        } else {
+            // Property managers see only their data
+            $owners = collect([$user]); // Only themselves as owner
+            $properties = $user->managedProperties()->get();
+            $technicians = User::whereHas('role', function($q) {
+                $q->where('slug', 'technician');
+            })->where('invited_by', $user->id)->get();
+        }
 
         return view('mobile.reports.create', compact('owners', 'properties', 'technicians'));
     }
