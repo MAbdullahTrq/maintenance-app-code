@@ -191,6 +191,31 @@ class ReportController extends Controller
         // Generate report data
         $reportData = $this->generateReportData($requests, $request, $dateRange);
         
+        // Add navigation stats for mobile layout
+        if ($user->isAdmin()) {
+            $navigationStats = [
+                'ownersCount' => \App\Models\Owner::count(),
+                'propertiesCount' => \App\Models\Property::count(),
+                'techniciansCount' => \App\Models\User::whereHas('role', function($q) {
+                    $q->where('slug', 'technician');
+                })->count(),
+                'requestsCount' => \App\Models\MaintenanceRequest::count(),
+            ];
+        } else {
+            // Property manager stats
+            $navigationStats = [
+                'ownersCount' => $user->managedOwners()->count(),
+                'propertiesCount' => $user->managedProperties()->count(),
+                'techniciansCount' => \App\Models\User::whereHas('role', function($q) {
+                    $q->where('slug', 'technician');
+                })->where('invited_by', $user->id)->count(),
+                'requestsCount' => \App\Models\MaintenanceRequest::whereIn('property_id', $user->managedProperties()->pluck('id'))->count(),
+            ];
+        }
+        
+        // Merge navigation stats with report data
+        $reportData = array_merge($reportData, $navigationStats);
+        
         return view('mobile.reports.show', $reportData);
     }
 
@@ -449,6 +474,33 @@ class ReportController extends Controller
      */
     private function displayWebReport(array $reportData, Request $request)
     {
+        $user = Auth::user();
+        
+        // Add navigation stats for both mobile and desktop layouts
+        if ($user->isAdmin()) {
+            $navigationStats = [
+                'ownersCount' => \App\Models\Owner::count(),
+                'propertiesCount' => \App\Models\Property::count(),
+                'techniciansCount' => \App\Models\User::whereHas('role', function($q) {
+                    $q->where('slug', 'technician');
+                })->count(),
+                'requestsCount' => \App\Models\MaintenanceRequest::count(),
+            ];
+        } else {
+            // Property manager stats
+            $navigationStats = [
+                'ownersCount' => $user->managedOwners()->count(),
+                'propertiesCount' => $user->managedProperties()->count(),
+                'techniciansCount' => \App\Models\User::whereHas('role', function($q) {
+                    $q->where('slug', 'technician');
+                })->where('invited_by', $user->id)->count(),
+                'requestsCount' => \App\Models\MaintenanceRequest::whereIn('property_id', $user->managedProperties()->pluck('id'))->count(),
+            ];
+        }
+        
+        // Merge navigation stats with report data
+        $reportData = array_merge($reportData, $navigationStats);
+        
         if ($request->is('*/m/*')) {
             return view('mobile.reports.show', $reportData);
         }
