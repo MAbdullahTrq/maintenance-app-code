@@ -139,14 +139,14 @@
         </div>
 
         <!-- Status Breakdown -->
-        @if(count($statusBreakdown) > 0)
+        @if(isset($breakdowns['status']) && count($breakdowns['status']) > 0)
         <div class="mb-6">
             <h2 class="text-lg font-semibold text-gray-800 mb-3 border-b border-gray-200 pb-1">Status Breakdown</h2>
             <div class="grid grid-cols-2 gap-2">
-                @foreach($statusBreakdown as $status => $data)
+                @foreach($breakdowns['status'] as $status => $count)
                 <div class="flex justify-between border-b border-gray-100 py-1">
                     <span class="font-medium">{{ ucfirst(str_replace('_', ' ', $status)) }}</span>
-                    <span>{{ $data['count'] }} ({{ $data['percentage'] }}%)</span>
+                    <span>{{ $count }} ({{ $summary['total_requests'] > 0 ? round(($count / $summary['total_requests']) * 100, 1) : 0 }}%)</span>
                 </div>
                 @endforeach
             </div>
@@ -154,14 +154,14 @@
         @endif
 
         <!-- Priority Breakdown -->
-        @if(count($priorityBreakdown) > 0)
+        @if(isset($breakdowns['priority']) && count($breakdowns['priority']) > 0)
         <div class="mb-6">
             <h2 class="text-lg font-semibold text-gray-800 mb-3 border-b border-gray-200 pb-1">Priority Breakdown</h2>
             <div class="grid grid-cols-2 gap-2">
-                @foreach($priorityBreakdown as $priority => $data)
+                @foreach($breakdowns['priority'] as $priority => $count)
                 <div class="flex justify-between border-b border-gray-100 py-1">
                     <span class="font-medium">{{ ucfirst($priority) }} Priority</span>
-                    <span>{{ $data['count'] }} ({{ $data['percentage'] }}%)</span>
+                    <span>{{ $count }} ({{ $summary['total_requests'] > 0 ? round(($count / $summary['total_requests']) * 100, 1) : 0 }}%)</span>
                 </div>
                 @endforeach
             </div>
@@ -169,18 +169,18 @@
         @endif
 
         <!-- Property Performance -->
-        @if(count($propertyPerformance) > 0)
+        @if(isset($breakdowns['property']) && count($breakdowns['property']) > 0)
         <div class="mb-6">
             <h2 class="text-lg font-semibold text-gray-800 mb-3 border-b border-gray-200 pb-1">Property Performance</h2>
-            @foreach($propertyPerformance as $property)
+            @foreach($breakdowns['property'] as $propertyName => $data)
             <div class="flex justify-between border-b border-gray-100 py-2">
                 <div>
-                    <span class="font-medium">{{ $property['name'] }}</span><br>
-                    <span class="text-xs text-gray-600">Total: {{ $property['total'] }}</span>
+                    <span class="font-medium">{{ $propertyName }}</span><br>
+                    <span class="text-xs text-gray-600">Total: {{ $data['count'] }}</span>
                 </div>
                 <div class="text-right">
-                    <span class="font-medium">{{ $property['completion_rate'] }}%</span><br>
-                    <span class="text-xs text-gray-600">Completed: {{ $property['completed'] }}</span>
+                    <span class="font-medium">{{ $data['count'] > 0 ? round(($data['completed'] / $data['count']) * 100, 1) : 0 }}%</span><br>
+                    <span class="text-xs text-gray-600">Completed: {{ $data['completed'] }}</span>
                 </div>
             </div>
             @endforeach
