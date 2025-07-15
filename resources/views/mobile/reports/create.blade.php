@@ -431,9 +431,9 @@ function submitForm(format) {
     
     // Set the correct action based on format
     if (format === 'csv') {
-        newForm.action = '{{ route('mobile.reports.csv') }}';
+        newForm.action = '/m/reports/csv';
     } else if (format === 'pdf') {
-        newForm.action = '{{ route('mobile.reports.pdf') }}';
+        newForm.action = '/m/reports/pdf';
         newForm.target = '_blank'; // Open PDF in new window
     }
     
