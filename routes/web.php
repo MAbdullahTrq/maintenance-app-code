@@ -262,10 +262,6 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::post('/reports/csv', [App\Http\Controllers\ReportController::class, 'generateCSVReport'])->name('mobile.reports.csv');
     Route::post('/reports/pdf', [App\Http\Controllers\ReportController::class, 'generatePDFReport'])->name('mobile.reports.pdf');
     
-    // Test routes
-    Route::get('/test', function() { return 'Mobile test route works!'; })->name('mobile.test');
-    Route::post('/test-post', function() { return 'Mobile POST test route works!'; })->name('mobile.test.post');
-    
     // Property manager specific routes
     Route::middleware(['property_manager'])->group(function () {
         

@@ -199,9 +199,30 @@ class ReportController extends Controller
      */
     public function generateCSVReport(Request $request)
     {
-        \Log::info('CSV Report method called');
-        return response('CSV method called successfully!', 200)
-            ->header('Content-Type', 'text/plain');
+        $request->validate([
+            'date_range' => 'required|string',
+            'owner_id' => 'nullable|exists:owners,id',
+            'property_ids' => 'nullable|array',
+            'property_ids.*' => 'exists:properties,id',
+            'technician_ids' => 'nullable|array',
+            'technician_ids.*' => 'exists:users,id',
+        ]);
+
+        $user = Auth::user();
+        
+        // Parse date range
+        $dateRange = $this->parseDateRange($request->date_range);
+        
+        // Build query based on filters
+        $query = $this->buildReportQuery($request, $user, $dateRange);
+        
+        // Get the results
+        $requests = $query->get();
+        
+        // Generate report data
+        $reportData = $this->generateReportData($requests, $request, $dateRange);
+        
+        return $this->generateCSV($reportData);
     }
 
     /**
@@ -209,9 +230,30 @@ class ReportController extends Controller
      */
     public function generatePDFReport(Request $request)
     {
-        \Log::info('PDF Report method called');
-        return response('<h1>PDF method called successfully!</h1>', 200)
-            ->header('Content-Type', 'text/html');
+        $request->validate([
+            'date_range' => 'required|string',
+            'owner_id' => 'nullable|exists:owners,id',
+            'property_ids' => 'nullable|array',
+            'property_ids.*' => 'exists:properties,id',
+            'technician_ids' => 'nullable|array',
+            'technician_ids.*' => 'exists:users,id',
+        ]);
+
+        $user = Auth::user();
+        
+        // Parse date range
+        $dateRange = $this->parseDateRange($request->date_range);
+        
+        // Build query based on filters
+        $query = $this->buildReportQuery($request, $user, $dateRange);
+        
+        // Get the results
+        $requests = $query->get();
+        
+        // Generate report data
+        $reportData = $this->generateReportData($requests, $request, $dateRange);
+        
+        return $this->generatePDF($reportData);
     }
 
     /**
