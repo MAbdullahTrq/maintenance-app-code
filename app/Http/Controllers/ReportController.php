@@ -10,6 +10,7 @@ use App\Models\Property;
 use App\Models\MaintenanceRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use OpenAI\Laravel\Facades\OpenAI;
 
 class ReportController extends Controller
 {
@@ -583,5 +584,135 @@ class ReportController extends Controller
             
             fclose($handle);
         }, 200, $headers);
+    }
+
+    /**
+     * Generate AI Summary for the report.
+     */
+    public function generateAISummary(Request $request)
+    {
+        $user = Auth::user();
+        
+        // Only allow property managers and admins
+        if (!$user->isPropertyManager() && !$user->isAdmin()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        try {
+            // Parse date range
+            $dateRange = $this->parseDateRange($request->date_range, $request->start_date, $request->end_date);
+            
+            // Build query and get requests with comments
+            $query = $this->buildReportQuery($request, $user, $dateRange);
+            $requests = $query->with(['comments.user', 'property.owner', 'assignedTechnician'])->get();
+            
+            // Generate comprehensive report data
+            $reportData = $this->generateReportData($requests, $request, $dateRange);
+            
+            // Prepare data for AI prompt
+            $promptData = $this->prepareDataForAI($requests, $reportData, $dateRange);
+            
+            // Base AI Prompt Template
+            $basePrompt = "You are an assistant helping a property manager summarize maintenance reports. Based on the data, and comments inside each task from either the property manager or the technician, create a clear and professional summary. Highlight the most important details such as total number of tasks, completed vs pending, any recurring issues, top-performing technicians, and any unusual delays. Be concise, use plain language, and include relevant stats where helpful.";
+            
+            // Generate AI summary
+            $response = OpenAI::chat()->create([
+                'model' => config('openai.default_model', 'gpt-3.5-turbo'),
+                'messages' => [
+                    [
+                        'role' => 'system',
+                        'content' => $basePrompt
+                    ],
+                    [
+                        'role' => 'user',
+                        'content' => $promptData
+                    ]
+                ],
+                'max_tokens' => 800,
+                'temperature' => 0.7,
+            ]);
+            
+            $aiSummary = $response->choices[0]->message->content;
+            
+            return response()->json([
+                'success' => true,
+                'summary' => $aiSummary
+            ]);
+            
+        } catch (\Exception $e) {
+            \Log::error('AI Summary Generation Error: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to generate AI summary. Please try again later.'
+            ], 500);
+        }
+    }
+
+    /**
+     * Prepare data for AI analysis.
+     */
+    private function prepareDataForAI($requests, $reportData, $dateRange)
+    {
+        $data = [];
+        
+        // Report overview
+        $data[] = "=== MAINTENANCE REPORT SUMMARY ===";
+        $data[] = "Report Period: {$dateRange['label']}";
+        $data[] = "Total Requests: {$reportData['summary']['total_requests']}";
+        $data[] = "Completed: {$reportData['summary']['completed_requests']}";
+        $data[] = "Pending: {$reportData['summary']['pending_requests']}";
+        $data[] = "Average Completion Time: {$reportData['summary']['average_completion_time']} hours";
+        $data[] = "";
+        
+        // Status breakdown
+        if (!empty($reportData['breakdowns']['status'])) {
+            $data[] = "=== STATUS BREAKDOWN ===";
+            foreach ($reportData['breakdowns']['status'] as $status => $count) {
+                $data[] = ucfirst($status) . ": {$count}";
+            }
+            $data[] = "";
+        }
+        
+        // Priority breakdown
+        if (!empty($reportData['breakdowns']['priority'])) {
+            $data[] = "=== PRIORITY BREAKDOWN ===";
+            foreach ($reportData['breakdowns']['priority'] as $priority => $count) {
+                $data[] = ucfirst($priority) . " Priority: {$count}";
+            }
+            $data[] = "";
+        }
+        
+        // Individual requests with comments
+        $data[] = "=== INDIVIDUAL MAINTENANCE REQUESTS ===";
+        foreach ($requests as $request) {
+            $data[] = "Request #{$request->id}: {$request->title}";
+            $ownerName = $request->property->owner->name ?? 'N/A';
+            $data[] = "Property: {$request->property->name} (Owner: {$ownerName})";
+            $data[] = "Priority: {$request->priority} | Status: {$request->status}";
+            $technicianName = $request->assignedTechnician->name ?? 'Not Assigned';
+            $data[] = "Technician: {$technicianName}";
+            $data[] = "Created: {$request->created_at->format('Y-m-d H:i')}";
+            
+            if ($request->completed_at) {
+                $completionTime = $request->created_at->diffInHours($request->completed_at);
+                $data[] = "Completed: {$request->completed_at->format('Y-m-d H:i')} (Duration: {$completionTime} hours)";
+            }
+            
+            // Add comments
+            if ($request->comments && $request->comments->count() > 0) {
+                $data[] = "Comments:";
+                foreach ($request->comments as $comment) {
+                    $userRole = $comment->user->role->name ?? 'User';
+                    $userName = $comment->user->name;
+                    $commentText = $comment->comment;
+                    $data[] = "  - {$userRole} ({$userName}): {$commentText}";
+                }
+            }
+            
+            $data[] = "---";
+        }
+        
+        return implode("\n", $data);
     }
 } 

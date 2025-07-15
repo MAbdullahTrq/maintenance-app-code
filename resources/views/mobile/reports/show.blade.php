@@ -17,25 +17,46 @@
         </div>
 
         <!-- Export Actions -->
-        <div class="mb-6 flex space-x-2 no-print">
-            <button onclick="window.print()" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-sm font-medium">
-                🖨️ Print Report
+        <div class="mb-6 space-y-2 no-print">
+            <button id="generateAISummary" class="w-full bg-orange-600 hover:bg-orange-700 text-white px-3 py-2 rounded-lg text-sm font-medium">
+                🧠 Generate AI Summary
             </button>
-            <form method="POST" action="{{ route('mobile.reports.generate') }}" class="inline flex-1">
-                @csrf
-                @foreach($filters as $key => $value)
-                    @if(is_array($value))
-                        @foreach($value as $item)
-                            <input type="hidden" name="{{ $key }}[]" value="{{ $item }}">
-                        @endforeach
-                    @else
-                        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                    @endif
-                @endforeach
-                <button type="submit" name="format" value="csv" class="w-full bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-medium">
-                    📥 Export CSV
+            <div class="flex space-x-2">
+                <button onclick="window.print()" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-sm font-medium">
+                    🖨️ Print Report
                 </button>
-            </form>
+                <form method="POST" action="{{ route('mobile.reports.generate') }}" class="inline flex-1">
+                    @csrf
+                    @foreach($filters as $key => $value)
+                        @if(is_array($value))
+                            @foreach($value as $item)
+                                <input type="hidden" name="{{ $key }}[]" value="{{ $item }}">
+                            @endforeach
+                        @else
+                            <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                        @endif
+                    @endforeach
+                    <button type="submit" name="format" value="csv" class="w-full bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-medium">
+                        📥 Export CSV
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- AI Summary Section -->
+        <div id="aiSummarySection" class="mb-6 no-print" style="display: none;">
+            <div class="bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-200 rounded-lg p-4">
+                <div class="flex items-center mb-3">
+                    <span class="text-orange-600 text-lg mr-2">🧠</span>
+                    <h2 class="text-lg font-bold text-orange-800">AI Summary</h2>
+                </div>
+                <div id="aiSummaryContent" class="text-gray-700 text-sm leading-relaxed whitespace-pre-line"></div>
+                <div id="aiSummaryLoading" class="flex items-center justify-center py-6">
+                    <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-600"></div>
+                    <span class="ml-2 text-orange-600 text-sm">Generating AI summary...</span>
+                </div>
+                <div id="aiSummaryError" class="text-red-600 text-sm" style="display: none;"></div>
+            </div>
         </div>
 
         <!-- Summary Cards -->
@@ -387,4 +408,74 @@
         }
     }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const generateBtn = document.getElementById('generateAISummary');
+    const summarySection = document.getElementById('aiSummarySection');
+    const summaryContent = document.getElementById('aiSummaryContent');
+    const summaryLoading = document.getElementById('aiSummaryLoading');
+    const summaryError = document.getElementById('aiSummaryError');
+
+    generateBtn.addEventListener('click', function() {
+        // Show the summary section
+        summarySection.style.display = 'block';
+        summaryContent.style.display = 'none';
+        summaryLoading.style.display = 'flex';
+        summaryError.style.display = 'none';
+        
+        // Disable the button to prevent multiple requests
+        generateBtn.disabled = true;
+        generateBtn.innerHTML = '⏳ Generating...';
+
+        // Prepare form data with all the filters
+        const formData = new FormData();
+        formData.append('_token', '{{ csrf_token() }}');
+        
+        // Add all filter data from the current report
+        @foreach($filters as $key => $value)
+            @if(is_array($value))
+                @foreach($value as $item)
+                    formData.append('{{ $key }}[]', '{{ $item }}');
+                @endforeach
+            @else
+                formData.append('{{ $key }}', '{{ $value }}');
+            @endif
+        @endforeach
+
+        // Make AJAX request to generate AI summary
+        fetch('{{ route("mobile.reports.ai-summary") }}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            summaryLoading.style.display = 'none';
+            
+            if (data.success) {
+                summaryContent.textContent = data.summary;
+                summaryContent.style.display = 'block';
+            } else {
+                summaryError.textContent = data.error || 'Failed to generate AI summary.';
+                summaryError.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            summaryLoading.style.display = 'none';
+            summaryError.textContent = 'Network error. Please try again.';
+            summaryError.style.display = 'block';
+        })
+        .finally(() => {
+            // Re-enable the button
+            generateBtn.disabled = false;
+            generateBtn.innerHTML = '🧠 Generate AI Summary';
+        });
+    });
+});
+</script>
+
 @endsection 

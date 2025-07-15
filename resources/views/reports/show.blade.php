@@ -14,6 +14,9 @@
             <a href="{{ route('reports.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                 <i class="fas fa-plus mr-2"></i>New Report
             </a>
+            <button id="generateAISummary" class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+                <i class="fas fa-brain mr-2"></i>Generate AI Summary
+            </button>
             <button onclick="window.print()" class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
                 <i class="fas fa-print mr-2"></i>Print Report
             </button>
@@ -32,6 +35,22 @@
                     <i class="fas fa-download mr-2"></i>Export CSV
                 </button>
             </form>
+        </div>
+    </div>
+
+    <!-- AI Summary Section -->
+    <div id="aiSummarySection" class="mb-8 no-print" style="display: none;">
+        <div class="bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-200 rounded-lg p-6">
+            <div class="flex items-center mb-4">
+                <i class="fas fa-brain text-orange-600 text-xl mr-3"></i>
+                <h2 class="text-xl font-bold text-orange-800">AI-Generated Summary</h2>
+            </div>
+            <div id="aiSummaryContent" class="text-gray-700 leading-relaxed whitespace-pre-line"></div>
+            <div id="aiSummaryLoading" class="flex items-center justify-center py-8">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
+                <span class="ml-3 text-orange-600">Generating AI summary...</span>
+            </div>
+            <div id="aiSummaryError" class="text-red-600" style="display: none;"></div>
         </div>
     </div>
 
@@ -433,4 +452,74 @@
         }
     }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const generateBtn = document.getElementById('generateAISummary');
+    const summarySection = document.getElementById('aiSummarySection');
+    const summaryContent = document.getElementById('aiSummaryContent');
+    const summaryLoading = document.getElementById('aiSummaryLoading');
+    const summaryError = document.getElementById('aiSummaryError');
+
+    generateBtn.addEventListener('click', function() {
+        // Show the summary section
+        summarySection.style.display = 'block';
+        summaryContent.style.display = 'none';
+        summaryLoading.style.display = 'flex';
+        summaryError.style.display = 'none';
+        
+        // Disable the button to prevent multiple requests
+        generateBtn.disabled = true;
+        generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Generating...';
+
+        // Prepare form data with all the filters
+        const formData = new FormData();
+        formData.append('_token', '{{ csrf_token() }}');
+        
+        // Add all filter data from the current report
+        @foreach($filters as $key => $value)
+            @if(is_array($value))
+                @foreach($value as $item)
+                    formData.append('{{ $key }}[]', '{{ $item }}');
+                @endforeach
+            @else
+                formData.append('{{ $key }}', '{{ $value }}');
+            @endif
+        @endforeach
+
+        // Make AJAX request to generate AI summary
+        fetch('{{ route("reports.ai-summary") }}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            summaryLoading.style.display = 'none';
+            
+            if (data.success) {
+                summaryContent.textContent = data.summary;
+                summaryContent.style.display = 'block';
+            } else {
+                summaryError.textContent = data.error || 'Failed to generate AI summary.';
+                summaryError.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            summaryLoading.style.display = 'none';
+            summaryError.textContent = 'Network error. Please try again.';
+            summaryError.style.display = 'block';
+        })
+        .finally(() => {
+            // Re-enable the button
+            generateBtn.disabled = false;
+            generateBtn.innerHTML = '<i class="fas fa-brain mr-2"></i>Generate AI Summary';
+        });
+    });
+});
+</script>
+
 @endsection 

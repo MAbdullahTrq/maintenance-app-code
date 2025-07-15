@@ -83,6 +83,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/reports/generate', [App\Http\Controllers\ReportController::class, 'generate'])->name('reports.generate');
     Route::post('/reports/csv', [App\Http\Controllers\ReportController::class, 'generateCSVReport'])->name('reports.csv');
     Route::post('/reports/pdf', [App\Http\Controllers\ReportController::class, 'generatePDFReport'])->name('reports.pdf');
+    Route::post('/reports/ai-summary', [App\Http\Controllers\ReportController::class, 'generateAISummary'])->name('reports.ai-summary');
     
     // AJAX endpoints for dynamic filtering
     Route::get('/api/properties-by-owner', [App\Http\Controllers\ReportController::class, 'getPropertiesByOwner'])->name('api.properties-by-owner');
@@ -261,6 +262,7 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::post('/reports/generate', [App\Http\Controllers\ReportController::class, 'generateMobile'])->name('mobile.reports.generate');
     Route::post('/reports/csv', [App\Http\Controllers\ReportController::class, 'generateCSVReport'])->name('mobile.reports.csv');
     Route::post('/reports/pdf', [App\Http\Controllers\ReportController::class, 'generatePDFReport'])->name('mobile.reports.pdf');
+    Route::post('/reports/ai-summary', [App\Http\Controllers\ReportController::class, 'generateAISummary'])->name('mobile.reports.ai-summary');
     
     // Property manager specific routes
     Route::middleware(['property_manager'])->group(function () {
