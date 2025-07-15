@@ -76,6 +76,21 @@ Route::get('/manifest.json', function () {
     ]);
 });
 
+// Report routes
+Route::middleware(['auth'])->group(function () {
+    // Desktop report routes
+    Route::get('/reports/create', [App\Http\Controllers\ReportController::class, 'create'])->name('reports.create');
+    Route::post('/reports/generate', [App\Http\Controllers\ReportController::class, 'generate'])->name('reports.generate');
+    
+    // Mobile report routes
+    Route::get('/m/reports/create', [App\Http\Controllers\ReportController::class, 'createMobile'])->name('mobile.reports.create');
+    Route::post('/m/reports/generate', [App\Http\Controllers\ReportController::class, 'generateMobile'])->name('mobile.reports.generate');
+    
+    // AJAX endpoints for dynamic filtering
+    Route::get('/api/properties-by-owner', [App\Http\Controllers\ReportController::class, 'getPropertiesByOwner'])->name('api.properties-by-owner');
+    Route::get('/api/technicians-by-properties', [App\Http\Controllers\ReportController::class, 'getTechniciansByProperties'])->name('api.technicians-by-properties');
+});
+
 Route::middleware('guest')->group(function () {
     Route::get('/web/login', [LoginController::class, 'showLoginForm'])->name('web.login');
     Route::post('/web/login', [LoginController::class, 'login']);

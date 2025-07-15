@@ -7,11 +7,16 @@
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-900">Maintenance Requests</h1>
         
-        @if(auth()->user()->isPropertyManager() || auth()->user()->isAdmin())
-            <a href="{{ route('maintenance.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                <i class="fas fa-plus mr-2"></i>Create Request
-            </a>
-        @endif
+        <div class="flex space-x-3">
+            @if(auth()->user()->isPropertyManager() || auth()->user()->isAdmin())
+                <a href="{{ route('reports.create') }}" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                    <i class="fas fa-chart-bar mr-2"></i>Create Report
+                </a>
+                <a href="{{ route('maintenance.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                    <i class="fas fa-plus mr-2"></i>Create Request
+                </a>
+            @endif
+        </div>
     </div>
     
     @if(session('success'))
