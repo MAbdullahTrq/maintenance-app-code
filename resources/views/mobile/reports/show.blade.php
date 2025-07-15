@@ -17,8 +17,11 @@
         </div>
 
         <!-- Export Actions -->
-        <div class="mb-6 flex space-x-2">
-            <form method="POST" action="{{ route('mobile.reports.generate') }}" class="inline">
+        <div class="mb-6 flex space-x-2 no-print">
+            <button onclick="window.print()" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-sm font-medium">
+                🖨️ Print Report
+            </button>
+            <form method="POST" action="{{ route('mobile.reports.generate') }}" class="inline flex-1">
                 @csrf
                 @foreach($filters as $key => $value)
                     @if(is_array($value))
@@ -29,7 +32,7 @@
                         <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                     @endif
                 @endforeach
-                <button type="submit" name="format" value="csv" class="flex-1 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-medium">
+                <button type="submit" name="format" value="csv" class="w-full bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-medium">
                     📥 Export CSV
                 </button>
             </form>
@@ -199,9 +202,9 @@
             @if($requests->isNotEmpty())
                 <div class="space-y-3">
                     @foreach($requests as $request)
-                        <div class="p-3 bg-gray-50 rounded-lg">
+                        <div class="p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 border hover:border-blue-300 transition-colors" onclick="window.open('{{ route('mobile.request.show', $request->id) }}', '_blank')">
                             <div class="flex justify-between items-start mb-2">
-                                <div class="text-sm font-medium text-gray-900">{{ $request->title }}</div>
+                                <div class="text-sm font-medium text-blue-600 hover:text-blue-800">{{ $request->title }}</div>
                                 <div class="flex space-x-1">
                                     <span class="px-2 py-1 text-xs rounded 
                                         @if($request->priority == 'low') bg-green-100 text-green-800
@@ -232,6 +235,9 @@
                                 @if($request->completed_at)
                                 <div>✅ Completed: {{ $request->completed_at->format('M d, Y') }}</div>
                                 @endif
+                                <div class="mt-2 text-blue-500 text-xs">
+                                    👆 Tap to open request details
+                                </div>
                             </div>
                         </div>
                     @endforeach
@@ -252,4 +258,61 @@
         </div>
     </div>
 </div>
+
+<style>
+    @media print {
+        .no-print {
+            display: none !important;
+        }
+        
+        body {
+            font-size: 11px;
+        }
+        
+        .cursor-pointer {
+            cursor: default !important;
+        }
+        
+        .hover\:bg-gray-100:hover,
+        .hover\:border-blue-300:hover {
+            background-color: transparent !important;
+            border-color: transparent !important;
+        }
+        
+        .transition-colors {
+            transition: none !important;
+        }
+        
+        .bg-white {
+            background: white !important;
+        }
+        
+        .shadow {
+            box-shadow: none !important;
+        }
+        
+        .rounded-xl,
+        .rounded-lg {
+            border-radius: 4px !important;
+        }
+        
+        .space-y-3 > * + * {
+            margin-top: 8px !important;
+        }
+        
+        .mb-6 {
+            margin-bottom: 16px !important;
+        }
+        
+        .p-4,
+        .p-3 {
+            padding: 8px !important;
+        }
+        
+        /* Hide tap instruction when printing */
+        .text-blue-500:last-child {
+            display: none !important;
+        }
+    }
+</style>
 @endsection 

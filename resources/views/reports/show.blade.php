@@ -10,10 +10,13 @@
             <h1 class="text-3xl font-bold text-gray-900">Maintenance Report</h1>
             <p class="text-gray-600 mt-1">{{ $report_type }} • {{ $dateRange['label'] }}</p>
         </div>
-        <div class="flex space-x-3">
+        <div class="flex space-x-3 no-print">
             <a href="{{ route('reports.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                 <i class="fas fa-plus mr-2"></i>New Report
             </a>
+            <button onclick="window.print()" class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
+                <i class="fas fa-print mr-2"></i>Print Report
+            </button>
             <form method="POST" action="{{ route('reports.generate') }}" class="inline">
                 @csrf
                 @foreach($filters as $key => $value)
@@ -270,10 +273,10 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach($requests as $request)
-                            <tr class="hover:bg-gray-50">
+                            <tr class="hover:bg-gray-50 cursor-pointer" onclick="window.open('{{ route('maintenance.show', $request) }}', '_blank')">
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ $request->title }}</div>
-                                    <div class="text-sm text-gray-500">ID: {{ $request->id }}</div>
+                                    <div class="text-sm font-medium text-blue-600 hover:text-blue-800">{{ $request->title }}</div>
+                                    <div class="text-sm text-gray-500">ID: {{ $request->id }} • Click to open</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">{{ $request->property->name ?? 'N/A' }}</div>
@@ -320,4 +323,45 @@
         @endif
     </div>
 </div>
+
+<style>
+    @media print {
+        .no-print {
+            display: none !important;
+        }
+        
+        body {
+            font-size: 12px;
+        }
+        
+        .container {
+            max-width: none;
+            padding: 0;
+        }
+        
+        .bg-white {
+            background: white !important;
+        }
+        
+        .shadow-lg, .shadow {
+            box-shadow: none !important;
+        }
+        
+        .cursor-pointer {
+            cursor: default !important;
+        }
+        
+        tr {
+            break-inside: avoid;
+        }
+        
+        table {
+            break-inside: auto;
+        }
+        
+        thead {
+            display: table-header-group;
+        }
+    }
+</style>
 @endsection 
