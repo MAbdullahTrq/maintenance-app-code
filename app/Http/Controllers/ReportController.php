@@ -72,7 +72,29 @@ class ReportController extends Controller
             })->where('invited_by', $user->id)->get();
         }
 
-        return view('mobile.reports.create', compact('owners', 'properties', 'technicians'));
+        // Add navigation stats for mobile layout
+        if ($user->isAdmin()) {
+            $navigationStats = [
+                'ownersCount' => \App\Models\Owner::count(),
+                'propertiesCount' => \App\Models\Property::count(),
+                'techniciansCount' => \App\Models\User::whereHas('role', function($q) {
+                    $q->where('slug', 'technician');
+                })->count(),
+                'requestsCount' => \App\Models\MaintenanceRequest::count(),
+            ];
+        } else {
+            // Property manager stats
+            $navigationStats = [
+                'ownersCount' => $user->managedOwners()->count(),
+                'propertiesCount' => $user->managedProperties()->count(),
+                'techniciansCount' => \App\Models\User::whereHas('role', function($q) {
+                    $q->where('slug', 'technician');
+                })->where('invited_by', $user->id)->count(),
+                'requestsCount' => \App\Models\MaintenanceRequest::whereIn('property_id', $user->managedProperties()->pluck('id'))->count(),
+            ];
+        }
+
+        return view('mobile.reports.create', compact('owners', 'properties', 'technicians') + $navigationStats);
     }
 
     /**
