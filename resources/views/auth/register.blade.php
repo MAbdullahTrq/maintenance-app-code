@@ -3,6 +3,43 @@
 @section('title', 'Register')
 
 @section('content')
+<style>
+    /* Turnstile responsive styles */
+    .turnstile-container {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+    
+    .cf-turnstile {
+        width: 100% !important;
+        max-width: 100% !important;
+        transform-origin: 0 0;
+    }
+    
+    /* Scale down on very small screens */
+    @media (max-width: 320px) {
+        .cf-turnstile {
+            transform: scale(0.9);
+            transform-origin: 0 0;
+        }
+        .turnstile-container {
+            max-width: 270px;
+        }
+    }
+    
+    @media (max-width: 280px) {
+        .cf-turnstile {
+            transform: scale(0.8);
+            transform-origin: 0 0;
+        }
+        .turnstile-container {
+            max-width: 240px;
+        }
+    }
+</style>
+
 <div class="flex justify-center">
     <div class="w-full max-w-md">
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
@@ -51,7 +88,7 @@
                     <!-- Cloudflare Turnstile -->
                     <div class="mb-6">
                         <div class="flex justify-center">
-                            <div class="w-full max-w-sm">
+                            <div class="turnstile-container">
                                 <div class="cf-turnstile" 
                                      data-sitekey="{{ config('services.turnstile.site_key') }}"
                                      data-theme="light"

@@ -3,6 +3,33 @@
 @section('title', 'Register')
 
 @section('content')
+<style>
+    /* Turnstile responsive styles for compact size (150x140px) */
+    .turnstile-container {
+        width: 100%;
+        max-width: 180px;
+        margin: 0 auto;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .cf-turnstile {
+        transform-origin: center center;
+    }
+    
+    /* Scale down on very small screens */
+    @media (max-width: 200px) {
+        .cf-turnstile {
+            transform: scale(0.85);
+            transform-origin: center center;
+        }
+        .turnstile-container {
+            max-width: 150px;
+        }
+    }
+</style>
+
 <div class="min-h-screen bg-blue-50 px-4 sm:px-6 lg:px-8">
     <div class="flex justify-center" style="padding-top: min(25vh, 120px)">
     <div class="w-full max-w-md space-y-8">
@@ -41,11 +68,11 @@
                 
                 <!-- Cloudflare Turnstile -->
                 <div class="flex justify-center w-full">
-                    <div class="w-full max-w-sm">
+                    <div class="turnstile-container">
                         <div class="cf-turnstile" 
                              data-sitekey="{{ config('services.turnstile.site_key') }}"
                              data-theme="light"
-                             data-size="flexible"></div>
+                             data-size="compact"></div>
                     </div>
                 </div>
                 @error('cf-turnstile-response')

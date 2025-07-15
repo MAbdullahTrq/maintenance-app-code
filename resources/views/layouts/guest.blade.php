@@ -37,18 +37,44 @@
                         size: size
                     };
                     
-                    // For flexible size, ensure proper container sizing
+                    console.log('Rendering Turnstile with config:', config);
+                    console.log('Element size attribute:', size);
+                    
+                    // For flexible size, ensure proper container styling
                     if (size === 'flexible') {
                         element.style.width = '100%';
+                        element.style.maxWidth = '100%';
+                        // Add responsive class to parent container
+                        const parent = element.closest('.turnstile-container');
+                        if (parent) {
+                            parent.style.display = 'block';
+                            parent.style.width = '100%';
+                        }
                     }
                     
-                    turnstile.render(element, config);
-                    element.setAttribute('data-rendered', 'true');
+                    try {
+                        const widgetId = turnstile.render(element, config);
+                        console.log('Turnstile widget rendered with ID:', widgetId);
+                        element.setAttribute('data-rendered', 'true');
+                        element.setAttribute('data-widget-id', widgetId);
+                    } catch (error) {
+                        console.error('Error rendering Turnstile:', error);
+                    }
                 }
             });
         };
+        
+        // Force refresh when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait a bit then check if widgets need re-rendering
+            setTimeout(function() {
+                if (typeof turnstile !== 'undefined') {
+                    window.onTurnstileLoad();
+                }
+            }, 1000);
+        });
     </script>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit" async defer></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit&t={{ time() }}" async defer></script>
     
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
