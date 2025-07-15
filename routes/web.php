@@ -82,10 +82,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/reports/create', [App\Http\Controllers\ReportController::class, 'create'])->name('reports.create');
     Route::post('/reports/generate', [App\Http\Controllers\ReportController::class, 'generate'])->name('reports.generate');
     
-    // Mobile report routes
-    Route::get('/m/reports/create', [App\Http\Controllers\ReportController::class, 'createMobile'])->name('mobile.reports.create');
-    Route::post('/m/reports/generate', [App\Http\Controllers\ReportController::class, 'generateMobile'])->name('mobile.reports.generate');
-    
     // AJAX endpoints for dynamic filtering
     Route::get('/api/properties-by-owner', [App\Http\Controllers\ReportController::class, 'getPropertiesByOwner'])->name('api.properties-by-owner');
     Route::get('/api/technicians-by-properties', [App\Http\Controllers\ReportController::class, 'getTechniciansByProperties'])->name('api.technicians-by-properties');
@@ -257,6 +253,10 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::post('/profile/update-picture', [App\Http\Controllers\Mobile\ProfileController::class, 'updatePicture'])->name('mobile.profile.update-picture');
     Route::get('/profile/change-password', [App\Http\Controllers\Mobile\ProfileController::class, 'showChangePassword'])->name('mobile.profile.change-password');
     Route::post('/profile/change-password', [App\Http\Controllers\Mobile\ProfileController::class, 'changePassword'])->name('mobile.profile.change-password.submit');
+    
+    // Mobile report routes
+    Route::get('/reports/create', [App\Http\Controllers\ReportController::class, 'createMobile'])->name('mobile.reports.create');
+    Route::post('/reports/generate', [App\Http\Controllers\ReportController::class, 'generateMobile'])->name('mobile.reports.generate');
     
     // Property manager specific routes
     Route::middleware(['property_manager'])->group(function () {
