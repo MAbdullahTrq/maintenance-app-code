@@ -4,302 +4,76 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-8 print-content">
-    <!-- Report Header -->
-    <div class="flex justify-between items-center mb-6">
-        <div>
-            <h1 class="text-3xl font-bold text-gray-900">Maintenance Report</h1>
-            <p class="text-gray-600 mt-1">{{ $report_type }} • {{ $dateRange['label'] }}</p>
+    <!-- Report Header with Export Controls -->
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Report</h1>
+                <p class="text-gray-600 mt-1">{{ $report_type }} • {{ $dateRange['label'] }}</p>
+            </div>
+            <div class="flex space-x-3 no-print">
+                <form method="POST" action="{{ route('reports.generate') }}" class="inline">
+                    @csrf
+                    @foreach($filters as $key => $value)
+                        @if(is_array($value))
+                            @foreach($value as $item)
+                                <input type="hidden" name="{{ $key }}[]" value="{{ $item }}">
+                            @endforeach
+                        @else
+                            <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                        @endif
+                    @endforeach
+                    <button type="submit" name="format" value="csv" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                        Export
+                    </button>
+                </form>
+            </div>
         </div>
-        <div class="flex space-x-3 no-print">
-            <a href="{{ route('reports.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                <i class="fas fa-plus mr-2"></i>New Report
-            </a>
-            <button id="generateAISummary" class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
-                <i class="fas fa-brain mr-2"></i>Generate AI Summary
+        
+        <!-- Generate AI Summary Button -->
+        <div class="text-center no-print">
+            <button id="generateAISummary" class="px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900">
+                Generate AI summary
             </button>
-            <button onclick="window.print()" class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
-                <i class="fas fa-print mr-2"></i>Print Report
-            </button>
-            <form method="POST" action="{{ route('reports.generate') }}" class="inline">
-                @csrf
-                @foreach($filters as $key => $value)
-                    @if(is_array($value))
-                        @foreach($value as $item)
-                            <input type="hidden" name="{{ $key }}[]" value="{{ $item }}">
-                        @endforeach
-                    @else
-                        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                    @endif
-                @endforeach
-                <button type="submit" name="format" value="csv" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
-                    <i class="fas fa-download mr-2"></i>Export CSV
-                </button>
-            </form>
         </div>
     </div>
 
     <!-- AI Summary Section -->
-    <div id="aiSummarySection" class="mb-8 no-print" style="display: none;">
-        <div class="bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-200 rounded-lg p-6">
+    <div id="aiSummarySection" class="mb-6 no-print" style="display: none;">
+        <div class="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-6">
             <div class="flex items-center mb-4">
-                <i class="fas fa-brain text-orange-600 text-xl mr-3"></i>
-                <h2 class="text-xl font-bold text-orange-800">AI-Generated Summary</h2>
+                <i class="fas fa-brain text-blue-600 text-xl mr-3"></i>
+                <h2 class="text-xl font-bold text-blue-800">AI-Generated Summary</h2>
             </div>
             <div id="aiSummaryContent" class="text-gray-700 leading-relaxed whitespace-pre-line"></div>
             <div id="aiSummaryLoading" class="flex items-center justify-center py-8">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
-                <span class="ml-3 text-orange-600">Generating AI summary...</span>
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <span class="ml-3 text-blue-600">Generating AI summary...</span>
             </div>
             <div id="aiSummaryError" class="text-red-600" style="display: none;"></div>
         </div>
     </div>
 
-    <!-- Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <i class="fas fa-clipboard-list text-2xl text-blue-500"></i>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-500">Total Requests</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $summary['total_requests'] }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <i class="fas fa-check-circle text-2xl text-green-500"></i>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-500">Completed</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $summary['completed_requests'] }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <i class="fas fa-clock text-2xl text-yellow-500"></i>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-500">Pending</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $summary['pending_requests'] }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <i class="fas fa-percentage text-2xl text-purple-500"></i>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-500">Completion Rate</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $summary['completion_rate'] }}%</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Charts Row -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <!-- Status Breakdown -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Status Breakdown</h3>
-            <div class="space-y-3">
-                @foreach($breakdowns['status'] as $status => $count)
-                    @php
-                        $percentage = $summary['total_requests'] > 0 ? round(($count / $summary['total_requests']) * 100, 1) : 0;
-                        $colorClass = match($status) {
-                            'completed' => 'bg-green-500',
-                            'pending' => 'bg-yellow-500',
-                            'assigned' => 'bg-blue-500',
-                            'started' => 'bg-purple-500',
-                            'declined' => 'bg-red-500',
-                            default => 'bg-gray-500'
-                        };
-                    @endphp
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="w-4 h-4 rounded {{ $colorClass }} mr-3"></div>
-                            <span class="text-sm font-medium">{{ ucfirst($status) }}</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <span class="text-sm text-gray-600">{{ $count }}</span>
-                            <span class="text-xs text-gray-500">({{ $percentage }}%)</span>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-
-        <!-- Priority Breakdown -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Priority Breakdown</h3>
-            <div class="space-y-3">
-                @foreach($breakdowns['priority'] as $priority => $count)
-                    @php
-                        $percentage = $summary['total_requests'] > 0 ? round(($count / $summary['total_requests']) * 100, 1) : 0;
-                        $colorClass = match($priority) {
-                            'high' => 'bg-red-500',
-                            'medium' => 'bg-yellow-500',
-                            'low' => 'bg-green-500',
-                            default => 'bg-gray-500'
-                        };
-                    @endphp
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="w-4 h-4 rounded {{ $colorClass }} mr-3"></div>
-                            <span class="text-sm font-medium">{{ ucfirst($priority) }} Priority</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <span class="text-sm text-gray-600">{{ $count }}</span>
-                            <span class="text-xs text-gray-500">({{ $percentage }}%)</span>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
-
-    <!-- Performance Metrics -->
-    @if($summary['average_completion_time'])
-    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Performance Metrics</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="text-center">
-                <div class="text-3xl font-bold text-blue-600">{{ $summary['average_completion_time'] }}</div>
-                <div class="text-sm text-gray-500">Average Completion Time (Hours)</div>
-            </div>
-            <div class="text-center">
-                <div class="text-3xl font-bold text-green-600">{{ $summary['completion_rate'] }}%</div>
-                <div class="text-sm text-gray-500">Completion Rate</div>
-            </div>
-            <div class="text-center">
-                <div class="text-3xl font-bold text-purple-600">{{ count($breakdowns['technician']) }}</div>
-                <div class="text-sm text-gray-500">Active Technicians</div>
-            </div>
-        </div>
-    </div>
-    @endif
-
-    <!-- Property Performance -->
-    @if($breakdowns['property']->isNotEmpty())
-    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Property Performance</h3>
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Requests</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Completed</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Completion Rate</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @foreach($breakdowns['property'] as $propertyName => $data)
-                        @php
-                            $completionRate = $data['count'] > 0 ? round(($data['completed'] / $data['count']) * 100, 1) : 0;
-                        @endphp
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $propertyName }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $data['count'] }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $data['completed'] }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="w-full bg-gray-200 rounded-full h-2 mr-3">
-                                        <div class="bg-green-600 h-2 rounded-full" style="width: {{ $completionRate }}%"></div>
-                                    </div>
-                                    <span class="text-sm text-gray-600">{{ $completionRate }}%</span>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-    @endif
-
-    <!-- Technician Performance -->
-    @if($breakdowns['technician']->isNotEmpty())
-    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Technician Performance</h3>
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Technician</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Requests</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Completed</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Completion Rate</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Avg. Time (Hours)</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @foreach($breakdowns['technician'] as $technicianName => $data)
-                        @php
-                            $completionRate = $data['count'] > 0 ? round(($data['completed'] / $data['count']) * 100, 1) : 0;
-                        @endphp
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $technicianName }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $data['count'] }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $data['completed'] }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="w-full bg-gray-200 rounded-full h-2 mr-3">
-                                        <div class="bg-blue-600 h-2 rounded-full" style="width: {{ $completionRate }}%"></div>
-                                    </div>
-                                    <span class="text-sm text-gray-600">{{ $completionRate }}%</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ $data['avg_completion_time'] ? number_format($data['avg_completion_time'], 1) : 'N/A' }}
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-    @endif
-
-    <!-- Detailed Request List -->
+    <!-- Main Report Table -->
     <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <div class="p-6 border-b border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-800">Detailed Request List</h3>
-            <p class="text-sm text-gray-500 mt-1">{{ $requests->count() }} requests found</p>
-        </div>
-        
         @if($requests->isNotEmpty())
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Request</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Technician</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Completed</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach($requests as $request)
-                            <tr class="hover:bg-gray-50 cursor-pointer" onclick="window.open('{{ route('maintenance.show', $request) }}', '_blank')">
+                            <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-blue-600 hover:text-blue-800">{{ $request->title }}</div>
-                                    <div class="text-sm text-gray-500">ID: {{ $request->id }} • Click to open</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ $request->property->name ?? 'N/A' }}</div>
-                                    <div class="text-sm text-gray-500">{{ $request->property->owner->name ?? 'N/A' }}</div>
+                                    <div class="text-sm font-medium text-gray-900">{{ $request->property->name ?? 'N/A' }}</div>
+                                    <div class="text-sm text-gray-500">{{ $request->property->address ?? 'No address' }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
@@ -307,8 +81,12 @@
                                         @elseif($request->priority == 'medium') bg-yellow-100 text-yellow-800
                                         @elseif($request->priority == 'high') bg-red-100 text-red-800
                                         @endif">
-                                        {{ strtoupper($request->priority) }}
+                                        {{ ucfirst($request->priority) }}
                                     </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ $request->created_at->format('d M, Y') }}<br>
+                                    <span class="text-xs">{{ $request->created_at->format('H:i') }}</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
@@ -321,14 +99,11 @@
                                         {{ ucfirst($request->status) }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $request->assignedTechnician->name ?? 'Not Assigned' }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $request->created_at->format('M d, Y H:i') }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $request->completed_at ? $request->completed_at->format('M d, Y H:i') : '-' }}
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <a href="{{ route('maintenance.show', $request) }}" target="_blank" 
+                                       class="w-8 h-8 bg-blue-100 hover:bg-blue-200 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-eye text-blue-600"></i>
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach
@@ -336,119 +111,54 @@
                 </table>
             </div>
         @else
-            <div class="p-6 text-center">
-                <p class="text-gray-500">No requests found for the selected criteria.</p>
+            <div class="p-12 text-center">
+                <div class="text-gray-400 text-4xl mb-4">
+                    <i class="fas fa-inbox"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">No requests found</h3>
+                <p class="text-gray-500">No maintenance requests match the selected criteria.</p>
+                <div class="mt-6">
+                    <a href="{{ route('reports.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                        Create New Report
+                    </a>
+                </div>
             </div>
         @endif
     </div>
+
+    @if($requests->isNotEmpty())
+    <!-- Back to Create Button -->
+    <div class="text-center mt-6 no-print">
+        <a href="{{ route('reports.create') }}" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+            Create New Report
+        </a>
+    </div>
+    @endif
 </div>
 
 <style>
     @media print {
-        /* Hide everything except report content */
-        * {
-            visibility: hidden;
-        }
-        
-        /* Show only the main report container and its children */
-        .print-content, .print-content * {
-            visibility: visible;
-        }
-        
-        /* Hide specific elements */
         .no-print {
             display: none !important;
         }
         
-        /* Reset page layout for printing */
-        html, body {
-            margin: 0 !important;
-            padding: 0 !important;
-            font-size: 11px;
-            line-height: 1.3;
-            color: #000 !important;
-            background: white !important;
-            height: auto !important;
-            overflow: visible !important;
-        }
-        
-        /* Position report content to fill page */
         .print-content {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100% !important;
-            margin: 0 !important;
-            padding: 15px !important;
-            max-width: none !important;
-            background: white !important;
+            margin: 0;
+            padding: 15px;
         }
         
-        /* Clean up styling for print */
-        .bg-white, .bg-blue-50, .bg-green-50, .bg-yellow-50, .bg-red-50 {
-            background: white !important;
-            box-shadow: none !important;
-            border: 1px solid #ddd !important;
-        }
-        
-        .rounded-lg, .rounded-xl {
-            border-radius: 0 !important;
-        }
-        
-        .shadow, .shadow-lg {
-            box-shadow: none !important;
-        }
-        
-        /* Table styling for print */
         table {
-            page-break-inside: avoid;
-            width: 100% !important;
-            border-collapse: collapse !important;
+            border-collapse: collapse;
         }
         
         th, td {
-            border: 1px solid #ddd !important;
-            padding: 4px 6px !important;
-            font-size: 10px !important;
+            border: 1px solid #ddd;
+            padding: 8px;
         }
         
-        /* Grid adjustments */
-        .grid {
-            display: block !important;
-        }
-        
-        .grid > div {
-            display: block !important;
-            margin-bottom: 8px !important;
-            break-inside: avoid;
-            page-break-inside: avoid;
-        }
-        
-        /* Typography for print */
-        h1 {
-            font-size: 16px !important;
-            margin-bottom: 8px !important;
-        }
-        
-        h2, h3 {
-            font-size: 14px !important;
-            margin-bottom: 6px !important;
-        }
-        
-        p {
-            margin-bottom: 4px !important;
-        }
-        
-        .cursor-pointer {
-            cursor: default !important;
-        }
-        
-        tr {
-            break-inside: avoid;
-        }
-        
-        thead {
-            display: table-header-group;
+        .bg-white {
+            background: white !important;
+            box-shadow: none !important;
         }
     }
 </style>
@@ -462,21 +172,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const summaryError = document.getElementById('aiSummaryError');
 
     generateBtn.addEventListener('click', function() {
-        // Show the summary section
         summarySection.style.display = 'block';
         summaryContent.style.display = 'none';
         summaryLoading.style.display = 'flex';
         summaryError.style.display = 'none';
         
-        // Disable the button to prevent multiple requests
         generateBtn.disabled = true;
-        generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Generating...';
+        generateBtn.innerHTML = 'Generating...';
 
-        // Prepare form data with all the filters
         const formData = new FormData();
         formData.append('_token', '{{ csrf_token() }}');
         
-        // Add all filter data from the current report
         @foreach($filters as $key => $value)
             @if(is_array($value))
                 @foreach($value as $item)
@@ -487,7 +193,6 @@ document.addEventListener('DOMContentLoaded', function() {
             @endif
         @endforeach
 
-        // Make AJAX request to generate AI summary
         fetch('{{ route("reports.ai-summary") }}', {
             method: 'POST',
             body: formData,
@@ -514,9 +219,8 @@ document.addEventListener('DOMContentLoaded', function() {
             summaryError.style.display = 'block';
         })
         .finally(() => {
-            // Re-enable the button
             generateBtn.disabled = false;
-            generateBtn.innerHTML = '<i class="fas fa-brain mr-2"></i>Generate AI Summary';
+            generateBtn.innerHTML = 'Generate AI summary';
         });
     });
 });
