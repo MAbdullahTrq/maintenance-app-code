@@ -32,30 +32,48 @@
 
                 <!-- Property -->
                 <div>
-                    <label for="property_id" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
                         Property
                     </label>
-                    <select name="property_id" id="property_id" 
-                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Select Property</option>
-                        @foreach($properties as $property)
-                            <option value="{{ $property->id }}" data-owner="{{ $property->owner_id }}">{{ $property->name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="border border-gray-300 rounded-md p-3 max-h-32 overflow-y-auto bg-gray-50">
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" id="select-all-properties" class="mr-2 text-blue-600 focus:ring-blue-500">
+                                <span class="text-sm font-medium text-gray-700">Select All Properties</span>
+                            </label>
+                            <hr class="border-gray-300">
+                            @foreach($properties as $property)
+                                <label class="flex items-center property-checkbox">
+                                    <input type="checkbox" name="property_ids[]" value="{{ $property->id }}" data-owner="{{ $property->owner_id }}" class="mr-2 text-blue-600 focus:ring-blue-500">
+                                    <span class="text-sm">{{ $property->name }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1">Select one or more properties</p>
                 </div>
 
                 <!-- Technician -->
                 <div>
-                    <label for="technician_id" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
                         Technician
                     </label>
-                    <select name="technician_id" id="technician_id" 
-                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Select Technician</option>
-                        @foreach($technicians as $technician)
-                            <option value="{{ $technician->id }}">{{ $technician->name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="border border-gray-300 rounded-md p-3 max-h-32 overflow-y-auto bg-gray-50">
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" id="select-all-technicians" class="mr-2 text-blue-600 focus:ring-blue-500">
+                                <span class="text-sm font-medium text-gray-700">Select All Technicians</span>
+                            </label>
+                            <hr class="border-gray-300">
+                            @foreach($technicians as $technician)
+                                <label class="flex items-center technician-checkbox">
+                                    <input type="checkbox" name="technician_ids[]" value="{{ $technician->id }}" class="mr-2 text-blue-600 focus:ring-blue-500">
+                                    <span class="text-sm">{{ $technician->name }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1">Select one or more technicians</p>
                 </div>
 
                 <!-- Date Range -->
@@ -117,7 +135,32 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateRange = document.getElementById('date_range');
     const customDateRange = document.getElementById('customDateRange');
     const ownerSelect = document.getElementById('owner_id');
-    const propertySelect = document.getElementById('property_id');
+
+    // Select All functionality for properties
+    const selectAllProperties = document.getElementById('select-all-properties');
+    const propertyCheckboxes = document.querySelectorAll('.property-checkbox input[type="checkbox"]');
+    
+    if (selectAllProperties) {
+        selectAllProperties.addEventListener('change', function() {
+            propertyCheckboxes.forEach(checkbox => {
+                if (checkbox.style.display !== 'none') {
+                    checkbox.checked = this.checked;
+                }
+            });
+        });
+    }
+
+    // Select All functionality for technicians  
+    const selectAllTechnicians = document.getElementById('select-all-technicians');
+    const technicianCheckboxes = document.querySelectorAll('.technician-checkbox input[type="checkbox"]');
+    
+    if (selectAllTechnicians) {
+        selectAllTechnicians.addEventListener('change', function() {
+            technicianCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+    }
 
     // Handle custom date range visibility
     dateRange.addEventListener('change', function() {
@@ -131,19 +174,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle owner change - filter properties
     ownerSelect.addEventListener('change', function() {
         const ownerId = this.value;
-        const propertyOptions = propertySelect.querySelectorAll('option');
         
-        propertySelect.value = ''; // Reset property selection
-        
-        propertyOptions.forEach(option => {
-            if (option.value === '') {
-                option.style.display = 'block'; // Always show "Select Property"
-            } else if (ownerId === '' || option.dataset.owner === ownerId) {
-                option.style.display = 'block';
+        propertyCheckboxes.forEach(checkbox => {
+            const propertyContainer = checkbox.closest('.property-checkbox');
+            
+            if (ownerId === '' || checkbox.dataset.owner === ownerId) {
+                propertyContainer.style.display = 'flex';
             } else {
-                option.style.display = 'none';
+                propertyContainer.style.display = 'none';
+                checkbox.checked = false; // Uncheck hidden properties
             }
         });
+        
+        // Reset "Select All" state
+        selectAllProperties.checked = false;
     });
 
     // Form validation
