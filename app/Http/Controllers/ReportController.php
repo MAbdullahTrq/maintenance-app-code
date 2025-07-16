@@ -222,6 +222,28 @@ class ReportController extends Controller
         // Generate report data
         $reportData = $this->generateReportData($requests, $request, $dateRange);
         
+        // Add owner, properties, and technicians details for mobile report title
+        $ownerName = null;
+        $propertyNames = [];
+        $technicianNames = [];
+        
+        if ($request->filled('owner_id')) {
+            $owner = \App\Models\Owner::find($request->owner_id);
+            $ownerName = $owner ? $owner->name : null;
+        }
+        
+        if ($request->filled('property_ids')) {
+            $propertyNames = \App\Models\Property::whereIn('id', $request->property_ids)
+                ->pluck('name')
+                ->toArray();
+        }
+        
+        if ($request->filled('technician_ids')) {
+            $technicianNames = \App\Models\User::whereIn('id', $request->technician_ids)
+                ->pluck('name')
+                ->toArray();
+        }
+        
         // Add navigation stats for mobile layout
         if ($user->isAdmin()) {
             $navigationStats = [
@@ -244,8 +266,12 @@ class ReportController extends Controller
             ];
         }
         
-        // Merge navigation stats with report data
-        $reportData = array_merge($reportData, $navigationStats);
+        // Merge all data for mobile report
+        $reportData = array_merge($reportData, $navigationStats, [
+            'owner_name' => $ownerName,
+            'property_names' => $propertyNames,
+            'technician_names' => $technicianNames,
+        ]);
         
         return view('mobile.reports.show', $reportData);
     }

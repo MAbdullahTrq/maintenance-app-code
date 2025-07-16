@@ -11,29 +11,52 @@
     <div class="bg-white rounded-xl shadow p-4 w-full max-w-6xl mx-auto print-content">
         <!-- Report Header with Export Controls -->
         <div class="mb-6">
-            <h1 class="text-xl font-bold text-gray-900 mb-1">📊 Report</h1>
-            <p class="text-sm text-gray-600">{{ $report_type }}</p>
+            <h1 class="text-xl font-bold text-gray-900 mb-2">
+                📊 Report{{ $owner_name ? ' for ' . $owner_name : '' }}
+            </h1>
+            
+            @if(count($property_names) > 0 || count($technician_names) > 0)
+                <div class="text-sm text-gray-600 mb-2 space-y-1">
+                    @if(count($property_names) > 0)
+                        <div>
+                            <span class="font-medium">Properties:</span> 
+                            {{ implode(', ', $property_names) }}
+                        </div>
+                    @endif
+                    @if(count($technician_names) > 0)
+                        <div>
+                            <span class="font-medium">Technicians:</span> 
+                            {{ implode(', ', $technician_names) }}
+                        </div>
+                    @endif
+                </div>
+            @endif
+            
             <p class="text-xs text-gray-500">{{ $dateRange['label'] }}</p>
         </div>
 
         <!-- Export Actions -->
         <div class="mb-6 space-y-3 no-print">
-            <div class="flex space-x-2">
-                <form method="POST" action="{{ route('mobile.reports.generate') }}" class="flex-1">
-                    @csrf
-                    @foreach($filters as $key => $value)
-                        @if(is_array($value))
-                            @foreach($value as $item)
-                                <input type="hidden" name="{{ $key }}[]" value="{{ $item }}">
-                            @endforeach
-                        @else
-                            <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                        @endif
-                    @endforeach
-                    <button type="submit" name="format" value="csv" class="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
-                        📤 Export
+            <!-- Export Dropdown -->
+            <div class="relative">
+                <button id="exportDropdownBtn" type="button" class="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-between">
+                    📤 Export
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                
+                <div id="exportDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                    <button onclick="exportReport('csv')" class="w-full text-left px-4 py-3 hover:bg-gray-50 text-gray-700 border-b border-gray-100">
+                        📊 CSV Spreadsheet
                     </button>
-                </form>
+                    <button onclick="exportReport('pdf')" class="w-full text-left px-4 py-3 hover:bg-gray-50 text-gray-700 border-b border-gray-100">
+                        📄 PDF Document
+                    </button>
+                    <button onclick="printReport()" class="w-full text-left px-4 py-3 hover:bg-gray-50 text-gray-700">
+                        🖨️ Print Report
+                    </button>
+                </div>
             </div>
             
             <!-- Generate AI Summary Button -->
@@ -62,7 +85,7 @@
         @if($requests->isNotEmpty())
             <div class="space-y-3">
                 @foreach($requests as $request)
-                    <div class="bg-gray-50 rounded-lg p-4 cursor-pointer hover:bg-gray-100 border hover:border-blue-300 transition-colors" onclick="window.open('{{ route('mobile.request.show', $request->id) }}', '_blank')">
+                    <div class="bg-gray-50 rounded-lg p-4 cursor-pointer hover:bg-gray-100 border hover:border-blue-300 transition-colors request-item" onclick="window.open('{{ route('mobile.request.show', $request->id) }}', '_blank')">
                         <!-- Header Row -->
                         <div class="flex justify-between items-start mb-3">
                             <div class="flex-1">
@@ -105,7 +128,7 @@
                         <div class="mt-2 text-sm font-medium text-blue-600">{{ $request->title }}</div>
                         
                         <!-- Tap instruction -->
-                        <div class="mt-2 text-blue-500 text-xs">
+                        <div class="mt-2 text-blue-500 text-xs action-button">
                             👆 Tap to view details
                         </div>
                     </div>
@@ -137,7 +160,7 @@
 
 <style>
     @media print {
-        .no-print {
+        .no-print, .action-button {
             display: none !important;
         }
         
@@ -155,11 +178,52 @@
         .rounded-xl, .rounded-lg {
             border-radius: 0 !important;
         }
+        
+        /* Remove cursor and hover effects for print */
+        .cursor-pointer {
+            cursor: default !important;
+        }
+        
+        .hover\:bg-gray-100:hover,
+        .hover\:border-blue-300:hover {
+            background-color: inherit !important;
+            border-color: inherit !important;
+        }
+        
+        /* Show AI summary in print */
+        #aiSummarySection {
+            display: block !important;
+        }
+        
+        /* Ensure request items are not clickable in print */
+        .request-item {
+            pointer-events: none !important;
+        }
+    }
+    
+    /* Dropdown styles */
+    .dropdown-open {
+        display: block !important;
     }
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Export dropdown functionality
+    const exportDropdownBtn = document.getElementById('exportDropdownBtn');
+    const exportDropdown = document.getElementById('exportDropdown');
+    
+    exportDropdownBtn.addEventListener('click', function() {
+        exportDropdown.classList.toggle('hidden');
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!exportDropdownBtn.contains(event.target) && !exportDropdown.contains(event.target)) {
+            exportDropdown.classList.add('hidden');
+        }
+    });
+    
     const generateBtn = document.getElementById('generateAISummary');
     const summarySection = document.getElementById('aiSummarySection');
     const summaryContent = document.getElementById('aiSummaryContent');
@@ -219,6 +283,72 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Export report function
+function exportReport(format) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = format === 'csv' ? '{{ route("mobile.reports.csv") }}' : '{{ route("mobile.reports.pdf") }}';
+    if (format === 'pdf') {
+        form.target = '_blank';
+    }
+    
+    // Add CSRF token
+    const csrfToken = document.createElement('input');
+    csrfToken.type = 'hidden';
+    csrfToken.name = '_token';
+    csrfToken.value = '{{ csrf_token() }}';
+    form.appendChild(csrfToken);
+    
+    // Add all filter data
+    @foreach($filters as $key => $value)
+        @if(is_array($value))
+            @foreach($value as $item)
+                const input{{ $loop->parent->index }}_{{ $loop->index }} = document.createElement('input');
+                input{{ $loop->parent->index }}_{{ $loop->index }}.type = 'hidden';
+                input{{ $loop->parent->index }}_{{ $loop->index }}.name = '{{ $key }}[]';
+                input{{ $loop->parent->index }}_{{ $loop->index }}.value = '{{ $item }}';
+                form.appendChild(input{{ $loop->parent->index }}_{{ $loop->index }});
+            @endforeach
+        @else
+            const input{{ $loop->index }} = document.createElement('input');
+            input{{ $loop->index }}.type = 'hidden';
+            input{{ $loop->index }}.name = '{{ $key }}';
+            input{{ $loop->index }}.value = '{{ $value }}';
+            form.appendChild(input{{ $loop->index }});
+        @endif
+    @endforeach
+    
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+    
+    // Close dropdown
+    document.getElementById('exportDropdown').classList.add('hidden');
+}
+
+// Print report function
+function printReport() {
+    // First generate AI summary if not already generated
+    const summarySection = document.getElementById('aiSummarySection');
+    if (summarySection.style.display === 'none') {
+        document.getElementById('generateAISummary').click();
+        
+        // Wait for AI summary to load before printing
+        const checkSummary = setInterval(function() {
+            const summaryContent = document.getElementById('aiSummaryContent');
+            if (summaryContent.style.display === 'block') {
+                clearInterval(checkSummary);
+                window.print();
+            }
+        }, 500);
+    } else {
+        window.print();
+    }
+    
+    // Close dropdown
+    document.getElementById('exportDropdown').classList.add('hidden');
+}
 </script>
 
 @endsection 
