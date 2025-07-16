@@ -18,50 +18,64 @@
         <a href="{{ route('guest.request.form', $property->access_link) }}" class="flex-1 bg-blue-100 text-blue-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-blue-200 transition text-center text-sm md:text-base">Link</a>
         <a href="{{ route('mobile.properties.edit', $property->id) }}" class="flex-1 bg-blue-100 text-blue-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-blue-200 transition text-center text-sm md:text-base">Edit</a>
     </div>
+
+    <!-- Property Details Section with Responsive Layout -->
     <div class="bg-white border rounded p-3 md:p-4 lg:p-6 mb-4 md:mb-6">
-        <div class="mb-3 md:mb-4">
-            <span class="font-semibold text-sm md:text-base">Property name</span><br>
-            <span class="text-sm md:text-base lg:text-lg">{{ $property->name }}</span>
-        </div>
-        <div class="mb-3 md:mb-4">
-            <span class="font-semibold text-sm md:text-base">Property address</span><br>
-            <span class="font-bold text-sm md:text-base lg:text-lg">{{ $property->address }}</span>
-        </div>
-        <div class="mb-3 md:mb-4">
-            <span class="font-semibold text-sm md:text-base">Owner</span><br>
-            <div class="flex items-center justify-between">
-                <span class="font-bold text-sm md:text-base lg:text-lg">
-                    @if($property->owner)
-                        {{ $property->owner->name }}
-                        @if($property->owner->company)
-                            <span class="text-gray-600 text-sm">({{ $property->owner->company }})</span>
-                        @endif
-                    @else
-                        <span class="text-gray-400">No owner assigned</span>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <!-- Property Image (Top on mobile, left on large screens) -->
+            @if($property->image)
+                <div class="lg:col-span-1 order-1 lg:order-1">
+                    <div class="mb-2 lg:mb-0">
+                        <span class="font-semibold text-sm md:text-base block mb-2">Property image</span>
+                        <div class="w-full max-w-sm mx-auto lg:max-w-none lg:mx-0">
+                            <img src="{{ asset('storage/' . $property->image) }}" alt="Property image" class="w-full h-48 md:h-56 lg:h-64 object-cover rounded shadow">
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            <!-- Property Details (Bottom on mobile, right on large screens) -->
+            <div class="@if($property->image) lg:col-span-2 order-2 lg:order-2 @else lg:col-span-3 @endif">
+                <div class="space-y-3 md:space-y-4">
+                    <div>
+                        <span class="font-semibold text-sm md:text-base">Property name</span><br>
+                        <span class="text-sm md:text-base lg:text-lg">{{ $property->name }}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-sm md:text-base">Property address</span><br>
+                        <span class="font-bold text-sm md:text-base lg:text-lg">{{ $property->address }}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-sm md:text-base">Owner</span><br>
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-sm md:text-base lg:text-lg">
+                                @if($property->owner)
+                                    {{ $property->owner->name }}
+                                    @if($property->owner->company)
+                                        <span class="text-gray-600 text-sm">({{ $property->owner->company }})</span>
+                                    @endif
+                                @else
+                                    <span class="text-gray-400">No owner assigned</span>
+                                @endif
+                            </span>
+                            @if(Auth::user()->hasActiveSubscription())
+                                <button onclick="showChangeOwnerModal()" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition">
+                                    Change Owner
+                                </button>
+                            @endif
+                        </div>
+                    </div>
+                    @if($property->special_instructions)
+                    <div>
+                        <span class="font-semibold text-sm md:text-base">Special instructions</span><br>
+                        <span class="font-bold text-sm md:text-base lg:text-lg">{{ $property->special_instructions }}</span>
+                    </div>
                     @endif
-                </span>
-                @if(Auth::user()->hasActiveSubscription())
-                    <button onclick="showChangeOwnerModal()" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition">
-                        Change Owner
-                    </button>
-                @endif
+                </div>
             </div>
         </div>
-        @if($property->special_instructions)
-        <div class="mb-3 md:mb-4">
-            <span class="font-semibold text-sm md:text-base">Special instructions</span><br>
-            <span class="font-bold text-sm md:text-base lg:text-lg">{{ $property->special_instructions }}</span>
-        </div>
-        @endif
-        @if($property->image)
-        <div class="mb-2">
-            <span class="font-semibold text-sm md:text-base">Property image</span><br>
-            <div class="w-32 h-24 md:w-48 md:h-32 lg:w-64 lg:h-40 mx-auto mt-2">
-                <img src="{{ asset('storage/' . $property->image) }}" alt="Property image" class="w-full h-full object-cover rounded shadow">
-            </div>
-        </div>
-        @endif
     </div>
+
     <div>
         <h3 class="text-center text-lg md:text-xl lg:text-2xl font-bold mb-2 md:mb-4">Maintenance requests</h3>
         <div class="overflow-x-auto w-full">
