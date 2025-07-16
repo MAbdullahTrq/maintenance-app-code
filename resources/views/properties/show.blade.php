@@ -29,68 +29,76 @@
 
     <div class="bg-white shadow rounded-lg overflow-hidden">
         <div class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Property Details -->
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Property Details</h2>
-                    
-                    @if($property->image)
-                        <div class="mb-6">
-                            <img src="{{ asset('storage/' . $property->image) }}" alt="{{ $property->name }}" class="w-full h-64 object-cover rounded-lg shadow-md">
-                        </div>
-                    @endif
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-600">Name</label>
-                            <p class="mt-1 text-lg text-gray-900">{{ $property->name }}</p>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-600">Address</label>
-                            <p class="mt-1 text-lg text-gray-900">{{ $property->address }}</p>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-600">Created</label>
-                            <p class="mt-1 text-lg text-gray-900">{{ $property->created_at->format('M d, Y') }}</p>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Property Image (Left side on large screens, top on mobile) -->
+                @if($property->image)
+                    <div class="lg:col-span-1">
+                        <div class="aspect-w-4 aspect-h-3 lg:aspect-w-1 lg:aspect-h-1">
+                            <img src="{{ asset('storage/' . $property->image) }}" alt="{{ $property->name }}" class="w-full h-64 lg:h-full object-cover rounded-lg shadow-md">
                         </div>
                     </div>
+                @endif
 
-                    <div class="mt-6 flex space-x-4">
-                        <a href="{{ route('properties.edit', $property) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:border-blue-800 focus:ring ring-blue-300 disabled:opacity-25 transition">
-                            <i class="fas fa-edit mr-2"></i> Edit Property
-                        </a>
-                        <form action="{{ route('properties.destroy', $property) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this property?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-800 focus:outline-none focus:border-red-800 focus:ring ring-red-300 disabled:opacity-25 transition">
-                                <i class="fas fa-trash-alt mr-2"></i> Delete Property
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- QR Code -->
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">QR Code</h2>
-                    <div class="bg-gray-50 p-6 rounded-lg text-center">
-                        @if($property->qr_code)
-                            <img src="{{ asset('storage/' . $property->qr_code) }}" alt="Property QR Code" class="mx-auto mb-4 max-w-[200px]">
-                            <div class="flex justify-center space-x-3">
-                                <a href="{{ route('properties.qrcode', $property) }}" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 active:bg-green-800 focus:outline-none focus:border-green-800 focus:ring ring-green-300 disabled:opacity-25 transition">
-                                    <i class="fas fa-download mr-2"></i> Download QR Code
-                                </a>
-                                <button type="button" 
-                                    class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:border-indigo-800 focus:ring ring-indigo-300 disabled:opacity-25 transition copy-link-btn" 
-                                    data-url="{{ $property->getRequestUrl() }}">
-                                    <i class="fas fa-copy mr-2"></i> Copy Link
-                                </button>
+                <!-- Property Details and QR Code (Right side on large screens) -->
+                <div class="@if($property->image) lg:col-span-2 @else lg:col-span-3 @endif">
+                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                        <!-- Property Details -->
+                        <div>
+                            <h2 class="text-xl font-semibold text-gray-800 mb-4">Property Details</h2>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600">Name</label>
+                                    <p class="mt-1 text-lg text-gray-900">{{ $property->name }}</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600">Address</label>
+                                    <p class="mt-1 text-lg text-gray-900">{{ $property->address }}</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600">Created</label>
+                                    <p class="mt-1 text-lg text-gray-900">{{ $property->created_at->format('M d, Y') }}</p>
+                                </div>
                             </div>
-                        @else
-                            <p class="text-gray-500">QR code not generated yet.</p>
-                        @endif
-                    </div>
-                    <div class="mt-4 text-sm text-gray-600">
-                        <p>Scan this QR code to access the maintenance request form for this property.</p>
+
+                            <div class="mt-6 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                                <a href="{{ route('properties.edit', $property) }}" class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:border-blue-800 focus:ring ring-blue-300 disabled:opacity-25 transition">
+                                    <i class="fas fa-edit mr-2"></i> Edit Property
+                                </a>
+                                <form action="{{ route('properties.destroy', $property) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this property?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-800 focus:outline-none focus:border-red-800 focus:ring ring-red-300 disabled:opacity-25 transition">
+                                        <i class="fas fa-trash-alt mr-2"></i> Delete Property
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- QR Code -->
+                        <div>
+                            <h2 class="text-xl font-semibold text-gray-800 mb-4">QR Code</h2>
+                            <div class="bg-gray-50 p-6 rounded-lg text-center">
+                                @if($property->qr_code)
+                                    <img src="{{ asset('storage/' . $property->qr_code) }}" alt="Property QR Code" class="mx-auto mb-4 max-w-[200px]">
+                                    <div class="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-3">
+                                        <a href="{{ route('properties.qrcode', $property) }}" class="inline-flex items-center justify-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 active:bg-green-800 focus:outline-none focus:border-green-800 focus:ring ring-green-300 disabled:opacity-25 transition">
+                                            <i class="fas fa-download mr-2"></i> Download QR Code
+                                        </a>
+                                        <button type="button" 
+                                            class="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:border-indigo-800 focus:ring ring-indigo-300 disabled:opacity-25 transition copy-link-btn" 
+                                            data-url="{{ $property->getRequestUrl() }}">
+                                            <i class="fas fa-copy mr-2"></i> Copy Link
+                                        </button>
+                                    </div>
+                                @else
+                                    <p class="text-gray-500">QR code not generated yet.</p>
+                                @endif
+                            </div>
+                            <div class="mt-4 text-sm text-gray-600">
+                                <p>Scan this QR code to access the maintenance request form for this property.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
