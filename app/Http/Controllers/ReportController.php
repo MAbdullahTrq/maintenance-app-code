@@ -153,8 +153,10 @@ class ReportController extends Controller
         $request->validate([
             'date_range' => 'required|string',
             'owner_id' => 'nullable|exists:owners,id',
+            'property_id' => 'nullable|exists:properties,id',
             'property_ids' => 'nullable|array',
             'property_ids.*' => 'exists:properties,id',
+            'technician_id' => 'nullable|exists:users,id',
             'technician_ids' => 'nullable|array',
             'technician_ids.*' => 'exists:users,id',
             'format' => 'nullable|in:web,pdf,csv'
@@ -162,6 +164,9 @@ class ReportController extends Controller
 
         $user = Auth::user();
         $format = $request->input('format', 'web');
+        
+        // Convert single selections to arrays for backward compatibility
+        $this->normalizeSingleSelections($request);
         
         // Parse date range
         $dateRange = $this->parseDateRange($request->date_range);
@@ -191,6 +196,9 @@ class ReportController extends Controller
      */
     public function generateMobile(Request $request)
     {
+        // Convert single selections to arrays for backward compatibility
+        $this->normalizeSingleSelections($request);
+        
         // Check if requesting a download format
         $format = $request->input('format', 'web');
         
@@ -302,6 +310,22 @@ class ReportController extends Controller
         $reportData = $this->generateReportData($requests, $request, $dateRange);
         
         return $this->generatePDF($reportData);
+    }
+
+    /**
+     * Convert single property_id and technician_id to arrays for backward compatibility.
+     */
+    private function normalizeSingleSelections(Request $request)
+    {
+        // Convert single property_id to property_ids array
+        if ($request->filled('property_id') && !$request->filled('property_ids')) {
+            $request->merge(['property_ids' => [$request->property_id]]);
+        }
+        
+        // Convert single technician_id to technician_ids array
+        if ($request->filled('technician_id') && !$request->filled('technician_ids')) {
+            $request->merge(['technician_ids' => [$request->technician_id]]);
+        }
     }
 
     /**
