@@ -15,8 +15,8 @@
             html, body {
                 margin: 0 !important;
                 padding: 0 !important;
-                font-size: 11px;
-                line-height: 1.3;
+                font-size: 12px;
+                line-height: 1.4;
                 color: #000 !important;
                 background: white !important;
             }
@@ -24,13 +24,13 @@
             .pdf-container {
                 width: 100% !important;
                 margin: 0 !important;
-                padding: 15px !important;
+                padding: 20px !important;
                 max-width: none !important;
                 background: white !important;
             }
             
             /* Clean up styling for print */
-            .bg-white, .bg-blue-50, .bg-green-50, .bg-yellow-50, .bg-red-50 {
+            .bg-white, .bg-blue-50, .bg-green-50, .bg-yellow-50, .bg-red-50, .bg-gray-50 {
                 background: white !important;
                 box-shadow: none !important;
                 border: 1px solid #ddd !important;
@@ -49,39 +49,50 @@
                 width: 100% !important;
                 border-collapse: collapse !important;
                 page-break-inside: avoid;
+                margin-top: 15px !important;
             }
             
             th, td {
-                border: 1px solid #ddd !important;
-                padding: 4px 6px !important;
-                font-size: 10px !important;
+                border: 1px solid #333 !important;
+                padding: 6px 8px !important;
+                font-size: 11px !important;
+                text-align: left !important;
             }
             
-            /* Grid adjustments */
-            .grid {
-                display: block !important;
-            }
-            
-            .grid > div {
-                display: block !important;
-                margin-bottom: 8px !important;
-                break-inside: avoid;
-                page-break-inside: avoid;
+            th {
+                background: #f5f5f5 !important;
+                font-weight: bold !important;
             }
             
             /* Typography for print */
             h1 {
-                font-size: 16px !important;
-                margin-bottom: 8px !important;
+                font-size: 20px !important;
+                margin-bottom: 10px !important;
+                font-weight: bold !important;
             }
             
-            h2, h3 {
+            h2 {
+                font-size: 16px !important;
+                margin-bottom: 8px !important;
+                font-weight: bold !important;
+            }
+            
+            h3 {
                 font-size: 14px !important;
                 margin-bottom: 6px !important;
+                font-weight: bold !important;
             }
             
             p {
-                margin-bottom: 4px !important;
+                margin-bottom: 6px !important;
+            }
+            
+            .ai-summary {
+                background: #f8f9fa !important;
+                border: 1px solid #ddd !important;
+                padding: 15px !important;
+                margin: 15px 0 !important;
+                page-break-inside: avoid;
             }
         }
         
@@ -103,153 +114,120 @@
 </head>
 <body>
     <div class="pdf-container">
-        <!-- Header -->
-        <div class="border-b-2 border-gray-300 pb-4 mb-6">
-            <h1 class="text-2xl font-bold text-gray-900 mb-2">Maintenance Report</h1>
-            <div class="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                    <p><strong>Report Type:</strong> {{ $report_type }}</p>
-                    <p><strong>Date Range:</strong> {{ $dateRange['label'] }}</p>
-                </div>
-                <div class="text-right">
-                    <p><strong>Generated:</strong> {{ now()->format('M d, Y H:i') }}</p>
-                    <p><strong>Total Requests:</strong> {{ $summary['total_requests'] }}</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Summary Cards -->
-        <div class="grid grid-cols-4 gap-4 mb-6">
-            <div class="bg-blue-50 rounded-lg p-4 text-center border">
-                <div class="text-2xl font-bold text-blue-600">{{ $summary['total_requests'] }}</div>
-                <div class="text-sm text-blue-800">Total Requests</div>
-            </div>
-            <div class="bg-green-50 rounded-lg p-4 text-center border">
-                <div class="text-2xl font-bold text-green-600">{{ $summary['completed_requests'] }}</div>
-                <div class="text-sm text-green-800">Completed</div>
-            </div>
-            <div class="bg-yellow-50 rounded-lg p-4 text-center border">
-                <div class="text-2xl font-bold text-yellow-600">{{ $summary['pending_requests'] }}</div>
-                <div class="text-sm text-yellow-800">Pending</div>
-            </div>
-            <div class="bg-purple-50 rounded-lg p-4 text-center border">
-                <div class="text-2xl font-bold text-purple-600">{{ $summary['completion_rate'] }}%</div>
-                <div class="text-sm text-purple-800">Completion Rate</div>
-            </div>
-        </div>
-
-        <!-- Status Breakdown -->
-        @if(isset($breakdowns['status']) && count($breakdowns['status']) > 0)
+        <!-- Report Header -->
         <div class="mb-6">
-            <h2 class="text-lg font-semibold text-gray-800 mb-3 border-b border-gray-200 pb-1">Status Breakdown</h2>
-            <div class="grid grid-cols-2 gap-2">
+            <h1 class="text-2xl font-bold text-gray-900 mb-2">
+                📊 Report{{ isset($owner_name) && $owner_name ? ' for ' . $owner_name : '' }}
+            </h1>
+            
+            @if((isset($property_names) && count($property_names) > 0) || (isset($technician_names) && count($technician_names) > 0))
+                <div class="text-sm text-gray-600 mb-3 space-y-1">
+                    @if(isset($property_names) && count($property_names) > 0)
+                        <div>
+                            <span class="font-medium">Properties:</span> 
+                            {{ implode(', ', $property_names) }}
+                        </div>
+                    @endif
+                    @if(isset($technician_names) && count($technician_names) > 0)
+                        <div>
+                            <span class="font-medium">Technicians:</span> 
+                            {{ implode(', ', $technician_names) }}
+                        </div>
+                    @endif
+                </div>
+            @endif
+            
+            <p class="text-sm text-gray-500 mb-1">{{ $dateRange['label'] }}</p>
+            <p class="text-xs text-gray-400">Generated on {{ now()->format('F j, Y \a\t g:i A') }}</p>
+        </div>
+
+        <!-- AI Summary Section (placeholder for manual inclusion) -->
+        <div class="ai-summary mb-6">
+            <h2 class="text-lg font-bold text-blue-800 mb-3">🧠 AI Summary</h2>
+            <div class="text-sm text-gray-700 leading-relaxed">
+                <p><strong>Maintenance Report Summary:</strong></p>
+                <p>- Total maintenance requests: {{ $summary['total_requests'] }}</p>
+                <p>- Completed tasks: {{ $summary['completed_requests'] }}</p>
+                <p>- Pending tasks: {{ $summary['pending_requests'] }}</p>
+                <p>- Average completion time: {{ $summary['average_completion_time'] ? $summary['average_completion_time'] . ' hours' : 'N/A' }}</p>
+                
+                @if(isset($breakdowns['status']) && count($breakdowns['status']) > 0)
+                <p style="margin-top: 10px;"><strong>Status Breakdown:</strong></p>
                 @foreach($breakdowns['status'] as $status => $count)
-                <div class="flex justify-between border-b border-gray-100 py-1">
-                    <span class="font-medium">{{ ucfirst(str_replace('_', ' ', $status)) }}</span>
-                    <span>{{ $count }} ({{ $summary['total_requests'] > 0 ? round(($count / $summary['total_requests']) * 100, 1) : 0 }}%)</span>
-                </div>
+                <p>- {{ ucfirst($status) }}: {{ $count }}</p>
                 @endforeach
-            </div>
-        </div>
-        @endif
-
-        <!-- Priority Breakdown -->
-        @if(isset($breakdowns['priority']) && count($breakdowns['priority']) > 0)
-        <div class="mb-6">
-            <h2 class="text-lg font-semibold text-gray-800 mb-3 border-b border-gray-200 pb-1">Priority Breakdown</h2>
-            <div class="grid grid-cols-2 gap-2">
+                @endif
+                
+                @if(isset($breakdowns['priority']) && count($breakdowns['priority']) > 0)
+                <p style="margin-top: 10px;"><strong>Priority Breakdown:</strong></p>
                 @foreach($breakdowns['priority'] as $priority => $count)
-                <div class="flex justify-between border-b border-gray-100 py-1">
-                    <span class="font-medium">{{ ucfirst($priority) }} Priority</span>
-                    <span>{{ $count }} ({{ $summary['total_requests'] > 0 ? round(($count / $summary['total_requests']) * 100, 1) : 0 }}%)</span>
-                </div>
+                <p>- {{ ucfirst($priority) }} Priority: {{ $count }}</p>
                 @endforeach
+                @endif
             </div>
         </div>
-        @endif
 
-        <!-- Property Performance -->
-        @if(isset($breakdowns['property']) && count($breakdowns['property']) > 0)
-        <div class="mb-6">
-            <h2 class="text-lg font-semibold text-gray-800 mb-3 border-b border-gray-200 pb-1">Property Performance</h2>
-            @foreach($breakdowns['property'] as $propertyName => $data)
-            <div class="flex justify-between border-b border-gray-100 py-2">
-                <div>
-                    <span class="font-medium">{{ $propertyName }}</span><br>
-                    <span class="text-xs text-gray-600">Total: {{ $data['count'] }}</span>
-                </div>
-                <div class="text-right">
-                    <span class="font-medium">{{ $data['count'] > 0 ? round(($data['completed'] / $data['count']) * 100, 1) : 0 }}%</span><br>
-                    <span class="text-xs text-gray-600">Completed: {{ $data['completed'] }}</span>
-                </div>
+        <!-- Main Report Content -->
+        @if($requests->isNotEmpty())
+            <div class="mb-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Maintenance Requests</h3>
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="border border-gray-300 px-3 py-2 text-left text-sm font-semibold text-gray-900">Property</th>
+                            <th class="border border-gray-300 px-3 py-2 text-center text-sm font-semibold text-gray-900">Priority</th>
+                            <th class="border border-gray-300 px-3 py-2 text-center text-sm font-semibold text-gray-900">Date</th>
+                            <th class="border border-gray-300 px-3 py-2 text-center text-sm font-semibold text-gray-900">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($requests as $request)
+                        <tr class="hover:bg-gray-50">
+                            <td class="border border-gray-300 px-3 py-2 text-sm">
+                                <div class="font-medium text-gray-900">{{ $request->property->name ?? 'N/A' }}</div>
+                                <div class="text-xs text-gray-500">{{ $request->property->address ?? 'No address' }}</div>
+                            </td>
+                            <td class="border border-gray-300 px-3 py-2 text-center text-sm">
+                                <span class="px-2 py-1 text-xs rounded-full font-medium
+                                    @if($request->priority == 'low') bg-green-100 text-green-800
+                                    @elseif($request->priority == 'medium') bg-yellow-100 text-yellow-800
+                                    @elseif($request->priority == 'high') bg-red-100 text-red-800
+                                    @else bg-gray-100 text-gray-800
+                                    @endif">
+                                    {{ ucfirst($request->priority) }}
+                                </span>
+                            </td>
+                            <td class="border border-gray-300 px-3 py-2 text-center text-sm text-gray-600">
+                                {{ $request->created_at->format('M j, Y') }}<br>
+                                <span class="text-xs">{{ $request->created_at->format('H:i') }}</span>
+                            </td>
+                            <td class="border border-gray-300 px-3 py-2 text-center text-sm">
+                                <span class="px-2 py-1 text-xs rounded-full font-medium
+                                    @if($request->status == 'pending') bg-yellow-100 text-yellow-800
+                                    @elseif($request->status == 'assigned') bg-blue-100 text-blue-800
+                                    @elseif($request->status == 'started') bg-purple-100 text-purple-800
+                                    @elseif($request->status == 'completed') bg-green-100 text-green-800
+                                    @else bg-gray-100 text-gray-800
+                                    @endif">
+                                    {{ ucfirst($request->status) }}
+                                </span>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-            @endforeach
-        </div>
-        @endif
-
-        <!-- Requests Table -->
-        @if(count($requests) > 0)
-        <div class="mb-6">
-            <h2 class="text-lg font-semibold text-gray-800 mb-3 border-b border-gray-200 pb-1">Request Details</h2>
-            <table class="w-full border border-gray-300">
-                <thead>
-                    <tr class="bg-gray-50">
-                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase border">ID</th>
-                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase border">Title</th>
-                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase border">Property</th>
-                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase border">Priority</th>
-                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase border">Status</th>
-                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase border">Technician</th>
-                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase border">Created</th>
-                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase border">Completed</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($requests as $request)
-                    <tr>
-                        <td class="px-3 py-2 text-sm text-gray-900 border">{{ $request->id }}</td>
-                        <td class="px-3 py-2 text-sm text-gray-900 border">{{ $request->title }}</td>
-                        <td class="px-3 py-2 text-sm text-gray-900 border">{{ $request->property->name ?? 'N/A' }}</td>
-                        <td class="px-3 py-2 text-sm border">
-                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
-                                @if($request->priority === 'high') bg-red-100 text-red-800
-                                @elseif($request->priority === 'medium') bg-yellow-100 text-yellow-800
-                                @else bg-blue-100 text-blue-800 @endif">
-                                {{ ucfirst($request->priority) }}
-                            </span>
-                        </td>
-                        <td class="px-3 py-2 text-sm border">
-                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
-                                @if($request->status === 'completed') bg-green-100 text-green-800
-                                @elseif($request->status === 'in_progress') bg-blue-100 text-blue-800
-                                @elseif($request->status === 'started') bg-purple-100 text-purple-800
-                                @else bg-gray-100 text-gray-800 @endif">
-                                {{ ucfirst(str_replace('_', ' ', $request->status)) }}
-                            </span>
-                        </td>
-                        <td class="px-3 py-2 text-sm text-gray-900 border">
-                            {{ $request->assignedTechnician->name ?? 'Not Assigned' }}
-                        </td>
-                        <td class="px-3 py-2 text-sm text-gray-500 border">
-                            {{ $request->created_at->format('M d, Y') }}
-                        </td>
-                        <td class="px-3 py-2 text-sm text-gray-500 border">
-                            {{ $request->completed_at ? $request->completed_at->format('M d, Y') : '-' }}
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
         @else
-        <div class="text-center py-8">
-            <p class="text-gray-500">No requests found for the selected criteria.</p>
-        </div>
+            <div class="text-center py-8">
+                <div class="text-4xl mb-3">📭</div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">No requests found</h3>
+                <p class="text-sm text-gray-600">No maintenance requests match the selected criteria.</p>
+            </div>
         @endif
 
         <!-- Footer -->
         <div class="border-t-2 border-gray-300 pt-4 mt-8 text-center text-xs text-gray-500">
-            <p>This report was generated automatically by MaintainXtra on {{ now()->format('F j, Y \a\t g:i A') }}</p>
+            <p>This report was generated automatically by MaintainXtra</p>
         </div>
     </div>
 
@@ -266,20 +244,9 @@
     <script>
         // Auto-trigger print dialog when page loads
         window.addEventListener('load', function() {
-            // Small delay to ensure page is fully rendered
             setTimeout(function() {
                 window.print();
             }, 500);
-        });
-        
-        // Close window after printing (if opened in new tab)
-        window.addEventListener('afterprint', function() {
-            // Give user a moment to see the result
-            setTimeout(function() {
-                if (window.opener) {
-                    window.close();
-                }
-            }, 1000);
         });
     </script>
 </body>

@@ -160,13 +160,35 @@
 
 <style>
     @media print {
-        .no-print, .action-button {
+        /* Hide all layout elements except report content */
+        body > header,
+        body > nav,
+        .no-print, 
+        .action-button {
             display: none !important;
         }
         
+        /* Reset body and main container */
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: white !important;
+        }
+        
+        main {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        
+        /* Style the print content container */
         .print-content {
-            margin: 0;
-            padding: 15px;
+            margin: 0 !important;
+            padding: 20px !important;
+            box-shadow: none !important;
+            border: none !important;
+            border-radius: 0 !important;
+            max-width: none !important;
+            width: 100% !important;
         }
         
         .bg-white, .bg-gray-50 {
@@ -198,6 +220,22 @@
         /* Ensure request items are not clickable in print */
         .request-item {
             pointer-events: none !important;
+        }
+        
+        /* Print-specific typography */
+        h1 {
+            font-size: 24px !important;
+            margin-bottom: 10px !important;
+        }
+        
+        /* Ensure content takes full width */
+        .flex.justify-center {
+            justify-content: flex-start !important;
+        }
+        
+        .px-4 {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
         }
     }
     
@@ -329,21 +367,37 @@ function exportReport(format) {
 
 // Print report function
 function printReport() {
-    // First generate AI summary if not already generated
+    // Always generate AI summary for print
     const summarySection = document.getElementById('aiSummarySection');
-    if (summarySection.style.display === 'none') {
+    const summaryContent = document.getElementById('aiSummaryContent');
+    
+    // Show summary section first
+    summarySection.style.display = 'block';
+    
+    // If summary already exists, print immediately
+    if (summaryContent.style.display === 'block' && summaryContent.textContent.trim()) {
+        setTimeout(() => window.print(), 100);
+    } else {
+        // Generate new summary
         document.getElementById('generateAISummary').click();
         
-        // Wait for AI summary to load before printing
+        // Wait for AI summary to load before printing with timeout
+        let attempts = 0;
+        const maxAttempts = 20; // 10 seconds max wait
+        
         const checkSummary = setInterval(function() {
+            attempts++;
             const summaryContent = document.getElementById('aiSummaryContent');
-            if (summaryContent.style.display === 'block') {
+            
+            if (summaryContent.style.display === 'block' && summaryContent.textContent.trim()) {
                 clearInterval(checkSummary);
+                setTimeout(() => window.print(), 200); // Small delay to ensure content is rendered
+            } else if (attempts >= maxAttempts) {
+                clearInterval(checkSummary);
+                // Print anyway if summary takes too long
                 window.print();
             }
         }, 500);
-    } else {
-        window.print();
     }
     
     // Close dropdown

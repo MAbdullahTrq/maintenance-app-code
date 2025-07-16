@@ -586,6 +586,35 @@ class ReportController extends Controller
      */
     private function generatePDF(array $reportData)
     {
+        // Add owner, properties, and technicians details for PDF report title
+        $ownerName = null;
+        $propertyNames = [];
+        $technicianNames = [];
+        
+        $request = request(); // Get current request
+        
+        if ($request->filled('owner_id')) {
+            $owner = \App\Models\Owner::find($request->owner_id);
+            $ownerName = $owner ? $owner->name : null;
+        }
+        
+        if ($request->filled('property_ids')) {
+            $propertyNames = \App\Models\Property::whereIn('id', $request->property_ids)
+                ->pluck('name')
+                ->toArray();
+        }
+        
+        if ($request->filled('technician_ids')) {
+            $technicianNames = \App\Models\User::whereIn('id', $request->technician_ids)
+                ->pluck('name')
+                ->toArray();
+        }
+        
+        // Add additional data for PDF
+        $reportData['owner_name'] = $ownerName;
+        $reportData['property_names'] = $propertyNames;
+        $reportData['technician_names'] = $technicianNames;
+        
         // Create a special PDF view that opens in new window and triggers print dialog
         return view('reports.pdf', $reportData);
     }
