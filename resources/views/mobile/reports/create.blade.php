@@ -32,7 +32,7 @@
             </div>
 
             <!-- Properties Filter -->
-            <div>
+            <div id="property-section-mobile" style="display: none;">
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                     Properties
                 </label>
@@ -55,7 +55,7 @@
             </div>
 
             <!-- Technicians Filter -->
-            <div>
+            <div id="technician-section-mobile" style="display: none;">
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                     Technicians
                 </label>
@@ -78,7 +78,7 @@
             </div>
 
             <!-- Date Range -->
-            <div>
+            <div id="date-range-section-mobile" style="display: none;">
                 <label for="date_range" class="block text-sm font-medium text-gray-700 mb-2">
                     Date Range
                 </label>
@@ -108,7 +108,7 @@
             </div>
 
             <!-- Generate Report Button -->
-            <div class="pt-4">
+            <div id="generate-button-section-mobile" class="pt-4" style="display: none;">
                 <button type="submit" name="format" value="web" 
                         class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     Generate Report
@@ -116,7 +116,7 @@
             </div>
                 
             <!-- Additional Export Options -->
-            <div class="grid grid-cols-2 gap-3">
+            <div id="export-buttons-section-mobile" class="grid grid-cols-2 gap-3" style="display: none;">
                 <button type="button" onclick="submitForm('csv')"
                         class="bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-sm">
                     📥 CSV
@@ -135,6 +135,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateRange = document.getElementById('date_range');
     const customDateRange = document.getElementById('customDateRange');
     const ownerSelect = document.getElementById('owner_id');
+    const propertySectionMobile = document.getElementById('property-section-mobile');
+    const technicianSectionMobile = document.getElementById('technician-section-mobile');
+    const dateRangeSectionMobile = document.getElementById('date-range-section-mobile');
+    const generateButtonSectionMobile = document.getElementById('generate-button-section-mobile');
+    const exportButtonsSectionMobile = document.getElementById('export-buttons-section-mobile');
 
     // Select All functionality for properties (mobile)
     const selectAllPropertiesMobile = document.getElementById('select-all-properties-mobile');
@@ -169,25 +174,58 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             customDateRange.style.display = 'none';
         }
+        
+        // Show generate buttons when date range is selected
+        if (this.value) {
+            generateButtonSectionMobile.style.display = 'block';
+            exportButtonsSectionMobile.style.display = 'grid';
+        } else {
+            generateButtonSectionMobile.style.display = 'none';
+            exportButtonsSectionMobile.style.display = 'none';
+        }
     });
 
-    // Handle owner change - filter properties
+    // Handle owner change - show/hide sections and filter properties
     ownerSelect.addEventListener('change', function() {
         const ownerId = this.value;
         
-        propertyCheckboxesMobile.forEach(checkbox => {
-            const propertyContainer = checkbox.closest('.property-checkbox-mobile');
+        if (ownerId) {
+            // Show property and technician sections
+            propertySectionMobile.style.display = 'block';
+            technicianSectionMobile.style.display = 'block';
+            dateRangeSectionMobile.style.display = 'block';
             
-            if (ownerId === '' || checkbox.dataset.owner === ownerId) {
-                propertyContainer.style.display = 'flex';
-            } else {
-                propertyContainer.style.display = 'none';
-                checkbox.checked = false; // Uncheck hidden properties
-            }
-        });
+            // Filter properties based on selected owner
+            propertyCheckboxesMobile.forEach(checkbox => {
+                const propertyContainer = checkbox.closest('.property-checkbox-mobile');
+                
+                if (checkbox.dataset.owner === ownerId) {
+                    propertyContainer.style.display = 'flex';
+                } else {
+                    propertyContainer.style.display = 'none';
+                    checkbox.checked = false; // Uncheck hidden properties
+                }
+            });
+        } else {
+            // Hide all sections if no owner selected
+            propertySectionMobile.style.display = 'none';
+            technicianSectionMobile.style.display = 'none';
+            dateRangeSectionMobile.style.display = 'none';
+            generateButtonSectionMobile.style.display = 'none';
+            exportButtonsSectionMobile.style.display = 'none';
+            
+            // Reset form
+            dateRange.value = '';
+            customDateRange.style.display = 'none';
+            
+            // Uncheck all checkboxes
+            propertyCheckboxesMobile.forEach(checkbox => checkbox.checked = false);
+            technicianCheckboxesMobile.forEach(checkbox => checkbox.checked = false);
+        }
         
-        // Reset "Select All" state
+        // Reset "Select All" states
         selectAllPropertiesMobile.checked = false;
+        selectAllTechniciansMobile.checked = false;
     });
 
     // Form validation

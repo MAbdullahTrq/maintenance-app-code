@@ -31,7 +31,7 @@
                 </div>
 
                 <!-- Property -->
-                <div>
+                <div id="property-section" style="display: none;">
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Property
                     </label>
@@ -54,7 +54,7 @@
                 </div>
 
                 <!-- Technician -->
-                <div>
+                <div id="technician-section" style="display: none;">
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Technician
                     </label>
@@ -77,7 +77,7 @@
                 </div>
 
                 <!-- Date Range -->
-                <div>
+                <div id="date-range-section" style="display: none;">
                     <label for="date_range" class="block text-sm font-medium text-gray-700 mb-2">
                         Date Range
                     </label>
@@ -108,7 +108,7 @@
             </div>
 
             <!-- Generate Report Button -->
-            <div class="mt-6">
+            <div id="generate-button-section" class="mt-6" style="display: none;">
                 <button type="submit" name="format" value="web" 
                         class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     Generate Report
@@ -116,7 +116,7 @@
             </div>
 
             <!-- Additional Export Options -->
-            <div class="mt-4 grid grid-cols-2 gap-3">
+            <div id="export-buttons-section" class="mt-4 grid grid-cols-2 gap-3" style="display: none;">
                 <button type="button" onclick="submitForm('csv')"
                         class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-sm">
                     <i class="fas fa-download mr-1"></i>CSV
@@ -135,6 +135,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateRange = document.getElementById('date_range');
     const customDateRange = document.getElementById('customDateRange');
     const ownerSelect = document.getElementById('owner_id');
+    const propertySection = document.getElementById('property-section');
+    const technicianSection = document.getElementById('technician-section');
+    const dateRangeSection = document.getElementById('date-range-section');
+    const generateButtonSection = document.getElementById('generate-button-section');
+    const exportButtonsSection = document.getElementById('export-buttons-section');
 
     // Select All functionality for properties
     const selectAllProperties = document.getElementById('select-all-properties');
@@ -169,25 +174,58 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             customDateRange.style.display = 'none';
         }
+        
+        // Show generate buttons when date range is selected
+        if (this.value) {
+            generateButtonSection.style.display = 'block';
+            exportButtonsSection.style.display = 'grid';
+        } else {
+            generateButtonSection.style.display = 'none';
+            exportButtonsSection.style.display = 'none';
+        }
     });
 
-    // Handle owner change - filter properties
+    // Handle owner change - show/hide sections and filter properties
     ownerSelect.addEventListener('change', function() {
         const ownerId = this.value;
         
-        propertyCheckboxes.forEach(checkbox => {
-            const propertyContainer = checkbox.closest('.property-checkbox');
+        if (ownerId) {
+            // Show property and technician sections
+            propertySection.style.display = 'block';
+            technicianSection.style.display = 'block';
+            dateRangeSection.style.display = 'block';
             
-            if (ownerId === '' || checkbox.dataset.owner === ownerId) {
-                propertyContainer.style.display = 'flex';
-            } else {
-                propertyContainer.style.display = 'none';
-                checkbox.checked = false; // Uncheck hidden properties
-            }
-        });
+            // Filter properties based on selected owner
+            propertyCheckboxes.forEach(checkbox => {
+                const propertyContainer = checkbox.closest('.property-checkbox');
+                
+                if (checkbox.dataset.owner === ownerId) {
+                    propertyContainer.style.display = 'flex';
+                } else {
+                    propertyContainer.style.display = 'none';
+                    checkbox.checked = false; // Uncheck hidden properties
+                }
+            });
+        } else {
+            // Hide all sections if no owner selected
+            propertySection.style.display = 'none';
+            technicianSection.style.display = 'none';
+            dateRangeSection.style.display = 'none';
+            generateButtonSection.style.display = 'none';
+            exportButtonsSection.style.display = 'none';
+            
+            // Reset form
+            dateRange.value = '';
+            customDateRange.style.display = 'none';
+            
+            // Uncheck all checkboxes
+            propertyCheckboxes.forEach(checkbox => checkbox.checked = false);
+            technicianCheckboxes.forEach(checkbox => checkbox.checked = false);
+        }
         
-        // Reset "Select All" state
+        // Reset "Select All" states
         selectAllProperties.checked = false;
+        selectAllTechnicians.checked = false;
     });
 
     // Form validation
