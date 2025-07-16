@@ -120,9 +120,17 @@ class MaintenanceRequestController extends Controller
         
         $technicians = [];
         if (Auth::user()->isPropertyManager() || Auth::user()->isAdmin()) {
-            $technicians = User::whereHas('role', function ($query) {
+            $technicianQuery = User::whereHas('role', function ($query) {
                 $query->where('slug', 'technician');
-            })->get();
+            });
+            
+            // Property managers can only see technicians they invited
+            if (Auth::user()->isPropertyManager()) {
+                $technicianQuery->where('invited_by', Auth::id());
+            }
+            // Admins can see all technicians (no additional filter needed)
+            
+            $technicians = $technicianQuery->get();
         }
         
         return view('maintenance.show', compact('maintenance', 'technicians'));
@@ -384,6 +392,11 @@ class MaintenanceRequestController extends Controller
         ]);
 
         $technician = User::findOrFail($request->assigned_to);
+        
+        // Security check: Property managers can only assign technicians they invited
+        if (Auth::user()->isPropertyManager() && $technician->invited_by !== Auth::id()) {
+            abort(403, 'You can only assign technicians you have invited.');
+        }
         $maintenance->assignTo($technician);
         
         // Mark the request as assigned when a technician is assigned

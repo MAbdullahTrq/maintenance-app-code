@@ -163,7 +163,7 @@
                         <label class="block font-semibold mb-1">Assign Technician*</label>
                         <select name="technician_id" class="w-full border rounded p-2" x-model="tech">
                             <option value="">Select Technician</option>
-                            @foreach(App\Models\User::whereHas('role', function($q){$q->where('slug','technician');})->get() as $tech)
+                            @foreach(App\Models\User::whereHas('role', function($q){$q->where('slug','technician');})->where('invited_by', auth()->id())->get() as $tech)
                                 <option value="{{ $tech->id }}">{{ $tech->name }}</option>
                             @endforeach
                         </select>

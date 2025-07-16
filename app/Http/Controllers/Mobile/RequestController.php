@@ -122,6 +122,11 @@ class RequestController extends Controller
         ]);
         $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);
         $technician = \App\Models\User::findOrFail($request->technician_id);
+        
+        // Security check: Property managers can only assign technicians they invited
+        if (auth()->user()->isPropertyManager() && $technician->invited_by !== auth()->id()) {
+            abort(403, 'You can only assign technicians you have invited.');
+        }
         $maintenance->assigned_to = $technician->id;
         $maintenance->status = 'assigned';
         $maintenance->approved_by = auth()->id();
