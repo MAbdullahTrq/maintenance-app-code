@@ -121,22 +121,24 @@
         position: absolute;
         top: 100%;
         left: 0;
-        width: 280px;
+        width: 250px;
         background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 0.5rem;
-        box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         z-index: 1000;
-        height: 180px !important;
-        max-height: 180px !important;
-        overflow: hidden !important;
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        transform: translateY(-5px);
-        transition: all 0.2s ease;
-        border-top: 2px solid #3b82f6;
-        flex-direction: column;
+        max-height: 200px;
+        overflow: hidden;
+        display: none;
+        opacity: 0;
+        transform: translateY(-2px);
+        transition: all 0.15s ease;
+    }
+    
+    #mobileCountryOptions.show {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
     }
     
     #mobileCountryOptions.show {
@@ -149,37 +151,28 @@
 
     
     .country-search {
-        padding: 10px 12px;
+        padding: 8px 12px;
         border: none;
         border-bottom: 1px solid #e5e7eb;
         width: 100%;
-        height: 40px;
-        font-size: 12px;
+        font-size: 13px;
         outline: none;
-        background: #f8fafc;
-        font-weight: 500;
+        background: #f9fafb;
         color: #374151;
-        transition: all 0.2s ease;
-        flex-shrink: 0;
     }
     
     .country-search:focus {
         background: white;
         border-bottom-color: #3b82f6;
-        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
     }
     
     .country-search::placeholder {
         color: #9ca3af;
-        font-style: italic;
     }
     
     .country-options-list {
-        height: 130px !important;
-        max-height: 130px !important;
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
-        position: relative;
+        max-height: 160px;
+        overflow-y: auto;
     }
     
     .country-option {
@@ -187,54 +180,37 @@
         cursor: pointer;
         display: flex;
         align-items: center;
-        font-size: 12px;
-        transition: all 0.15s ease;
-        border-bottom: 1px solid rgba(229, 231, 235, 0.3);
-        position: relative;
+        font-size: 13px;
+        border-bottom: 1px solid #f3f4f6;
     }
     
-
-    
     .country-option:hover {
-        background: #f0f9ff;
-        border-left: 2px solid #3b82f6;
-        padding-left: 10px;
+        background: #f3f4f6;
     }
     
     .country-option:last-child {
         border-bottom: none;
     }
     
-    .country-option:active {
-        transform: scale(0.98);
-        background: #dbeafe;
-    }
-    
     .country-option-flag {
-        font-size: 14px;
+        font-size: 16px;
         margin-right: 8px;
-        width: 18px;
+        width: 20px;
         text-align: center;
     }
     
     .country-option-name {
         flex: 1;
         color: #374151;
-        margin-right: 6px;
-        font-size: 12px;
-        font-weight: 500;
-        line-height: 1.2;
+        margin-right: 8px;
+        font-size: 13px;
     }
     
     .country-option-code {
-        font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+        font-family: monospace;
         font-weight: 600;
         color: #6b7280;
-        font-size: 10px;
-        background: #f3f4f6;
-        padding: 1px 4px;
-        border-radius: 3px;
-        letter-spacing: 0.3px;
+        font-size: 11px;
     }
     
     .phone-input {
@@ -362,9 +338,9 @@
                                 <span class="country-dropdown-arrow">▼</span>
                             </button>
                             
-                            <div class="country-options" id="mobileCountryOptions" style="display: none !important; visibility: hidden !important; opacity: 0 !important; height: 180px !important; max-height: 180px !important; overflow: hidden !important;">
+                            <div class="country-options" id="mobileCountryOptions">
                                 <input type="text" class="country-search" id="mobileCountrySearch" placeholder="Search countries...">
-                                <div class="country-options-list" style="height: 130px !important; max-height: 130px !important; overflow-y: auto !important;">
+                                <div class="country-options-list">
                                     <div id="mobileCountryList">
                                         <!-- Countries will be populated by JavaScript -->
                                     </div>
@@ -487,20 +463,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function forceHideDropdown() {
         if (countryOptions) {
             countryOptions.classList.remove('show');
-            countryOptions.style.display = 'none';
-            countryOptions.style.visibility = 'hidden';
-            countryOptions.style.opacity = '0';
         }
         if (countryDropdown) {
             countryDropdown.classList.remove('open');
-        }
-        
-        // Remove visual highlight from phone container
-        const phoneContainer = document.querySelector('.phone-container');
-        if (phoneContainer) {
-            phoneContainer.style.borderColor = '';
-            phoneContainer.style.boxShadow = '';
-            phoneContainer.style.background = '';
         }
     }
 
@@ -557,20 +522,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function openDropdown() {
         countryDropdown.classList.add('open');
         countryOptions.classList.add('show');
-        countryOptions.style.display = 'flex';
-        countryOptions.style.visibility = 'visible';
-        countryOptions.style.opacity = '1';
-        countryOptions.style.height = '180px';
-        countryOptions.style.maxHeight = '180px';
-        
-        // Add visual highlight to phone container
-        const phoneContainer = document.querySelector('.phone-container');
-        if (phoneContainer) {
-            phoneContainer.style.borderColor = '#3b82f6';
-            phoneContainer.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
-            phoneContainer.style.background = 'rgba(239, 246, 255, 0.3)';
-        }
-        
         countrySearch.focus();
         countrySearch.value = '';
         filterCountries('');
