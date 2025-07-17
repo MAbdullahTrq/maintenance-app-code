@@ -104,11 +104,16 @@
         z-index: 1000;
         max-height: 240px;
         overflow-y: auto;
-        display: none;
+        display: none !important;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.2s ease;
     }
     
     .country-options.show {
-        display: block;
+        display: block !important;
+        opacity: 1;
+        transform: translateY(0);
     }
     
     .country-search {
@@ -373,6 +378,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }));
         
         renderCountryList();
+        
+        // Ensure dropdown is hidden initially
+        countryOptions.classList.remove('show');
+        countryDropdown.classList.remove('open');
         
         // Set initial country
         const initialCountry = '{{ $userCountry }}' || 'US';
