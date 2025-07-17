@@ -115,7 +115,7 @@
                 </button>
             </div>
 
-            <!-- Additional Export Options -->
+            <!-- Additional Export Options
             <div id="export-buttons-section" class="mt-4 grid grid-cols-2 gap-3" style="display: none;">
                 <button type="button" onclick="submitForm('csv')"
                         class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-sm">
@@ -125,7 +125,7 @@
                         class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 text-sm">
                     <i class="fas fa-file-pdf mr-1"></i>PDF
                 </button>
-            </div>
+            </div> -->
         </form>
     </div>
 </div>

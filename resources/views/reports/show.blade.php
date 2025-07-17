@@ -23,9 +23,11 @@
                             <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                         @endif
                     @endforeach
-                    <button type="submit" name="format" value="csv" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
-                        Export
-                    </button>
+                    <div class="text-center no-print">
+                        <button type="submit" name="format" value="csv" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                            Export
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
