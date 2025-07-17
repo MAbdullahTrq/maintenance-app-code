@@ -45,6 +45,12 @@
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
     
+    .phone-container.dropdown-open {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        background: rgba(239, 246, 255, 0.3);
+    }
+    
     .country-dropdown {
         position: relative;
         width: 120px;
@@ -54,7 +60,7 @@
     
     .country-select-button {
         width: 100%;
-        padding: 14px 6px 14px 10px;
+        padding: 14px 8px 14px 12px;
         background: transparent;
         border: none;
         display: flex;
@@ -62,25 +68,42 @@
         justify-content: space-between;
         cursor: pointer;
         font-size: 12px;
-        font-weight: 500;
+        font-weight: 600;
         color: #374151;
-        transition: background-color 0.2s ease;
+        transition: all 0.2s ease;
+        border-radius: 0.5rem 0 0 0.5rem;
     }
     
     .country-select-button:hover {
-        background: #f3f4f6;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        color: #1f2937;
+    }
+    
+    .country-dropdown.open .country-select-button {
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        color: #1e40af;
     }
     
     .country-flag {
-        font-size: 14px;
-        margin-right: 3px;
+        font-size: 16px;
+        margin-right: 6px;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+        transition: transform 0.2s ease;
+    }
+    
+    .country-select-button:hover .country-flag {
+        transform: scale(1.1);
     }
     
     .country-code {
-        font-family: 'Courier New', monospace;
-        font-weight: 600;
+        font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+        font-weight: 700;
         color: #1f2937;
         font-size: 11px;
+        background: rgba(59, 130, 246, 0.1);
+        padding: 2px 6px;
+        border-radius: 3px;
+        letter-spacing: 0.5px;
     }
     
     .country-dropdown-arrow {
@@ -99,17 +122,19 @@
         left: 0;
         right: 0;
         background: white;
-        border: 1px solid #d1d5db;
-        border-radius: 0.5rem;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+        border-radius: 0.75rem;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         z-index: 1000;
-        max-height: 200px;
-        overflow-y: auto;
+        max-height: 280px;
+        overflow: hidden;
         display: none !important;
         visibility: hidden !important;
         opacity: 0 !important;
         transform: translateY(-10px);
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        border-top: 3px solid #3b82f6;
     }
     
     #mobileCountryOptions.show {
@@ -120,55 +145,100 @@
     }
     
     .country-search {
-        padding: 8px 10px;
+        padding: 12px 16px;
         border: none;
-        border-bottom: 1px solid #e5e7eb;
+        border-bottom: 2px solid #e5e7eb;
         width: 100%;
-        font-size: 12px;
+        font-size: 13px;
         outline: none;
-        background: #f9fafb;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        font-weight: 500;
+        color: #374151;
+        transition: all 0.2s ease;
     }
     
     .country-search:focus {
         background: white;
+        border-bottom-color: #3b82f6;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+    }
+    
+    .country-search::placeholder {
+        color: #9ca3af;
+        font-style: italic;
+    }
+    
+    .country-options-list {
+        max-height: 240px;
+        overflow-y: auto;
     }
     
     .country-option {
-        padding: 8px 10px;
+        padding: 12px 16px;
         cursor: pointer;
         display: flex;
         align-items: center;
-        font-size: 12px;
-        transition: background-color 0.15s ease;
-        border-bottom: 1px solid #f3f4f6;
+        font-size: 13px;
+        transition: all 0.2s ease;
+        border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+        position: relative;
+        opacity: 0;
+        animation: fadeInSlide 0.3s ease forwards;
+    }
+    
+    @keyframes fadeInSlide {
+        from {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
     }
     
     .country-option:hover {
-        background: #f3f4f6;
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        transform: translateX(2px);
+        border-left: 3px solid #3b82f6;
+        padding-left: 13px;
     }
     
     .country-option:last-child {
         border-bottom: none;
     }
     
+    .country-option:active {
+        transform: scale(0.98);
+        background: #dbeafe;
+    }
+    
     .country-option-flag {
-        font-size: 14px;
-        margin-right: 6px;
-        width: 16px;
+        font-size: 18px;
+        margin-right: 12px;
+        width: 24px;
+        text-align: center;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
     }
     
     .country-option-name {
         flex: 1;
-        color: #374151;
-        margin-right: 6px;
-        font-size: 11px;
+        color: #1f2937;
+        margin-right: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 1.2;
     }
     
     .country-option-code {
-        font-family: 'Courier New', monospace;
-        font-weight: 600;
-        color: #6b7280;
-        font-size: 10px;
+        font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+        font-weight: 700;
+        color: #3b82f6;
+        font-size: 11px;
+        background: rgba(59, 130, 246, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+        letter-spacing: 0.5px;
     }
     
     .phone-input {
@@ -208,22 +278,30 @@
         font-size: 11px;
     }
     
-    /* Scrollbar styling for mobile country dropdown */
-    .country-options::-webkit-scrollbar {
-        width: 4px;
+    /* Custom scrollbar styling for mobile country dropdown */
+    .country-options-list::-webkit-scrollbar {
+        width: 6px;
     }
     
-    .country-options::-webkit-scrollbar-track {
-        background: #f1f1f1;
+    .country-options-list::-webkit-scrollbar-track {
+        background: rgba(243, 244, 246, 0.5);
+        border-radius: 3px;
     }
     
-    .country-options::-webkit-scrollbar-thumb {
-        background: #c1c1c1;
-        border-radius: 2px;
+    .country-options-list::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        border-radius: 3px;
+        transition: all 0.2s ease;
     }
     
-    .country-options::-webkit-scrollbar-thumb:hover {
-        background: #a8a8a8;
+    .country-options-list::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        transform: scaleX(1.2);
+    }
+    
+    /* Smooth scrolling */
+    .country-options-list {
+        scroll-behavior: smooth;
     }
     
     /* Mobile form enhancements */
@@ -289,9 +367,11 @@
                             </button>
                             
                             <div class="country-options" id="mobileCountryOptions" style="display: none !important; visibility: hidden !important; opacity: 0 !important;">
-                                <input type="text" class="country-search" id="mobileCountrySearch" placeholder="Search countries...">
-                                <div id="mobileCountryList">
-                                    <!-- Countries will be populated by JavaScript -->
+                                <input type="text" class="country-search" id="mobileCountrySearch" placeholder="🔍 Search countries...">
+                                <div class="country-options-list">
+                                    <div id="mobileCountryList">
+                                        <!-- Countries will be populated by JavaScript -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -418,14 +498,38 @@ document.addEventListener('DOMContentLoaded', function() {
         if (countryDropdown) {
             countryDropdown.classList.remove('open');
         }
+        
+        // Remove visual highlight from phone container
+        const phoneContainer = document.querySelector('.phone-container');
+        if (phoneContainer) {
+            phoneContainer.style.borderColor = '';
+            phoneContainer.style.boxShadow = '';
+            phoneContainer.style.background = '';
+        }
     }
 
     function renderCountryList() {
         countryList.innerHTML = '';
-        filteredCountries.forEach(country => {
+        
+        if (filteredCountries.length === 0) {
+            const noResults = document.createElement('div');
+            noResults.className = 'no-results';
+            noResults.innerHTML = `
+                <div style="text-align: center; padding: 20px; color: #6b7280;">
+                    <div style="font-size: 24px; margin-bottom: 8px;">🔍</div>
+                    <div style="font-size: 13px; font-weight: 500;">No countries found</div>
+                    <div style="font-size: 11px; margin-top: 4px;">Try a different search term</div>
+                </div>
+            `;
+            countryList.appendChild(noResults);
+            return;
+        }
+        
+        filteredCountries.forEach((country, index) => {
             const option = document.createElement('div');
             option.className = 'country-option';
             option.dataset.code = country.code;
+            option.style.animationDelay = `${index * 0.02}s`;
             option.innerHTML = `
                 <span class="country-option-flag">${country.flag}</span>
                 <span class="country-option-name">${country.name}</span>
@@ -462,6 +566,15 @@ document.addEventListener('DOMContentLoaded', function() {
         countryOptions.style.display = 'block';
         countryOptions.style.visibility = 'visible';
         countryOptions.style.opacity = '1';
+        
+        // Add visual highlight to phone container
+        const phoneContainer = document.querySelector('.phone-container');
+        if (phoneContainer) {
+            phoneContainer.style.borderColor = '#3b82f6';
+            phoneContainer.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
+            phoneContainer.style.background = 'rgba(239, 246, 255, 0.3)';
+        }
+        
         countrySearch.focus();
         countrySearch.value = '';
         filterCountries('');
