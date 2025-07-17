@@ -121,40 +121,46 @@
         position: absolute;
         top: 100%;
         left: 0;
-        width: 300px;
+        width: 280px;
         background: white;
         border: 1px solid #e5e7eb;
         border-radius: 0.5rem;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -5px rgba(0, 0, 0, 0.04);
+        box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
         z-index: 1000;
-        max-height: 200px;
-        overflow: hidden;
+        height: 180px !important;
+        max-height: 180px !important;
+        overflow: hidden !important;
         display: none !important;
         visibility: hidden !important;
         opacity: 0 !important;
         transform: translateY(-5px);
         transition: all 0.2s ease;
         border-top: 2px solid #3b82f6;
+        flex-direction: column;
     }
     
     #mobileCountryOptions.show {
-        display: block !important;
+        display: flex !important;
         visibility: visible !important;
         opacity: 1 !important;
         transform: translateY(0);
     }
     
+
+    
     .country-search {
-        padding: 8px 12px;
+        padding: 10px 12px;
         border: none;
         border-bottom: 1px solid #e5e7eb;
         width: 100%;
+        height: 40px;
         font-size: 12px;
         outline: none;
         background: #f8fafc;
         font-weight: 500;
         color: #374151;
         transition: all 0.2s ease;
+        flex-shrink: 0;
     }
     
     .country-search:focus {
@@ -169,9 +175,11 @@
     }
     
     .country-options-list {
-        max-height: 150px;
-        overflow-y: auto;
-        overflow-x: hidden;
+        height: 130px !important;
+        max-height: 130px !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        position: relative;
     }
     
     .country-option {
@@ -354,9 +362,9 @@
                                 <span class="country-dropdown-arrow">▼</span>
                             </button>
                             
-                            <div class="country-options" id="mobileCountryOptions" style="display: none !important; visibility: hidden !important; opacity: 0 !important;">
+                            <div class="country-options" id="mobileCountryOptions" style="display: none !important; visibility: hidden !important; opacity: 0 !important; height: 180px !important; max-height: 180px !important; overflow: hidden !important;">
                                 <input type="text" class="country-search" id="mobileCountrySearch" placeholder="Search countries...">
-                                <div class="country-options-list">
+                                <div class="country-options-list" style="height: 130px !important; max-height: 130px !important; overflow-y: auto !important;">
                                     <div id="mobileCountryList">
                                         <!-- Countries will be populated by JavaScript -->
                                     </div>
@@ -549,9 +557,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function openDropdown() {
         countryDropdown.classList.add('open');
         countryOptions.classList.add('show');
-        countryOptions.style.display = 'block';
+        countryOptions.style.display = 'flex';
         countryOptions.style.visibility = 'visible';
         countryOptions.style.opacity = '1';
+        countryOptions.style.height = '180px';
+        countryOptions.style.maxHeight = '180px';
         
         // Add visual highlight to phone container
         const phoneContainer = document.querySelector('.phone-container');
