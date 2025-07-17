@@ -21,7 +21,11 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        return view('auth.register');
+        $phoneService = new \App\Services\PhoneValidationService();
+        $userCountry = $phoneService->getUserCountry(request()->ip());
+        $countries = $phoneService->getCountries();
+        
+        return view('auth.register', compact('userCountry', 'countries'));
     }
 
     /**
@@ -33,16 +37,23 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'phone' => ['required', new \App\Rules\PhoneValidationRule($request->country_code)],
+            'country_code' => ['required', 'string', 'size:2'],
             'cf-turnstile-response' => ['required', new TurnstileRule],
         ]);
 
         // Get the property manager role
         $role = Role::where('slug', 'property_manager')->first();
 
+        // Format phone number to E164 format
+        $phoneService = new \App\Services\PhoneValidationService();
+        $formattedPhone = $phoneService->formatPhoneNumber($request->phone, $request->country_code);
+
         // Create user account as inactive by default
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $formattedPhone,
             'password' => Hash::make($request->password),
             'role_id' => $role->id,
             'is_active' => false, // Account starts as inactive
