@@ -39,7 +39,7 @@
         <div class="mb-6 space-y-3 no-print">
             <!-- Export Dropdown -->
             <div class="relative">
-                <button id="exportDropdownBtn" type="button" class="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                <button id="exportDropdownBtn" type="button" class="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center">
                     📤 Export
                     <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
