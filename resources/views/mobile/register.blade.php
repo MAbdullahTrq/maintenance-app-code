@@ -28,189 +28,33 @@
         }
     }
 
-    /* Enhanced Phone input styling for mobile */
-    .phone-container {
+    /* Single Phone input styling for mobile */
+    .phone-input-container {
         position: relative;
-        display: flex;
-        gap: 0;
         border: 1px solid #d1d5db;
         border-radius: 0.5rem;
-        overflow: hidden;
         transition: all 0.2s ease;
         background: white;
     }
     
-    .phone-container:focus-within {
+    .phone-input-container:focus-within {
         border-color: #3b82f6;
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
     
-    .phone-container.dropdown-open {
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        background: rgba(239, 246, 255, 0.3);
-    }
-    
-    .country-dropdown {
-        position: relative;
-        width: 130px;
-        background: #f9fafb;
-        border-right: 1px solid #e5e7eb;
-        flex-shrink: 0;
-    }
-    
-    .country-select-button {
+    .phone-input-single {
         width: 100%;
-        padding: 14px 8px 14px 12px;
-        background: transparent;
         border: none;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        cursor: pointer;
-        font-size: 12px;
-        font-weight: 600;
-        color: #374151;
-        transition: all 0.2s ease;
-        border-radius: 0.5rem 0 0 0.5rem;
-    }
-    
-    .country-select-button:hover {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        color: #1f2937;
-    }
-    
-    .country-dropdown.open .country-select-button {
-        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-        color: #1e40af;
-    }
-    
-    .country-flag {
-        font-size: 16px;
-        margin-right: 6px;
-        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
-        transition: transform 0.2s ease;
-    }
-    
-    .country-select-button:hover .country-flag {
-        transform: scale(1.1);
-    }
-    
-    .country-code {
-        font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
-        font-weight: 700;
-        color: #1f2937;
-        font-size: 11px;
-        background: rgba(59, 130, 246, 0.1);
-        padding: 2px 6px;
-        border-radius: 3px;
-        letter-spacing: 0.5px;
-    }
-    
-    .country-dropdown-arrow {
-        font-size: 8px;
-        color: #6b7280;
-        transition: transform 0.2s ease;
-    }
-    
-    .country-dropdown.open .country-dropdown-arrow {
-        transform: rotate(180deg);
-    }
-    
-    #mobileCountryOptions {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 250px;
-        background: white;
-        border: 1px solid #d1d5db;
-        border-radius: 0.375rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-        max-height: 200px;
-        overflow: hidden;
-        display: none;
-        opacity: 0;
-        transform: translateY(-2px);
-        transition: all 0.15s ease;
-    }
-    
-    #mobileCountryOptions.show {
-        display: block;
-        opacity: 1;
-        transform: translateY(0);
-    }
-    
-    #mobileCountryOptions.show {
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        transform: translateY(0);
-    }
-    
-
-    
-    .country-search {
-        padding: 8px 12px;
-        border: none;
-        border-bottom: 1px solid #e5e7eb;
-        width: 100%;
-        font-size: 13px;
+        padding: 14px 16px;
+        font-size: 14px;
         outline: none;
-        background: #f9fafb;
-        color: #374151;
+        background: transparent;
+        font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
     }
     
-    .country-search:focus {
-        background: white;
-        border-bottom-color: #3b82f6;
-    }
-    
-    .country-search::placeholder {
+    .phone-input-single::placeholder {
         color: #9ca3af;
-    }
-    
-    .country-options-list {
-        max-height: 160px;
-        overflow-y: auto;
-    }
-    
-    .country-option {
-        padding: 8px 12px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        font-size: 13px;
-        border-bottom: 1px solid #f3f4f6;
-    }
-    
-    .country-option:hover {
-        background: #f3f4f6;
-    }
-    
-    .country-option:last-child {
-        border-bottom: none;
-    }
-    
-    .country-option-flag {
-        font-size: 16px;
-        margin-right: 8px;
-        width: 20px;
-        text-align: center;
-    }
-    
-    .country-option-name {
-        flex: 1;
-        color: #374151;
-        margin-right: 8px;
-        font-size: 13px;
-    }
-    
-    .country-option-code {
-        font-family: monospace;
-        font-weight: 600;
-        color: #6b7280;
-        font-size: 11px;
+        font-family: inherit;
     }
     
     .phone-input {
@@ -248,6 +92,14 @@
     
     .phone-feedback-icon {
         font-size: 11px;
+    }
+    
+    .phone-example {
+        font-size: 10px;
+        color: #6b7280;
+        margin-top: 2px;
+        padding: 0 4px;
+        font-style: italic;
     }
     
     /* Custom scrollbar styling for mobile country dropdown */
@@ -328,36 +180,15 @@
                 </div>
                 <div>
                     <label for="mobile_phone" class="sr-only">Phone Number</label>
-                    <div class="phone-container @error('phone') border-red-500 @enderror @error('country_code') border-red-500 @enderror">
-                        <div class="country-dropdown" id="mobileCountryDropdown">
-                            <button type="button" class="country-select-button" id="mobileCountrySelectButton">
-                                <div class="flex items-center">
-                                    <span class="country-flag" id="mobileSelectedFlag">🇺🇸</span>
-                                    <span class="country-code" id="mobileSelectedCode">+1</span>
-                                </div>
-                                <span class="country-dropdown-arrow">▼</span>
-                            </button>
-                            
-                            <div class="country-options" id="mobileCountryOptions">
-                                <input type="text" class="country-search" id="mobileCountrySearch" placeholder="Search countries...">
-                                <div class="country-options-list">
-                                    <div id="mobileCountryList">
-                                        <!-- Countries will be populated by JavaScript -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <input type="hidden" name="country_code" id="mobile_country_code" value="{{ old('country_code', $userCountry) }}">
+                    <div class="phone-input-container @error('phone') border-red-500 @enderror">
                         <input type="tel" name="phone" id="mobile_phone" 
-                            class="phone-input"
-                            placeholder="Phone number" value="{{ old('phone') }}" required>
+                            class="phone-input-single"
+                            placeholder="+1 555 123 4567" value="{{ old('phone') }}" required>
+                        <input type="hidden" name="country_code" id="mobile_country_code" value="{{ old('country_code', $userCountry) }}">
                     </div>
                     <div id="mobile-phone-feedback" class="phone-feedback"></div>
+                    <div id="mobile-phone-example" class="phone-example"></div>
                     @error('phone')
-                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
-                    @enderror
-                    @error('country_code')
                         <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
                     @enderror
                 </div>
@@ -425,140 +256,70 @@ document.addEventListener('DOMContentLoaded', function() {
     const phoneInput = document.getElementById('mobile_phone');
     const countryCodeInput = document.getElementById('mobile_country_code');
     const feedbackDiv = document.getElementById('mobile-phone-feedback');
+    const exampleDiv = document.getElementById('mobile-phone-example');
     const submitBtn = document.getElementById('mobileSubmitBtn');
-    const countryDropdown = document.getElementById('mobileCountryDropdown');
-    const countrySelectButton = document.getElementById('mobileCountrySelectButton');
-    const countryOptions = document.getElementById('mobileCountryOptions');
-    const countrySearch = document.getElementById('mobileCountrySearch');
-    const countryList = document.getElementById('mobileCountryList');
-    const selectedFlag = document.getElementById('mobileSelectedFlag');
-    const selectedCode = document.getElementById('mobileSelectedCode');
 
     let validationTimeout;
     let isPhoneValid = false;
-    let filteredCountries = [];
+    let detectedCountry = null;
 
-    // Initialize countries
-    function initializeCountries() {
-        filteredCountries = Object.entries(countryData).map(([code, country]) => ({
-            code,
-            name: country.name,
-            dialCode: country.code,
-            flag: countryFlags[code] || '🏳️'
-        }));
-        
-        // Force hide dropdown immediately
-        forceHideDropdown();
-        
-        renderCountryList();
-        
-        // Ensure dropdown is hidden after rendering
-        forceHideDropdown();
-        
-        // Set initial country
+    // Initialize phone input
+    function initializePhoneInput() {
+        // Set initial placeholder based on user's country
         const initialCountry = '{{ $userCountry }}' || 'US';
-        selectCountry(initialCountry);
-    }
-
-    function forceHideDropdown() {
-        if (countryOptions) {
-            countryOptions.classList.remove('show');
-        }
-        if (countryDropdown) {
-            countryDropdown.classList.remove('open');
-        }
-    }
-
-    function renderCountryList() {
-        countryList.innerHTML = '';
-        
-        if (filteredCountries.length === 0) {
-            const noResults = document.createElement('div');
-            noResults.className = 'no-results';
-            noResults.innerHTML = `
-                <div style="text-align: center; padding: 16px 12px; color: #6b7280;">
-                    <div style="font-size: 12px; font-weight: 500;">No countries found</div>
-                    <div style="font-size: 10px; margin-top: 2px; opacity: 0.7;">Try a different search</div>
-                </div>
-            `;
-            countryList.appendChild(noResults);
-            return;
-        }
-        
-        filteredCountries.forEach((country) => {
-            const option = document.createElement('div');
-            option.className = 'country-option';
-            option.dataset.code = country.code;
-            option.innerHTML = `
-                <span class="country-option-flag">${country.flag}</span>
-                <span class="country-option-name">${country.name}</span>
-                <span class="country-option-code">${country.dialCode}</span>
-            `;
-            option.addEventListener('click', () => {
-                selectCountry(country.code);
-                closeDropdown();
-            });
-            countryList.appendChild(option);
-        });
-    }
-
-    function selectCountry(countryCode) {
-        const country = filteredCountries.find(c => c.code === countryCode);
+        const country = countryData[initialCountry];
         if (country) {
-            selectedFlag.textContent = country.flag;
-            selectedCode.textContent = country.dialCode;
-            countryCodeInput.value = countryCode;
-            
-            // Update placeholder
-            phoneInput.placeholder = `Phone number`;
-            
-            // Validate phone if there's input
-            if (phoneInput.value.trim()) {
-                validatePhone();
+            phoneInput.placeholder = `+${country.code} 555 123 4567`;
+            countryCodeInput.value = initialCountry;
+        }
+    }
+
+    function detectCountryFromPhone(phone) {
+        if (!phone || !phone.startsWith('+')) {
+            return null;
+        }
+        
+        // Remove the + and get the dial code
+        const dialCode = phone.substring(1);
+        
+        // Find country by dial code
+        for (const [code, country] of Object.entries(countryData)) {
+            if (dialCode.startsWith(country.code)) {
+                return { code, ...country };
             }
         }
-    }
-
-    function openDropdown() {
-        countryDropdown.classList.add('open');
-        countryOptions.classList.add('show');
-        countrySearch.focus();
-        countrySearch.value = '';
-        filterCountries('');
-    }
-
-    function closeDropdown() {
-        forceHideDropdown();
-    }
-
-    function filterCountries(searchTerm) {
-        const filtered = Object.entries(countryData)
-            .map(([code, country]) => ({
-                code,
-                name: country.name,
-                dialCode: country.code,
-                flag: countryFlags[code] || '🏳️'
-            }))
-            .filter(country => 
-                country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                country.dialCode.includes(searchTerm) ||
-                country.code.toLowerCase().includes(searchTerm.toLowerCase())
-            );
         
-        filteredCountries = filtered;
-        renderCountryList();
+        return null;
+    }
+
+    function updatePhoneExample(country) {
+        if (country) {
+            exampleDiv.textContent = `e.g. +${country.code}${country.example || '555123456'}`;
+        } else {
+            exampleDiv.textContent = '';
+        }
     }
 
     function validatePhone() {
         const phone = phoneInput.value.trim();
-        const country = countryCodeInput.value;
         
         if (!phone) {
             feedbackDiv.innerHTML = '';
             feedbackDiv.className = 'phone-feedback';
+            exampleDiv.textContent = '';
             isPhoneValid = false;
             updateSubmitButton();
             return;
+        }
+
+        // Detect country from phone number
+        const detectedCountry = detectCountryFromPhone(phone);
+        
+        if (detectedCountry) {
+            countryCodeInput.value = detectedCountry.code;
+            updatePhoneExample(detectedCountry);
+        } else {
+            exampleDiv.textContent = '';
         }
 
         // Show loading state
@@ -578,7 +339,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 body: JSON.stringify({
                     phone: phone,
-                    country: country
+                    country: detectedCountry ? detectedCountry.code : 'US'
                 })
             })
             .then(response => response.json())
@@ -612,35 +373,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Event listeners
-    countrySelectButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (countryOptions.classList.contains('show')) {
-            closeDropdown();
-        } else {
-            openDropdown();
-        }
-    });
-
-    countrySearch.addEventListener('input', (e) => {
-        filterCountries(e.target.value);
-    });
-
     phoneInput.addEventListener('input', validatePhone);
 
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!countryDropdown.contains(e.target)) {
-            closeDropdown();
-        }
-    });
-
     // Initialize
-    initializeCountries();
-
-    // Force hide dropdown after a short delay as final fallback
-    setTimeout(function() {
-        forceHideDropdown();
-    }, 100);
+    initializePhoneInput();
 
     // Initial validation if there's an old value
     if (phoneInput.value) {
