@@ -93,7 +93,7 @@
         transform: rotate(180deg);
     }
     
-    .country-options {
+    #mobileCountryOptions {
         position: absolute;
         top: 100%;
         left: 0;
@@ -106,14 +106,16 @@
         max-height: 200px;
         overflow-y: auto;
         display: none !important;
-        opacity: 0;
+        visibility: hidden !important;
+        opacity: 0 !important;
         transform: translateY(-10px);
         transition: all 0.2s ease;
     }
     
-    .country-options.show {
+    #mobileCountryOptions.show {
         display: block !important;
-        opacity: 1;
+        visibility: visible !important;
+        opacity: 1 !important;
         transform: translateY(0);
     }
     
@@ -286,7 +288,7 @@
                                 <span class="country-dropdown-arrow">▼</span>
                             </button>
                             
-                            <div class="country-options" id="mobileCountryOptions">
+                            <div class="country-options" id="mobileCountryOptions" style="display: none !important; visibility: hidden !important; opacity: 0 !important;">
                                 <input type="text" class="country-search" id="mobileCountrySearch" placeholder="Search countries...">
                                 <div id="mobileCountryList">
                                     <!-- Countries will be populated by JavaScript -->
@@ -393,15 +395,29 @@ document.addEventListener('DOMContentLoaded', function() {
             flag: countryFlags[code] || '🏳️'
         }));
         
+        // Force hide dropdown immediately
+        forceHideDropdown();
+        
         renderCountryList();
         
-        // Ensure dropdown is hidden initially
-        countryOptions.classList.remove('show');
-        countryDropdown.classList.remove('open');
+        // Ensure dropdown is hidden after rendering
+        forceHideDropdown();
         
         // Set initial country
         const initialCountry = '{{ $userCountry }}' || 'US';
         selectCountry(initialCountry);
+    }
+
+    function forceHideDropdown() {
+        if (countryOptions) {
+            countryOptions.classList.remove('show');
+            countryOptions.style.display = 'none';
+            countryOptions.style.visibility = 'hidden';
+            countryOptions.style.opacity = '0';
+        }
+        if (countryDropdown) {
+            countryDropdown.classList.remove('open');
+        }
     }
 
     function renderCountryList() {
@@ -443,14 +459,16 @@ document.addEventListener('DOMContentLoaded', function() {
     function openDropdown() {
         countryDropdown.classList.add('open');
         countryOptions.classList.add('show');
+        countryOptions.style.display = 'block';
+        countryOptions.style.visibility = 'visible';
+        countryOptions.style.opacity = '1';
         countrySearch.focus();
         countrySearch.value = '';
         filterCountries('');
     }
 
     function closeDropdown() {
-        countryDropdown.classList.remove('open');
-        countryOptions.classList.remove('show');
+        forceHideDropdown();
     }
 
     function filterCountries(searchTerm) {
@@ -558,6 +576,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize
     initializeCountries();
+
+    // Force hide dropdown after a short delay as final fallback
+    setTimeout(function() {
+        forceHideDropdown();
+    }, 100);
 
     // Initial validation if there's an old value
     if (phoneInput.value) {
