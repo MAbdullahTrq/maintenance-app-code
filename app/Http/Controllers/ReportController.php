@@ -610,10 +610,52 @@ class ReportController extends Controller
                 ->toArray();
         }
         
+        // Generate AI Summary for PDF
+        $aiSummary = null;
+        try {
+            // Reload requests with comments for comprehensive AI analysis
+            $user = Auth::user();
+            $dateRange = $reportData['dateRange'];
+            
+            // Build query to get requests with comments
+            $query = $this->buildReportQuery($request, $user, $dateRange);
+            $requestsWithComments = $query->with(['comments.user', 'property.owner', 'assignedTechnician'])->get();
+            
+            // Prepare data for AI prompt
+            $promptData = $this->prepareDataForAI($requestsWithComments, $reportData, $dateRange);
+            
+            // Base AI Prompt Template
+            $basePrompt = "You are an assistant helping a property manager summarize maintenance reports. Based on the data, and comments inside each task from either the property manager or the technician, create a clear and professional summary. Highlight the most important details such as total number of tasks, completed vs pending, any recurring issues, top-performing technicians, and any unusual delays. Be concise, use plain language, and include relevant stats where helpful.";
+            
+            // Generate AI summary
+            $response = OpenAI::chat()->create([
+                'model' => config('openai.default_model', 'gpt-3.5-turbo'),
+                'messages' => [
+                    [
+                        'role' => 'system',
+                        'content' => $basePrompt
+                    ],
+                    [
+                        'role' => 'user',
+                        'content' => $promptData
+                    ]
+                ],
+                'max_tokens' => 800,
+                'temperature' => 0.7,
+            ]);
+            
+            $aiSummary = $response->choices[0]->message->content;
+            
+        } catch (\Exception $e) {
+            \Log::error('PDF AI Summary Generation Error: ' . $e->getMessage());
+            $aiSummary = 'AI summary could not be generated at this time.';
+        }
+        
         // Add additional data for PDF
         $reportData['owner_name'] = $ownerName;
         $reportData['property_names'] = $propertyNames;
         $reportData['technician_names'] = $technicianNames;
+        $reportData['ai_summary'] = $aiSummary;
         
         // Create a special PDF view that opens in new window and triggers print dialog
         return view('reports.pdf', $reportData);

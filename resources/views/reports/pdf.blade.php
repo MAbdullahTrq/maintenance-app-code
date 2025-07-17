@@ -141,7 +141,13 @@
             <p class="text-xs text-gray-400">Generated on {{ now()->format('F j, Y \a\t g:i A') }}</p>
         </div>
 
-        <!-- AI Summary Section (placeholder for manual inclusion) -->
+        <!-- AI Summary Section -->
+        @if(isset($ai_summary) && $ai_summary)
+        <div class="ai-summary mb-6">
+            <h2 class="text-lg font-bold text-blue-800 mb-3">🧠 AI Summary</h2>
+            <div class="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{{ $ai_summary }}</div>
+        </div>
+        @else
         <div class="ai-summary mb-6">
             <h2 class="text-lg font-bold text-blue-800 mb-3">🧠 AI Summary</h2>
             <div class="text-sm text-gray-700 leading-relaxed">
@@ -166,6 +172,7 @@
                 @endif
             </div>
         </div>
+        @endif
 
         <!-- Main Report Content -->
         @if($requests->isNotEmpty())
