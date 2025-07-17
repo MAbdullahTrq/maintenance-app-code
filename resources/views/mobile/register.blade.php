@@ -28,33 +28,165 @@
         }
     }
 
-    /* Phone input styling for mobile */
+    /* Enhanced Phone input styling for mobile */
     .phone-container {
+        position: relative;
         display: flex;
         gap: 0;
-        margin-bottom: 8px;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        transition: all 0.2s ease;
+        background: white;
     }
     
-    .country-select {
-        width: 100px;
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-        border-right: none;
+    .phone-container:focus-within {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .country-dropdown {
+        position: relative;
+        width: 120px;
+        background: #f9fafb;
+        border-right: 1px solid #e5e7eb;
+    }
+    
+    .country-select-button {
+        width: 100%;
+        padding: 14px 6px 14px 10px;
+        background: transparent;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
         font-size: 12px;
-        padding: 12px 8px;
+        font-weight: 500;
+        color: #374151;
+        transition: background-color 0.2s ease;
+    }
+    
+    .country-select-button:hover {
+        background: #f3f4f6;
+    }
+    
+    .country-flag {
+        font-size: 14px;
+        margin-right: 3px;
+    }
+    
+    .country-code {
+        font-family: 'Courier New', monospace;
+        font-weight: 600;
+        color: #1f2937;
+        font-size: 11px;
+    }
+    
+    .country-dropdown-arrow {
+        font-size: 8px;
+        color: #6b7280;
+        transition: transform 0.2s ease;
+    }
+    
+    .country-dropdown.open .country-dropdown-arrow {
+        transform: rotate(180deg);
+    }
+    
+    .country-options {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        max-height: 200px;
+        overflow-y: auto;
+        display: none;
+    }
+    
+    .country-options.show {
+        display: block;
+    }
+    
+    .country-search {
+        padding: 8px 10px;
+        border: none;
+        border-bottom: 1px solid #e5e7eb;
+        width: 100%;
+        font-size: 12px;
+        outline: none;
+        background: #f9fafb;
+    }
+    
+    .country-search:focus {
+        background: white;
+    }
+    
+    .country-option {
+        padding: 8px 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        transition: background-color 0.15s ease;
+        border-bottom: 1px solid #f3f4f6;
+    }
+    
+    .country-option:hover {
+        background: #f3f4f6;
+    }
+    
+    .country-option:last-child {
+        border-bottom: none;
+    }
+    
+    .country-option-flag {
+        font-size: 14px;
+        margin-right: 6px;
+        width: 16px;
+    }
+    
+    .country-option-name {
+        flex: 1;
+        color: #374151;
+        margin-right: 6px;
+        font-size: 11px;
+    }
+    
+    .country-option-code {
+        font-family: 'Courier New', monospace;
+        font-weight: 600;
+        color: #6b7280;
+        font-size: 10px;
     }
     
     .phone-input {
         flex: 1;
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
+        border: none;
+        padding: 14px 16px;
+        font-size: 14px;
+        outline: none;
+        background: white;
+    }
+    
+    .phone-input::placeholder {
+        color: #9ca3af;
+        font-size: 13px;
     }
     
     .phone-feedback {
         font-size: 11px;
-        margin-top: 4px;
+        margin-top: 6px;
         transition: all 0.3s ease;
         min-height: 16px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 0 4px;
     }
     
     .phone-feedback.invalid {
@@ -63,6 +195,47 @@
     
     .phone-feedback.valid {
         color: #16a34a;
+    }
+    
+    .phone-feedback-icon {
+        font-size: 11px;
+    }
+    
+    /* Scrollbar styling for mobile country dropdown */
+    .country-options::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    .country-options::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    
+    .country-options::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 2px;
+    }
+    
+    .country-options::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+    
+    /* Mobile form enhancements */
+    .form-input {
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        padding: 14px 16px;
+        font-size: 14px;
+        transition: all 0.2s ease;
+    }
+    
+    .form-input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        outline: none;
+    }
+    
+    .form-input.error {
+        border-color: #dc2626;
     }
 </style>
 @endpush
@@ -80,31 +253,45 @@
                 @csrf
                 <div>
                     <label for="name" class="sr-only">Full Name</label>
-                    <input type="text" name="name" id="name" class="w-full border border-gray-300 rounded-lg p-3 text-sm placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Full Name" value="{{ old('name') }}" required autofocus>
+                    <input type="text" name="name" id="name" 
+                        class="form-input w-full placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('name') error @enderror" 
+                        placeholder="Full Name" value="{{ old('name') }}" required autofocus>
                     @error('name')
                         <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
                     @enderror
                 </div>
                 <div>
                     <label for="email" class="sr-only">Email address</label>
-                    <input type="email" name="email" id="email" class="w-full border border-gray-300 rounded-lg p-3 text-sm placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Email address" value="{{ old('email') }}" required>
+                    <input type="email" name="email" id="email" 
+                        class="form-input w-full placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('email') error @enderror" 
+                        placeholder="Email address" value="{{ old('email') }}" required>
                     @error('email')
                         <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
                     @enderror
                 </div>
                 <div>
                     <label for="mobile_phone" class="sr-only">Phone Number</label>
-                    <div class="phone-container">
-                        <select id="mobile_country_code" name="country_code" 
-                            class="country-select border border-gray-300 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('country_code') border-red-500 @enderror">
-                            @foreach($countries as $code => $country)
-                                <option value="{{ $code }}" {{ ($userCountry == $code || old('country_code') == $code) ? 'selected' : '' }}>
-                                    {{ $country['code'] }}
-                                </option>
-                            @endforeach
-                        </select>
+                    <div class="phone-container @error('phone') border-red-500 @enderror @error('country_code') border-red-500 @enderror">
+                        <div class="country-dropdown" id="mobileCountryDropdown">
+                            <button type="button" class="country-select-button" id="mobileCountrySelectButton">
+                                <div class="flex items-center">
+                                    <span class="country-flag" id="mobileSelectedFlag">🇺🇸</span>
+                                    <span class="country-code" id="mobileSelectedCode">+1</span>
+                                </div>
+                                <span class="country-dropdown-arrow">▼</span>
+                            </button>
+                            
+                            <div class="country-options" id="mobileCountryOptions">
+                                <input type="text" class="country-search" id="mobileCountrySearch" placeholder="Search countries...">
+                                <div id="mobileCountryList">
+                                    <!-- Countries will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <input type="hidden" name="country_code" id="mobile_country_code" value="{{ old('country_code', $userCountry) }}">
                         <input type="tel" name="phone" id="mobile_phone" 
-                            class="phone-input w-full border border-gray-300 p-3 text-sm placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('phone') border-red-500 @enderror"
+                            class="phone-input"
                             placeholder="Phone number" value="{{ old('phone') }}" required>
                     </div>
                     <div id="mobile-phone-feedback" class="phone-feedback"></div>
@@ -117,14 +304,18 @@
                 </div>
                 <div>
                     <label for="password" class="sr-only">Password</label>
-                    <input type="password" name="password" id="password" class="w-full border border-gray-300 rounded-lg p-3 text-sm placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Password" required>
+                    <input type="password" name="password" id="password" 
+                        class="form-input w-full placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('password') error @enderror" 
+                        placeholder="Password" required>
                     @error('password')
                         <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
                     @enderror
                 </div>
                 <div>
                     <label for="password_confirmation" class="sr-only">Confirm Password</label>
-                    <input type="password" name="password_confirmation" id="password_confirmation" class="w-full border border-gray-300 rounded-lg p-3 text-sm placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Confirm Password" required>
+                    <input type="password" name="password_confirmation" id="password_confirmation" 
+                        class="form-input w-full placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                        placeholder="Confirm Password" required>
                 </div>
                 
                 <!-- Cloudflare Turnstile -->
@@ -158,19 +349,125 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Country data with flags
+    const countryData = @json($countries);
+    const countryFlags = {
+        'US': '🇺🇸', 'CA': '🇨🇦', 'GB': '🇬🇧', 'AU': '🇦🇺', 'DE': '🇩🇪', 'FR': '🇫🇷', 'IT': '🇮🇹', 'ES': '🇪🇸',
+        'NL': '🇳🇱', 'BE': '🇧🇪', 'CH': '🇨🇭', 'AT': '🇦🇹', 'SE': '🇸🇪', 'NO': '🇳🇴', 'DK': '🇩🇰', 'FI': '🇫🇮',
+        'IE': '🇮🇪', 'PT': '🇵🇹', 'GR': '🇬🇷', 'PL': '🇵🇱', 'CZ': '🇨🇿', 'HU': '🇭🇺', 'SK': '🇸🇰', 'SI': '🇸🇮',
+        'HR': '🇭🇷', 'BG': '🇧🇬', 'RO': '🇷🇴', 'LT': '🇱🇹', 'LV': '🇱🇻', 'EE': '🇪🇪', 'RU': '🇷🇺', 'UA': '🇺🇦',
+        'BY': '🇧🇾', 'TR': '🇹🇷', 'IL': '🇮🇱', 'SA': '🇸🇦', 'AE': '🇦🇪', 'IN': '🇮🇳', 'CN': '🇨🇳', 'JP': '🇯🇵',
+        'KR': '🇰🇷', 'SG': '🇸🇬', 'MY': '🇲🇾', 'TH': '🇹🇭', 'PH': '🇵🇭', 'ID': '🇮🇩', 'VN': '🇻🇳', 'BR': '🇧🇷',
+        'MX': '🇲🇽', 'AR': '🇦🇷', 'CL': '🇨🇱', 'CO': '🇨🇴', 'PE': '🇵🇪', 'ZA': '🇿🇦', 'EG': '🇪🇬', 'NG': '🇳🇬',
+        'KE': '🇰🇪', 'GH': '🇬🇭', 'MA': '🇲🇦', 'TN': '🇹🇳', 'DZ': '🇩🇿', 'PK': '🇵🇰', 'BD': '🇧🇩', 'LK': '🇱🇰', 'NZ': '🇳🇿'
+    };
+
+    // DOM elements
     const phoneInput = document.getElementById('mobile_phone');
-    const countrySelect = document.getElementById('mobile_country_code');
+    const countryCodeInput = document.getElementById('mobile_country_code');
     const feedbackDiv = document.getElementById('mobile-phone-feedback');
     const submitBtn = document.getElementById('mobileSubmitBtn');
+    const countryDropdown = document.getElementById('mobileCountryDropdown');
+    const countrySelectButton = document.getElementById('mobileCountrySelectButton');
+    const countryOptions = document.getElementById('mobileCountryOptions');
+    const countrySearch = document.getElementById('mobileCountrySearch');
+    const countryList = document.getElementById('mobileCountryList');
+    const selectedFlag = document.getElementById('mobileSelectedFlag');
+    const selectedCode = document.getElementById('mobileSelectedCode');
+
     let validationTimeout;
     let isPhoneValid = false;
+    let filteredCountries = [];
+
+    // Initialize countries
+    function initializeCountries() {
+        filteredCountries = Object.entries(countryData).map(([code, country]) => ({
+            code,
+            name: country.name,
+            dialCode: country.code,
+            flag: countryFlags[code] || '🏳️'
+        }));
+        
+        renderCountryList();
+        
+        // Set initial country
+        const initialCountry = '{{ $userCountry }}' || 'US';
+        selectCountry(initialCountry);
+    }
+
+    function renderCountryList() {
+        countryList.innerHTML = '';
+        filteredCountries.forEach(country => {
+            const option = document.createElement('div');
+            option.className = 'country-option';
+            option.dataset.code = country.code;
+            option.innerHTML = `
+                <span class="country-option-flag">${country.flag}</span>
+                <span class="country-option-name">${country.name}</span>
+                <span class="country-option-code">${country.dialCode}</span>
+            `;
+            option.addEventListener('click', () => {
+                selectCountry(country.code);
+                closeDropdown();
+            });
+            countryList.appendChild(option);
+        });
+    }
+
+    function selectCountry(countryCode) {
+        const country = filteredCountries.find(c => c.code === countryCode);
+        if (country) {
+            selectedFlag.textContent = country.flag;
+            selectedCode.textContent = country.dialCode;
+            countryCodeInput.value = countryCode;
+            
+            // Update placeholder
+            phoneInput.placeholder = `Phone number`;
+            
+            // Validate phone if there's input
+            if (phoneInput.value.trim()) {
+                validatePhone();
+            }
+        }
+    }
+
+    function openDropdown() {
+        countryDropdown.classList.add('open');
+        countryOptions.classList.add('show');
+        countrySearch.focus();
+        countrySearch.value = '';
+        filterCountries('');
+    }
+
+    function closeDropdown() {
+        countryDropdown.classList.remove('open');
+        countryOptions.classList.remove('show');
+    }
+
+    function filterCountries(searchTerm) {
+        const filtered = Object.entries(countryData)
+            .map(([code, country]) => ({
+                code,
+                name: country.name,
+                dialCode: country.code,
+                flag: countryFlags[code] || '🏳️'
+            }))
+            .filter(country => 
+                country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                country.dialCode.includes(searchTerm) ||
+                country.code.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        
+        filteredCountries = filtered;
+        renderCountryList();
+    }
 
     function validatePhone() {
         const phone = phoneInput.value.trim();
-        const country = countrySelect.value;
+        const country = countryCodeInput.value;
         
         if (!phone) {
-            feedbackDiv.textContent = '';
+            feedbackDiv.innerHTML = '';
             feedbackDiv.className = 'phone-feedback';
             isPhoneValid = false;
             updateSubmitButton();
@@ -178,7 +475,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Show loading state
-        feedbackDiv.textContent = 'Validating...';
+        feedbackDiv.innerHTML = '<span class="phone-feedback-icon">⏳</span> Validating...';
         feedbackDiv.className = 'phone-feedback';
 
         // Clear previous timeout
@@ -200,18 +497,18 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.valid) {
-                    feedbackDiv.textContent = '✓ Valid phone number';
+                    feedbackDiv.innerHTML = '<span class="phone-feedback-icon">✓</span> Valid number';
                     feedbackDiv.className = 'phone-feedback valid';
                     isPhoneValid = true;
                 } else {
-                    feedbackDiv.textContent = '✗ ' + (data.message || 'Invalid phone number format');
+                    feedbackDiv.innerHTML = '<span class="phone-feedback-icon">✗</span> ' + (data.message || 'Invalid format');
                     feedbackDiv.className = 'phone-feedback invalid';
                     isPhoneValid = false;
                 }
                 updateSubmitButton();
             })
             .catch(error => {
-                feedbackDiv.textContent = '✗ Unable to validate phone number';
+                feedbackDiv.innerHTML = '<span class="phone-feedback-icon">✗</span> Validation failed';
                 feedbackDiv.className = 'phone-feedback invalid';
                 isPhoneValid = false;
                 updateSubmitButton();
@@ -227,9 +524,31 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Real-time validation
+    // Event listeners
+    countrySelectButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (countryOptions.classList.contains('show')) {
+            closeDropdown();
+        } else {
+            openDropdown();
+        }
+    });
+
+    countrySearch.addEventListener('input', (e) => {
+        filterCountries(e.target.value);
+    });
+
     phoneInput.addEventListener('input', validatePhone);
-    countrySelect.addEventListener('change', validatePhone);
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!countryDropdown.contains(e.target)) {
+            closeDropdown();
+        }
+    });
+
+    // Initialize
+    initializeCountries();
 
     // Initial validation if there's an old value
     if (phoneInput.value) {
