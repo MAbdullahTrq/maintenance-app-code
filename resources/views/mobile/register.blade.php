@@ -53,9 +53,10 @@
     
     .country-dropdown {
         position: relative;
-        width: 120px;
+        width: 130px;
         background: #f9fafb;
         border-right: 1px solid #e5e7eb;
+        flex-shrink: 0;
     }
     
     .country-select-button {
@@ -120,21 +121,20 @@
         position: absolute;
         top: 100%;
         left: 0;
-        right: 0;
+        width: 300px;
         background: white;
         border: 1px solid #e5e7eb;
-        border-radius: 0.75rem;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -5px rgba(0, 0, 0, 0.04);
         z-index: 1000;
-        max-height: 280px;
+        max-height: 200px;
         overflow: hidden;
         display: none !important;
         visibility: hidden !important;
         opacity: 0 !important;
-        transform: translateY(-10px);
-        transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
-        border-top: 3px solid #3b82f6;
+        transform: translateY(-5px);
+        transition: all 0.2s ease;
+        border-top: 2px solid #3b82f6;
     }
     
     #mobileCountryOptions.show {
@@ -145,13 +145,13 @@
     }
     
     .country-search {
-        padding: 12px 16px;
+        padding: 8px 12px;
         border: none;
-        border-bottom: 2px solid #e5e7eb;
+        border-bottom: 1px solid #e5e7eb;
         width: 100%;
-        font-size: 13px;
+        font-size: 12px;
         outline: none;
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        background: #f8fafc;
         font-weight: 500;
         color: #374151;
         transition: all 0.2s ease;
@@ -169,39 +169,28 @@
     }
     
     .country-options-list {
-        max-height: 240px;
+        max-height: 150px;
         overflow-y: auto;
+        overflow-x: hidden;
     }
     
     .country-option {
-        padding: 12px 16px;
+        padding: 8px 12px;
         cursor: pointer;
         display: flex;
         align-items: center;
-        font-size: 13px;
-        transition: all 0.2s ease;
-        border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+        font-size: 12px;
+        transition: all 0.15s ease;
+        border-bottom: 1px solid rgba(229, 231, 235, 0.3);
         position: relative;
-        opacity: 0;
-        animation: fadeInSlide 0.3s ease forwards;
     }
     
-    @keyframes fadeInSlide {
-        from {
-            opacity: 0;
-            transform: translateX(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
+
     
     .country-option:hover {
-        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-        transform: translateX(2px);
-        border-left: 3px solid #3b82f6;
-        padding-left: 13px;
+        background: #f0f9ff;
+        border-left: 2px solid #3b82f6;
+        padding-left: 10px;
     }
     
     .country-option:last-child {
@@ -214,31 +203,30 @@
     }
     
     .country-option-flag {
-        font-size: 18px;
-        margin-right: 12px;
-        width: 24px;
+        font-size: 14px;
+        margin-right: 8px;
+        width: 18px;
         text-align: center;
-        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
     }
     
     .country-option-name {
         flex: 1;
-        color: #1f2937;
-        margin-right: 8px;
-        font-size: 13px;
+        color: #374151;
+        margin-right: 6px;
+        font-size: 12px;
         font-weight: 500;
         line-height: 1.2;
     }
     
     .country-option-code {
         font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
-        font-weight: 700;
-        color: #3b82f6;
-        font-size: 11px;
-        background: rgba(59, 130, 246, 0.1);
-        padding: 2px 6px;
-        border-radius: 4px;
-        letter-spacing: 0.5px;
+        font-weight: 600;
+        color: #6b7280;
+        font-size: 10px;
+        background: #f3f4f6;
+        padding: 1px 4px;
+        border-radius: 3px;
+        letter-spacing: 0.3px;
     }
     
     .phone-input {
@@ -367,7 +355,7 @@
                             </button>
                             
                             <div class="country-options" id="mobileCountryOptions" style="display: none !important; visibility: hidden !important; opacity: 0 !important;">
-                                <input type="text" class="country-search" id="mobileCountrySearch" placeholder="🔍 Search countries...">
+                                <input type="text" class="country-search" id="mobileCountrySearch" placeholder="Search countries...">
                                 <div class="country-options-list">
                                     <div id="mobileCountryList">
                                         <!-- Countries will be populated by JavaScript -->
@@ -515,21 +503,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const noResults = document.createElement('div');
             noResults.className = 'no-results';
             noResults.innerHTML = `
-                <div style="text-align: center; padding: 20px; color: #6b7280;">
-                    <div style="font-size: 24px; margin-bottom: 8px;">🔍</div>
-                    <div style="font-size: 13px; font-weight: 500;">No countries found</div>
-                    <div style="font-size: 11px; margin-top: 4px;">Try a different search term</div>
+                <div style="text-align: center; padding: 16px 12px; color: #6b7280;">
+                    <div style="font-size: 12px; font-weight: 500;">No countries found</div>
+                    <div style="font-size: 10px; margin-top: 2px; opacity: 0.7;">Try a different search</div>
                 </div>
             `;
             countryList.appendChild(noResults);
             return;
         }
         
-        filteredCountries.forEach((country, index) => {
+        filteredCountries.forEach((country) => {
             const option = document.createElement('div');
             option.className = 'country-option';
             option.dataset.code = country.code;
-            option.style.animationDelay = `${index * 0.02}s`;
             option.innerHTML = `
                 <span class="country-option-flag">${country.flag}</span>
                 <span class="country-option-name">${country.name}</span>
