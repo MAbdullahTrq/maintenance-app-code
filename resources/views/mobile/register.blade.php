@@ -209,7 +209,7 @@
                         <div class="phone-input-wrapper">
                             <input type="text" id="mobile_country_code_input" 
                                 class="phone-country-code"
-                                placeholder="+1" readonly>
+                                placeholder="1">
                             <input type="tel" name="phone" id="mobile_phone" 
                                 class="phone-number-input"
                                 placeholder="555 123 4567" value="{{ old('phone') }}" required>
@@ -300,21 +300,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const initialCountry = '{{ $userCountry }}' || 'US';
         const country = countryData[initialCountry];
         if (country) {
-            countryCodeDisplay.value = `+${country.code}`;
+            countryCodeDisplay.value = country.code;
             countryCodeInput.value = initialCountry;
             phoneInput.placeholder = `555 123 4567`;
         }
     }
 
-    function detectCountryFromPhone(phone) {
-        if (!phone) {
+    function detectCountryFromCode(code) {
+        if (!code) {
             return null;
         }
         
         // Find country by dial code
-        for (const [code, country] of Object.entries(countryData)) {
-            if (phone.startsWith(country.code)) {
-                return { code, ...country };
+        for (const [countryCode, country] of Object.entries(countryData)) {
+            if (country.code === code) {
+                return { code: countryCode, ...country };
             }
         }
         
@@ -323,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateCountryCodeDisplay(country) {
         if (country) {
-            countryCodeDisplay.value = `+${country.code}`;
+            countryCodeDisplay.value = country.code;
             countryCodeInput.value = country.code;
         }
     }
@@ -338,9 +338,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function validatePhone() {
         const phone = phoneInput.value.trim();
-        const countryCode = countryCodeInput.value;
+        const countryCode = countryCodeDisplay.value.trim();
         
-        if (!phone) {
+        if (!phone || !countryCode) {
             feedbackDiv.innerHTML = '';
             feedbackDiv.className = 'phone-feedback';
             exampleDiv.textContent = '';
@@ -349,8 +349,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Detect country from phone number (without + prefix)
-        const detectedCountry = detectCountryFromPhone(phone);
+        // Detect country from country code
+        const detectedCountry = detectCountryFromCode(countryCode);
         
         if (detectedCountry) {
             updateCountryCodeDisplay(detectedCountry);
@@ -368,7 +368,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Validate after 500ms delay
         validationTimeout = setTimeout(() => {
-            const fullPhone = detectedCountry ? `+${detectedCountry.code}${phone}` : phone;
+            const fullPhone = `+${countryCode}${phone}`;
             fetch('/api/validate-phone', {
                 method: 'POST',
                 headers: {
@@ -377,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 body: JSON.stringify({
                     phone: fullPhone,
-                    country: detectedCountry ? detectedCountry.code : countryCode
+                    country: detectedCountry ? detectedCountry.code : 'US'
                 })
             })
             .then(response => response.json())
@@ -412,6 +412,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event listeners
     phoneInput.addEventListener('input', validatePhone);
+    countryCodeDisplay.addEventListener('input', validatePhone); // Listen for changes in country code display
 
     // Initialize
     initializePhoneInput();
