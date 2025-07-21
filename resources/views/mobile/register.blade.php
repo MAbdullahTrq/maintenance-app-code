@@ -98,7 +98,7 @@
     
     .phone-feedback {
         font-size: 11px;
-        margin-top: 12px;
+        margin-top: 15px;
         transition: all 0.3s ease;
         min-height: 16px;
         display: flex;
@@ -122,7 +122,7 @@
     .phone-example {
         font-size: 10px;
         color: #6b7280;
-        margin-top: 10px;
+        margin-top: 15px;
         padding: 0 4px;
         font-style: italic;
     }
@@ -216,9 +216,7 @@
                         </div>
                         <input type="hidden" name="country_code" id="mobile_country_code" value="{{ old('country_code', $userCountry) }}">
                     </div>
-                    <div class="px-5"></div>
                     <div id="mobile-phone-feedback" class="phone-feedback"></div>
-                    <div class="px-5"></div>
                     <div id="mobile-phone-example" class="phone-example"></div>
                     @error('phone')
                         <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
