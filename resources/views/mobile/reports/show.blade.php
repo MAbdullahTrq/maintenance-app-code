@@ -81,58 +81,77 @@
             </div>
         </div>
 
+        <!-- Status Summary Cards -->
+        <div class="grid grid-cols-5 gap-0 mb-4 border border-gray-400 rounded overflow-hidden">
+            <div class="text-center p-2 md:p-3 border-r border-gray-400 bg-gray-50">
+                <div class="font-semibold text-xs md:text-sm">Declined</div>
+                <div class="text-sm md:text-lg lg:text-xl font-bold">{{ $requests->where('status', 'declined')->count() }}</div>
+            </div>
+            <div class="text-center p-2 md:p-3 border-r border-gray-400 bg-gray-50">
+                <div class="font-semibold text-xs md:text-sm">Assigned</div>
+                <div class="text-sm md:text-lg lg:text-xl font-bold">{{ $requests->where('status', 'assigned')->count() }}</div>
+            </div>
+            <div class="text-center p-2 md:p-3 border-r border-gray-400 bg-gray-50">
+                <div class="font-semibold text-xs md:text-sm">Accepted</div>
+                <div class="text-sm md:text-lg lg:text-xl font-bold">{{ $requests->where('status', 'accepted')->count() }}</div>
+            </div>
+            <div class="text-center p-2 md:p-3 border-r border-gray-400 bg-gray-50">
+                <div class="font-semibold text-xs md:text-sm">Started</div>
+                <div class="text-sm md:text-lg lg:text-xl font-bold">{{ $requests->where('status', 'started')->count() }}</div>
+            </div>
+            <div class="text-center p-2 md:p-3 bg-gray-50">
+                <div class="font-semibold text-xs md:text-sm">Completed</div>
+                <div class="text-sm md:text-lg lg:text-xl font-bold">{{ $requests->where('status', 'completed')->count() }}</div>
+            </div>
+        </div>
+
         <!-- Main Report Content -->
         @if($requests->isNotEmpty())
-            <div class="space-y-3">
-                @foreach($requests as $request)
-                    <div class="bg-gray-50 rounded-lg p-4 cursor-pointer hover:bg-gray-100 border hover:border-blue-300 transition-colors request-item" onclick="window.open('{{ route('mobile.request.show', $request->id) }}', '_blank')">
-                        <!-- Header Row -->
-                        <div class="flex justify-between items-start mb-3">
-                            <div class="flex-1">
-                                <div class="text-sm font-medium text-gray-900">{{ $request->property->name ?? 'N/A' }}</div>
-                                <div class="text-xs text-gray-500">{{ $request->property->address ?? 'No address' }}</div>
-                            </div>
-                            <div class="flex space-x-2 ml-3">
-                                <span class="px-2 py-1 text-xs rounded-full font-medium
-                                    @if($request->priority == 'low') bg-green-100 text-green-800
-                                    @elseif($request->priority == 'medium') bg-yellow-100 text-yellow-800
-                                    @elseif($request->priority == 'high') bg-red-100 text-red-800
-                                    @endif">
-                                    {{ ucfirst($request->priority) }}
+            <div class="overflow-x-auto w-full">
+                <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-hidden table-fixed">
+                    <colgroup>
+                        <col class="w-2/5">
+                        <col class="w-1/6">
+                        <col class="w-1/6">
+                        <col class="w-1/6">
+                        <col class="w-1/12">
+                    </colgroup>
+                    <thead>
+                        <tr class="bg-gray-100 border-b border-gray-400">
+                            <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Property</th>
+                            <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-center">Priority</th>
+                            <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-center">Date</th>
+                            <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-center">Status</th>
+                            <th class="p-2 md:p-3 lg:p-4 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($requests as $request)
+                        <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" onclick="window.location.href='{{ route('mobile.request.show', $request->id) }}'">
+                            <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
+                                <span class="font-semibold">{{ $request->property->name ?? 'N/A' }}</span><br>
+                                <span class="text-gray-500 text-xs md:text-sm">
+                                    <span class="md:hidden">{{ Str::limit($request->property->address, 15) }}</span>
+                                    <span class="sm:hidden md:block">{{ Str::limit($request->property->address, 30) }}</span>
                                 </span>
-                            </div>
-                        </div>
-                        
-                        <!-- Details Row -->
-                        <div class="flex justify-between items-center">
-                            <div class="text-xs text-gray-600">
-                                📅 {{ $request->created_at->format('d M, Y') }} • {{ $request->created_at->format('H:i') }}
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <span class="px-2 py-1 text-xs rounded-full font-medium
-                                    @if($request->status == 'pending') bg-yellow-100 text-yellow-800
-                                    @elseif($request->status == 'assigned') bg-blue-100 text-blue-800
-                                    @elseif($request->status == 'started') bg-purple-100 text-purple-800
-                                    @elseif($request->status == 'completed') bg-green-100 text-green-800
-                                    @else bg-gray-100 text-gray-800
-                                    @endif">
-                                    {{ ucfirst($request->status) }}
-                                </span>
-                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-eye text-blue-600 text-xs"></i>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Title Row -->
-                        <div class="mt-2 text-sm font-medium text-blue-600">{{ $request->title }}</div>
-                        
-                        <!-- Tap instruction -->
-                        <div class="mt-2 text-blue-500 text-xs action-button">
-                            👆 Tap to view details
-                        </div>
-                    </div>
-                @endforeach
+                            </td>
+                            <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center {{ $request->priority == 'high' ? 'bg-red-500 text-white' : ($request->priority == 'low' ? 'bg-yellow-200' : ($request->priority == 'medium' ? 'bg-yellow-100' : '')) }}">
+                                {{ ucfirst($request->priority) }}
+                            </td>
+                            <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">
+                                <div>{{ $request->created_at->format('d M, Y') }}</div>
+                                <div class="text-xs text-gray-500">{{ $request->created_at->format('H:i') }}</div>
+                            </td>
+                            <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">{{ ucfirst($request->status) }}</td>
+                            <td class="p-2 md:p-3 lg:p-4 align-top text-center">
+                                <a href="{{ route('mobile.request.show', $request->id) }}" class="text-blue-600 hover:text-blue-800 text-lg md:text-xl" onclick="event.stopPropagation();">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         @else
             <div class="p-8 text-center text-gray-500">
