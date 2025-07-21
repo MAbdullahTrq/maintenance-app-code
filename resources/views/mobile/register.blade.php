@@ -209,14 +209,16 @@
                         <div class="phone-input-wrapper">
                             <input type="text" id="mobile_country_code_input" 
                                 class="phone-country-code"
-                                placeholder="1">
+                                placeholder="+1">
                             <input type="tel" name="phone" id="mobile_phone" 
                                 class="phone-number-input"
                                 placeholder="555 123 4567" value="{{ old('phone') }}" required>
                         </div>
                         <input type="hidden" name="country_code" id="mobile_country_code" value="{{ old('country_code', $userCountry) }}">
                     </div>
+                    <div class="px-5"></div>
                     <div id="mobile-phone-feedback" class="phone-feedback"></div>
+                    <div class="px-5"></div>
                     <div id="mobile-phone-example" class="phone-example"></div>
                     @error('phone')
                         <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
