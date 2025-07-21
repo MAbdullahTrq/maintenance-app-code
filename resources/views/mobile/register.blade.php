@@ -98,7 +98,7 @@
     
     .phone-feedback {
         font-size: 11px;
-        margin-top: 8px;
+        margin-top: 12px;
         transition: all 0.3s ease;
         min-height: 16px;
         display: flex;
@@ -122,7 +122,7 @@
     .phone-example {
         font-size: 10px;
         color: #6b7280;
-        margin-top: 8px;
+        margin-top: 10px;
         padding: 0 4px;
         font-style: italic;
     }
