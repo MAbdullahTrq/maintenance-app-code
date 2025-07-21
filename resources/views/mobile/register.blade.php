@@ -42,8 +42,33 @@
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
     
-    .phone-input-single {
-        width: 100%;
+    .phone-input-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0;
+    }
+    
+    .phone-country-code {
+        width: 60px;
+        border: none;
+        padding: 14px 8px 14px 16px;
+        font-size: 14px;
+        outline: none;
+        background: transparent;
+        font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+        font-weight: 600;
+        color: #374151;
+        border-right: 1px solid #e5e7eb;
+        text-align: center;
+    }
+    
+    .phone-country-code::placeholder {
+        color: #9ca3af;
+        font-family: inherit;
+    }
+    
+    .phone-number-input {
+        flex: 1;
         border: none;
         padding: 14px 16px;
         font-size: 14px;
@@ -52,7 +77,7 @@
         font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
     }
     
-    .phone-input-single::placeholder {
+    .phone-number-input::placeholder {
         color: #9ca3af;
         font-family: inherit;
     }
@@ -181,9 +206,14 @@
                 <div>
                     <label for="mobile_phone" class="sr-only">Phone Number</label>
                     <div class="phone-input-container @error('phone') border-red-500 @enderror">
-                        <input type="tel" name="phone" id="mobile_phone" 
-                            class="phone-input-single"
-                            placeholder="+1 555 123 4567" value="{{ old('phone') }}" required>
+                        <div class="phone-input-wrapper">
+                            <input type="text" id="mobile_country_code_input" 
+                                class="phone-country-code"
+                                placeholder="+1" readonly>
+                            <input type="tel" name="phone" id="mobile_phone" 
+                                class="phone-number-input"
+                                placeholder="555 123 4567" value="{{ old('phone') }}" required>
+                        </div>
                         <input type="hidden" name="country_code" id="mobile_country_code" value="{{ old('country_code', $userCountry) }}">
                     </div>
                     <div id="mobile-phone-feedback" class="phone-feedback"></div>
@@ -255,6 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // DOM elements
     const phoneInput = document.getElementById('mobile_phone');
     const countryCodeInput = document.getElementById('mobile_country_code');
+    const countryCodeDisplay = document.getElementById('mobile_country_code_input');
     const feedbackDiv = document.getElementById('mobile-phone-feedback');
     const exampleDiv = document.getElementById('mobile-phone-example');
     const submitBtn = document.getElementById('mobileSubmitBtn');
@@ -265,31 +296,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize phone input
     function initializePhoneInput() {
-        // Set initial placeholder based on user's country
+        // Set initial country code display
         const initialCountry = '{{ $userCountry }}' || 'US';
         const country = countryData[initialCountry];
         if (country) {
-            phoneInput.placeholder = `+${country.code} 555 123 4567`;
+            countryCodeDisplay.value = `+${country.code}`;
             countryCodeInput.value = initialCountry;
+            phoneInput.placeholder = `555 123 4567`;
         }
     }
 
     function detectCountryFromPhone(phone) {
-        if (!phone || !phone.startsWith('+')) {
+        if (!phone) {
             return null;
         }
         
-        // Remove the + and get the dial code
-        const dialCode = phone.substring(1);
-        
         // Find country by dial code
         for (const [code, country] of Object.entries(countryData)) {
-            if (dialCode.startsWith(country.code)) {
+            if (phone.startsWith(country.code)) {
                 return { code, ...country };
             }
         }
         
         return null;
+    }
+
+    function updateCountryCodeDisplay(country) {
+        if (country) {
+            countryCodeDisplay.value = `+${country.code}`;
+            countryCodeInput.value = country.code;
+        }
     }
 
     function updatePhoneExample(country) {
@@ -302,6 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function validatePhone() {
         const phone = phoneInput.value.trim();
+        const countryCode = countryCodeInput.value;
         
         if (!phone) {
             feedbackDiv.innerHTML = '';
@@ -312,11 +349,11 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Detect country from phone number
+        // Detect country from phone number (without + prefix)
         const detectedCountry = detectCountryFromPhone(phone);
         
         if (detectedCountry) {
-            countryCodeInput.value = detectedCountry.code;
+            updateCountryCodeDisplay(detectedCountry);
             updatePhoneExample(detectedCountry);
         } else {
             exampleDiv.textContent = '';
@@ -331,6 +368,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Validate after 500ms delay
         validationTimeout = setTimeout(() => {
+            const fullPhone = detectedCountry ? `+${detectedCountry.code}${phone}` : phone;
             fetch('/api/validate-phone', {
                 method: 'POST',
                 headers: {
@@ -338,8 +376,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
                 body: JSON.stringify({
-                    phone: phone,
-                    country: detectedCountry ? detectedCountry.code : 'US'
+                    phone: fullPhone,
+                    country: detectedCountry ? detectedCountry.code : countryCode
                 })
             })
             .then(response => response.json())
