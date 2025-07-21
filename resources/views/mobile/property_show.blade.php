@@ -26,7 +26,7 @@
             @if($property->image)
                 <div class="lg:col-span-1 order-1 lg:order-1">
                     <div class="mb-2 lg:mb-0">
-                        <span class="font-semibold text-sm md:text-base block mb-2">Property image</span>
+                        <!-- <span class="font-semibold text-sm md:text-base block mb-2">Property image</span> -->
                         <div class="w-full max-w-sm mx-auto lg:max-w-none lg:mx-0">
                             <img src="{{ asset('storage/' . $property->image) }}" alt="Property image" class="w-full h-48 md:h-56 lg:h-64 object-cover rounded shadow">
                         </div>
