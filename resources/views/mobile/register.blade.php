@@ -216,8 +216,8 @@
                         </div>
                         <input type="hidden" name="country_code" id="mobile_country_code" value="{{ old('country_code', $userCountry) }}">
                     </div>
-                    <div id="mobile-phone-feedback" class="phone-feedback"></div>
-                    <div id="mobile-phone-example" class="phone-example"></div>
+                    <div id="mobile-phone-feedback" class="phone-feedback" style="margin-top: 15px;"></div>
+                    <div id="mobile-phone-example" class="phone-example" style="margin-top: 15px;"></div>
                     @error('phone')
                         <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
                     @enderror
