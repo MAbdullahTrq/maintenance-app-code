@@ -46,24 +46,32 @@
                         <span class="font-bold text-sm md:text-base lg:text-lg">{{ $property->address }}</span>
                     </div>
                     <div>
-                        <span class="font-semibold text-sm md:text-base">Owner</span><br>
-                        <div class="flex items-center justify-between">
-                            <span class="font-bold text-sm md:text-base lg:text-lg">
-                                @if($property->owner)
-                                    {{ $property->owner->name }}
-                                    @if($property->owner->company)
-                                        <span class="text-gray-600 text-sm">({{ $property->owner->company }})</span>
-                                    @endif
-                                @else
-                                    <span class="text-gray-400">No owner assigned</span>
+                        <span class="font-semibold text-sm md:text-base bg-yellow-200 px-2 py-1 rounded">Owner details</span><br>
+                        @if($property->owner)
+                            <div class="mt-2 space-y-1">
+                                <div class="font-bold text-sm md:text-base lg:text-lg">{{ $property->owner->name }}</div>
+                                @if($property->owner->email)
+                                    <div class="text-sm md:text-base">
+                                        <a href="mailto:{{ $property->owner->email }}" class="text-blue-600 hover:text-blue-800">{{ $property->owner->email }}</a>
+                                    </div>
                                 @endif
-                            </span>
-                            @if(Auth::user()->hasActiveSubscription())
+                                @if($property->owner->phone)
+                                    <div class="text-sm md:text-base">{{ $property->owner->phone }}</div>
+                                @endif
+                                @if($property->owner->company)
+                                    <div class="text-gray-600 text-sm">({{ $property->owner->company }})</div>
+                                @endif
+                            </div>
+                        @else
+                            <span class="text-gray-400">No owner assigned</span>
+                        @endif
+                        @if(Auth::user()->hasActiveSubscription())
+                            <div class="mt-2">
                                 <button onclick="showChangeOwnerModal()" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition">
                                     Change Owner
                                 </button>
-                            @endif
-                        </div>
+                            </div>
+                        @endif
                     </div>
                     @if($property->special_instructions)
                     <div>
