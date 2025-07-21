@@ -209,15 +209,13 @@
                             <col class="w-1/6">
                             <col class="w-1/6">
                             <col class="w-1/6">
-                            <col class="w-1/12">
                         </colgroup>
                         <thead>
                             <tr class="bg-gray-100 border-b border-gray-400">
                                 <th class="p-4 border-r border-gray-400 text-left">Property</th>
                                 <th class="p-4 border-r border-gray-400 text-center">Priority</th>
                                 <th class="p-4 border-r border-gray-400 text-center">Date</th>
-                                <th class="p-4 border-r border-gray-400 text-center">Status</th>
-                                <th class="p-4 text-center">Actions</th>
+                                <th class="p-4 text-center">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -234,12 +232,7 @@
                                     <div>{{ $request->created_at->format('d M, Y') }}</div>
                                     <div class="text-xs text-gray-500">{{ $request->created_at->format('H:i') }}</div>
                                 </td>
-                                <td class="p-4 align-top border-r border-gray-400 text-center">{{ ucfirst($request->status) }}</td>
-                                <td class="p-4 align-top text-center">
-                                    <span class="text-blue-600 text-lg">
-                                        <i class="fas fa-eye"></i>
-                                    </span>
-                                </td>
+                                <td class="p-4 align-top text-center">{{ ucfirst($request->status) }}</td>
                             </tr>
                             @endforeach
                         </tbody>
