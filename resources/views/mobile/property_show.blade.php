@@ -38,18 +38,17 @@
             <div class="@if($property->image) lg:col-span-2 order-2 lg:order-2 @else lg:col-span-3 @endif">
                 <div class="space-y-3 md:space-y-4">
                     <div>
-                        <span class="font-semibold text-sm md:text-base">Property name</span><br>
-                        <span class="text-sm md:text-base lg:text-lg">{{ $property->name }}</span>
+                        <span class="font-bold text-lg md:text-xl lg:text-2xl">{{ $property->name }}</span>
                     </div>
                     <div>
-                        <span class="font-semibold text-sm md:text-base">Property address</span><br>
-                        <span class="font-bold text-sm md:text-base lg:text-lg">{{ $property->address }}</span>
+                        <span class="font-bold text-sm md:text-base">Property address</span><br>
+                        <span class="text-sm md:text-base lg:text-lg">{{ $property->address }}</span>
                     </div>
                     <div>
-                        <span class="font-semibold text-sm md:text-base bg-yellow-200 px-2 py-1 rounded">Owner details</span><br>
+                        <span class="font-bold text-sm md:text-base">Owner details</span><br>
                         @if($property->owner)
                             <div class="mt-2 space-y-1">
-                                <div class="font-bold text-sm md:text-base lg:text-lg">{{ $property->owner->name }}</div>
+                                <div class="text-sm md:text-base lg:text-lg">{{ $property->owner->name }}</div>
                                 @if($property->owner->email)
                                     <div class="text-sm md:text-base">
                                         <a href="mailto:{{ $property->owner->email }}" class="text-blue-600 hover:text-blue-800">{{ $property->owner->email }}</a>
@@ -75,8 +74,8 @@
                     </div>
                     @if($property->special_instructions)
                     <div>
-                        <span class="font-semibold text-sm md:text-base">Special instructions</span><br>
-                        <span class="font-bold text-sm md:text-base lg:text-lg">{{ $property->special_instructions }}</span>
+                        <span class="font-bold text-sm md:text-base">Special instructions</span><br>
+                        <span class="text-sm md:text-base lg:text-lg">{{ $property->special_instructions }}</span>
                     </div>
                     @endif
                 </div>
