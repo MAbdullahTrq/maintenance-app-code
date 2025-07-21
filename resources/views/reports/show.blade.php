@@ -56,55 +56,70 @@
         </div>
     </div>
 
+    <!-- Status Summary Cards -->
+    <div class="grid grid-cols-5 gap-0 mb-6 border border-gray-400 rounded overflow-hidden">
+        <div class="text-center p-4 border-r border-gray-400 bg-gray-50">
+            <div class="font-semibold text-sm">Declined</div>
+            <div class="text-lg font-bold">{{ $requests->where('status', 'declined')->count() }}</div>
+        </div>
+        <div class="text-center p-4 border-r border-gray-400 bg-gray-50">
+            <div class="font-semibold text-sm">Assigned</div>
+            <div class="text-lg font-bold">{{ $requests->where('status', 'assigned')->count() }}</div>
+        </div>
+        <div class="text-center p-4 border-r border-gray-400 bg-gray-50">
+            <div class="font-semibold text-sm">Accepted</div>
+            <div class="text-lg font-bold">{{ $requests->where('status', 'accepted')->count() }}</div>
+        </div>
+        <div class="text-center p-4 border-r border-gray-400 bg-gray-50">
+            <div class="font-semibold text-sm">Started</div>
+            <div class="text-lg font-bold">{{ $requests->where('status', 'started')->count() }}</div>
+        </div>
+        <div class="text-center p-4 bg-gray-50">
+            <div class="font-semibold text-sm">Completed</div>
+            <div class="text-lg font-bold">{{ $requests->where('status', 'completed')->count() }}</div>
+        </div>
+    </div>
+
     <!-- Main Report Table -->
     <div class="bg-white rounded-lg shadow-lg overflow-hidden">
         @if($requests->isNotEmpty())
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            <div class="overflow-x-auto w-full">
+                <table class="min-w-full text-sm border border-gray-400 border-collapse rounded overflow-hidden">
+                    <colgroup>
+                        <col class="w-2/5">
+                        <col class="w-1/6">
+                        <col class="w-1/6">
+                        <col class="w-1/6">
+                        <col class="w-1/12">
+                    </colgroup>
+                    <thead>
+                        <tr class="bg-gray-100 border-b border-gray-400">
+                            <th class="p-4 border-r border-gray-400 text-left">Property</th>
+                            <th class="p-4 border-r border-gray-400 text-center">Priority</th>
+                            <th class="p-4 border-r border-gray-400 text-center">Date</th>
+                            <th class="p-4 border-r border-gray-400 text-center">Status</th>
+                            <th class="p-4 text-center">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody>
                         @foreach($requests as $request)
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ $request->property->name ?? 'N/A' }}</div>
-                                    <div class="text-sm text-gray-500">{{ $request->property->address ?? 'No address' }}</div>
+                            <tr class="border-b border-gray-400 hover:bg-gray-50">
+                                <td class="p-4 align-top border-r border-gray-400">
+                                    <span class="font-semibold">{{ $request->property->name ?? 'N/A' }}</span><br>
+                                    <span class="text-gray-500 text-sm">{{ $request->property->address ?? 'No address' }}</span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                        @if($request->priority == 'low') bg-green-100 text-green-800
-                                        @elseif($request->priority == 'medium') bg-yellow-100 text-yellow-800
-                                        @elseif($request->priority == 'high') bg-red-100 text-red-800
-                                        @endif">
-                                        {{ ucfirst($request->priority) }}
-                                    </span>
+                                <td class="p-4 align-top border-r border-gray-400 text-center {{ $request->priority == 'high' ? 'bg-red-500 text-white' : ($request->priority == 'low' ? 'bg-yellow-200' : ($request->priority == 'medium' ? 'bg-yellow-100' : '')) }}">
+                                    {{ ucfirst($request->priority) }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $request->created_at->format('d M, Y') }}<br>
-                                    <span class="text-xs">{{ $request->created_at->format('H:i') }}</span>
+                                <td class="p-4 align-top border-r border-gray-400 text-center">
+                                    <div>{{ $request->created_at->format('d M, Y') }}</div>
+                                    <div class="text-xs text-gray-500">{{ $request->created_at->format('H:i') }}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                        @if($request->status == 'pending') bg-yellow-100 text-yellow-800
-                                        @elseif($request->status == 'assigned') bg-blue-100 text-blue-800
-                                        @elseif($request->status == 'started') bg-purple-100 text-purple-800
-                                        @elseif($request->status == 'completed') bg-green-100 text-green-800
-                                        @else bg-gray-100 text-gray-800
-                                        @endif">
-                                        {{ ucfirst($request->status) }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <td class="p-4 align-top border-r border-gray-400 text-center">{{ ucfirst($request->status) }}</td>
+                                <td class="p-4 align-top text-center">
                                     <a href="{{ route('maintenance.show', $request) }}" target="_blank" 
-                                       class="w-8 h-8 bg-blue-100 hover:bg-blue-200 rounded-full flex items-center justify-center">
-                                        <i class="fas fa-eye text-blue-600"></i>
+                                       class="text-blue-600 hover:text-blue-800 text-lg">
+                                        <i class="fas fa-eye"></i>
                                     </a>
                                 </td>
                             </tr>
