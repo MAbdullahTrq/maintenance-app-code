@@ -98,7 +98,7 @@
     
     .phone-feedback {
         font-size: 11px;
-        margin-top: 6px;
+        margin-top: 8px;
         transition: all 0.3s ease;
         min-height: 16px;
         display: flex;
@@ -122,7 +122,7 @@
     .phone-example {
         font-size: 10px;
         color: #6b7280;
-        margin-top: 2px;
+        margin-top: 8px;
         padding: 0 4px;
         font-style: italic;
     }
@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updatePhoneExample(country) {
         if (country) {
-            exampleDiv.textContent = `e.g. +${country.code}${country.example || '555123456'}`;
+            exampleDiv.textContent = `e.g. ${country.code}${country.example || '555123456'}`;
         } else {
             exampleDiv.textContent = '';
         }
