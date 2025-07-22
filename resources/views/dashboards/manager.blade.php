@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="container mx-auto px-4 pt-12">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-6">
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-purple-500 bg-opacity-10">
@@ -50,6 +50,18 @@
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-500">Pending Requests</p>
                     <p class="text-2xl font-semibold text-gray-800">{{ $pendingRequests }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-blue-500 bg-opacity-10">
+                    <i class="fas fa-users text-blue-500 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-500">Team Members</p>
+                    <p class="text-2xl font-semibold text-gray-800">{{ $teamMembersCount ?? 0 }}</p>
                 </div>
             </div>
         </div>

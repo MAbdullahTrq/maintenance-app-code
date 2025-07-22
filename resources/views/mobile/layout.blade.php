@@ -169,6 +169,18 @@
                     <a href="{{ route('mobile.manager.all-requests') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
                         <i class="fas fa-file-alt text-gray-700 mr-2"></i> Requests
                     </a>
+                    
+                    <!-- Team Management Section -->
+                    <div class="border-t border-gray-200 my-1"></div>
+                    <div class="px-4 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        Team Settings
+                    </div>
+                    <a href="{{ route('team.index') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-users text-green-600 mr-2"></i> Team Management
+                    </a>
+                    <a href="{{ route('team.create') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-user-plus text-blue-600 mr-2"></i> Invite Member
+                    </a>
                 @endif
                 <a href="/m/profile" class="block px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">Profile</a>
                 <form method="POST" action="{{ route('logout') }}">
@@ -182,7 +194,7 @@
     @auth
     @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
     <nav class="bg-white shadow mb-2 rounded-b-xl">
-        <div class="grid grid-cols-4 divide-x divide-gray-200 text-center md:py-2">
+        <div class="grid grid-cols-5 divide-x divide-gray-200 text-center md:py-2">
             <!-- Owners -->
             <div class="flex flex-col items-center py-3 md:py-4">
                 <a href="/m/ao" class="flex flex-col items-center group">
@@ -247,6 +259,24 @@
                     <span class="text-black text-xl md:text-2xl lg:text-3xl font-bold leading-none">+</span>
                     <span x-show="show" x-transition class="absolute right-full top-1/2 -translate-y-1/2 mr-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">New Request</span>
                 </a>
+            </div>
+            <!-- Team -->
+            <div class="flex flex-col items-center py-3 md:py-4">
+                <a href="{{ route('team.index') }}" class="flex flex-col items-center group">
+                    <i class="fas fa-users text-2xl md:text-3xl lg:text-4xl text-blue-600 group-hover:underline"></i>
+                    <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ isset($teamMembersCount) ? $teamMembersCount : 0 }}</div>
+                </a>
+                @if(Auth::user()->hasActiveSubscription())
+                    <a href="{{ route('team.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <span class="text-black text-xl md:text-2xl lg:text-3xl font-bold leading-none">+</span>
+                        <span x-show="show" x-transition class="absolute left-full top-1/2 -translate-y-1/2 ml-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">Invite Member</span>
+                    </a>
+                @else
+                    <a href="{{ route('mobile.subscription.plans') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <span class="text-gray-400 text-xl md:text-2xl lg:text-3xl font-bold leading-none">🔒</span>
+                        <span x-show="show" x-transition class="absolute left-full top-1/2 -translate-y-1/2 ml-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">Subscription Required</span>
+                    </a>
+                @endif
             </div>
         </div>
     </nav>

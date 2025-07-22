@@ -52,6 +52,12 @@
                             </a>
                         @endif
                         
+                        @if(Auth::user()->isPropertyManager() && Auth::user()->hasActiveSubscription())
+                            <a href="{{ route('team.index') }}" class="mr-6 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center">
+                                <i class="fas fa-users mr-2"></i>Team
+                            </a>
+                        @endif
+                        
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" class="flex items-center text-gray-700 hover:text-blue-600 focus:outline-none">
                                 <span class="mr-2">{{ Auth::user()->name }}</span>
@@ -66,31 +72,52 @@
                                     </a>
                                 @endif
                                 
-                                                @if(Auth::user()->isPropertyManager() && Auth::user()->hasActiveSubscription())
-                    <a href="{{ route('owners.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-user text-yellow-500 w-5 text-center"></i>
-                        <span class="ml-2">Owners</span>
-                    </a>
-                    <a href="{{ route('properties.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-building text-purple-500 w-5 text-center"></i>
-                        <span class="ml-2">Properties</span>
-                    </a>
-                    <a href="{{ route('technicians.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-users-cog text-blue-500 w-5 text-center"></i>
-                        <span class="ml-2">Technicians</span>
-                    </a>
-                    <a href="{{ route('team.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-users text-green-500 w-5 text-center"></i>
-                        <span class="ml-2">Team Management</span>
-                    </a>
-                @endif
+                                @if(Auth::user()->isPropertyManager() && Auth::user()->hasActiveSubscription())
+                                    <!-- Management Section -->
+                                    <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100">
+                                        Management
+                                    </div>
+                                    <a href="{{ route('owners.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-user text-yellow-500 w-5 text-center"></i>
+                                        <span class="ml-2">Owners</span>
+                                    </a>
+                                    <a href="{{ route('properties.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-building text-purple-500 w-5 text-center"></i>
+                                        <span class="ml-2">Properties</span>
+                                    </a>
+                                    <a href="{{ route('technicians.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-users-cog text-blue-500 w-5 text-center"></i>
+                                        <span class="ml-2">Technicians</span>
+                                    </a>
+                                    
+                                    <!-- Team Settings Section -->
+                                    <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100">
+                                        Team Settings
+                                    </div>
+                                    <a href="{{ route('team.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-users text-green-500 w-5 text-center"></i>
+                                        <span class="ml-2">Team Management</span>
+                                    </a>
+                                    <a href="{{ route('team.create') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-user-plus text-blue-500 w-5 text-center"></i>
+                                        <span class="ml-2">Invite Member</span>
+                                    </a>
+                                @endif
                                 
-                                <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                                <!-- Account Section -->
+                                <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100">
+                                    Account
+                                </div>
+                                <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-user-cog text-gray-500 w-5 text-center"></i>
+                                    <span class="ml-2">Profile</span>
+                                </a>
                                 
                                 <form action="{{ route('logout') }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        Logout
+                                    <button type="submit" class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-sign-out-alt text-red-500 w-5 text-center"></i>
+                                        <span class="ml-2">Logout</span>
                                     </button>
                                 </form>
                             </div>

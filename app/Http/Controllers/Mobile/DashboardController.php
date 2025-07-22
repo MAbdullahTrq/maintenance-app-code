@@ -24,6 +24,14 @@ class DashboardController extends Controller
         $technicians = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->get();
         $pendingRequests = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->where('status', 'pending')->get();
         $requestsCount = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->count();
+        
+        // Get team members count (excluding the workspace owner)
+        $teamMembersCount = User::where('invited_by', $user->id)
+            ->whereHas('role', function ($query) {
+                $query->whereIn('slug', ['team_member', 'viewer', 'editor']);
+            })
+            ->count();
+        
         return view('mobile.dashboard', [
             'properties' => $properties,
             'owners' => $owners,
@@ -32,6 +40,7 @@ class DashboardController extends Controller
             'pendingRequests' => $pendingRequests,
             'requestsCount' => $requestsCount,
             'hasActiveSubscription' => $hasActiveSubscription,
+            'teamMembersCount' => $teamMembersCount,
         ]);
     }
 
@@ -81,6 +90,13 @@ class DashboardController extends Controller
         $ownersCount = $user->managedOwners()->count();
         $techniciansCount = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
         
+        // Get team members count (excluding the workspace owner)
+        $teamMembersCount = User::where('invited_by', $user->id)
+            ->whereHas('role', function ($query) {
+                $query->whereIn('slug', ['team_member', 'viewer', 'editor']);
+            })
+            ->count();
+        
         // Count by status (for tabs)
         $allRequestsForCount = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->get();
         $requestsCount = $allRequestsForCount->count(); // Always show total count, not filtered count
@@ -94,6 +110,7 @@ class DashboardController extends Controller
             'propertiesCount' => $propertiesCount,
             'ownersCount' => $ownersCount,
             'techniciansCount' => $techniciansCount,
+            'teamMembersCount' => $teamMembersCount,
             'requestsCount' => $requestsCount,
             'declinedCount' => $declinedCount,
             'assignedCount' => $assignedCount,

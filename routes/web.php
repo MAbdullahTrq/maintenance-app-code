@@ -297,6 +297,14 @@ Route::prefix('m')->middleware('auth')->group(function () {
             Route::get('/ep/{id}', [MobilePropertyController::class, 'edit'])->name('mobile.properties.edit');
             Route::post('/ep/{id}', [MobilePropertyController::class, 'update'])->name('mobile.properties.ep.update');
             Route::get('/ap/{id}/qrcode', [MobilePropertyController::class, 'qrcode'])->name('mobile.properties.qrcode');
+            
+            // Mobile team management routes
+            Route::get('/team', [App\Http\Controllers\TeamController::class, 'index'])->name('mobile.team.index');
+            Route::get('/team/create', [App\Http\Controllers\TeamController::class, 'create'])->name('mobile.team.create');
+            Route::post('/team', [App\Http\Controllers\TeamController::class, 'store'])->name('mobile.team.store');
+            Route::put('/team/member/{member}/role', [App\Http\Controllers\TeamController::class, 'updateMemberRole'])->name('mobile.team.member.role');
+            Route::delete('/team/member/{member}', [App\Http\Controllers\TeamController::class, 'removeMember'])->name('mobile.team.member.remove');
+            Route::delete('/team/invitation/{invitation}', [App\Http\Controllers\TeamController::class, 'cancelInvitation'])->name('mobile.team.invitation.cancel');
         });
     });
 
