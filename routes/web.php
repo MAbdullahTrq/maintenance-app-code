@@ -190,6 +190,26 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/team/member/{memberId}', [App\Http\Controllers\TeamController::class, 'removeMember'])->name('team.remove-member');
             Route::delete('/team/invitation/{invitationId}', [App\Http\Controllers\TeamController::class, 'cancelInvitation'])->name('team.cancel-invitation');
             Route::put('/team/member/{memberId}/role', [App\Http\Controllers\TeamController::class, 'updateRole'])->name('team.update-role');
+            
+            // Technician management routes
+            Route::get('/technicians', [App\Http\Controllers\TechnicianController::class, 'index'])->name('technicians.index');
+            Route::get('/technicians/create', [App\Http\Controllers\TechnicianController::class, 'create'])->name('technicians.create');
+            Route::post('/technicians', [App\Http\Controllers\TechnicianController::class, 'store'])->name('technicians.store');
+            Route::get('/technicians/{user}/edit', [App\Http\Controllers\TechnicianController::class, 'edit'])->name('technicians.edit');
+            Route::put('/technicians/{user}', [App\Http\Controllers\TechnicianController::class, 'update'])->name('technicians.update');
+            Route::delete('/technicians/{user}', [App\Http\Controllers\TechnicianController::class, 'destroy'])->name('technicians.destroy');
+            Route::post('/technicians/{user}/toggle-active', [App\Http\Controllers\TechnicianController::class, 'toggleActive'])->name('technicians.toggle-active');
+            Route::post('/technicians/{user}/reset-password', [App\Http\Controllers\TechnicianController::class, 'resetPassword'])->name('technicians.reset-password');
+            
+            // Property management routes
+            Route::get('/properties', [App\Http\Controllers\PropertyController::class, 'index'])->name('properties.index');
+            Route::get('/properties/create', [App\Http\Controllers\PropertyController::class, 'create'])->name('properties.create');
+            Route::post('/properties', [App\Http\Controllers\PropertyController::class, 'store'])->name('properties.store');
+            Route::get('/properties/{property}', [App\Http\Controllers\PropertyController::class, 'show'])->name('properties.show');
+            Route::get('/properties/{property}/edit', [App\Http\Controllers\PropertyController::class, 'edit'])->name('properties.edit');
+            Route::put('/properties/{property}', [App\Http\Controllers\PropertyController::class, 'update'])->name('properties.update');
+            Route::delete('/properties/{property}', [App\Http\Controllers\PropertyController::class, 'destroy'])->name('properties.destroy');
+            Route::get('/properties/{property}/qrcode', [App\Http\Controllers\PropertyController::class, 'downloadQrCode'])->name('properties.qrcode');
         });
     });
 
