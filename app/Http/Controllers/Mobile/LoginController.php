@@ -45,6 +45,8 @@ class LoginController extends Controller
                 return redirect()->intended('/admin/dashboard');
             } elseif (method_exists($user, 'isPropertyManager') && $user->isPropertyManager()) {
                 return redirect()->intended(route('mobile.manager.dashboard'));
+            } elseif (method_exists($user, 'hasTeamMemberRole') && $user->hasTeamMemberRole()) {
+                return redirect()->intended(route('mobile.manager.dashboard'));
             } elseif (method_exists($user, 'isTechnician') && $user->isTechnician()) {
                 return redirect()->intended(route('mobile.technician.dashboard'));
             } else {

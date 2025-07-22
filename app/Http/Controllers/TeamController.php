@@ -172,7 +172,8 @@ class TeamController extends Controller
         // Log the user in
         Auth::login($user);
 
-        return redirect()->route('dashboard')
+        // Redirect team members to the mobile manager dashboard
+        return redirect()->route('mobile.manager.dashboard')
             ->with('success', 'Welcome to the team! Your account has been created successfully.');
     }
 

@@ -278,6 +278,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if the user is a team member (team_member, viewer, editor).
+     *
+     * @return bool
+     */
+    public function hasTeamMemberRole()
+    {
+        return $this->role && in_array($this->role->slug, ['team_member', 'viewer', 'editor']);
+    }
+
+    /**
      * Generate a verification token for the user.
      *
      * @return string
