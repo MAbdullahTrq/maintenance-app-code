@@ -101,10 +101,10 @@ function toggleDropdown(button, ownerId) {
     const dropdown = document.getElementById(`dropdown-${ownerId}`);
     const buttonRect = button.getBoundingClientRect();
     
-    // Position dropdown right next to the button
+    // Position dropdown for mobile view
     dropdown.style.position = 'fixed';
     dropdown.style.top = (buttonRect.bottom + 2) + 'px';
-    dropdown.style.left = (buttonRect.left - 150) + 'px'; // Adjust width to be closer
+    dropdown.style.right = '10px'; // Position from right edge on mobile
     dropdown.style.zIndex = '9999';
     
     dropdown.classList.toggle('hidden');
