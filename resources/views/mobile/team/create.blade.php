@@ -58,7 +58,7 @@
                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('role_id') border-red-500 @enderror"
                         required>
                     <option value="">Select a role</option>
-                    @foreach($availableRoles as $role)
+                    @foreach($roles as $role)
                         <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
                             {{ $role->name }}
                         </option>
@@ -70,7 +70,7 @@
                 
                 <!-- Role Descriptions -->
                 <div class="mt-3 space-y-2">
-                    @foreach($availableRoles as $role)
+                    @foreach($roles as $role)
                         <div class="text-xs text-gray-600 p-2 bg-gray-50 rounded">
                             <strong>{{ $role->name }}:</strong> {{ $role->description ?? 'No description available' }}
                         </div>
