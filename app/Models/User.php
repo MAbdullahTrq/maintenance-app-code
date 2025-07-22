@@ -97,6 +97,82 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the team invitations sent by this user.
+     */
+    public function sentInvitations(): HasMany
+    {
+        return $this->hasMany(TeamInvitation::class, 'invited_by');
+    }
+
+    /**
+     * Get the team invitation accepted by this user.
+     */
+    public function acceptedInvitation(): HasMany
+    {
+        return $this->hasMany(TeamInvitation::class, 'accepted_by');
+    }
+
+    /**
+     * Get the team members (users invited by this user).
+     */
+    public function teamMembers(): HasMany
+    {
+        return $this->hasMany(User::class, 'invited_by');
+    }
+
+    /**
+     * Get the team owner (user who invited this user).
+     */
+    public function teamOwner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'invited_by');
+    }
+
+    /**
+     * Check if this user is a team owner (has team members).
+     */
+    public function isTeamOwner(): bool
+    {
+        return $this->teamMembers()->exists();
+    }
+
+    /**
+     * Check if this user is a team member (was invited by someone).
+     */
+    public function isTeamMember(): bool
+    {
+        return !is_null($this->invited_by);
+    }
+
+    /**
+     * Get the workspace owner (either this user or the user who invited them).
+     */
+    public function getWorkspaceOwner(): User
+    {
+        return $this->isTeamMember() ? $this->teamOwner : $this;
+    }
+
+    /**
+     * Get all users in the same workspace (team owner + team members).
+     */
+    public function getWorkspaceUsers()
+    {
+        $workspaceOwner = $this->getWorkspaceOwner();
+        
+        if ($workspaceOwner->id === $this->id) {
+            // This user is the workspace owner
+            return User::where('id', $workspaceOwner->id)
+                ->orWhere('invited_by', $workspaceOwner->id)
+                ->get();
+        } else {
+            // This user is a team member
+            return User::where('id', $workspaceOwner->id)
+                ->orWhere('invited_by', $workspaceOwner->id)
+                ->get();
+        }
+    }
+
+    /**
      * Get the properties managed by this user.
      */
     public function managedProperties(): HasMany

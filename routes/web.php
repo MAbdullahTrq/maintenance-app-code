@@ -96,6 +96,10 @@ Route::middleware('guest')->group(function () {
     Route::post('/web/login', [LoginController::class, 'login']);
     Route::get('/web/register', [RegisterController::class, 'showRegistrationForm'])->name('web.register');
     Route::post('/web/register', [RegisterController::class, 'register']);
+    
+    // Team invitation routes (no auth required)
+    Route::get('/team/invitation/{token}', [App\Http\Controllers\TeamController::class, 'acceptInvitation'])->name('team.accept');
+    Route::post('/team/invitation/{token}', [App\Http\Controllers\TeamController::class, 'processInvitation'])->name('team.process-invitation');
 });
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -179,25 +183,13 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/owners/{owner}', [App\Http\Controllers\OwnerController::class, 'update'])->name('owners.update');
             Route::delete('/owners/{owner}', [App\Http\Controllers\OwnerController::class, 'destroy'])->name('owners.destroy');
             
-            // Technician management routes
-            Route::get('/technicians', [TechnicianController::class, 'index'])->name('technicians.index');
-            Route::get('/technicians/create', [TechnicianController::class, 'create'])->name('technicians.create');
-            Route::post('/technicians', [TechnicianController::class, 'store'])->name('technicians.store');
-            Route::get('/technicians/{user}/edit', [TechnicianController::class, 'edit'])->name('technicians.edit');
-            Route::put('/technicians/{user}', [TechnicianController::class, 'update'])->name('technicians.update');
-            Route::delete('/technicians/{user}', [TechnicianController::class, 'destroy'])->name('technicians.destroy');
-            Route::put('/technicians/{user}/toggle-active', [TechnicianController::class, 'toggleActive'])->name('technicians.toggle-active');
-            Route::post('/technicians/{user}/reset-password', [TechnicianController::class, 'resetPassword'])->name('technicians.reset-password');
-            
-            // Property routes for managers
-            Route::get('/properties', [PropertyController::class, 'index'])->name('properties.index');
-            Route::get('/properties/create', [PropertyController::class, 'create'])->name('properties.create');
-            Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
-            Route::get('/properties/{property}', [PropertyController::class, 'show'])->name('properties.show');
-            Route::get('/properties/{property}/edit', [PropertyController::class, 'edit'])->name('properties.edit');
-            Route::put('/properties/{property}', [PropertyController::class, 'update'])->name('properties.update');
-            Route::delete('/properties/{property}', [PropertyController::class, 'destroy'])->name('properties.destroy');
-            Route::get('/properties/{property}/qrcode', [PropertyController::class, 'downloadQrCode'])->name('properties.qrcode');
+            // Team management routes
+            Route::get('/team', [App\Http\Controllers\TeamController::class, 'index'])->name('team.index');
+            Route::get('/team/create', [App\Http\Controllers\TeamController::class, 'create'])->name('team.create');
+            Route::post('/team', [App\Http\Controllers\TeamController::class, 'store'])->name('team.store');
+            Route::delete('/team/member/{memberId}', [App\Http\Controllers\TeamController::class, 'removeMember'])->name('team.remove-member');
+            Route::delete('/team/invitation/{invitationId}', [App\Http\Controllers\TeamController::class, 'cancelInvitation'])->name('team.cancel-invitation');
+            Route::put('/team/member/{memberId}/role', [App\Http\Controllers\TeamController::class, 'updateRole'])->name('team.update-role');
         });
     });
 
