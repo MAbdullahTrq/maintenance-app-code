@@ -10,7 +10,7 @@
             <h1 class="text-2xl font-bold text-gray-900">Team Management</h1>
             <p class="text-gray-600 mt-1">Manage your team assistants</p>
         </div>
-        <a href="{{ route('team.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+        <a href="{{ route('mobile.team.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
             <i class="fas fa-plus mr-1"></i>Invite
         </a>
     </div>
@@ -119,7 +119,7 @@ function updateRole(memberId, roleId) {
     if (confirm('Are you sure you want to update this member\'s role?')) {
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = `/team/member/${memberId}/role`;
+        form.action = `/m/team/member/${memberId}/role`;
         
         const csrfToken = document.createElement('input');
         csrfToken.type = 'hidden';
@@ -148,7 +148,7 @@ function removeMember(memberId) {
     if (confirm('Are you sure you want to remove this team member?')) {
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = `/team/member/${memberId}`;
+        form.action = `/m/team/member/${memberId}`;
         
         const csrfToken = document.createElement('input');
         csrfToken.type = 'hidden';
@@ -171,7 +171,7 @@ function cancelInvitation(invitationId) {
     if (confirm('Are you sure you want to cancel this invitation?')) {
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = `/team/invitation/${invitationId}`;
+        form.action = `/m/team/invitation/${invitationId}`;
         
         const csrfToken = document.createElement('input');
         csrfToken.type = 'hidden';

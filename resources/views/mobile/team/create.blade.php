@@ -7,7 +7,7 @@
     <!-- Header -->
     <div class="mb-6">
         <div class="flex items-center mb-4">
-            <a href="{{ route('team.index') }}" class="text-blue-600 hover:text-blue-800 mr-3">
+            <a href="{{ route('mobile.team.index') }}" class="text-blue-600 hover:text-blue-800 mr-3">
                 <i class="fas fa-arrow-left text-lg"></i>
             </a>
             <h1 class="text-2xl font-bold text-gray-900">Invite Team Assistant</h1>
@@ -17,7 +17,7 @@
 
     <!-- Invitation Form -->
     <div class="bg-white rounded-lg shadow-lg p-6">
-        <form method="POST" action="{{ route('team.store') }}">
+        <form method="POST" action="{{ route('mobile.team.store') }}">
             @csrf
             
             <!-- Name Field -->
@@ -97,7 +97,7 @@
 
             <!-- Submit Button -->
             <div class="flex space-x-3">
-                <a href="{{ route('team.index') }}" 
+                <a href="{{ route('mobile.team.index') }}" 
                    class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md text-center hover:bg-gray-50 transition-colors">
                     Cancel
                 </a>

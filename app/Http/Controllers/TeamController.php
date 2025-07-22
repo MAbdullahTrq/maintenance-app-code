@@ -37,6 +37,11 @@ class TeamController extends Controller
         $availableRoles = Role::whereIn('slug', ['team_member', 'viewer', 'editor'])
             ->get();
 
+        // Check if this is a mobile route
+        if (request()->route()->getName() && str_starts_with(request()->route()->getName(), 'mobile.')) {
+            return view('mobile.team.index', compact('teamMembers', 'pendingInvitations', 'availableRoles', 'workspaceOwner'));
+        }
+
         return view('team.index', compact('teamMembers', 'pendingInvitations', 'availableRoles', 'workspaceOwner'));
     }
 
@@ -53,6 +58,11 @@ class TeamController extends Controller
 
         $roles = Role::whereIn('slug', ['team_member', 'viewer', 'editor'])
             ->get();
+
+        // Check if this is a mobile route
+        if (request()->route()->getName() && str_starts_with(request()->route()->getName(), 'mobile.')) {
+            return view('mobile.team.create', compact('roles'));
+        }
 
         return view('team.create', compact('roles'));
     }
@@ -105,6 +115,12 @@ class TeamController extends Controller
         } catch (\Exception $e) {
             \Log::error('Failed to send team invitation email: ' . $e->getMessage());
             return back()->withErrors(['email' => 'Failed to send invitation email. Please try again.']);
+        }
+
+        // Check if this is a mobile route and redirect accordingly
+        if (request()->route()->getName() && str_starts_with(request()->route()->getName(), 'mobile.')) {
+            return redirect()->route('mobile.team.index')
+                ->with('success', 'Team invitation sent successfully!');
         }
 
         return redirect()->route('team.index')
@@ -236,5 +252,13 @@ class TeamController extends Controller
         $member->update(['role_id' => $request->role_id]);
 
         return back()->with('success', 'Team member role updated successfully.');
+    }
+
+    /**
+     * Update team member role (alias for mobile routes).
+     */
+    public function updateMemberRole(Request $request, $memberId)
+    {
+        return $this->updateRole($request, $memberId);
     }
 }

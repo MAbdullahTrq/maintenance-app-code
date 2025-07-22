@@ -175,10 +175,10 @@
                     <div class="px-4 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                         Team Settings
                     </div>
-                    <a href="{{ route('team.index') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
+                    <a href="{{ route('mobile.team.index') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
                         <i class="fas fa-users text-green-600 mr-2"></i> Team Assistants
                     </a>
-                    <a href="{{ route('team.create') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
+                    <a href="{{ route('mobile.team.create') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
                         <i class="fas fa-user-plus text-blue-600 mr-2"></i> Invite Assistant
                     </a>
                 @endif
@@ -262,12 +262,12 @@
             </div>
             <!-- Team -->
             <div class="flex flex-col items-center py-3 md:py-4">
-                <a href="{{ route('team.index') }}" class="flex flex-col items-center group">
+                <a href="{{ route('mobile.team.index') }}" class="flex flex-col items-center group">
                     <i class="fas fa-users text-2xl md:text-3xl lg:text-4xl text-blue-600 group-hover:underline"></i>
                     <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ isset($teamMembersCount) ? $teamMembersCount : 0 }}</div>
                 </a>
                 @if(Auth::user()->hasActiveSubscription())
-                    <a href="{{ route('team.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
+                    <a href="{{ route('mobile.team.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
                         <span class="text-black text-xl md:text-2xl lg:text-3xl font-bold leading-none">+</span>
                         <span x-show="show" x-transition class="absolute left-full top-1/2 -translate-y-1/2 ml-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">Invite Assistant</span>
                     </a>
