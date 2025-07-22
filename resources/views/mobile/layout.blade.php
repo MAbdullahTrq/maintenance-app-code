@@ -192,7 +192,8 @@
         @endauth
     </header>
     @auth
-    @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
+    @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager() || 
+        Auth::user() && method_exists(Auth::user(), 'hasTeamMemberRole') && Auth::user()->hasTeamMemberRole())
     <nav class="bg-white shadow mb-2 rounded-b-xl">
         <div class="grid grid-cols-5 divide-x divide-gray-200 text-center md:py-2">
             <!-- Owners -->

@@ -1,9 +1,13 @@
 @extends('mobile.layout')
 
-@section('title', 'Dash – Manager')
+@section('title', 'Dash – ' . (Auth::user()->isPropertyManager() ? 'Manager' : 'Team Assistant'))
 
 @section('header-actions')
+@if(Auth::user()->isPropertyManager())
 <a href="#" class="text-sm font-medium">Manager &gt;</a>
+@elseif(Auth::user()->hasTeamMemberRole())
+<a href="#" class="text-sm font-medium">Team Assistant &gt;</a>
+@endif
 @endsection
 
 @section('content')
