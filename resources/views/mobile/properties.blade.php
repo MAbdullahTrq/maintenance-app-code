@@ -21,7 +21,7 @@
                     <tbody>
                         @foreach($properties as $property)
                         <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" onclick="window.location.href='{{ route('mobile.properties.show', $property->id) }}'">
-                            <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400" onclick="event.stopPropagation();">
+                            <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
                                 <div class="flex items-center gap-2 md:gap-3">
                                     @if($property->image)
                                         <img src="{{ asset('storage/' . $property->image) }}" class="rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 object-cover" alt="Property Image">
@@ -31,7 +31,7 @@
                                     <a href="{{ route('mobile.properties.show', $property->id) }}" class="font-semibold text-blue-700 hover:text-blue-900 cursor-pointer">{{ $property->name }}</a>
                                 </div>
                             </td>
-                            <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400" onclick="event.stopPropagation();">{{ $property->address }}</td>
+                            <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">{{ $property->address }}</td>
                             <td class="p-2 md:p-3 lg:p-4 align-top text-center" style="position: relative; overflow: visible;" onclick="event.stopPropagation();">
                                 <div class="relative" style="overflow: visible;">
                                     <button onclick="toggleDropdown(this)" class="px-2 py-1 text-gray-600 hover:text-gray-800 text-lg md:text-xl focus:outline-none dropdown-btn">
