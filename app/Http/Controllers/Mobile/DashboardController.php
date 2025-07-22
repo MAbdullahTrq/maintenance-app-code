@@ -14,8 +14,8 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        // Only allow property managers
-        if (!$user || !$user->isPropertyManager()) {
+        // Allow property managers and team members
+        if (!$user || (!$user->isPropertyManager() && !$user->hasTeamMemberRole())) {
             abort(403);
         }
         $hasActiveSubscription = method_exists($user, 'hasActiveSubscription') ? $user->hasActiveSubscription() : false;
@@ -51,8 +51,8 @@ class DashboardController extends Controller
     public function allRequests(Request $request)
     {
         $user = Auth::user();
-        // Only allow property managers
-        if (!$user || !$user->isPropertyManager()) {
+        // Allow property managers and team members
+        if (!$user || (!$user->isPropertyManager() && !$user->hasTeamMemberRole())) {
             abort(403);
         }
         $properties = $user->managedProperties()->get();

@@ -28,15 +28,17 @@ class PropertyManagerMiddleware
         }
 
         $isPropertyManager = $user->hasRole('property_manager');
+        $isTeamMember = $user->hasTeamMemberRole();
         
         Log::debug('PropertyManagerMiddleware check', [
             'user_id' => $user->id,
             'role_id' => $user->role_id,
             'role_slug' => $user->role->slug ?? null,
-            'is_property_manager' => $isPropertyManager
+            'is_property_manager' => $isPropertyManager,
+            'is_team_member' => $isTeamMember
         ]);
 
-        if (!$isPropertyManager) {
+        if (!$isPropertyManager && !$isTeamMember) {
             abort(403, 'Unauthorized action.');
         }
 
