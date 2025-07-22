@@ -7,8 +7,8 @@
     <div class="max-w-2xl mx-auto">
         <!-- Header -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">Invite Team Member</h1>
-            <p class="text-gray-600 mt-2">Send an invitation to join your team</p>
+            <h1 class="text-3xl font-bold text-gray-900">Invite Team Assistant</h1>
+            <p class="text-gray-600 mt-2">Send an invitation to join your workspace as a team assistant</p>
         </div>
 
         <!-- Form -->
@@ -38,7 +38,7 @@
 
                 <!-- Role -->
                 <div class="mb-6">
-                    <label for="role_id" class="block text-sm font-medium text-gray-700 mb-2">Role</label>
+                    <label for="role_id" class="block text-sm font-medium text-gray-700 mb-2">Assistant Role</label>
                     <select name="role_id" id="role_id" required
                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         <option value="">Select a role</option>
@@ -55,7 +55,7 @@
 
                 <!-- Role Descriptions -->
                 <div class="mb-6 bg-gray-50 rounded-lg p-4">
-                    <h3 class="text-sm font-medium text-gray-900 mb-3">Role Permissions:</h3>
+                    <h3 class="text-sm font-medium text-gray-900 mb-3">Assistant Role Permissions:</h3>
                     <div class="space-y-2 text-sm text-gray-600">
                         <div>
                             <strong>Team Member:</strong> View and manage properties, handle maintenance requests, access reports and team data
@@ -67,6 +67,10 @@
                             <strong>Editor:</strong> View and edit properties and maintenance requests, create and manage reports, access all team data
                         </div>
                     </div>
+                    <p class="text-xs text-gray-500 mt-3">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Note: Team assistants help manage your workspace. Technicians are managed separately and handle maintenance tasks.
+                    </p>
                 </div>
 
                 <!-- Submit Button -->

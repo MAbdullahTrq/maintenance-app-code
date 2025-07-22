@@ -8,7 +8,7 @@
     <div class="flex justify-between items-center mb-6">
         <div>
             <h1 class="text-2xl font-bold text-gray-900">Team Management</h1>
-            <p class="text-gray-600 mt-1">Manage your team members</p>
+            <p class="text-gray-600 mt-1">Manage your team assistants</p>
         </div>
         <a href="{{ route('team.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
             <i class="fas fa-plus mr-1"></i>Invite
@@ -20,14 +20,19 @@
         <h2 class="text-lg font-semibold text-blue-900 mb-2">Workspace Information</h2>
         <div class="text-blue-700 text-sm space-y-1">
             <p><strong>Workspace Owner:</strong> {{ $workspaceOwner->name }}</p>
-            <p><strong>Total Members:</strong> {{ $teamMembers->count() + 1 }}</p>
+            <p><strong>Team Assistants:</strong> {{ $teamMembers->count() }} members</p>
+            <p class="text-xs mt-2">
+                <i class="fas fa-info-circle mr-1"></i>
+                Team assistants help manage properties and requests. Technicians are managed separately.
+            </p>
         </div>
     </div>
 
     <!-- Team Members -->
     <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
         <div class="px-4 py-3 border-b border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-900">Team Members</h2>
+            <h2 class="text-lg font-semibold text-gray-900">Team Assistants</h2>
+            <p class="text-xs text-gray-600 mt-1">Workspace assistants who help manage properties and requests</p>
         </div>
         
         @if($teamMembers->count() > 0)

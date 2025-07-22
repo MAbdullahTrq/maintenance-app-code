@@ -9,7 +9,7 @@
         <div class="flex justify-between items-center mb-8">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900">Team Management</h1>
-                <p class="text-gray-600 mt-2">Manage your team members and invitations</p>
+                <p class="text-gray-600 mt-2">Manage your team assistants and workspace members</p>
             </div>
             <a href="{{ route('team.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium">
                 <i class="fas fa-plus mr-2"></i>Invite Team Member
@@ -23,14 +23,19 @@
                 <strong>Workspace Owner:</strong> {{ $workspaceOwner->name }} ({{ $workspaceOwner->email }})
             </p>
             <p class="text-blue-700">
-                <strong>Total Team Members:</strong> {{ $teamMembers->count() + 1 }} (including you)
+                <strong>Team Assistants:</strong> {{ $teamMembers->count() }} members
+            </p>
+            <p class="text-blue-700 text-sm mt-2">
+                <i class="fas fa-info-circle mr-1"></i>
+                Team members are assistants who help you manage properties and requests. Technicians are managed separately.
             </p>
         </div>
 
         <!-- Team Members -->
         <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
             <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-xl font-semibold text-gray-900">Team Members</h2>
+                <h2 class="text-xl font-semibold text-gray-900">Team Assistants</h2>
+                <p class="text-sm text-gray-600 mt-1">These are your workspace assistants who can help manage properties and requests</p>
             </div>
             
             @if($teamMembers->count() > 0)

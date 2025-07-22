@@ -96,11 +96,11 @@
                                     </div>
                                     <a href="{{ route('team.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         <i class="fas fa-users text-green-500 w-5 text-center"></i>
-                                        <span class="ml-2">Team Management</span>
+                                        <span class="ml-2">Team Assistants</span>
                                     </a>
                                     <a href="{{ route('team.create') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         <i class="fas fa-user-plus text-blue-500 w-5 text-center"></i>
-                                        <span class="ml-2">Invite Member</span>
+                                        <span class="ml-2">Invite Assistant</span>
                                     </a>
                                 @endif
                                 

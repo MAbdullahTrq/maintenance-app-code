@@ -10,9 +10,9 @@
             <a href="{{ route('team.index') }}" class="text-blue-600 hover:text-blue-800 mr-3">
                 <i class="fas fa-arrow-left text-lg"></i>
             </a>
-            <h1 class="text-2xl font-bold text-gray-900">Invite Team Member</h1>
+            <h1 class="text-2xl font-bold text-gray-900">Invite Team Assistant</h1>
         </div>
-        <p class="text-gray-600">Send an invitation to join your workspace</p>
+        <p class="text-gray-600">Send an invitation to join your workspace as a team assistant</p>
     </div>
 
     <!-- Invitation Form -->
@@ -52,7 +52,7 @@
 
             <!-- Role Selection -->
             <div class="mb-6">
-                <label for="role_id" class="block text-sm font-medium text-gray-700 mb-2">Role</label>
+                <label for="role_id" class="block text-sm font-medium text-gray-700 mb-2">Assistant Role</label>
                 <select id="role_id" 
                         name="role_id" 
                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('role_id') border-red-500 @enderror"
@@ -76,6 +76,10 @@
                         </div>
                     @endforeach
                 </div>
+                <p class="text-xs text-gray-500 mt-3">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Team assistants help manage your workspace. Technicians are managed separately.
+                </p>
             </div>
 
             <!-- Personal Message (Optional) -->

@@ -113,11 +113,25 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the team members (users invited by this user).
+     * Get the team members (users invited by this user with team member roles).
      */
     public function teamMembers(): HasMany
     {
-        return $this->hasMany(User::class, 'invited_by');
+        return $this->hasMany(User::class, 'invited_by')
+            ->whereHas('role', function ($query) {
+                $query->whereIn('slug', ['team_member', 'viewer', 'editor']);
+            });
+    }
+
+    /**
+     * Get the technicians (users invited by this user with technician role).
+     */
+    public function technicians(): HasMany
+    {
+        return $this->hasMany(User::class, 'invited_by')
+            ->whereHas('role', function ($query) {
+                $query->where('slug', 'technician');
+            });
     }
 
     /**

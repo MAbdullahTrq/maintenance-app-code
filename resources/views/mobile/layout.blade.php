@@ -176,10 +176,10 @@
                         Team Settings
                     </div>
                     <a href="{{ route('team.index') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-users text-green-600 mr-2"></i> Team Management
+                        <i class="fas fa-users text-green-600 mr-2"></i> Team Assistants
                     </a>
                     <a href="{{ route('team.create') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-user-plus text-blue-600 mr-2"></i> Invite Member
+                        <i class="fas fa-user-plus text-blue-600 mr-2"></i> Invite Assistant
                     </a>
                 @endif
                 <a href="/m/profile" class="block px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">Profile</a>
@@ -269,7 +269,7 @@
                 @if(Auth::user()->hasActiveSubscription())
                     <a href="{{ route('team.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
                         <span class="text-black text-xl md:text-2xl lg:text-3xl font-bold leading-none">+</span>
-                        <span x-show="show" x-transition class="absolute left-full top-1/2 -translate-y-1/2 ml-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">Invite Member</span>
+                        <span x-show="show" x-transition class="absolute left-full top-1/2 -translate-y-1/2 ml-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">Invite Assistant</span>
                     </a>
                 @else
                     <a href="{{ route('mobile.subscription.plans') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">

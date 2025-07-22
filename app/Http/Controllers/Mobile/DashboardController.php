@@ -21,11 +21,15 @@ class DashboardController extends Controller
         $hasActiveSubscription = method_exists($user, 'hasActiveSubscription') ? $user->hasActiveSubscription() : false;
         $properties = $user->managedProperties()->get();
         $owners = $user->managedOwners()->get();
-        $technicians = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->get();
+        $technicians = User::where('invited_by', $user->id)
+            ->whereHas('role', function ($q) { 
+                $q->where('slug', 'technician'); 
+            })
+            ->get();
         $pendingRequests = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->where('status', 'pending')->get();
         $requestsCount = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->count();
         
-        // Get team members count (excluding the workspace owner)
+        // Get team members count (excluding technicians)
         $teamMembersCount = User::where('invited_by', $user->id)
             ->whereHas('role', function ($query) {
                 $query->whereIn('slug', ['team_member', 'viewer', 'editor']);
@@ -88,9 +92,13 @@ class DashboardController extends Controller
         }
         $propertiesCount = $properties->count();
         $ownersCount = $user->managedOwners()->count();
-        $techniciansCount = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
+        $techniciansCount = User::where('invited_by', $user->id)
+            ->whereHas('role', function ($q) { 
+                $q->where('slug', 'technician'); 
+            })
+            ->count();
         
-        // Get team members count (excluding the workspace owner)
+        // Get team members count (excluding technicians)
         $teamMembersCount = User::where('invited_by', $user->id)
             ->whereHas('role', function ($query) {
                 $query->whereIn('slug', ['team_member', 'viewer', 'editor']);
