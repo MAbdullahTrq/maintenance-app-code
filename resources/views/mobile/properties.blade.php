@@ -53,9 +53,8 @@
                                                 <i class="fas fa-link mr-2 text-orange-500"></i>Public Link
                                             </a>
                                             @endif
-                                            <form action="{{ route('properties.destroy', $property->id) }}" method="POST" class="block" onsubmit="return confirm('Are you sure you want to delete this property?');">
+                                            <form action="{{ route('mobile.properties.destroy', $property->id) }}" method="DELETE" class="block" onsubmit="return confirm('Are you sure you want to delete this property?');">
                                                 @csrf
-                                                @method('DELETE')
                                                 <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors">
                                                     <i class="fas fa-trash-alt mr-2"></i>Delete
                                                 </button>
@@ -87,6 +86,14 @@ function toggleDropdown(button) {
     
     // Toggle the clicked dropdown
     const menu = button.nextElementSibling;
+    const buttonRect = button.getBoundingClientRect();
+    
+    // Position dropdown outside table constraints
+    menu.style.position = 'fixed';
+    menu.style.top = (buttonRect.bottom + 5) + 'px';
+    menu.style.right = (window.innerWidth - buttonRect.right) + 'px';
+    menu.style.zIndex = '9999';
+    
     menu.classList.toggle('hidden');
 }
 

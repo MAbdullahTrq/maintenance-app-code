@@ -101,12 +101,10 @@ class OwnerController extends Controller
         $properties = $owner->properties;
         
         if ($properties->count() > 0) {
-            $propertyLinks = $properties->map(function($property) {
-                return '<a href="' . route('properties.show', $property) . '" class="text-blue-600 hover:text-blue-800 underline">' . $property->name . '</a>';
-            })->implode(', ');
+            $propertyNames = $properties->pluck('name')->implode(', ');
             
             return redirect()->back()->with('error', 
-                'This owner cannot be deleted because the following properties are owned by them: ' . $propertyLinks
+                'This owner cannot be deleted because the following properties are owned by them: ' . $propertyNames
             );
         }
         

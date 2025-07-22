@@ -17,9 +17,8 @@
         <a href="{{ route('mobile.properties.qrcode', $property->id) }}" class="flex-1 bg-blue-100 text-blue-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-blue-200 transition text-center text-sm md:text-base">QR Code</a>
         <a href="{{ route('guest.request.form', $property->access_link) }}" class="flex-1 bg-blue-100 text-blue-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-blue-200 transition text-center text-sm md:text-base">Link</a>
         <a href="{{ route('mobile.properties.edit', $property->id) }}" class="flex-1 bg-blue-100 text-blue-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-blue-200 transition text-center text-sm md:text-base">Edit</a>
-        <form action="{{ route('properties.destroy', $property->id) }}" method="POST" class="flex-1" onsubmit="return confirm('Are you sure you want to delete this property?');">
+        <form action="{{ route('mobile.properties.destroy', $property->id) }}" method="DELETE" class="flex-1" onsubmit="return confirm('Are you sure you want to delete this property?');">
             @csrf
-            @method('DELETE')
             <button type="submit" class="w-full bg-red-100 text-red-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-red-200 transition text-center text-sm md:text-base">Delete</button>
         </form>
     </div>

@@ -279,7 +279,7 @@ Route::prefix('m')->middleware('auth')->group(function () {
             Route::get('/ao/{id}', [MobileOwnerController::class, 'show'])->name('mobile.owners.show');
             Route::get('/ao/{id}/edit', [MobileOwnerController::class, 'edit'])->name('mobile.owners.edit');
             Route::post('/ao/{id}/edit', [MobileOwnerController::class, 'update'])->name('mobile.owners.update');
-            Route::post('/ao/{id}/delete', [MobileOwnerController::class, 'destroy'])->name('mobile.owners.destroy');
+            Route::delete('/ao/{id}', [MobileOwnerController::class, 'destroy'])->name('mobile.owners.destroy');
             
             // Mobile technician management routes
             Route::get('/at/create', [MobileTechnicianController::class, 'create'])->name('mobile.technicians.create');
@@ -298,7 +298,7 @@ Route::prefix('m')->middleware('auth')->group(function () {
             Route::get('/ap', [MobilePropertyController::class, 'index'])->name('mobile.properties.index');
             Route::post('/ap/add', [MobilePropertyController::class, 'store'])->name('mobile.properties.store');
             Route::post('/ap/{id}/edit', [MobilePropertyController::class, 'update'])->name('mobile.properties.update');
-            Route::post('/ap/{id}/delete', [MobilePropertyController::class, 'destroy'])->name('mobile.properties.destroy');
+            Route::delete('/ap/{id}', [MobilePropertyController::class, 'destroy'])->name('mobile.properties.destroy');
             Route::get('/ap/{id}', [MobilePropertyController::class, 'show'])->name('mobile.properties.show');
             Route::get('/ep/{id}', [MobilePropertyController::class, 'edit'])->name('mobile.properties.edit');
             Route::post('/ep/{id}', [MobilePropertyController::class, 'update'])->name('mobile.properties.ep.update');
