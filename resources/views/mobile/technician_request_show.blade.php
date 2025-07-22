@@ -67,24 +67,50 @@
         <hr class="my-4 border-gray-300">
         <div class="mb-4">
             <div class="font-bold text-lg mb-2 text-gray-800">Property Details</div>
-            <div class="mb-1"><span class="font-semibold text-gray-600">Property name</span><div class="font-medium text-gray-900 text-base mb-2">{{ $property->name ?? '' }}</div></div>
-            <div class="mb-1"><span class="font-semibold text-gray-600">Property address</span><div class="font-medium text-gray-900 text-base mb-2">{{ $property->address ?? '' }}</div></div>
-            <div class="mb-1"><span class="font-semibold text-gray-600">Special instructions</span><div class="font-medium text-gray-900 text-base mb-2">{{ $property->special_instructions ?? '' }}</div></div>
-            <div class="mb-1" x-data="{ showModal: false }">
-                <span class="font-semibold text-gray-600">Property image</span>
-                @if(!empty($property->image))
-                    <div class="w-48 h-32 mx-auto">
-                        <img src="{{ asset('storage/' . $property->image) }}" class="w-full h-full object-cover rounded border cursor-pointer" alt="Property Image" @click="showModal = true">
+            <div class="bg-white border rounded p-3 md:p-4 lg:p-6 mb-4 md:mb-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <!-- Property Image (Top on mobile, left on large screens) -->
+                    @if($property->image)
+                        <div class="lg:col-span-1 order-1 lg:order-1">
+                            <div class="mb-2 lg:mb-0">
+                                <div class="w-full max-w-sm mx-auto lg:max-w-none lg:mx-0">
+                                    <img src="{{ asset('storage/' . $property->image) }}" alt="Property image" class="w-full h-48 md:h-56 lg:h-64 object-cover rounded shadow cursor-pointer" @click="showModal = true">
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    <!-- Property Details (Bottom on mobile, right on large screens) -->
+                    <div class="@if($property->image) lg:col-span-2 order-2 lg:order-2 @else lg:col-span-3 @endif">
+                        <div class="space-y-3 md:space-y-4">
+                            <div>
+                                <span class="font-bold text-lg md:text-xl lg:text-2xl">{{ $property->name ?? '' }}</span>
+                            </div>
+                            <div>
+                                <span class="font-bold text-sm md:text-base">Property address</span><br>
+                                <span class="text-sm md:text-base lg:text-lg">{{ $property->address ?? '' }}</span>
+                            </div>
+                            @if($property->special_instructions)
+                            <div>
+                                <span class="font-bold text-sm md:text-base">Special instructions</span><br>
+                                <span class="text-sm md:text-base lg:text-lg">{{ $property->special_instructions }}</span>
+                            </div>
+                            @endif
+                        </div>
                     </div>
+                </div>
+            </div>
+            
+            <!-- Property Image Modal -->
+            @if($property->image)
+                <div x-data="{ showModal: false }">
                     <template x-if="showModal">
                         <div class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50" @click.self="showModal = false">
                             <img src="{{ asset('storage/' . $property->image) }}" class="max-h-[80vh] max-w-[90vw] rounded shadow-lg border-4 border-white cursor-pointer" @click="showModal = false">
                         </div>
                     </template>
-                @else
-                    <div class="text-xs text-gray-400 mb-2">No image</div>
-                @endif
-            </div>
+                </div>
+            @endif
         </div>
         <div class="mb-4">
             <div class="font-bold text-lg mb-2 text-gray-800">Requester Info</div>
