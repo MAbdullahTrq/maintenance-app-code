@@ -12,23 +12,30 @@
                 <p class="text-gray-600 mt-1">{{ $report_type }} • {{ $dateRange['label'] }}</p>
             </div>
             <div class="flex space-x-3 no-print">
-                <form method="POST" action="{{ route('reports.generate') }}" class="inline">
-                    @csrf
-                    @foreach($filters as $key => $value)
-                        @if(is_array($value))
-                            @foreach($value as $item)
-                                <input type="hidden" name="{{ $key }}[]" value="{{ $item }}">
-                            @endforeach
-                        @else
-                            <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                        @endif
-                    @endforeach
-                    <div class="text-center no-print">
-                        <button type="submit" name="format" value="csv" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
-                            Export
+                <!-- Export Dropdown -->
+                <div class="relative">
+                    <button id="exportDropdownBtn" type="button" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 flex items-center">
+                        Export
+                        <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    
+                    <div id="exportDropdown" class="hidden absolute top-full right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 min-w-48">
+                        <button onclick="exportReport('csv')" class="w-full text-left px-4 py-3 hover:bg-gray-50 text-gray-700 border-b border-gray-100">
+                            📊 CSV Spreadsheet
+                        </button>
+                        <button onclick="exportReport('pdf')" class="w-full text-left px-4 py-3 hover:bg-gray-50 text-gray-700 border-b border-gray-100">
+                            📄 PDF Document
+                        </button>
+                        <button onclick="exportReport('docx')" class="w-full text-left px-4 py-3 hover:bg-gray-50 text-gray-700 border-b border-gray-100">
+                            📝 Word Document
+                        </button>
+                        <button onclick="printReport()" class="w-full text-left px-4 py-3 hover:bg-gray-50 text-gray-700">
+                            🖨️ Print Report
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
         
@@ -188,6 +195,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const summaryLoading = document.getElementById('aiSummaryLoading');
     const summaryError = document.getElementById('aiSummaryError');
 
+    // Export dropdown functionality
+    const exportDropdownBtn = document.getElementById('exportDropdownBtn');
+    const exportDropdown = document.getElementById('exportDropdown');
+
+    exportDropdownBtn.addEventListener('click', function() {
+        exportDropdown.classList.toggle('hidden');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!exportDropdownBtn.contains(event.target) && !exportDropdown.contains(event.target)) {
+            exportDropdown.classList.add('hidden');
+        }
+    });
+
     generateBtn.addEventListener('click', function() {
         summarySection.style.display = 'block';
         summaryContent.style.display = 'none';
@@ -241,6 +263,93 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Export report function
+function exportReport(format) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    
+    if (format === 'csv') {
+        form.action = '{{ route("reports.csv") }}';
+    } else if (format === 'pdf') {
+        form.action = '{{ route("reports.pdf") }}';
+        form.target = '_blank';
+    } else if (format === 'docx') {
+        form.action = '{{ route("reports.docx") }}';
+    }
+    
+    // Add CSRF token
+    const csrfToken = document.createElement('input');
+    csrfToken.type = 'hidden';
+    csrfToken.name = '_token';
+    csrfToken.value = '{{ csrf_token() }}';
+    form.appendChild(csrfToken);
+    
+    // Add all filter data
+    @foreach($filters as $key => $value)
+        @if(is_array($value))
+            @foreach($value as $item)
+                const input{{ $loop->parent->index }}_{{ $loop->index }} = document.createElement('input');
+                input{{ $loop->parent->index }}_{{ $loop->index }}.type = 'hidden';
+                input{{ $loop->parent->index }}_{{ $loop->index }}.name = '{{ $key }}[]';
+                input{{ $loop->parent->index }}_{{ $loop->index }}.value = '{{ $item }}';
+                form.appendChild(input{{ $loop->parent->index }}_{{ $loop->index }});
+            @endforeach
+        @else
+            const input{{ $loop->index }} = document.createElement('input');
+            input{{ $loop->index }}.type = 'hidden';
+            input{{ $loop->index }}.name = '{{ $key }}';
+            input{{ $loop->index }}.value = '{{ $value }}';
+            form.appendChild(input{{ $loop->index }});
+        @endif
+    @endforeach
+    
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+    
+    // Close dropdown
+    document.getElementById('exportDropdown').classList.add('hidden');
+}
+
+// Print report function
+function printReport() {
+    // Always generate AI summary for print
+    const summarySection = document.getElementById('aiSummarySection');
+    const summaryContent = document.getElementById('aiSummaryContent');
+    
+    // Show summary section first
+    summarySection.style.display = 'block';
+    
+    // If summary already exists, print immediately
+    if (summaryContent.style.display === 'block' && summaryContent.textContent.trim()) {
+        setTimeout(() => window.print(), 100);
+    } else {
+        // Generate new summary
+        document.getElementById('generateAISummary').click();
+        
+        // Wait for AI summary to load before printing with timeout
+        let attempts = 0;
+        const maxAttempts = 20; // 10 seconds max wait
+        
+        const checkSummary = setInterval(function() {
+            attempts++;
+            const summaryContent = document.getElementById('aiSummaryContent');
+            
+            if (summaryContent.style.display === 'block' && summaryContent.textContent.trim()) {
+                clearInterval(checkSummary);
+                setTimeout(() => window.print(), 200); // Small delay to ensure content is rendered
+            } else if (attempts >= maxAttempts) {
+                clearInterval(checkSummary);
+                // Print anyway if summary takes too long
+                window.print();
+            }
+        }, 500);
+    }
+    
+    // Close dropdown
+    document.getElementById('exportDropdown').classList.add('hidden');
+}
 </script>
 
 @endsection 

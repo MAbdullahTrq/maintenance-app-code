@@ -53,6 +53,9 @@
                     <button onclick="exportReport('pdf')" class="w-full text-left px-4 py-3 hover:bg-gray-50 text-gray-700 border-b border-gray-100">
                         📄 PDF Document
                     </button>
+                    <button onclick="exportReport('docx')" class="w-full text-left px-4 py-3 hover:bg-gray-50 text-gray-700 border-b border-gray-100">
+                        📝 Word Document
+                    </button>
                     <button onclick="printReport()" class="w-full text-left px-4 py-3 hover:bg-gray-50 text-gray-700">
                         🖨️ Print Report
                     </button>
@@ -345,9 +348,14 @@ document.addEventListener('DOMContentLoaded', function() {
 function exportReport(format) {
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = format === 'csv' ? '{{ route("mobile.reports.csv") }}' : '{{ route("mobile.reports.pdf") }}';
-    if (format === 'pdf') {
+    
+    if (format === 'csv') {
+        form.action = '{{ route("mobile.reports.csv") }}';
+    } else if (format === 'pdf') {
+        form.action = '{{ route("mobile.reports.pdf") }}';
         form.target = '_blank';
+    } else if (format === 'docx') {
+        form.action = '{{ route("mobile.reports.docx") }}';
     }
     
     // Add CSRF token
