@@ -27,7 +27,7 @@
                 <div class="font-semibold text-xs md:text-sm">Requests</div>
                 <div class="text-sm md:text-lg lg:text-xl font-bold">{{ $requestsCount }}</div>
             </a>
-            <a href="{{ route('mobile.reports.index') }}" class="text-center p-2 md:p-3 block focus:outline-none">
+            <a href="{{ route('mobile.reports.create') }}" class="text-center p-2 md:p-3 block focus:outline-none">
                 <div class="font-semibold text-xs md:text-sm">Reports</div>
                 <div class="text-sm md:text-lg lg:text-xl font-bold">📊</div>
             </a>
