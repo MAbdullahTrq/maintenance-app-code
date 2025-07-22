@@ -18,10 +18,14 @@ class DashboardController extends Controller
         if (!$user || (!$user->isPropertyManager() && !$user->hasTeamMemberRole())) {
             abort(403);
         }
+        
+        // For team members, get the workspace owner's data
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
         $hasActiveSubscription = method_exists($user, 'hasActiveSubscription') ? $user->hasActiveSubscription() : false;
-        $properties = $user->managedProperties()->get();
-        $owners = $user->managedOwners()->get();
-        $technicians = User::where('invited_by', $user->id)
+        $properties = $workspaceOwner->managedProperties()->get();
+        $owners = $workspaceOwner->managedOwners()->get();
+        $technicians = User::where('invited_by', $workspaceOwner->id)
             ->whereHas('role', function ($q) { 
                 $q->where('slug', 'technician'); 
             })
@@ -30,7 +34,7 @@ class DashboardController extends Controller
         $requestsCount = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->count();
         
         // Get team members count (excluding technicians)
-        $teamMembersCount = User::where('invited_by', $user->id)
+        $teamMembersCount = User::where('invited_by', $workspaceOwner->id)
             ->whereHas('role', function ($query) {
                 $query->whereIn('slug', ['team_member', 'viewer', 'editor']);
             })
@@ -55,7 +59,11 @@ class DashboardController extends Controller
         if (!$user || (!$user->isPropertyManager() && !$user->hasTeamMemberRole())) {
             abort(403);
         }
-        $properties = $user->managedProperties()->get();
+        
+        // For team members, get the workspace owner's data
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
+        $properties = $workspaceOwner->managedProperties()->get();
         $status = $request->query('status');
         $sortBy = $request->query('sort', 'created_at'); // Default sort by date
         $sortDirection = $request->query('direction', 'desc'); // Default descending
@@ -91,15 +99,15 @@ class DashboardController extends Controller
             $allRequests = $query->orderBy($sortBy, $sortDirection)->get();
         }
         $propertiesCount = $properties->count();
-        $ownersCount = $user->managedOwners()->count();
-        $techniciansCount = User::where('invited_by', $user->id)
+        $ownersCount = $workspaceOwner->managedOwners()->count();
+        $techniciansCount = User::where('invited_by', $workspaceOwner->id)
             ->whereHas('role', function ($q) { 
                 $q->where('slug', 'technician'); 
             })
             ->count();
         
         // Get team members count (excluding technicians)
-        $teamMembersCount = User::where('invited_by', $user->id)
+        $teamMembersCount = User::where('invited_by', $workspaceOwner->id)
             ->whereHas('role', function ($query) {
                 $query->whereIn('slug', ['team_member', 'viewer', 'editor']);
             })

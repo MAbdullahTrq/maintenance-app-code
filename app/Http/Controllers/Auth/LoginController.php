@@ -52,12 +52,15 @@ class LoginController extends Controller
             // Redirect based on user role
             if ($user->isAdmin()) {
                 return redirect()->intended(route('admin.dashboard'));
-            } elseif ($user->isPropertyManager() || $user->hasTeamMemberRole()) {
-                // Check if property manager or team member has an active subscription
+            } elseif ($user->isPropertyManager()) {
+                // Check if property manager has an active subscription
                 if (!$user->hasActiveSubscription()) {
                     return redirect()->route('mobile.subscription.plans');
                 }
                 
+                return redirect()->intended(route('mobile.manager.dashboard'));
+            } elseif ($user->hasTeamMemberRole()) {
+                // Team members inherit workspace owner's subscription, no need to check
                 return redirect()->intended(route('mobile.manager.dashboard'));
             } else {
                 return redirect()->intended(route('mobile.technician.dashboard'));

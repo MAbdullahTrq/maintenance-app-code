@@ -228,9 +228,19 @@ class User extends Authenticatable
 
     /**
      * Check if the user has an active subscription.
+     * For team members, check their workspace owner's subscription.
      */
     public function hasActiveSubscription(): bool
     {
+        // If this user is a team member, check their workspace owner's subscription
+        if ($this->isTeamMember()) {
+            $workspaceOwner = $this->getWorkspaceOwner();
+            return $workspaceOwner->subscriptions()->where('status', 'active')
+                ->where('ends_at', '>', now())
+                ->exists();
+        }
+        
+        // For property managers and others, check their own subscription
         return $this->subscriptions()->where('status', 'active')
             ->where('ends_at', '>', now())
             ->exists();

@@ -26,12 +26,14 @@ class RedirectIfAuthenticated
                 // Redirect based on user role
                 if (method_exists($user, 'hasRole') && $user->hasRole('admin')) {
                     return redirect()->route('admin.dashboard');
-                } elseif ((method_exists($user, 'isPropertyManager') && $user->isPropertyManager()) || 
-                         (method_exists($user, 'hasTeamMemberRole') && $user->hasTeamMemberRole())) {
-                    // Check if property manager or team member has an active subscription
+                } elseif (method_exists($user, 'isPropertyManager') && $user->isPropertyManager()) {
+                    // Check if property manager has an active subscription
                     if (method_exists($user, 'hasActiveSubscription') && !$user->hasActiveSubscription()) {
                         return redirect()->route('subscription.plans');
                     }
+                    return redirect()->route('mobile.manager.dashboard');
+                } elseif (method_exists($user, 'hasTeamMemberRole') && $user->hasTeamMemberRole()) {
+                    // Team members inherit workspace owner's subscription, no need to check
                     return redirect()->route('mobile.manager.dashboard');
                 } elseif (method_exists($user, 'isTechnician') && $user->isTechnician()) {
                     return redirect()->route('mobile.technician.dashboard');
