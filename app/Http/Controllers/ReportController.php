@@ -743,73 +743,205 @@ class ReportController extends Controller
      */
     private function generateDOCX(array $reportData)
     {
+        // Add owner, properties, and technicians details for DOCX report title
+        $ownerName = null;
+        $propertyNames = [];
+        $technicianNames = [];
+        
+        $request = request(); // Get current request
+        
+        if ($request->filled('owner_id')) {
+            $owner = \App\Models\Owner::find($request->owner_id);
+            $ownerName = $owner ? $owner->name : null;
+        }
+        
+        if ($request->filled('property_ids')) {
+            $propertyNames = \App\Models\Property::whereIn('id', $request->property_ids)
+                ->pluck('name')
+                ->toArray();
+        }
+        
+        if ($request->filled('technician_ids')) {
+            $technicianNames = \App\Models\User::whereIn('id', $request->technician_ids)
+                ->pluck('name')
+                ->toArray();
+        }
+        
+        // Generate AI Summary for DOCX
+        $aiSummary = null;
+        try {
+            // Reload requests with comments for comprehensive AI analysis
+            $user = Auth::user();
+            $dateRange = $reportData['dateRange'];
+            
+            // Build query to get requests with comments
+            $query = $this->buildReportQuery($request, $user, $dateRange);
+            $requestsWithComments = $query->with(['comments.user', 'property.owner', 'assignedTechnician'])->get();
+            
+            // Prepare data for AI prompt
+            $promptData = $this->prepareDataForAI($requestsWithComments, $reportData, $dateRange);
+            
+            // Base AI Prompt Template
+            $basePrompt = "You are an assistant helping a property manager summarize maintenance reports. Based on the data, and comments inside each task from either the property manager or the technician, create a clear and professional summary. Highlight the most important details such as total number of tasks, completed vs pending, any recurring issues, top-performing technicians, and any unusual delays. Be concise, use plain language, and include relevant stats where helpful.";
+            
+            // Generate AI summary
+            $response = OpenAI::chat()->create([
+                'model' => config('openai.default_model', 'gpt-3.5-turbo'),
+                'messages' => [
+                    [
+                        'role' => 'system',
+                        'content' => $basePrompt
+                    ],
+                    [
+                        'role' => 'user',
+                        'content' => $promptData
+                    ]
+                ],
+                'max_tokens' => 800,
+                'temperature' => 0.7,
+            ]);
+            
+            $aiSummary = $response->choices[0]->message->content;
+            
+        } catch (\Exception $e) {
+            \Log::error('DOCX AI Summary Generation Error: ' . $e->getMessage());
+            $aiSummary = 'AI summary could not be generated at this time.';
+        }
+        
+        // Add additional data for DOCX
+        $reportData['owner_name'] = $ownerName;
+        $reportData['property_names'] = $propertyNames;
+        $reportData['technician_names'] = $technicianNames;
+        $reportData['ai_summary'] = $aiSummary;
+        
         // Create new PHPWord instance
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
         
         // Add styles
-        $phpWord->addTitleStyle(1, ['bold' => true, 'size' => 16]);
-        $phpWord->addTitleStyle(2, ['bold' => true, 'size' => 14]);
+        $phpWord->addTitleStyle(1, ['bold' => true, 'size' => 20]);
+        $phpWord->addTitleStyle(2, ['bold' => true, 'size' => 16]);
+        $phpWord->addTitleStyle(3, ['bold' => true, 'size' => 14]);
         
         // Create section
         $section = $phpWord->addSection();
         
-        // Add title
-        $section->addTitle('Maintenance Report', 1);
-        $section->addTextBreak();
+        // Add report header
+        $section->addTitle('📊 Report' . (isset($reportData['owner_name']) && $reportData['owner_name'] ? ' for ' . $reportData['owner_name'] : ''), 1);
         
-        // Add report summary
-        $section->addTitle('Report Summary', 2);
-        $section->addText('Report Period: ' . $reportData['dateRange']['label']);
-        $section->addText('Total Requests: ' . $reportData['summary']['total_requests']);
-        $section->addText('Completed Requests: ' . $reportData['summary']['completed_requests']);
-        $section->addText('Average Completion Time: ' . ($reportData['summary']['average_completion_time'] ?? 'N/A') . ' hours');
-        $section->addTextBreak();
-        
-        // Add status breakdown
-        $section->addTitle('Status Breakdown', 2);
-        foreach ($reportData['breakdowns']['status'] as $status => $count) {
-            $section->addText(ucfirst($status) . ': ' . $count);
+        // Add filter information
+        if ((isset($reportData['property_names']) && count($reportData['property_names']) > 0) || 
+            (isset($reportData['technician_names']) && count($reportData['technician_names']) > 0)) {
+            
+            if (isset($reportData['property_names']) && count($reportData['property_names']) > 0) {
+                $section->addText('Properties: ' . implode(', ', $reportData['property_names']), ['size' => 11]);
+            }
+            
+            if (isset($reportData['technician_names']) && count($reportData['technician_names']) > 0) {
+                $section->addText('Technicians: ' . implode(', ', $reportData['technician_names']), ['size' => 11]);
+            }
         }
+        
+        // Add date range and generation info
+        $section->addText($reportData['dateRange']['label'], ['size' => 11, 'color' => '666666']);
+        $section->addText('Generated on ' . now()->format('F j, Y \a\t g:i A'), ['size' => 10, 'color' => '999999']);
         $section->addTextBreak();
         
-        // Add priority breakdown
-        $section->addTitle('Priority Breakdown', 2);
-        foreach ($reportData['breakdowns']['priority'] as $priority => $count) {
-            $section->addText(ucfirst($priority) . ': ' . $count);
+        // Add AI Summary section
+        $section->addTitle('🧠 AI Summary', 2);
+        
+        if (isset($reportData['ai_summary']) && $reportData['ai_summary']) {
+            $section->addText($reportData['ai_summary'], ['size' => 11]);
+        } else {
+            $section->addText('Maintenance Report Summary:', ['bold' => true, 'size' => 11]);
+            $section->addText('- Total maintenance requests: ' . $reportData['summary']['total_requests'], ['size' => 11]);
+            $section->addText('- Completed tasks: ' . $reportData['summary']['completed_requests'], ['size' => 11]);
+            $section->addText('- Pending tasks: ' . $reportData['summary']['pending_requests'], ['size' => 11]);
+            $section->addText('- Average completion time: ' . ($reportData['summary']['average_completion_time'] ? $reportData['summary']['average_completion_time'] . ' hours' : 'N/A'), ['size' => 11]);
+            
+            if (isset($reportData['breakdowns']['status']) && count($reportData['breakdowns']['status']) > 0) {
+                $section->addTextBreak();
+                $section->addText('Status Breakdown:', ['bold' => true, 'size' => 11]);
+                foreach ($reportData['breakdowns']['status'] as $status => $count) {
+                    $section->addText('- ' . ucfirst($status) . ': ' . $count, ['size' => 11]);
+                }
+            }
+            
+            if (isset($reportData['breakdowns']['priority']) && count($reportData['breakdowns']['priority']) > 0) {
+                $section->addTextBreak();
+                $section->addText('Priority Breakdown:', ['bold' => true, 'size' => 11]);
+                foreach ($reportData['breakdowns']['priority'] as $priority => $count) {
+                    $section->addText('- ' . ucfirst($priority) . ' Priority: ' . $count, ['size' => 11]);
+                }
+            }
         }
+        
+        $section->addTextBreak();
+        
+        // Add status summary table
+        $section->addTitle('Status Summary', 2);
+        
+        $statusTable = $section->addTable(['borderSize' => 6, 'borderColor' => '000000']);
+        $statusTable->addRow();
+        $statusTable->addCell(2000)->addText('Declined', ['bold' => true, 'size' => 11]);
+        $statusTable->addCell(2000)->addText('Assigned', ['bold' => true, 'size' => 11]);
+        $statusTable->addCell(2000)->addText('Accepted', ['bold' => true, 'size' => 11]);
+        $statusTable->addCell(2000)->addText('Started', ['bold' => true, 'size' => 11]);
+        $statusTable->addCell(2000)->addText('Completed', ['bold' => true, 'size' => 11]);
+        
+        $statusTable->addRow();
+        $statusTable->addCell(2000)->addText($reportData['requests']->where('status', 'declined')->count(), ['bold' => true, 'size' => 14]);
+        $statusTable->addCell(2000)->addText($reportData['requests']->where('status', 'assigned')->count(), ['bold' => true, 'size' => 14]);
+        $statusTable->addCell(2000)->addText($reportData['requests']->where('status', 'accepted')->count(), ['bold' => true, 'size' => 14]);
+        $statusTable->addCell(2000)->addText($reportData['requests']->where('status', 'started')->count(), ['bold' => true, 'size' => 14]);
+        $statusTable->addCell(2000)->addText($reportData['requests']->where('status', 'completed')->count(), ['bold' => true, 'size' => 14]);
+        
         $section->addTextBreak();
         
         // Add detailed requests table
-        $section->addTitle('Detailed Requests', 2);
-        
-        // Create table
-        $table = $section->addTable(['borderSize' => 6, 'borderColor' => '000000']);
-        
-        // Add table headers
-        $table->addRow();
-        $table->addCell(1000)->addText('ID', ['bold' => true]);
-        $table->addCell(2000)->addText('Title', ['bold' => true]);
-        $table->addCell(2000)->addText('Property', ['bold' => true]);
-        $table->addCell(2000)->addText('Owner', ['bold' => true]);
-        $table->addCell(1000)->addText('Priority', ['bold' => true]);
-        $table->addCell(1000)->addText('Status', ['bold' => true]);
-        $table->addCell(2000)->addText('Technician', ['bold' => true]);
-        $table->addCell(2000)->addText('Created Date', ['bold' => true]);
-        $table->addCell(2000)->addText('Completed Date', ['bold' => true]);
-        
-        // Add table data
-        foreach ($reportData['requests'] as $request) {
+        if ($reportData['requests']->isNotEmpty()) {
+            $section->addTitle('Maintenance Requests', 3);
+            
+            // Create table
+            $table = $section->addTable(['borderSize' => 6, 'borderColor' => '000000']);
+            
+            // Add table headers
             $table->addRow();
-            $table->addCell(1000)->addText($request->id);
-            $table->addCell(2000)->addText($request->title);
-            $table->addCell(2000)->addText($request->property->name ?? '');
-            $table->addCell(2000)->addText($request->property->owner->name ?? '');
-            $table->addCell(1000)->addText($request->priority);
-            $table->addCell(1000)->addText($request->status);
-            $table->addCell(2000)->addText($request->assignedTechnician->name ?? 'Not Assigned');
-            $table->addCell(2000)->addText($request->created_at->format('Y-m-d H:i:s'));
-            $table->addCell(2000)->addText($request->completed_at ? $request->completed_at->format('Y-m-d H:i:s') : '');
+            $table->addCell(3000)->addText('Property', ['bold' => true, 'size' => 11]);
+            $table->addCell(1500)->addText('Priority', ['bold' => true, 'size' => 11]);
+            $table->addCell(1500)->addText('Date', ['bold' => true, 'size' => 11]);
+            $table->addCell(1500)->addText('Status', ['bold' => true, 'size' => 11]);
+            
+            // Add table data
+            foreach ($reportData['requests'] as $request) {
+                $table->addRow();
+                
+                // Property cell with name and address
+                $propertyCell = $table->addCell(3000);
+                $propertyCell->addText($request->property->name ?? 'N/A', ['bold' => true, 'size' => 11]);
+                $propertyCell->addText($request->property->address ?? 'No address', ['size' => 10, 'color' => '666666']);
+                
+                // Priority cell
+                $priorityCell = $table->addCell(1500);
+                $priorityCell->addText(ucfirst($request->priority), ['size' => 11]);
+                
+                // Date cell
+                $dateCell = $table->addCell(1500);
+                $dateCell->addText($request->created_at->format('d M, Y'), ['size' => 11]);
+                $dateCell->addText($request->created_at->format('H:i'), ['size' => 10, 'color' => '666666']);
+                
+                // Status cell
+                $table->addCell(1500)->addText(ucfirst($request->status), ['size' => 11]);
+            }
+        } else {
+            $section->addTitle('Maintenance Requests', 3);
+            $section->addText('No requests found', ['size' => 11]);
+            $section->addText('No maintenance requests match the selected criteria.', ['size' => 10, 'color' => '666666']);
         }
+        
+        $section->addTextBreak();
+        
+        // Add footer
+        $section->addText('This report was generated automatically by MaintainXtra', ['size' => 10, 'color' => '666666'], ['alignment' => 'center']);
         
         // Generate filename
         $filename = 'maintenance_report_' . now()->format('Y-m-d_H-i-s') . '.docx';
