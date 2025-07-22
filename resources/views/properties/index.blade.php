@@ -63,6 +63,13 @@
                                         data-url="{{ $property->getRequestUrl() }}">
                                         <i class="fas fa-copy"></i> Copy Link
                                     </button>
+                                    <form action="{{ route('properties.destroy', $property) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this property?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash-alt"></i> Delete
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

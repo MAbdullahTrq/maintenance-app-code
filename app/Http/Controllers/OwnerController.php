@@ -97,6 +97,19 @@ class OwnerController extends Controller
     {
         $this->authorize('delete', $owner);
         
+        // Check if owner has any properties
+        $properties = $owner->properties;
+        
+        if ($properties->count() > 0) {
+            $propertyLinks = $properties->map(function($property) {
+                return '<a href="' . route('properties.show', $property) . '" class="text-blue-600 hover:text-blue-800 underline">' . $property->name . '</a>';
+            })->implode(', ');
+            
+            return redirect()->back()->with('error', 
+                'This owner cannot be deleted because the following properties are owned by them: ' . $propertyLinks
+            );
+        }
+        
         $owner->delete();
 
         return redirect()->route('owners.index')

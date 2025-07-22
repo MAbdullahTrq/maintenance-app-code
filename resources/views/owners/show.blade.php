@@ -31,6 +31,13 @@
                     <a href="{{ route('owners.edit', $owner) }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                         <i class="fas fa-edit mr-2"></i>Edit Owner
                     </a>
+                    <form action="{{ route('owners.destroy', $owner) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this owner?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                            <i class="fas fa-trash-alt mr-2"></i>Delete Owner
+                        </button>
+                    </form>
                 </div>
             </div>
 
