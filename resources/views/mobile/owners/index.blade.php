@@ -37,7 +37,7 @@
                                 <button onclick="toggleDropdown(this, {{ $owner->id }})" class="px-2 py-1 text-gray-600 hover:text-gray-800 text-lg md:text-xl focus:outline-none dropdown-btn">
                                     <i class="fas fa-ellipsis-v"></i>
                                 </button>
-                                <div id="dropdown-{{ $owner->id }}" class="dropdown-menu absolute right-0 top-full mt-1 w-40 bg-white rounded-md shadow-lg border border-gray-200 z-[9999] hidden" style="position: fixed; transform: translateX(-100%);">
+                                <div id="dropdown-{{ $owner->id }}" class="dropdown-menu absolute right-0 top-full mt-1 w-40 bg-white rounded-md shadow-lg border border-gray-200 z-[9999] hidden">
                                     <div class="py-1">
                                         <a href="/m/ao/{{ $owner->id }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
                                             <i class="fas fa-eye mr-2 text-blue-500"></i>View
