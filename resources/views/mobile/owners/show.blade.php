@@ -37,8 +37,9 @@
         
         <div class="flex gap-2 md:gap-3 lg:gap-4 mb-4">
             <a href="/m/ao/{{ $owner->id }}/edit" class="flex-1 bg-blue-100 text-blue-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-blue-200 transition text-center text-sm md:text-base">Edit Owner</a>
-            <form action="{{ route('mobile.owners.destroy', $owner->id) }}" method="DELETE" class="flex-1" onsubmit="return confirm('Are you sure you want to delete this owner?');">
+            <form action="{{ route('mobile.owners.destroy', $owner->id) }}" method="POST" class="flex-1" onsubmit="return confirm('Are you sure you want to delete this owner?');">
                 @csrf
+                @method('DELETE')
                 <button type="submit" class="w-full bg-red-100 text-red-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-red-200 transition text-center text-sm md:text-base">Delete Owner</button>
             </form>
         </div>

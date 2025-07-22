@@ -45,8 +45,9 @@
                                         <a href="/m/ao/{{ $owner->id }}/edit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
                                             <i class="fas fa-edit mr-2 text-green-500"></i>Edit
                                         </a>
-                                        <form action="{{ route('mobile.owners.destroy', $owner->id) }}" method="DELETE" class="block" onsubmit="return confirm('Are you sure you want to delete this owner?');">
+                                        <form action="{{ route('mobile.owners.destroy', $owner->id) }}" method="POST" class="block" onsubmit="return confirm('Are you sure you want to delete this owner?');">
                                             @csrf
+                                            @method('DELETE')
                                             <button type="submit" class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors">
                                                 <i class="fas fa-trash-alt mr-2"></i>Delete
                                             </button>
@@ -100,10 +101,10 @@ function toggleDropdown(button, ownerId) {
     const dropdown = document.getElementById(`dropdown-${ownerId}`);
     const buttonRect = button.getBoundingClientRect();
     
-    // Position dropdown outside table constraints
+    // Position dropdown right next to the button
     dropdown.style.position = 'fixed';
-    dropdown.style.top = (buttonRect.bottom + 5) + 'px';
-    dropdown.style.right = (window.innerWidth - buttonRect.right) + 'px';
+    dropdown.style.top = (buttonRect.bottom + 2) + 'px';
+    dropdown.style.left = (buttonRect.left - 192) + 'px'; // 192px = w-48 (12rem)
     dropdown.style.zIndex = '9999';
     
     dropdown.classList.toggle('hidden');
