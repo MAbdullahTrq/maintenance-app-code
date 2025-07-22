@@ -89,10 +89,10 @@ function toggleDropdown(button) {
     const menu = button.nextElementSibling;
     const buttonRect = button.getBoundingClientRect();
     
-    // Position dropdown for mobile view
+    // Position dropdown for mobile view - closer to button
     menu.style.position = 'fixed';
     menu.style.top = (buttonRect.bottom + 2) + 'px';
-    menu.style.right = '10px'; // Position from right edge on mobile
+    menu.style.right = (window.innerWidth - buttonRect.right + 10) + 'px'; // Position relative to button
     menu.style.zIndex = '9999';
     
     menu.classList.toggle('hidden');
