@@ -339,6 +339,37 @@ class ReportController extends Controller
     }
 
     /**
+     * Generate and download DOCX report.
+     */
+    public function generateDOCXReport(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required|string',
+            'owner_id' => 'nullable|exists:owners,id',
+            'property_ids' => 'nullable|array',
+            'property_ids.*' => 'exists:properties,id',
+            'technician_ids' => 'nullable|array',
+            'technician_ids.*' => 'exists:users,id',
+        ]);
+
+        $user = Auth::user();
+        
+        // Parse date range
+        $dateRange = $this->parseDateRange($request->date_range);
+        
+        // Build query based on filters
+        $query = $this->buildReportQuery($request, $user, $dateRange);
+        
+        // Get the results
+        $requests = $query->get();
+        
+        // Generate report data
+        $reportData = $this->generateReportData($requests, $request, $dateRange);
+        
+        return $this->generateDOCX($reportData);
+    }
+
+    /**
      * Convert single property_id and technician_id to arrays for backward compatibility.
      */
     private function normalizeSingleSelections(Request $request)
@@ -705,6 +736,95 @@ class ReportController extends Controller
             
             fclose($handle);
         }, 200, $headers);
+    }
+
+    /**
+     * Generate DOCX report.
+     */
+    private function generateDOCX(array $reportData)
+    {
+        // Create new PHPWord instance
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+        
+        // Add styles
+        $phpWord->addTitleStyle(1, ['bold' => true, 'size' => 16]);
+        $phpWord->addTitleStyle(2, ['bold' => true, 'size' => 14]);
+        
+        // Create section
+        $section = $phpWord->addSection();
+        
+        // Add title
+        $section->addTitle('Maintenance Report', 1);
+        $section->addTextBreak();
+        
+        // Add report summary
+        $section->addTitle('Report Summary', 2);
+        $section->addText('Report Period: ' . $reportData['dateRange']['label']);
+        $section->addText('Total Requests: ' . $reportData['summary']['total_requests']);
+        $section->addText('Completed Requests: ' . $reportData['summary']['completed_requests']);
+        $section->addText('Average Completion Time: ' . ($reportData['summary']['average_completion_time'] ?? 'N/A') . ' hours');
+        $section->addTextBreak();
+        
+        // Add status breakdown
+        $section->addTitle('Status Breakdown', 2);
+        foreach ($reportData['breakdowns']['status'] as $status => $count) {
+            $section->addText(ucfirst($status) . ': ' . $count);
+        }
+        $section->addTextBreak();
+        
+        // Add priority breakdown
+        $section->addTitle('Priority Breakdown', 2);
+        foreach ($reportData['breakdowns']['priority'] as $priority => $count) {
+            $section->addText(ucfirst($priority) . ': ' . $count);
+        }
+        $section->addTextBreak();
+        
+        // Add detailed requests table
+        $section->addTitle('Detailed Requests', 2);
+        
+        // Create table
+        $table = $section->addTable(['borderSize' => 6, 'borderColor' => '000000']);
+        
+        // Add table headers
+        $table->addRow();
+        $table->addCell(1000)->addText('ID', ['bold' => true]);
+        $table->addCell(2000)->addText('Title', ['bold' => true]);
+        $table->addCell(2000)->addText('Property', ['bold' => true]);
+        $table->addCell(2000)->addText('Owner', ['bold' => true]);
+        $table->addCell(1000)->addText('Priority', ['bold' => true]);
+        $table->addCell(1000)->addText('Status', ['bold' => true]);
+        $table->addCell(2000)->addText('Technician', ['bold' => true]);
+        $table->addCell(2000)->addText('Created Date', ['bold' => true]);
+        $table->addCell(2000)->addText('Completed Date', ['bold' => true]);
+        
+        // Add table data
+        foreach ($reportData['requests'] as $request) {
+            $table->addRow();
+            $table->addCell(1000)->addText($request->id);
+            $table->addCell(2000)->addText($request->title);
+            $table->addCell(2000)->addText($request->property->name ?? '');
+            $table->addCell(2000)->addText($request->property->owner->name ?? '');
+            $table->addCell(1000)->addText($request->priority);
+            $table->addCell(1000)->addText($request->status);
+            $table->addCell(2000)->addText($request->assignedTechnician->name ?? 'Not Assigned');
+            $table->addCell(2000)->addText($request->created_at->format('Y-m-d H:i:s'));
+            $table->addCell(2000)->addText($request->completed_at ? $request->completed_at->format('Y-m-d H:i:s') : '');
+        }
+        
+        // Generate filename
+        $filename = 'maintenance_report_' . now()->format('Y-m-d_H-i-s') . '.docx';
+        
+        // Create writer
+        $writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+        
+        // Save to temporary file
+        $tempFile = tempnam(sys_get_temp_dir(), 'docx_');
+        $writer->save($tempFile);
+        
+        // Return file as download
+        return response()->download($tempFile, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        ])->deleteFileAfterSend();
     }
 
     /**

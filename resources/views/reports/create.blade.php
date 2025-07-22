@@ -115,8 +115,8 @@
                 </button>
             </div>
 
-            <!-- Additional Export Options
-            <div id="export-buttons-section" class="mt-4 grid grid-cols-2 gap-3" style="display: none;">
+            <!-- Additional Export Options -->
+            <div id="export-buttons-section" class="mt-4 grid grid-cols-3 gap-3" style="display: none;">
                 <button type="button" onclick="submitForm('csv')"
                         class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-sm">
                     <i class="fas fa-download mr-1"></i>CSV
@@ -125,7 +125,11 @@
                         class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 text-sm">
                     <i class="fas fa-file-pdf mr-1"></i>PDF
                 </button>
-            </div> -->
+                <button type="button" onclick="submitForm('docx')" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                    <i class="fas fa-file-word mr-1"></i>DOCX
+                </button>
+            </div>
         </form>
     </div>
 </div>
@@ -274,6 +278,8 @@ function submitForm(format) {
     } else if (format === 'pdf') {
         form.action = '/reports/pdf';
         form.target = '_blank';
+    } else if (format === 'docx') {
+        form.action = '/reports/docx';
     }
     
     // Submit the form
