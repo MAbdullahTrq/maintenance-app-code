@@ -8,6 +8,31 @@
         <div class="mb-2 flex items-center">
             <a href="#" onclick="window.history.back(); return false;" class="mr-2 text-blue-700 hover:underline flex items-center"><i class="fas fa-arrow-left mr-1"></i> Back</a>
         </div>
+        
+        <!-- Top Stats Section -->
+        <div class="grid grid-cols-5 gap-0 mb-4 border border-gray-400 rounded overflow-hidden">
+            <a href="{{ route('mobile.owners.index') }}" class="text-center p-2 md:p-3 border-r border-gray-400 block focus:outline-none">
+                <div class="font-semibold text-xs md:text-sm">Owners</div>
+                <div class="text-sm md:text-lg lg:text-xl font-bold">{{ $ownersCount }}</div>
+            </a>
+            <a href="{{ route('mobile.properties.index') }}" class="text-center p-2 md:p-3 border-r border-gray-400 block focus:outline-none">
+                <div class="font-semibold text-xs md:text-sm">Properties</div>
+                <div class="text-sm md:text-lg lg:text-xl font-bold">{{ $propertiesCount }}</div>
+            </a>
+            <a href="{{ route('mobile.technicians.index') }}" class="text-center p-2 md:p-3 border-r border-gray-400 block focus:outline-none">
+                <div class="font-semibold text-xs md:text-sm">Technicians</div>
+                <div class="text-sm md:text-lg lg:text-xl font-bold">{{ $techniciansCount }}</div>
+            </a>
+            <a href="{{ route('mobile.manager.all-requests') }}" class="text-center p-2 md:p-3 border-r border-gray-400 block focus:outline-none">
+                <div class="font-semibold text-xs md:text-sm">Requests</div>
+                <div class="text-sm md:text-lg lg:text-xl font-bold">{{ $requestsCount }}</div>
+            </a>
+            <a href="{{ route('mobile.reports.index') }}" class="text-center p-2 md:p-3 block focus:outline-none">
+                <div class="font-semibold text-xs md:text-sm">Reports</div>
+                <div class="text-sm md:text-lg lg:text-xl font-bold">📊</div>
+            </a>
+        </div>
+        
         <h2 class="text-center text-xl md:text-2xl lg:text-3xl font-bold mb-2 md:mb-4 text-yellow-600">{{ $owner->name }}</h2>
         
         <!-- Owner Details -->

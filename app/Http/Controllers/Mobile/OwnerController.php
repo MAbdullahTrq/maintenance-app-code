@@ -64,7 +64,16 @@ class OwnerController extends Controller
         
         $properties = $owner->properties()->latest()->paginate(10);
         
-        return view('mobile.owners.show', compact('owner', 'properties'));
+        // Get additional stats for the navigation grid
+        $user = Auth::user();
+        $propertiesCount = $user->managedProperties()->count();
+        $ownersCount = $user->managedOwners()->count();
+        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { 
+            $q->where('slug', 'technician'); 
+        })->where('invited_by', $user->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $user->managedProperties()->pluck('id'))->count();
+        
+        return view('mobile.owners.show', compact('owner', 'properties', 'propertiesCount', 'ownersCount', 'techniciansCount', 'requestsCount'));
     }
 
     /**
