@@ -113,13 +113,13 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the team members (users invited by this user with team member roles).
+     * Get team members (excluding technicians).
      */
     public function teamMembers(): HasMany
     {
         return $this->hasMany(User::class, 'invited_by')
             ->whereHas('role', function ($query) {
-                $query->whereIn('slug', ['team_member', 'viewer', 'editor']);
+                $query->whereIn('slug', ['editor', 'viewer']);
             });
     }
 
@@ -288,13 +288,13 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if the user is a team member (team_member, viewer, editor).
+     * Check if the user is a team member (editor, viewer).
      *
      * @return bool
      */
     public function hasTeamMemberRole()
     {
-        return $this->role && in_array($this->role->slug, ['team_member', 'viewer', 'editor']);
+        return $this->role && in_array($this->role->slug, ['editor', 'viewer']);
     }
 
     /**

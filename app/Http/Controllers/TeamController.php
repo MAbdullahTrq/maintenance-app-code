@@ -36,7 +36,7 @@ class TeamController extends Controller
             ->with('role')
             ->get();
 
-        $availableRoles = Role::whereIn('slug', ['team_member', 'viewer', 'editor'])
+        $availableRoles = Role::whereIn('slug', ['editor', 'viewer'])
             ->get();
 
         // Get navigation stats for mobile
@@ -67,7 +67,7 @@ class TeamController extends Controller
             abort(403);
         }
 
-        $roles = Role::whereIn('slug', ['team_member', 'viewer', 'editor'])
+        $roles = Role::whereIn('slug', ['editor', 'viewer'])
             ->get();
 
         // Check if this is a mobile route

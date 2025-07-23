@@ -36,7 +36,7 @@ class DashboardController extends Controller
         // Get team members count (excluding technicians)
         $teamMembersCount = User::where('invited_by', $workspaceOwner->id)
             ->whereHas('role', function ($query) {
-                $query->whereIn('slug', ['team_member', 'viewer', 'editor']);
+                $query->whereIn('slug', ['editor', 'viewer']);
             })
             ->count();
         
@@ -109,7 +109,7 @@ class DashboardController extends Controller
         // Get team members count (excluding technicians)
         $teamMembersCount = User::where('invited_by', $workspaceOwner->id)
             ->whereHas('role', function ($query) {
-                $query->whereIn('slug', ['team_member', 'viewer', 'editor']);
+                $query->whereIn('slug', ['editor', 'viewer']);
             })
             ->count();
         
