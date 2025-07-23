@@ -42,6 +42,7 @@
                                         <a href="/m/ao/{{ $owner->id }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
                                             <i class="fas fa-eye mr-2 text-blue-500"></i>View
                                         </a>
+                                        @if(!Auth::user()->isViewer())
                                         <a href="/m/ao/{{ $owner->id }}/edit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
                                             <i class="fas fa-edit mr-2 text-green-500"></i>Edit
                                         </a>
@@ -52,6 +53,7 @@
                                                 <i class="fas fa-trash-alt mr-2"></i>Delete
                                             </button>
                                         </form>
+                                        @endif
                                     </div>
                                 </div>
                             </td>
@@ -83,7 +85,7 @@
     </div>
 </div>
 
-@if(Auth::user()->hasActiveSubscription())
+@if(Auth::user()->hasActiveSubscription() && !Auth::user()->isViewer())
 <a href="/m/ao/create" class="fixed bottom-6 right-6 bg-blue-600 text-white rounded-full w-14 h-14 flex items-center justify-center text-3xl shadow-lg z-50">
     <i class="fas fa-plus"></i>
 </a>

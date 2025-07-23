@@ -298,6 +298,26 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if the user is a viewer (read-only access).
+     *
+     * @return bool
+     */
+    public function isViewer()
+    {
+        return $this->hasRole('viewer');
+    }
+
+    /**
+     * Check if the user is an editor (can edit but not create).
+     *
+     * @return bool
+     */
+    public function isEditor()
+    {
+        return $this->hasRole('editor');
+    }
+
+    /**
      * Generate a verification token for the user.
      *
      * @return string

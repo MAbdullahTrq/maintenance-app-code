@@ -64,8 +64,11 @@
             <div x-show="dropdownOpen" @click.away="dropdownOpen = false" class="fixed z-[9999] bg-white rounded shadow-lg border text-xs min-w-max" x-cloak :style="'top:'+dropdownTop+'px;left:'+dropdownLeft+'px;'">
                 <template x-if="dropdownTech">
                     <div>
+                        @if(!Auth::user()->isViewer())
                         <a :href="'{{ url('m/at') }}/' + dropdownTech + '/edit'" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
+                        @endif
                         <a :href="'{{ url('m/at') }}/' + dropdownTech" class="block px-4 py-2 hover:bg-gray-100">View</a>
+                        @if(!Auth::user()->isViewer())
                         <template x-if="dropdownTechActive">
                             <form :action="'{{ url('m/at') }}/' + dropdownTech + '/deactivate'" method="POST" class="block" @submit.prevent="showDeactivateConfirm = true; deactivateForm = $event.target; dropdownOpen = false;">
                                 @csrf
@@ -82,6 +85,7 @@
                             @csrf
                             <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-100">Reset Password</button>
                         </form>
+                        @endif
                     </div>
                 </template>
             </div>

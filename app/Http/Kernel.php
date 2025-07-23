@@ -71,5 +71,6 @@ class Kernel extends HttpKernel
         'property_manager' => \App\Http\Middleware\PropertyManagerMiddleware::class,
         'technician' => \App\Http\Middleware\TechnicianMiddleware::class,
         'subscription' => \App\Http\Middleware\CheckSubscription::class,
+        'viewer' => \App\Http\Middleware\ViewerMiddleware::class,
     ];
 } 
