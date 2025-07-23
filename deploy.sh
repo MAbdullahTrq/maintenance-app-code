@@ -496,7 +496,7 @@ chmod -R 775 "$INSTALL_DIR/bootstrap/cache" || print_error "Failed to set cache 
 
 print_section "Installation Complete"
 
-echo -e "${GREEN}The Maintenance App has been successfully installed at $INSTALL_DIR${NC}"
+echo -e "${GREEN}The MaintainXtra has been successfully installed at $INSTALL_DIR${NC}"
 echo -e "You can access it at: ${YELLOW}http://$DOMAIN_NAME${NC}"
 
 if [ "$SETUP_SSL" = true ]; then

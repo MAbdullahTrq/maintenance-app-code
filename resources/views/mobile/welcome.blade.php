@@ -3,33 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maintenance App - Mobile</title>
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <style>
-        body { background: #f8fafc; }
-        .mobile-header { background: #2563eb; color: #fff; padding: 1.5rem 1rem; text-align: center; }
-        .mobile-section { margin: 1.5rem 1rem; background: #fff; border-radius: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 1.5rem; }
-        .mobile-btn { display: block; width: 100%; background: #2563eb; color: #fff; border: none; border-radius: 0.5rem; padding: 1rem; font-size: 1.1rem; margin-top: 1.5rem; text-align: center; text-decoration: none; }
-    </style>
+    <title>MaintainXtra - Mobile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    @vite('resources/css/app.css')
 </head>
-<body>
-    <div class="mobile-header">
-        <h1>Maintenance App</h1>
-        <p style="font-size:1.1rem;">Easy maintenance management on the go</p>
-    </div>
-    <div class="mobile-section">
-        <h2 style="font-size:1.3rem; font-weight:600;">Welcome!</h2>
-        <p style="margin-top:0.5rem;">Submit requests, track progress, and stay updated—all from your phone.</p>
-        <a href="{{ route('login') }}" class="mobile-btn">Login</a>
-    </div>
-    <div class="mobile-section">
-        <h3 style="font-size:1.1rem; font-weight:500;">Features</h3>
-        <ul style="margin-top:0.5rem; padding-left:1.2rem;">
-            <li>• Submit maintenance requests</li>
-            <li>• Track request status</li>
-            <li>• Receive notifications</li>
-            <li>• Contact property manager</li>
-        </ul>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center">
+    <div class="text-center p-8">
+        <div class="mb-8">
+            <img src="{{ asset('images/logo.png') }}" alt="MaintainXtra Logo" class="mx-auto h-24 w-auto mb-4">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">MaintainXtra</h1>
+            <p class="text-gray-600">Property Maintenance Management</p>
+        </div>
+        
+        <div class="space-y-4">
+            <a href="{{ route('login') }}" class="block w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                <i class="fas fa-sign-in-alt mr-2"></i> Login
+            </a>
+            
+            <a href="{{ route('register') }}" class="block w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                <i class="fas fa-user-plus mr-2"></i> Register
+            </a>
+            
+            <a href="{{ route('guest.request.create') }}" class="block w-full bg-gray-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-gray-700 transition-colors">
+                <i class="fas fa-tools mr-2"></i> Submit Maintenance Request
+            </a>
+        </div>
+        
+        <div class="mt-8 text-sm text-gray-500">
+            <p>Choose your preferred option above</p>
+        </div>
     </div>
 </body>
 </html> 

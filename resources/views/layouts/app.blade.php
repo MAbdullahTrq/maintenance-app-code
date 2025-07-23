@@ -21,7 +21,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="MaintainXtra">
     
-    <title>@yield('title') - Maintenance App</title>
+    <title>@yield('title') - MaintainXtra</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.3/dist/cdn.min.js" defer></script>
@@ -32,7 +32,7 @@
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center">
                     <a href="/" class="flex items-center">
-                        <img src="{{ asset('images/logo.png') }}" alt="Maintenance App Logo" class="h-12 w-auto">
+                        <img src="{{ asset('images/logo.png') }}" alt="MaintainXtra Logo" class="h-12 w-auto">
                     </a>
                 </div>
                 
@@ -155,7 +155,7 @@
     <footer class="bg-white shadow-inner py-6 mt-8">
         <div class="container mx-auto px-4">
             <div class="text-center text-gray-500 text-sm">
-                &copy; {{ date('Y') }} Maintenance App. All rights reserved.
+                &copy; {{ date('Y') }} MaintainXtra. All rights reserved.
             </div>
         </div>
     </footer>

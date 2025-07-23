@@ -1,6 +1,6 @@
-# Simplified Deployment Guide for Ubuntu
+# MaintainXtra Deployment Guide
 
-This guide provides instructions for deploying the Maintenance App on a new Ubuntu server using an automated script.
+This guide provides instructions for deploying the MaintainXtra on a new Ubuntu server using an automated script.
 
 ## Prerequisites
 

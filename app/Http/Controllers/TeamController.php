@@ -21,12 +21,14 @@ class TeamController extends Controller
     {
         $user = Auth::user();
         
+        // For team members, get the workspace owner's data
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
         // Only property managers can manage teams
-        if (!$user->isPropertyManager()) {
+        if (!$workspaceOwner->isPropertyManager()) {
             abort(403);
         }
 
-        $workspaceOwner = $user->getWorkspaceOwner();
         $teamMembers = $workspaceOwner->teamMembers()->with('role')->get();
         $pendingInvitations = $workspaceOwner->sentInvitations()
             ->whereNull('accepted_at')
@@ -37,9 +39,18 @@ class TeamController extends Controller
         $availableRoles = Role::whereIn('slug', ['team_member', 'viewer', 'editor'])
             ->get();
 
+        // Get navigation stats for mobile
+        $propertiesCount = $workspaceOwner->managedProperties()->count();
+        $ownersCount = $workspaceOwner->managedOwners()->count();
+        $techniciansCount = User::whereHas('role', function ($q) { 
+            $q->where('slug', 'technician'); 
+        })->where('invited_by', $workspaceOwner->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $workspaceOwner->managedProperties()->pluck('id'))->count();
+        $teamMembersCount = $teamMembers->count();
+
         // Check if this is a mobile route
         if (request()->route()->getName() && str_starts_with(request()->route()->getName(), 'mobile.')) {
-            return view('mobile.team.index', compact('teamMembers', 'pendingInvitations', 'availableRoles', 'workspaceOwner'));
+            return view('mobile.team.index', compact('teamMembers', 'pendingInvitations', 'availableRoles', 'workspaceOwner', 'propertiesCount', 'ownersCount', 'techniciansCount', 'requestsCount', 'teamMembersCount'));
         }
 
         return view('team.index', compact('teamMembers', 'pendingInvitations', 'availableRoles', 'workspaceOwner'));

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Maintenance App') }} - @yield('title', 'Home')</title>
+    <title>{{ config('app.name', 'MaintainXtra') }} - @yield('title', 'Home')</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
@@ -115,7 +115,7 @@
                     <div class="flex">
                         <div class="flex-shrink-0 flex items-center">
                             <a href="/" class="flex items-center">
-                                <img src="{{ asset('images/logo.png') }}" alt="Maintenance App Logo" class="h-12 w-auto">
+                                <img src="{{ asset('images/logo.png') }}" alt="MaintainXtra Logo" class="h-12 w-auto">
                             </a>
                         </div>
                     </div>
@@ -158,7 +158,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center h-16">
                     <div class="text-sm text-gray-500">
-                        &copy; {{ date('Y') }} Maintenance App. All rights reserved.
+                        &copy; {{ date('Y') }} MaintainXtra. All rights reserved.
                     </div>
                 </div>
             </div>

@@ -7,10 +7,10 @@
 @elseif (
     stripos($slot, 'maintain') !== false || 
     stripos(config('app.name'), 'maintain') !== false ||
-    $slot === 'Maintenance App' ||
     $slot === 'MaintainXtra' ||
-    config('app.name') === 'Maintenance App' ||
-    config('app.name') === 'MaintainXtra'
+    $slot === 'Laravel' ||
+    config('app.name') === 'MaintainXtra' ||
+    config('app.name') === 'Laravel'
 )
 <img src="{{ config('app.url') }}/images/logo.png" class="logo" alt="MaintainXtra Logo" style="height: 60px; max-height: 60px; width: auto; max-width: 200px;">
 @else

@@ -181,6 +181,19 @@
                     <a href="{{ route('mobile.team.create') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
                         <i class="fas fa-user-plus text-blue-600 mr-2"></i> Invite Assistant
                     </a>
+                @elseif(Auth::user() && method_exists(Auth::user(), 'hasTeamMemberRole') && Auth::user()->hasTeamMemberRole())
+                    <a href="/m/ao" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-user text-yellow-600 mr-2"></i> Owners
+                    </a>
+                    <a href="/m/ap" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-building text-purple-600 mr-2"></i> Properties
+                    </a>
+                    <a href="/m/at" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-users text-blue-600 mr-2"></i> Technicians
+                    </a>
+                    <a href="{{ route('mobile.manager.all-requests') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-file-alt text-gray-700 mr-2"></i> Requests
+                    </a>
                 @endif
                 <a href="/m/profile" class="block px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">Profile</a>
                 <form method="POST" action="{{ route('logout') }}">
@@ -261,7 +274,8 @@
                     <span x-show="show" x-transition class="absolute right-full top-1/2 -translate-y-1/2 mr-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">New Request</span>
                 </a>
             </div>
-            <!-- Team -->
+            <!-- Team - Only show for property managers -->
+            @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
             <div class="flex flex-col items-center py-3 md:py-4">
                 <a href="{{ route('mobile.team.index') }}" class="flex flex-col items-center group">
                     <i class="fas fa-users text-2xl md:text-3xl lg:text-4xl text-blue-600 group-hover:underline"></i>
@@ -279,6 +293,7 @@
                     </a>
                 @endif
             </div>
+            @endif
         </div>
     </nav>
     @endif

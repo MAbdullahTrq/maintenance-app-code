@@ -25,12 +25,14 @@ class TechnicianController extends Controller
         
         $technicians = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $workspaceOwner->id)->get();
         $propertiesCount = \App\Models\Property::where('manager_id', $workspaceOwner->id)->count();
+        $ownersCount = $workspaceOwner->managedOwners()->count();
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $workspaceOwner->id)->pluck('id'))->count();
         
         return view('mobile.technicians', [
             'technicians' => $technicians,
             'techniciansCount' => $technicians->count(),
             'propertiesCount' => $propertiesCount,
+            'ownersCount' => $ownersCount,
             'requestsCount' => $requestsCount,
         ]);
     }
