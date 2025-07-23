@@ -208,7 +208,7 @@
     @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager() || 
         Auth::user() && method_exists(Auth::user(), 'hasTeamMemberRole') && Auth::user()->hasTeamMemberRole())
     <nav class="bg-white shadow mb-2 rounded-b-xl">
-        <div class="grid grid-cols-5 divide-x divide-gray-200 text-center md:py-2">
+        <div class="grid {{ Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager() ? 'grid-cols-5' : 'grid-cols-4' }} divide-x divide-gray-200 text-center md:py-2">
             <!-- Owners -->
             <div class="flex flex-col items-center py-3 md:py-4">
                 <a href="/m/ao" class="flex flex-col items-center group">

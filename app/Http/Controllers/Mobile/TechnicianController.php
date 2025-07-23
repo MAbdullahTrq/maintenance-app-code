@@ -28,12 +28,20 @@ class TechnicianController extends Controller
         $ownersCount = $workspaceOwner->managedOwners()->count();
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $workspaceOwner->id)->pluck('id'))->count();
         
+        // Get team members count (excluding technicians)
+        $teamMembersCount = \App\Models\User::where('invited_by', $workspaceOwner->id)
+            ->whereHas('role', function ($query) {
+                $query->whereIn('slug', ['team_member', 'viewer', 'editor']);
+            })
+            ->count();
+        
         return view('mobile.technicians', [
             'technicians' => $technicians,
             'techniciansCount' => $technicians->count(),
             'propertiesCount' => $propertiesCount,
             'ownersCount' => $ownersCount,
             'requestsCount' => $requestsCount,
+            'teamMembersCount' => $teamMembersCount,
         ]);
     }
 
@@ -48,7 +56,14 @@ class TechnicianController extends Controller
         $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $workspaceOwner->id)->count();
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $workspaceOwner->id)->pluck('id'))->count();
         
-        return view('mobile.technician_create', compact('propertiesCount', 'techniciansCount', 'requestsCount'));
+        // Get team members count (excluding technicians)
+        $teamMembersCount = \App\Models\User::where('invited_by', $workspaceOwner->id)
+            ->whereHas('role', function ($query) {
+                $query->whereIn('slug', ['team_member', 'viewer', 'editor']);
+            })
+            ->count();
+        
+        return view('mobile.technician_create', compact('propertiesCount', 'techniciansCount', 'requestsCount', 'teamMembersCount'));
     }
 
     public function store(Request $request)

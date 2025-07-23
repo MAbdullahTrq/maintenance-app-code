@@ -28,7 +28,14 @@ class OwnerController extends Controller
         })->where('invited_by', $workspaceOwner->id)->count();
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $workspaceOwner->managedProperties()->pluck('id'))->count();
         
-        return view('mobile.owners.index', compact('owners', 'propertiesCount', 'techniciansCount', 'requestsCount'));
+        // Get team members count (excluding technicians)
+        $teamMembersCount = \App\Models\User::where('invited_by', $workspaceOwner->id)
+            ->whereHas('role', function ($query) {
+                $query->whereIn('slug', ['team_member', 'viewer', 'editor']);
+            })
+            ->count();
+        
+        return view('mobile.owners.index', compact('owners', 'propertiesCount', 'techniciansCount', 'requestsCount', 'teamMembersCount'));
     }
 
     /**

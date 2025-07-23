@@ -30,12 +30,20 @@ class PropertyController extends Controller
         $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $workspaceOwner->id)->count();
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->count();
         
+        // Get team members count (excluding technicians)
+        $teamMembersCount = \App\Models\User::where('invited_by', $workspaceOwner->id)
+            ->whereHas('role', function ($query) {
+                $query->whereIn('slug', ['team_member', 'viewer', 'editor']);
+            })
+            ->count();
+        
         return view('mobile.properties', [
             'properties' => $properties,
             'propertiesCount' => $properties->count(),
             'ownersCount' => $ownersCount,
             'techniciansCount' => $techniciansCount,
             'requestsCount' => $requestsCount,
+            'teamMembersCount' => $teamMembersCount,
         ]);
     }
 
@@ -52,7 +60,14 @@ class PropertyController extends Controller
         $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $workspaceOwner->id)->count();
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $workspaceOwner->managedProperties()->pluck('id'))->count();
         
-        return view('mobile.property_create', compact('owners', 'propertiesCount', 'ownersCount', 'techniciansCount', 'requestsCount'));
+        // Get team members count (excluding technicians)
+        $teamMembersCount = \App\Models\User::where('invited_by', $workspaceOwner->id)
+            ->whereHas('role', function ($query) {
+                $query->whereIn('slug', ['team_member', 'viewer', 'editor']);
+            })
+            ->count();
+        
+        return view('mobile.property_create', compact('owners', 'propertiesCount', 'ownersCount', 'techniciansCount', 'requestsCount', 'teamMembersCount'));
     }
 
     public function store(Request $request)
