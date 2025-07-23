@@ -15,14 +15,18 @@ class OwnerController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $owners = $user->managedOwners()->latest()->paginate(10);
+        
+        // For team members, get the workspace owner's data
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
+        $owners = $workspaceOwner->managedOwners()->latest()->paginate(10);
         
         // Get additional stats for the navigation grid
-        $propertiesCount = $user->managedProperties()->count();
+        $propertiesCount = $workspaceOwner->managedProperties()->count();
         $techniciansCount = \App\Models\User::whereHas('role', function ($q) { 
             $q->where('slug', 'technician'); 
-        })->where('invited_by', $user->id)->count();
-        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $user->managedProperties()->pluck('id'))->count();
+        })->where('invited_by', $workspaceOwner->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $workspaceOwner->managedProperties()->pluck('id'))->count();
         
         return view('mobile.owners.index', compact('owners', 'propertiesCount', 'techniciansCount', 'requestsCount'));
     }
@@ -49,7 +53,12 @@ class OwnerController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        Auth::user()->managedOwners()->create($request->all());
+        $user = Auth::user();
+        // For team members, use the workspace owner's ID
+        $managerId = $user->isTeamMember() ? $user->getWorkspaceOwner()->id : $user->id;
+        
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        $workspaceOwner->managedOwners()->create($request->all());
 
         return redirect('/m/ao')->with('success', 'Owner created successfully.');
     }
@@ -66,12 +75,16 @@ class OwnerController extends Controller
         
         // Get additional stats for the navigation grid
         $user = Auth::user();
-        $propertiesCount = $user->managedProperties()->count();
-        $ownersCount = $user->managedOwners()->count();
+        
+        // For team members, get the workspace owner's data
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
+        $propertiesCount = $workspaceOwner->managedProperties()->count();
+        $ownersCount = $workspaceOwner->managedOwners()->count();
         $techniciansCount = \App\Models\User::whereHas('role', function ($q) { 
             $q->where('slug', 'technician'); 
-        })->where('invited_by', $user->id)->count();
-        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $user->managedProperties()->pluck('id'))->count();
+        })->where('invited_by', $workspaceOwner->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $workspaceOwner->managedProperties()->pluck('id'))->count();
         
         return view('mobile.owners.show', compact('owner', 'properties', 'propertiesCount', 'ownersCount', 'techniciansCount', 'requestsCount'));
     }

@@ -21,10 +21,15 @@ class PropertyController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $properties = $user->managedProperties()->get();
-        $ownersCount = $user->managedOwners()->count();
-        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
+        
+        // For team members, get the workspace owner's data
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
+        $properties = $workspaceOwner->managedProperties()->get();
+        $ownersCount = $workspaceOwner->managedOwners()->count();
+        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $workspaceOwner->id)->count();
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->count();
+        
         return view('mobile.properties', [
             'properties' => $properties,
             'propertiesCount' => $properties->count(),
@@ -37,11 +42,16 @@ class PropertyController extends Controller
     public function create()
     {
         $user = auth()->user();
-        $owners = $user->managedOwners()->get();
-        $propertiesCount = $user->managedProperties()->count();
+        
+        // For team members, get the workspace owner's data
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
+        $owners = $workspaceOwner->managedOwners()->get();
+        $propertiesCount = $workspaceOwner->managedProperties()->count();
         $ownersCount = $owners->count();
-        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
-        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $user->managedProperties()->pluck('id'))->count();
+        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $workspaceOwner->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $workspaceOwner->managedProperties()->pluck('id'))->count();
+        
         return view('mobile.property_create', compact('owners', 'propertiesCount', 'ownersCount', 'techniciansCount', 'requestsCount'));
     }
 
@@ -53,12 +63,17 @@ class PropertyController extends Controller
             'owner_id' => 'required|exists:owners,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
+        
+        $user = auth()->user();
+        // For team members, use the workspace owner's ID
+        $managerId = $user->isTeamMember() ? $user->getWorkspaceOwner()->id : $user->id;
+        
         $property = new \App\Models\Property();
         $property->name = $request->name;
         $property->address = $request->address;
         $property->owner_id = $request->owner_id;
         $property->special_instructions = $request->special_instructions;
-        $property->manager_id = auth()->id();
+        $property->manager_id = $managerId;
         
         if ($request->hasFile('image')) {
             $property->image = $this->imageService->optimizeAndResize(
@@ -118,11 +133,15 @@ class PropertyController extends Controller
     {
         $property = Property::with('maintenanceRequests', 'owner')->findOrFail($id);
         $user = auth()->user();
-        $propertiesCount = $user->managedProperties()->count();
-        $ownersCount = $user->managedOwners()->count();
-        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
-        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $user->managedProperties()->pluck('id'))->count();
-        $owners = $user->managedOwners()->get();
+        
+        // For team members, get the workspace owner's data
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
+        $propertiesCount = $workspaceOwner->managedProperties()->count();
+        $ownersCount = $workspaceOwner->managedOwners()->count();
+        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $workspaceOwner->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $workspaceOwner->managedProperties()->pluck('id'))->count();
+        $owners = $workspaceOwner->managedOwners()->get();
         
         return view('mobile.property_show', [
             'property' => $property,
@@ -138,11 +157,16 @@ class PropertyController extends Controller
     {
         $property = Property::findOrFail($id);
         $user = auth()->user();
-        $owners = $user->managedOwners()->get();
-        $propertiesCount = $user->managedProperties()->count();
+        
+        // For team members, get the workspace owner's data
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
+        $owners = $workspaceOwner->managedOwners()->get();
+        $propertiesCount = $workspaceOwner->managedProperties()->count();
         $ownersCount = $owners->count();
-        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
-        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $user->managedProperties()->pluck('id'))->count();
+        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $workspaceOwner->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $workspaceOwner->managedProperties()->pluck('id'))->count();
+        
         return view('mobile.edit_property', [
             'property' => $property,
             'owners' => $owners,

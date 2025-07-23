@@ -32,11 +32,15 @@ class RequestController extends Controller
     public function create()
     {
         $user = auth()->user();
-        $properties = \App\Models\Property::where('manager_id', $user->id)->get();
+        
+        // For team members, get the workspace owner's data
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
+        $properties = \App\Models\Property::where('manager_id', $workspaceOwner->id)->get();
         $propertiesCount = $properties->count();
         $techniciansCount = \App\Models\User::whereHas('role', function ($q) { 
             $q->where('slug', 'technician'); 
-        })->where('invited_by', $user->id)->count();
+        })->where('invited_by', $workspaceOwner->id)->count();
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->count();
         
         return view('mobile.request_create', compact('properties', 'propertiesCount', 'techniciansCount', 'requestsCount'));
@@ -56,9 +60,13 @@ class RequestController extends Controller
             'images.*' => 'nullable|image|max:10240', // Allow up to 10MB per image, will be resized
         ]);
 
+        $user = auth()->user();
+        // For team members, use the workspace owner's ID
+        $managerId = $user->isTeamMember() ? $user->getWorkspaceOwner()->id : $user->id;
+
         // Check if user can create request for this property
         $property = \App\Models\Property::findOrFail($request->property_id);
-        if ($property->manager_id !== auth()->id()) {
+        if ($property->manager_id !== $managerId) {
             abort(403, 'Unauthorized to create request for this property');
         }
 
@@ -68,9 +76,9 @@ class RequestController extends Controller
             'location' => $request->location,
             'priority' => $request->priority,
             'property_id' => $request->property_id,
-            'requester_name' => auth()->user()->name,
-            'requester_email' => auth()->user()->email,
-            'requester_phone' => auth()->user()->phone,
+            'requester_name' => $user->name,
+            'requester_email' => $user->email,
+            'requester_phone' => $user->phone,
             'status' => 'pending',
         ]);
 
@@ -94,7 +102,8 @@ class RequestController extends Controller
         }
 
         // Send notification to property manager
-        Mail::to($property->manager->email)->send(new NewRequestNotification($maintenanceRequest));
+        $propertyManager = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        Mail::to($propertyManager->email)->send(new NewRequestNotification($maintenanceRequest));
 
         return redirect()->route('mobile.manager.dashboard')
             ->with('success', 'Maintenance request created successfully.');

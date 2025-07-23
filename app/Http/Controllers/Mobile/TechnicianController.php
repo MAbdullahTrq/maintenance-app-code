@@ -19,9 +19,14 @@ class TechnicianController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $technicians = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->get();
-        $propertiesCount = \App\Models\Property::where('manager_id', $user->id)->count();
-        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $user->id)->pluck('id'))->count();
+        
+        // For team members, get the workspace owner's data
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
+        $technicians = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $workspaceOwner->id)->get();
+        $propertiesCount = \App\Models\Property::where('manager_id', $workspaceOwner->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $workspaceOwner->id)->pluck('id'))->count();
+        
         return view('mobile.technicians', [
             'technicians' => $technicians,
             'techniciansCount' => $technicians->count(),
@@ -33,9 +38,14 @@ class TechnicianController extends Controller
     public function create()
     {
         $user = auth()->user();
-        $propertiesCount = \App\Models\Property::where('manager_id', $user->id)->count();
-        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
-        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $user->id)->pluck('id'))->count();
+        
+        // For team members, get the workspace owner's data
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
+        $propertiesCount = \App\Models\Property::where('manager_id', $workspaceOwner->id)->count();
+        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $workspaceOwner->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $workspaceOwner->id)->pluck('id'))->count();
+        
         return view('mobile.technician_create', compact('propertiesCount', 'techniciansCount', 'requestsCount'));
     }
 
@@ -47,30 +57,35 @@ class TechnicianController extends Controller
             'phone' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        $user = new \App\Models\User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->password = bcrypt('password'); // Temporary password, will be changed via verification
-        $user->invited_by = auth()->id();
+        
+        $user = auth()->user();
+        // For team members, use the workspace owner's ID
+        $managerId = $user->isTeamMember() ? $user->getWorkspaceOwner()->id : $user->id;
+        
+        $newUser = new \App\Models\User();
+        $newUser->name = $request->name;
+        $newUser->email = $request->email;
+        $newUser->phone = $request->phone;
+        $newUser->password = bcrypt('password'); // Temporary password, will be changed via verification
+        $newUser->invited_by = $managerId;
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('technician-profiles', 'public');
-            $user->image = $path;
+            $newUser->image = $path;
         }
         
         // Get the technician role and assign it
         $technicianRole = \App\Models\Role::where('slug', 'technician')->first();
-        $user->role_id = $technicianRole->id;
-        $user->save();
+        $newUser->role_id = $technicianRole->id;
+        $newUser->save();
 
         // Generate verification token and send welcome email
-        $verificationToken = $user->generateVerificationToken();
-        $manager = auth()->user();
+        $verificationToken = $newUser->generateVerificationToken();
+        $manager = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
         
         try {
-            Mail::to($user->email)->send(new TechnicianWelcomeMail($user, $manager, $verificationToken));
-            $successMessage = 'Technician added successfully! A welcome email with account verification link has been sent to ' . $user->email;
+            Mail::to($newUser->email)->send(new TechnicianWelcomeMail($newUser, $manager, $verificationToken));
+            $successMessage = 'Technician added successfully! A welcome email with account verification link has been sent to ' . $newUser->email;
         } catch (\Exception $e) {
             // If email fails, still show success but mention email issue
             $successMessage = 'Technician added successfully! However, there was an issue sending the welcome email. Please contact the technician directly.';
