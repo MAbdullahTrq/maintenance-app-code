@@ -320,11 +320,11 @@ Route::prefix('m')->middleware('auth')->group(function () {
             
             // Mobile team management routes
             Route::get('/team', [App\Http\Controllers\TeamController::class, 'index'])->name('mobile.team.index');
-            Route::get('/team/create', [App\Http\Controllers\TeamController::class, 'create'])->name('mobile.team.create')->middleware('viewer');
-            Route::post('/team', [App\Http\Controllers\TeamController::class, 'store'])->name('mobile.team.store')->middleware('viewer');
-            Route::put('/team/member/{member}/role', [App\Http\Controllers\TeamController::class, 'updateMemberRole'])->name('mobile.team.member.role')->middleware('viewer');
-            Route::delete('/team/member/{member}', [App\Http\Controllers\TeamController::class, 'removeMember'])->name('mobile.team.member.remove')->middleware('viewer');
-            Route::delete('/team/invitation/{invitation}', [App\Http\Controllers\TeamController::class, 'cancelInvitation'])->name('mobile.team.invitation.cancel')->middleware('viewer');
+            Route::get('/team/create', [App\Http\Controllers\TeamController::class, 'create'])->name('mobile.team.create');
+            Route::post('/team', [App\Http\Controllers\TeamController::class, 'store'])->name('mobile.team.store');
+            Route::put('/team/member/{member}/role', [App\Http\Controllers\TeamController::class, 'updateMemberRole'])->name('mobile.team.member.role');
+            Route::delete('/team/member/{member}', [App\Http\Controllers\TeamController::class, 'removeMember'])->name('mobile.team.member.remove');
+            Route::delete('/team/invitation/{invitation}', [App\Http\Controllers\TeamController::class, 'cancelInvitation'])->name('mobile.team.invitation.cancel');
         });
     });
 
