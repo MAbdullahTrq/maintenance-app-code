@@ -16,12 +16,14 @@
     <div class="flex gap-2 md:gap-3 lg:gap-4 mb-4">
         <a href="{{ route('mobile.properties.qrcode', $property->id) }}" class="flex-1 bg-blue-100 text-blue-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-blue-200 transition text-center text-sm md:text-base">QR Code</a>
         <a href="{{ route('guest.request.form', $property->access_link) }}" class="flex-1 bg-blue-100 text-blue-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-blue-200 transition text-center text-sm md:text-base">Link</a>
-        <a href="{{ route('mobile.properties.edit', $property->id) }}" class="flex-1 bg-blue-100 text-blue-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-blue-200 transition text-center text-sm md:text-base">Edit</a>
-        <form action="{{ route('mobile.properties.destroy', $property->id) }}" method="POST" class="flex-1" onsubmit="return confirm('Are you sure you want to delete this property?');">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="w-full bg-red-100 text-red-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-red-200 transition text-center text-sm md:text-base">Delete</button>
-        </form>
+        @if(!Auth::user()->isViewer())
+            <a href="{{ route('mobile.properties.edit', $property->id) }}" class="flex-1 bg-blue-100 text-blue-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-blue-200 transition text-center text-sm md:text-base">Edit</a>
+            <form action="{{ route('mobile.properties.destroy', $property->id) }}" method="POST" class="flex-1" onsubmit="return confirm('Are you sure you want to delete this property?');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="w-full bg-red-100 text-red-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-red-200 transition text-center text-sm md:text-base">Delete</button>
+            </form>
+        @endif
     </div>
 
     <!-- Property Details Section with Responsive Layout -->
@@ -69,7 +71,7 @@
                         @else
                             <span class="text-gray-400">No owner assigned</span>
                         @endif
-                        @if(Auth::user()->hasActiveSubscription())
+                        @if(Auth::user()->hasActiveSubscription() && !Auth::user()->isViewer())
                             <div class="mt-2">
                                 <button onclick="showChangeOwnerModal()" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition">
                                     Change Owner
@@ -129,15 +131,17 @@
     </div>
     </div>
 </div>
-@if(Auth::user()->hasActiveSubscription())
+@if(Auth::user()->hasActiveSubscription() && !Auth::user()->isViewer())
 <a href="{{ route('mobile.properties.create') }}" class="fixed bottom-6 right-6 bg-blue-600 text-white rounded-full w-14 h-14 flex items-center justify-center text-3xl shadow-lg z-50">
+    +
+</a>
+@elseif(Auth::user()->isViewer())
+    <!-- Viewers see no add button -->
 @else
     <a href="{{ route('mobile.subscription.plans') }}" class="fixed bottom-6 right-6 bg-gray-400 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg z-50" title="Subscription required">
         <i class="fas fa-lock text-xl"></i>
     </a>
 @endif
-    +
-</a>
 
 <!-- Change Owner Modal -->
 <div id="changeOwnerModal" class="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 hidden">

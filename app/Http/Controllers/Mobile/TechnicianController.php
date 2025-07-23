@@ -151,17 +151,25 @@ class TechnicianController extends Controller
     public function show($id)
     {
         $technician = User::findOrFail($id);
-        // Get all properties managed by the current manager
+        // Get workspace owner for team members
         $user = auth()->user();
-        $properties = \App\Models\Property::where('manager_id', $user->id)->get();
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
+        // Get all properties managed by the workspace owner
+        $properties = \App\Models\Property::where('manager_id', $workspaceOwner->id)->get();
+        
         // Get maintenance requests assigned to this technician for these properties
         $maintenanceRequests = \App\Models\MaintenanceRequest::where('assigned_to', $technician->id)
             ->whereIn('property_id', $properties->pluck('id'))
             ->with('property')
             ->get();
+            
         $propertiesCount = $properties->count();
-        $techniciansCount = User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
+        $techniciansCount = User::whereHas('role', function ($q) { 
+            $q->where('slug', 'technician'); 
+        })->where('invited_by', $workspaceOwner->id)->count();
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->count();
+        
         return view('mobile.technician_show', [
             'technician' => $technician,
             'maintenanceRequests' => $maintenanceRequests,

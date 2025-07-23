@@ -113,10 +113,15 @@ class RequestController extends Controller
     {
         $request = MaintenanceRequest::with(['property', 'assignedTechnician', 'images'])->findOrFail($id);
         $user = auth()->user();
-        $propertiesCount = \App\Models\Property::where('manager_id', $user->id)->count();
-        $ownersCount = $user->managedOwners()->count();
-        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $user->id)->count();
-        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $user->id)->pluck('id'))->count();
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
+        $propertiesCount = \App\Models\Property::where('manager_id', $workspaceOwner->id)->count();
+        $ownersCount = $workspaceOwner->managedOwners()->count();
+        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { 
+            $q->where('slug', 'technician'); 
+        })->where('invited_by', $workspaceOwner->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $workspaceOwner->id)->pluck('id'))->count();
+        
         return view('mobile.request', [
             'request' => $request,
             'propertiesCount' => $propertiesCount,
