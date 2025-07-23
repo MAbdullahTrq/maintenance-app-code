@@ -17,8 +17,7 @@ class ViewerMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::user();
-
-        // If user is a viewer, deny access to create/edit routes
+        
         if ($user && $user->isViewer()) {
             abort(403, 'Viewers have read-only access. This action is not allowed.');
         }

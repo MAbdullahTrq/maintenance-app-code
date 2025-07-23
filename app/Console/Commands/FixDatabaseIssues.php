@@ -99,7 +99,7 @@ class FixDatabaseIssues extends Command
         }
 
         // Check if roles table has the new team roles
-        $teamRoles = ['team_member', 'viewer', 'editor'];
+        $teamRoles = ['editor', 'viewer'];
         foreach ($teamRoles as $role) {
             $exists = DB::table('roles')->where('slug', $role)->exists();
             if (!$exists) {

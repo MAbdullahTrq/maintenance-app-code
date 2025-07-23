@@ -58,13 +58,10 @@
                     <h3 class="text-sm font-medium text-gray-900 mb-3">Assistant Role Permissions:</h3>
                     <div class="space-y-2 text-sm text-gray-600">
                         <div>
-                            <strong>Team Member:</strong> View and manage properties, handle maintenance requests, access reports and team data
+                            <strong>Viewer:</strong> View properties and maintenance requests, access reports and analytics (read-only access)
                         </div>
                         <div>
-                            <strong>Viewer:</strong> View properties and maintenance requests, access reports and analytics
-                        </div>
-                        <div>
-                            <strong>Editor:</strong> View and edit properties and maintenance requests, create and manage reports, access all team data
+                            <strong>Editor:</strong> View and edit properties and maintenance requests, create and manage reports, access all team data (cannot manage team members)
                         </div>
                     </div>
                     <p class="text-xs text-gray-500 mt-3">
