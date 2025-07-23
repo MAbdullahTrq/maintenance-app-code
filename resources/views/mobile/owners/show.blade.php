@@ -36,6 +36,7 @@
             @endif
         </div>
         
+        @if(!Auth::user()->isViewer())
         <div class="flex gap-2 md:gap-3 lg:gap-4 mb-4">
             <a href="/m/ao/{{ $owner->id }}/edit" class="flex-1 bg-blue-100 text-blue-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-blue-200 transition text-center text-sm md:text-base">Edit Owner</a>
             <form action="{{ route('mobile.owners.destroy', $owner->id) }}" method="POST" class="flex-1" onsubmit="return confirm('Are you sure you want to delete this owner?');">
@@ -44,6 +45,7 @@
                 <button type="submit" class="w-full bg-red-100 text-red-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-red-200 transition text-center text-sm md:text-base">Delete Owner</button>
             </form>
         </div>
+        @endif
         
         <hr class="my-4 border-gray-300">
         
@@ -89,9 +91,11 @@
         @else
         <div class="text-center py-8">
             <div class="text-gray-500 mb-4">No properties assigned to this owner yet.</div>
+            @if(!Auth::user()->isViewer())
             <a href="{{ route('mobile.properties.create') }}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                 Add Property for {{ $owner->name }}
             </a>
+            @endif
         </div>
         @endif
     </div>
