@@ -227,7 +227,7 @@
             <div class="px-6 py-8">
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Create an Account</h2>
                 
-                <form method="POST" action="{{ route('web.register') }}" id="registerForm">
+                <form method="POST" action="{{ route('web.register.submit') }}" id="registerForm">
                     @csrf
                     
                     <div class="mb-4">
@@ -275,7 +275,7 @@
                             <input type="hidden" name="country_code" id="country_code" value="{{ old('country_code', $userCountry) }}">
                             <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" required
                                 class="phone-input"
-                                placeholder="e.g. 7123456789">
+                                placeholder="Enter phone number">
                         </div>
                         <div id="phone-feedback" class="phone-feedback"></div>
                         @error('phone')
@@ -384,7 +384,7 @@ document.addEventListener('DOMContentLoaded', function() {
         countryDropdown.classList.remove('open');
         
         // Set initial country
-        const initialCountry = '{{ $userCountry }}' || 'US';
+        const initialCountry = '{{ old('country_code', $userCountry) }}' || 'US';
         selectCountry(initialCountry);
     }
 
@@ -414,18 +414,8 @@ document.addEventListener('DOMContentLoaded', function() {
             selectedCode.textContent = country.dialCode;
             countryCodeInput.value = countryCode;
             
-            // Update placeholder based on country
-            let placeholder = 'Enter phone number';
-            if (countryCode === 'GB') {
-                placeholder = 'e.g. 7123456789 (mobile) or 2012345678 (landline)';
-            } else if (countryCode === 'US') {
-                placeholder = 'e.g. 5551234567';
-            } else if (countryCode === 'CA') {
-                placeholder = 'e.g. 5551234567';
-            } else if (countryCode === 'AU') {
-                placeholder = 'e.g. 412345678';
-            }
-            phoneInput.placeholder = placeholder;
+            // Update placeholder
+            phoneInput.placeholder = `Enter phone number`;
             
             // Validate phone if there's input
             if (phoneInput.value.trim()) {

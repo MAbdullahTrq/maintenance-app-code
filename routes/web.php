@@ -95,7 +95,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/web/login', [LoginController::class, 'showLoginForm'])->name('web.login');
     Route::post('/web/login', [LoginController::class, 'login']);
     Route::get('/web/register', [RegisterController::class, 'showRegistrationForm'])->name('web.register');
-    Route::post('/web/register', [RegisterController::class, 'register']);
+    Route::post('/web/register', [RegisterController::class, 'register'])->name('web.register.submit');
     
     // Team invitation routes (no auth required)
     Route::get('/team/invitation/{token}', [App\Http\Controllers\TeamController::class, 'acceptInvitation'])->name('team.accept');
