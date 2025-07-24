@@ -165,6 +165,7 @@ class TechnicianController extends Controller
             ->get();
             
         $propertiesCount = $properties->count();
+        $ownersCount = $workspaceOwner->managedOwners()->count();
         $techniciansCount = User::whereHas('role', function ($q) { 
             $q->where('slug', 'technician'); 
         })->where('invited_by', $workspaceOwner->id)->count();
@@ -174,6 +175,7 @@ class TechnicianController extends Controller
             'technician' => $technician,
             'maintenanceRequests' => $maintenanceRequests,
             'propertiesCount' => $propertiesCount,
+            'ownersCount' => $ownersCount,
             'techniciansCount' => $techniciansCount,
             'requestsCount' => $requestsCount,
         ]);
