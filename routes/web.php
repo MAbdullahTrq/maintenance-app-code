@@ -281,41 +281,41 @@ Route::prefix('m')->middleware('auth')->group(function () {
     // Property manager specific routes
     Route::middleware(['property_manager'])->group(function () {
         
-        Route::get('/requests/create', [RequestController::class, 'create'])->name('mobile.requests.create')->middleware('viewer');
-        Route::post('/requests/add', [RequestController::class, 'store'])->name('mobile.requests.store')->middleware('viewer');
+        Route::get('/requests/create', [RequestController::class, 'create'])->name('mobile.requests.create');
+        Route::post('/requests/add', [RequestController::class, 'store'])->name('mobile.requests.store');
         
         // Property manager routes with active subscription (mobile)
         Route::middleware(['subscription'])->group(function () {
             // Mobile owner management routes
             Route::get('/ao', [MobileOwnerController::class, 'index'])->name('mobile.owners.index');
-            Route::get('/ao/create', [MobileOwnerController::class, 'create'])->name('mobile.owners.create')->middleware('viewer');
-            Route::post('/ao/add', [MobileOwnerController::class, 'store'])->name('mobile.owners.store')->middleware('viewer');
+            Route::get('/ao/create', [MobileOwnerController::class, 'create'])->name('mobile.owners.create');
+            Route::post('/ao/add', [MobileOwnerController::class, 'store'])->name('mobile.owners.store');
             Route::get('/ao/{id}', [MobileOwnerController::class, 'show'])->name('mobile.owners.show');
-            Route::get('/ao/{id}/edit', [MobileOwnerController::class, 'edit'])->name('mobile.owners.edit')->middleware('viewer');
-            Route::post('/ao/{id}/edit', [MobileOwnerController::class, 'update'])->name('mobile.owners.update')->middleware('viewer');
-            Route::delete('/ao/{id}', [MobileOwnerController::class, 'destroy'])->name('mobile.owners.destroy')->middleware('viewer');
+            Route::get('/ao/{id}/edit', [MobileOwnerController::class, 'edit'])->name('mobile.owners.edit');
+            Route::post('/ao/{id}/edit', [MobileOwnerController::class, 'update'])->name('mobile.owners.update');
+            Route::delete('/ao/{id}', [MobileOwnerController::class, 'destroy'])->name('mobile.owners.destroy');
             
             // Mobile technician management routes
-            Route::get('/at/create', [MobileTechnicianController::class, 'create'])->name('mobile.technicians.create')->middleware('viewer');
+            Route::get('/at/create', [MobileTechnicianController::class, 'create'])->name('mobile.technicians.create');
             Route::get('/at', [MobileTechnicianController::class, 'index'])->name('mobile.technicians.index');
-            Route::post('/at/add', [MobileTechnicianController::class, 'store'])->name('mobile.technicians.store')->middleware('viewer');
-            Route::get('/at/{id}/edit', [App\Http\Controllers\Mobile\TechnicianController::class, 'edit'])->name('mobile.technicians.edit')->middleware('viewer');
-            Route::post('/at/{id}/delete', [MobileTechnicianController::class, 'destroy'])->name('mobile.technicians.destroy')->middleware('viewer');
-            Route::post('/at/{id}/edit', [App\Http\Controllers\Mobile\TechnicianController::class, 'update'])->name('mobile.technicians.update')->middleware('viewer');
+            Route::post('/at/add', [MobileTechnicianController::class, 'store'])->name('mobile.technicians.store');
+            Route::get('/at/{id}/edit', [App\Http\Controllers\Mobile\TechnicianController::class, 'edit'])->name('mobile.technicians.edit');
+            Route::post('/at/{id}/delete', [MobileTechnicianController::class, 'destroy'])->name('mobile.technicians.destroy');
+            Route::post('/at/{id}/edit', [App\Http\Controllers\Mobile\TechnicianController::class, 'update'])->name('mobile.technicians.update');
             Route::get('/at/{id}', [App\Http\Controllers\Mobile\TechnicianController::class, 'show'])->name('mobile.technicians.show');
-            Route::post('/at/{id}/deactivate', [App\Http\Controllers\Mobile\TechnicianController::class, 'deactivate'])->name('mobile.technicians.deactivate')->middleware('viewer');
-            Route::post('/at/{id}/activate', [App\Http\Controllers\Mobile\TechnicianController::class, 'activate'])->name('mobile.technicians.activate')->middleware('viewer');
-            Route::post('/technicians/{id}/reset-password', [App\Http\Controllers\Mobile\TechnicianController::class, 'resetPassword'])->name('mobile.technicians.reset-password')->middleware('viewer');
+            Route::post('/at/{id}/deactivate', [App\Http\Controllers\Mobile\TechnicianController::class, 'deactivate'])->name('mobile.technicians.deactivate');
+            Route::post('/at/{id}/activate', [App\Http\Controllers\Mobile\TechnicianController::class, 'activate'])->name('mobile.technicians.activate');
+            Route::post('/technicians/{id}/reset-password', [App\Http\Controllers\Mobile\TechnicianController::class, 'resetPassword'])->name('mobile.technicians.reset-password');
             
             // Mobile property management routes
-            Route::get('/ap/create', [MobilePropertyController::class, 'create'])->name('mobile.properties.create')->middleware('viewer');
+            Route::get('/ap/create', [MobilePropertyController::class, 'create'])->name('mobile.properties.create');
             Route::get('/ap', [MobilePropertyController::class, 'index'])->name('mobile.properties.index');
-            Route::post('/ap/add', [MobilePropertyController::class, 'store'])->name('mobile.properties.store')->middleware('viewer');
-            Route::post('/ap/{id}/edit', [MobilePropertyController::class, 'update'])->name('mobile.properties.update')->middleware('viewer');
-            Route::delete('/ap/{id}', [MobilePropertyController::class, 'destroy'])->name('mobile.properties.destroy')->middleware('viewer');
+            Route::post('/ap/add', [MobilePropertyController::class, 'store'])->name('mobile.properties.store');
+            Route::post('/ap/{id}/edit', [MobilePropertyController::class, 'update'])->name('mobile.properties.update');
+            Route::delete('/ap/{id}', [MobilePropertyController::class, 'destroy'])->name('mobile.properties.destroy');
             Route::get('/ap/{id}', [MobilePropertyController::class, 'show'])->name('mobile.properties.show');
-            Route::get('/ep/{id}', [MobilePropertyController::class, 'edit'])->name('mobile.properties.edit')->middleware('viewer');
-            Route::post('/ep/{id}', [MobilePropertyController::class, 'update'])->name('mobile.properties.ep.update')->middleware('viewer');
+            Route::get('/ep/{id}', [MobilePropertyController::class, 'edit'])->name('mobile.properties.edit');
+            Route::post('/ep/{id}', [MobilePropertyController::class, 'update'])->name('mobile.properties.ep.update');
             Route::get('/ap/{id}/qrcode', [MobilePropertyController::class, 'qrcode'])->name('mobile.properties.qrcode');
             
             // Mobile team management routes
