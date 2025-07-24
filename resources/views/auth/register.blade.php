@@ -580,6 +580,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add form submission debugging
     const form = document.getElementById('registerForm');
     form.addEventListener('submit', function(e) {
+        // Prevent the form from submitting so we can see the debug info
+        e.preventDefault();
+        
+        console.log('=== FORM SUBMISSION DEBUG ===');
         console.log('Form submission attempted');
         console.log('Form action:', form.action);
         console.log('Form method:', form.method);
@@ -587,14 +591,24 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Form action URL:', form.getAttribute('action'));
         console.log('Current page URL:', window.location.href);
         
+        // Show form data
+        const formData = new FormData(form);
+        console.log('Form data:');
+        for (let [key, value] of formData.entries()) {
+            console.log(key + ':', value);
+        }
+        
         if (submitBtn.disabled) {
-            e.preventDefault();
-            console.log('Form submission prevented - submit button is disabled');
+            console.log('❌ Form submission prevented - submit button is disabled');
             return false;
         }
         
-        console.log('Form submission proceeding...');
-        console.log('Form data:', new FormData(form));
+        console.log('✅ Form submission would proceed...');
+        console.log('=== END DEBUG ===');
+        
+        // Now actually submit the form
+        console.log('Submitting form now...');
+        form.submit();
     });
 });
 </script>
