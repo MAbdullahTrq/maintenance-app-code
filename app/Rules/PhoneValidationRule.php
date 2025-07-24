@@ -35,32 +35,47 @@ class PhoneValidationRule implements ValidationRule
             return;
         }
 
+        // Debug: Log the values being validated
+        \Log::info('Phone validation debug', [
+            'phone' => $value,
+            'country_code' => $countryCode,
+            'request_all' => request()->all()
+        ]);
+
         // Validate phone number format
         try {
-            // Clean the phone number - remove any country code if it's already included
-            $cleanPhone = $value;
-            
-            // If the phone number starts with the country code, remove it
-            if (str_starts_with($cleanPhone, $countryCode)) {
-                $cleanPhone = substr($cleanPhone, strlen($countryCode));
-            }
-            
-            // If the phone number starts with ++ followed by country code, remove it
-            if (str_starts_with($cleanPhone, '++' . $countryCode)) {
-                $cleanPhone = substr($cleanPhone, strlen('++' . $countryCode));
-            }
-            
-            // If the phone number starts with + followed by country code, remove it
-            if (str_starts_with($cleanPhone, '+' . $countryCode)) {
-                $cleanPhone = substr($cleanPhone, strlen('+' . $countryCode));
-            }
-            
-            // Create phone number with country code
-            $phoneNumber = new PhoneNumber($cleanPhone, $countryCode);
+            // Try to create phone number directly with the provided value
+            $phoneNumber = new PhoneNumber($value, $countryCode);
             
             if (!$phoneNumber->isValid()) {
-                $fail('The phone number format is invalid for the selected country.');
-                return;
+                // If that fails, try cleaning the phone number
+                $cleanPhone = $value;
+                
+                // Remove country code if it's included
+                if (str_starts_with($cleanPhone, $countryCode)) {
+                    $cleanPhone = substr($cleanPhone, strlen($countryCode));
+                }
+                
+                if (str_starts_with($cleanPhone, '++' . $countryCode)) {
+                    $cleanPhone = substr($cleanPhone, strlen('++' . $countryCode));
+                }
+                
+                if (str_starts_with($cleanPhone, '+' . $countryCode)) {
+                    $cleanPhone = substr($cleanPhone, strlen('+' . $countryCode));
+                }
+                
+                // Try again with cleaned phone number
+                $phoneNumber = new PhoneNumber($cleanPhone, $countryCode);
+                
+                if (!$phoneNumber->isValid()) {
+                    \Log::error('Phone validation failed after cleaning', [
+                        'original_phone' => $value,
+                        'cleaned_phone' => $cleanPhone,
+                        'country_code' => $countryCode
+                    ]);
+                    $fail('The phone number format is invalid for the selected country.');
+                    return;
+                }
             }
 
             // Format the phone number to E164 format for consistency
@@ -79,6 +94,11 @@ class PhoneValidationRule implements ValidationRule
             }
 
         } catch (\Exception $e) {
+            \Log::error('Phone validation exception', [
+                'phone' => $value,
+                'country_code' => $countryCode,
+                'exception' => $e->getMessage()
+            ]);
             $fail('The phone number format is invalid.');
         }
     }
