@@ -576,6 +576,23 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize submit button state
     updateSubmitButton();
+    
+    // Add form submission debugging
+    const form = document.getElementById('registerForm');
+    form.addEventListener('submit', function(e) {
+        console.log('Form submission attempted');
+        console.log('Form action:', form.action);
+        console.log('Form method:', form.method);
+        console.log('Submit button disabled:', submitBtn.disabled);
+        
+        if (submitBtn.disabled) {
+            e.preventDefault();
+            console.log('Form submission prevented - submit button is disabled');
+            return false;
+        }
+        
+        console.log('Form submission proceeding...');
+    });
 });
 </script>
 @endsection 
