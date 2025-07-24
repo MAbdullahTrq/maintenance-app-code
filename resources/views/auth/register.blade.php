@@ -383,16 +383,26 @@ document.addEventListener('DOMContentLoaded', function() {
         countryOptions.classList.remove('show');
         countryDropdown.classList.remove('open');
         
-        // Check if there's an old country code value from the form
-        const oldCountryCode = countryCodeInput.value;
-        if (oldCountryCode && oldCountryCode !== '{{ $userCountry }}') {
-            // Use the old value from the form
-            selectCountry(oldCountryCode);
+        // Priority order for country selection:
+        // 1. Old form value (from validation errors)
+        // 2. User's previous selection (from session/localStorage)
+        // 3. Default country (US)
+        
+        let selectedCountry = 'US'; // Default fallback
+        
+        // Check for old form value first (highest priority)
+        const oldCountryCode = '{{ old('country_code') }}';
+        if (oldCountryCode) {
+            selectedCountry = oldCountryCode;
         } else {
-            // Set initial country only if no old value
-            const initialCountry = '{{ old('country_code', $userCountry) }}' || 'US';
-            selectCountry(initialCountry);
+            // Check if user has a previously selected country in localStorage
+            const savedCountry = localStorage.getItem('selectedCountryCode');
+            if (savedCountry && countryData[savedCountry]) {
+                selectedCountry = savedCountry;
+            }
         }
+        
+        selectCountry(selectedCountry);
     }
 
     function renderCountryList() {
@@ -420,10 +430,11 @@ document.addEventListener('DOMContentLoaded', function() {
             selectedFlag.textContent = country.flag;
             selectedCode.textContent = country.dialCode;
             
-            // Only update the hidden input if it's empty or different from the current selection
-            if (!countryCodeInput.value || countryCodeInput.value !== countryCode) {
-                countryCodeInput.value = countryCode;
-            }
+            // Always update the hidden input
+            countryCodeInput.value = countryCode;
+            
+            // Save the selection to localStorage for persistence
+            localStorage.setItem('selectedCountryCode', countryCode);
             
             // Update placeholder
             phoneInput.placeholder = `Enter phone number`;

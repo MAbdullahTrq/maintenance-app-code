@@ -296,13 +296,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize phone input
     function initializePhoneInput() {
-        // Set initial country code display
-        const initialCountry = '{{ $userCountry }}' || 'US';
-        const country = countryData[initialCountry];
+        // Priority order for country selection:
+        // 1. Old form value (from validation errors)
+        // 2. User's previous selection (from localStorage)
+        // 3. Default country (US)
+        
+        let selectedCountry = 'US'; // Default fallback
+        
+        // Check for old form value first (highest priority)
+        const oldCountryCode = '{{ old('country_code') }}';
+        if (oldCountryCode) {
+            selectedCountry = oldCountryCode;
+        } else {
+            // Check if user has a previously selected country in localStorage
+            const savedCountry = localStorage.getItem('selectedCountryCode');
+            if (savedCountry && countryData[savedCountry]) {
+                selectedCountry = savedCountry;
+            }
+        }
+        
+        const country = countryData[selectedCountry];
         if (country) {
             countryCodeDisplay.value = country.code;
-            countryCodeInput.value = initialCountry;
+            countryCodeInput.value = selectedCountry;
             phoneInput.placeholder = `555 123 4567`;
+            
+            // Save the selection to localStorage for persistence
+            localStorage.setItem('selectedCountryCode', selectedCountry);
         }
     }
 
@@ -325,6 +345,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (country) {
             countryCodeDisplay.value = country.code;
             countryCodeInput.value = country.code;
+            
+            // Save the selection to localStorage for persistence
+            localStorage.setItem('selectedCountryCode', country.code);
         }
     }
 
