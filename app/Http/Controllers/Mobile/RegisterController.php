@@ -17,7 +17,7 @@ class RegisterController extends Controller
     public function showRegistrationForm()
     {
         $phoneService = new \App\Services\PhoneValidationService();
-        $userCountry = $phoneService->getUserCountry(request()->ip());
+        $userCountry = 'US'; // Default to US (+1) instead of detecting location
         $countries = $phoneService->getCountries();
         
         return view('mobile.register', compact('userCountry', 'countries'));
@@ -29,7 +29,7 @@ class RegisterController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
-            'phone' => ['required', new \App\Rules\PhoneValidationRule($request->country_code)],
+            'phone' => ['required', new \App\Rules\PhoneValidationRule()],
             'country_code' => ['required', 'string', 'size:2'],
             'cf-turnstile-response' => ['required', new TurnstileRule],
         ]);

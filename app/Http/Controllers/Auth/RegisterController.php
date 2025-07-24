@@ -22,7 +22,7 @@ class RegisterController extends Controller
     public function showRegistrationForm()
     {
         $phoneService = new \App\Services\PhoneValidationService();
-        $userCountry = $phoneService->getUserCountry(request()->ip());
+        $userCountry = 'US'; // Default to US (+1) instead of detecting location
         $countries = $phoneService->getCountries();
         
         return view('auth.register', compact('userCountry', 'countries'));
