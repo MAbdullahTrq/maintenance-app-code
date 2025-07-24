@@ -498,6 +498,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Validate after 500ms delay
         validationTimeout = setTimeout(() => {
+            // Construct the full phone number for API validation
+            const fullPhone = country + phone;
+            
             fetch('/api/validate-phone', {
                 method: 'POST',
                 headers: {
@@ -505,7 +508,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
                 body: JSON.stringify({
-                    phone: phone,
+                    phone: fullPhone,
                     country: country
                 })
             })
