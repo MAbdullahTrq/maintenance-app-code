@@ -37,13 +37,15 @@ class RequestController extends Controller
         $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
         
         $properties = \App\Models\Property::where('manager_id', $workspaceOwner->id)->get();
-        $propertiesCount = $properties->count();
-        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { 
-            $q->where('slug', 'technician'); 
-        })->where('invited_by', $workspaceOwner->id)->count();
-        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->count();
         
-        return view('mobile.request_create', compact('properties', 'propertiesCount', 'techniciansCount', 'requestsCount'));
+        // Calculate all stats for mobile layout
+        $ownersCount = $workspaceOwner->managedOwners()->count();
+        $propertiesCount = $properties->count();
+        $techniciansCount = $workspaceOwner->technicians()->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->count();
+        $teamMembersCount = $workspaceOwner->teamMembers()->count();
+        
+        return view('mobile.request_create', compact('properties', 'ownersCount', 'propertiesCount', 'techniciansCount', 'requestsCount', 'teamMembersCount'));
     }
 
     /**

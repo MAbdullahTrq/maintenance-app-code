@@ -43,7 +43,19 @@ class OwnerController extends Controller
      */
     public function create()
     {
-        return view('mobile.owners.create');
+        $user = Auth::user();
+        
+        // For team members, get the workspace owner's data
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
+        // Calculate stats for mobile layout
+        $ownersCount = $workspaceOwner->managedOwners()->count();
+        $propertiesCount = $workspaceOwner->managedProperties()->count();
+        $techniciansCount = $workspaceOwner->technicians()->count();
+        $requestsCount = $workspaceOwner->managedMaintenanceRequests()->count();
+        $teamMembersCount = $workspaceOwner->teamMembers()->count();
+        
+        return view('mobile.owners.create', compact('ownersCount', 'propertiesCount', 'techniciansCount', 'requestsCount', 'teamMembersCount'));
     }
 
     /**

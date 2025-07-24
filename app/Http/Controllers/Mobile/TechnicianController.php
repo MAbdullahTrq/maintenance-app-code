@@ -52,6 +52,7 @@ class TechnicianController extends Controller
         // For team members, get the workspace owner's data
         $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
         
+        $ownersCount = $workspaceOwner->managedOwners()->count();
         $propertiesCount = \App\Models\Property::where('manager_id', $workspaceOwner->id)->count();
         $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $workspaceOwner->id)->count();
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $workspaceOwner->id)->pluck('id'))->count();
@@ -63,7 +64,7 @@ class TechnicianController extends Controller
             })
             ->count();
         
-        return view('mobile.technician_create', compact('propertiesCount', 'techniciansCount', 'requestsCount', 'teamMembersCount'));
+        return view('mobile.technician_create', compact('ownersCount', 'propertiesCount', 'techniciansCount', 'requestsCount', 'teamMembersCount'));
     }
 
     public function store(Request $request)

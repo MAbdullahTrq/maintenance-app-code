@@ -67,12 +67,22 @@ class TeamController extends Controller
             abort(403);
         }
 
+        // For team members, get the workspace owner's data
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
+        // Calculate stats for mobile layout
+        $ownersCount = $workspaceOwner->managedOwners()->count();
+        $propertiesCount = $workspaceOwner->managedProperties()->count();
+        $techniciansCount = $workspaceOwner->technicians()->count();
+        $requestsCount = $workspaceOwner->managedMaintenanceRequests()->count();
+        $teamMembersCount = $workspaceOwner->teamMembers()->count();
+
         $roles = Role::whereIn('slug', ['editor', 'viewer'])
             ->get();
 
         // Check if this is a mobile route
         if (request()->route()->getName() && str_starts_with(request()->route()->getName(), 'mobile.')) {
-            return view('mobile.team.create', compact('roles'));
+            return view('mobile.team.create', compact('roles', 'ownersCount', 'propertiesCount', 'techniciansCount', 'requestsCount', 'teamMembersCount'));
         }
 
         return view('team.create', compact('roles'));
