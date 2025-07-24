@@ -535,10 +535,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateSubmitButton() {
-        if (isPhoneValid && phoneInput.value.trim()) {
-            submitBtn.disabled = false;
-        } else {
+        // Enable button by default, only disable if phone validation explicitly fails
+        if (phoneInput.value.trim() && !isPhoneValid) {
             submitBtn.disabled = true;
+        } else {
+            submitBtn.disabled = false;
         }
     }
 
@@ -572,6 +573,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (phoneInput.value) {
         validatePhone();
     }
+    
+    // Initialize submit button state
+    updateSubmitButton();
 });
 </script>
 @endsection 
