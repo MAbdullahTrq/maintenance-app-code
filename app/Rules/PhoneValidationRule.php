@@ -35,6 +35,13 @@ class PhoneValidationRule implements ValidationRule
             return;
         }
 
+        // Debug: Log the values being validated
+        \Log::info('Phone validation debug', [
+            'phone' => $value,
+            'country_code' => $countryCode,
+            'request_all' => request()->all()
+        ]);
+
         // Validate phone number format
         try {
             // Create phone number with country code
@@ -61,6 +68,11 @@ class PhoneValidationRule implements ValidationRule
             }
 
         } catch (\Exception $e) {
+            \Log::error('Phone validation exception', [
+                'phone' => $value,
+                'country_code' => $countryCode,
+                'exception' => $e->getMessage()
+            ]);
             $fail('The phone number format is invalid.');
         }
     }

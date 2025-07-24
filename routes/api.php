@@ -15,6 +15,13 @@ Route::post('/validate-phone', function (Request $request) {
     $phone = $request->input('phone');
     $country = $request->input('country');
     
+    // Debug: Log the values being validated
+    \Log::info('API phone validation debug', [
+        'phone' => $phone,
+        'country' => $country,
+        'request_all' => $request->all()
+    ]);
+    
     if (empty($phone) || empty($country)) {
         return response()->json([
             'valid' => false,
@@ -48,6 +55,11 @@ Route::post('/validate-phone', function (Request $request) {
             ]);
         }
     } catch (\Exception $e) {
+        \Log::error('API phone validation exception', [
+            'phone' => $phone,
+            'country' => $country,
+            'exception' => $e->getMessage()
+        ]);
         return response()->json([
             'valid' => false,
             'message' => 'Unable to validate phone number'
