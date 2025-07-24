@@ -383,9 +383,16 @@ document.addEventListener('DOMContentLoaded', function() {
         countryOptions.classList.remove('show');
         countryDropdown.classList.remove('open');
         
-        // Set initial country
-        const initialCountry = '{{ old('country_code', $userCountry) }}' || 'US';
-        selectCountry(initialCountry);
+        // Check if there's an old country code value from the form
+        const oldCountryCode = countryCodeInput.value;
+        if (oldCountryCode && oldCountryCode !== '{{ $userCountry }}') {
+            // Use the old value from the form
+            selectCountry(oldCountryCode);
+        } else {
+            // Set initial country only if no old value
+            const initialCountry = '{{ old('country_code', $userCountry) }}' || 'US';
+            selectCountry(initialCountry);
+        }
     }
 
     function renderCountryList() {

@@ -35,17 +35,28 @@ class PhoneValidationRule implements ValidationRule
             return;
         }
 
-        // Debug: Log the values being validated
-        \Log::info('Phone validation debug', [
-            'phone' => $value,
-            'country_code' => $countryCode,
-            'request_all' => request()->all()
-        ]);
-
         // Validate phone number format
         try {
+            // Clean the phone number - remove any country code if it's already included
+            $cleanPhone = $value;
+            
+            // If the phone number starts with the country code, remove it
+            if (str_starts_with($cleanPhone, $countryCode)) {
+                $cleanPhone = substr($cleanPhone, strlen($countryCode));
+            }
+            
+            // If the phone number starts with ++ followed by country code, remove it
+            if (str_starts_with($cleanPhone, '++' . $countryCode)) {
+                $cleanPhone = substr($cleanPhone, strlen('++' . $countryCode));
+            }
+            
+            // If the phone number starts with + followed by country code, remove it
+            if (str_starts_with($cleanPhone, '+' . $countryCode)) {
+                $cleanPhone = substr($cleanPhone, strlen('+' . $countryCode));
+            }
+            
             // Create phone number with country code
-            $phoneNumber = new PhoneNumber($value, $countryCode);
+            $phoneNumber = new PhoneNumber($cleanPhone, $countryCode);
             
             if (!$phoneNumber->isValid()) {
                 $fail('The phone number format is invalid for the selected country.');
@@ -68,11 +79,6 @@ class PhoneValidationRule implements ValidationRule
             }
 
         } catch (\Exception $e) {
-            \Log::error('Phone validation exception', [
-                'phone' => $value,
-                'country_code' => $countryCode,
-                'exception' => $e->getMessage()
-            ]);
             $fail('The phone number format is invalid.');
         }
     }
