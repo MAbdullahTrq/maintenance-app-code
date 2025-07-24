@@ -11,9 +11,11 @@
     <div class="bg-white rounded-xl shadow p-2 md:p-3 lg:p-4 w-full max-w-6xl mx-auto">
         <div class="flex justify-between items-center mb-4">
             <div class="font-bold text-lg md:text-xl lg:text-2xl">All Requests</div>
+            @if(!Auth::user()->isViewer())
             <a href="{{ route('mobile.reports.create') }}" class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-xs md:text-sm font-medium">
                 📊 Create Report
             </a>
+            @endif
         </div>
         <div class="grid grid-cols-5 gap-0 mb-4 border border-gray-400 rounded overflow-hidden">
             <a href="?status=declined{{ request('sort') ? '&sort=' . request('sort') : '' }}{{ request('direction') ? '&direction=' . request('direction') : '' }}" class="text-center p-2 md:p-3 border-r border-gray-400 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'declined') ? 'bg-blue-100 font-bold' : '' }}">
