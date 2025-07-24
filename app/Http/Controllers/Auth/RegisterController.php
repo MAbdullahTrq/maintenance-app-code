@@ -33,11 +33,15 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
+        \Log::info('=== REGISTRATION CONTROLLER CALLED ===');
         \Log::info('Registration attempt started', [
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'country_code' => $request->country_code
+            'country_code' => $request->country_code,
+            'method' => $request->method(),
+            'url' => $request->url(),
+            'all_data' => $request->all()
         ]);
 
         $request->validate([

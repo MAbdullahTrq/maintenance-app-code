@@ -584,6 +584,8 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Form action:', form.action);
         console.log('Form method:', form.method);
         console.log('Submit button disabled:', submitBtn.disabled);
+        console.log('Form action URL:', form.getAttribute('action'));
+        console.log('Current page URL:', window.location.href);
         
         if (submitBtn.disabled) {
             e.preventDefault();
@@ -592,6 +594,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         console.log('Form submission proceeding...');
+        console.log('Form data:', new FormData(form));
     });
 });
 </script>
