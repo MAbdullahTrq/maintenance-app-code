@@ -37,7 +37,7 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'phone' => ['required', new \App\Rules\PhoneValidationRule($request->country_code)],
+            'phone' => ['required', new \App\Rules\PhoneValidationRule()],
             'country_code' => ['required', 'string', 'size:2'],
             'cf-turnstile-response' => ['required', new TurnstileRule],
         ]);

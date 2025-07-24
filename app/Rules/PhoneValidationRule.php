@@ -27,9 +27,18 @@ class PhoneValidationRule implements ValidationRule
             return; // Allow empty values if not required
         }
 
+        // Get the country code from the request
+        $countryCode = request()->input('country_code');
+        
+        if (empty($countryCode)) {
+            $fail('Country code is required.');
+            return;
+        }
+
         // Validate phone number format
         try {
-            $phoneNumber = new PhoneNumber($value, $this->country);
+            // Create phone number with country code
+            $phoneNumber = new PhoneNumber($value, $countryCode);
             
             if (!$phoneNumber->isValid()) {
                 $fail('The phone number format is invalid for the selected country.');
