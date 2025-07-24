@@ -277,7 +277,6 @@
                                 class="phone-input"
                                 placeholder="Enter phone number">
                         </div>
-                        <div id="phone-feedback" class="phone-feedback"></div>
                         @error('phone')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
@@ -354,8 +353,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // DOM elements
     const phoneInput = document.getElementById('phone');
     const countryCodeInput = document.getElementById('country_code');
-    const feedbackDiv = document.getElementById('phone-feedback');
-    const submitBtn = document.getElementById('submitBtn');
     const countryDropdown = document.getElementById('countryDropdown');
     const countrySelectButton = document.getElementById('countrySelectButton');
     const countryOptions = document.getElementById('countryOptions');
@@ -364,8 +361,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectedFlag = document.getElementById('selectedFlag');
     const selectedCode = document.getElementById('selectedCode');
 
-    let validationTimeout;
-    let isPhoneValid = false;
     let filteredCountries = [];
 
     // Initialize countries
@@ -438,109 +433,28 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Update placeholder
             phoneInput.placeholder = `Enter phone number`;
-            
-            // Validate phone if there's input
-            if (phoneInput.value.trim()) {
-                validatePhone();
-            }
         }
     }
 
     function openDropdown() {
-        countryDropdown.classList.add('open');
         countryOptions.classList.add('show');
+        countryDropdown.classList.add('open');
         countrySearch.focus();
-        countrySearch.value = '';
-        filterCountries('');
     }
 
     function closeDropdown() {
-        countryDropdown.classList.remove('open');
         countryOptions.classList.remove('show');
+        countryDropdown.classList.remove('open');
     }
 
     function filterCountries(searchTerm) {
-        const filtered = Object.entries(countryData)
-            .map(([code, country]) => ({
-                code,
-                name: country.name,
-                dialCode: country.code,
-                flag: countryFlags[code] || '🏳️'
-            }))
-            .filter(country => 
-                country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                country.dialCode.includes(searchTerm) ||
-                country.code.toLowerCase().includes(searchTerm.toLowerCase())
-            );
+        const filtered = filteredCountries.filter(country =>
+            country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            country.dialCode.includes(searchTerm)
+        );
         
         filteredCountries = filtered;
         renderCountryList();
-    }
-
-    function validatePhone() {
-        const phone = phoneInput.value.trim();
-        const country = countryCodeInput.value;
-        
-        if (!phone) {
-            feedbackDiv.innerHTML = '';
-            feedbackDiv.className = 'phone-feedback';
-            isPhoneValid = false;
-            updateSubmitButton();
-            return;
-        }
-
-        // Show loading state
-        feedbackDiv.innerHTML = '<span class="phone-feedback-icon">⏳</span> Validating...';
-        feedbackDiv.className = 'phone-feedback';
-
-        // Clear previous timeout
-        clearTimeout(validationTimeout);
-        
-        // Validate after 500ms delay
-        validationTimeout = setTimeout(() => {
-            // Construct the full phone number for API validation
-            const fullPhone = country + phone;
-            
-            fetch('/api/validate-phone', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({
-                    phone: fullPhone,
-                    country: country
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.valid) {
-                    feedbackDiv.innerHTML = '<span class="phone-feedback-icon">✓</span> Valid phone number';
-                    feedbackDiv.className = 'phone-feedback valid';
-                    isPhoneValid = true;
-                } else {
-                    feedbackDiv.innerHTML = '<span class="phone-feedback-icon">✗</span> ' + (data.message || 'Invalid phone number format');
-                    feedbackDiv.className = 'phone-feedback invalid';
-                    isPhoneValid = false;
-                }
-                updateSubmitButton();
-            })
-            .catch(error => {
-                feedbackDiv.innerHTML = '<span class="phone-feedback-icon">✗</span> Unable to validate phone number';
-                feedbackDiv.className = 'phone-feedback invalid';
-                isPhoneValid = false;
-                updateSubmitButton();
-            });
-        }, 500);
-    }
-
-    function updateSubmitButton() {
-        // Enable button by default, only disable if phone validation explicitly fails
-        if (phoneInput.value.trim() && !isPhoneValid) {
-            submitBtn.disabled = true;
-        } else {
-            submitBtn.disabled = false;
-        }
     }
 
     // Event listeners
@@ -557,8 +471,6 @@ document.addEventListener('DOMContentLoaded', function() {
         filterCountries(e.target.value);
     });
 
-    phoneInput.addEventListener('input', validatePhone);
-
     // Close dropdown when clicking outside
     document.addEventListener('click', (e) => {
         if (!countryDropdown.contains(e.target)) {
@@ -568,48 +480,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize
     initializeCountries();
-
-    // Initial validation if there's an old value
-    if (phoneInput.value) {
-        validatePhone();
-    }
-    
-    // Initialize submit button state
-    updateSubmitButton();
-    
-    // Add form submission debugging
-    const form = document.getElementById('registerForm');
-    form.addEventListener('submit', function(e) {
-        // Prevent the form from submitting so we can see the debug info
-        e.preventDefault();
-        
-        console.log('=== FORM SUBMISSION DEBUG ===');
-        console.log('Form submission attempted');
-        console.log('Form action:', form.action);
-        console.log('Form method:', form.method);
-        console.log('Submit button disabled:', submitBtn.disabled);
-        console.log('Form action URL:', form.getAttribute('action'));
-        console.log('Current page URL:', window.location.href);
-        
-        // Show form data
-        const formData = new FormData(form);
-        console.log('Form data:');
-        for (let [key, value] of formData.entries()) {
-            console.log(key + ':', value);
-        }
-        
-        if (submitBtn.disabled) {
-            console.log('❌ Form submission prevented - submit button is disabled');
-            return false;
-        }
-        
-        console.log('✅ Form submission would proceed...');
-        console.log('=== END DEBUG ===');
-        
-        // Now actually submit the form
-        console.log('Submitting form now...');
-        form.submit();
-    });
 });
 </script>
 @endsection 

@@ -48,7 +48,7 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'phone' => ['required', new \App\Rules\PhoneValidationRule()],
+            'phone' => ['required', 'string', 'max:20'],
             'country_code' => ['required', 'string', 'size:2'],
             'cf-turnstile-response' => ['required', new TurnstileRule],
         ]);
@@ -63,31 +63,10 @@ class RegisterController extends Controller
             return back()->withErrors(['error' => 'System configuration error.'])->withInput();
         }
 
-        // Format phone number to E164 format
-        $phoneService = new \App\Services\PhoneValidationService();
-        
-        // Construct the full phone number with country code
-        $fullPhone = $request->country_code . $request->phone;
-        
-        // Convert dialing code to ISO country code
-        $isoCountryCode = $this->getIsoCountryCode($request->country_code);
-        
-        if (!$isoCountryCode) {
-            \Log::error('Invalid country code', ['country_code' => $request->country_code]);
-            return back()->withErrors(['country_code' => 'Invalid country code.'])->withInput();
-        }
-        
-        $formattedPhone = $phoneService->formatPhoneNumber($fullPhone, $isoCountryCode);
-        
-        if (!$formattedPhone) {
-            \Log::error('Unable to format phone number', [
-                'full_phone' => $fullPhone,
-                'iso_country_code' => $isoCountryCode
-            ]);
-            return back()->withErrors(['phone' => 'Unable to format phone number.'])->withInput();
-        }
+        // Simple phone number formatting - just concatenate country code and phone
+        $formattedPhone = $request->country_code . $request->phone;
 
-        \Log::info('Phone number formatted successfully', ['formatted_phone' => $formattedPhone]);
+        \Log::info('Phone number formatted', ['formatted_phone' => $formattedPhone]);
 
         try {
             // Create user account as inactive by default
