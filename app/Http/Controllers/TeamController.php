@@ -74,7 +74,7 @@ class TeamController extends Controller
         $ownersCount = $workspaceOwner->managedOwners()->count();
         $propertiesCount = $workspaceOwner->managedProperties()->count();
         $techniciansCount = $workspaceOwner->technicians()->count();
-        $requestsCount = $workspaceOwner->managedMaintenanceRequests()->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $workspaceOwner->managedProperties()->pluck('id'))->count();
         $teamMembersCount = $workspaceOwner->teamMembers()->count();
 
         $roles = Role::whereIn('slug', ['editor', 'viewer'])

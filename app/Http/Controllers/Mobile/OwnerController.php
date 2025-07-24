@@ -52,7 +52,7 @@ class OwnerController extends Controller
         $ownersCount = $workspaceOwner->managedOwners()->count();
         $propertiesCount = $workspaceOwner->managedProperties()->count();
         $techniciansCount = $workspaceOwner->technicians()->count();
-        $requestsCount = $workspaceOwner->managedMaintenanceRequests()->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $workspaceOwner->managedProperties()->pluck('id'))->count();
         $teamMembersCount = $workspaceOwner->teamMembers()->count();
         
         return view('mobile.owners.create', compact('ownersCount', 'propertiesCount', 'techniciansCount', 'requestsCount', 'teamMembersCount'));
