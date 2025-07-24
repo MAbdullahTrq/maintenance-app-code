@@ -275,7 +275,7 @@
                             <input type="hidden" name="country_code" id="country_code" value="{{ old('country_code', $userCountry) }}">
                             <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" required
                                 class="phone-input"
-                                placeholder="Enter phone number">
+                                placeholder="e.g. 7123456789">
                         </div>
                         <div id="phone-feedback" class="phone-feedback"></div>
                         @error('phone')
@@ -414,8 +414,18 @@ document.addEventListener('DOMContentLoaded', function() {
             selectedCode.textContent = country.dialCode;
             countryCodeInput.value = countryCode;
             
-            // Update placeholder
-            phoneInput.placeholder = `Enter phone number`;
+            // Update placeholder based on country
+            let placeholder = 'Enter phone number';
+            if (countryCode === 'GB') {
+                placeholder = 'e.g. 7123456789 (mobile) or 2012345678 (landline)';
+            } else if (countryCode === 'US') {
+                placeholder = 'e.g. 5551234567';
+            } else if (countryCode === 'CA') {
+                placeholder = 'e.g. 5551234567';
+            } else if (countryCode === 'AU') {
+                placeholder = 'e.g. 412345678';
+            }
+            phoneInput.placeholder = placeholder;
             
             // Validate phone if there's input
             if (phoneInput.value.trim()) {
