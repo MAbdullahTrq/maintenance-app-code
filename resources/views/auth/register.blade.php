@@ -412,7 +412,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (country) {
             selectedFlag.textContent = country.flag;
             selectedCode.textContent = country.dialCode;
-            countryCodeInput.value = countryCode;
+            
+            // Only update the hidden input if it's empty or different from the current selection
+            if (!countryCodeInput.value || countryCodeInput.value !== countryCode) {
+                countryCodeInput.value = countryCode;
+            }
             
             // Update placeholder
             phoneInput.placeholder = `Enter phone number`;
