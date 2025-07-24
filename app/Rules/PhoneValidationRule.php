@@ -35,44 +35,19 @@ class PhoneValidationRule implements ValidationRule
             return;
         }
 
-        // Debug: Log the values being validated
-        \Log::info('PhoneValidationRule validation', [
-            'phone' => $value,
-            'country_code' => $countryCode,
-            'request_all' => request()->all()
-        ]);
-
         // Validate phone number format
         try {
-            // Try to create phone number directly with the provided value
-            $phoneNumber = new PhoneNumber($value, $countryCode);
+            // Construct the full phone number with country code
+            $fullPhone = $countryCode . $value;
+            
+            // Try to create phone number with the full phone number
+            $phoneNumber = new PhoneNumber($fullPhone, $countryCode);
             
             if (!$phoneNumber->isValid()) {
-                // If that fails, try cleaning the phone number
-                $cleanPhone = $value;
-                
-                // Remove country code if it's included
-                if (str_starts_with($cleanPhone, $countryCode)) {
-                    $cleanPhone = substr($cleanPhone, strlen($countryCode));
-                }
-                
-                if (str_starts_with($cleanPhone, '++' . $countryCode)) {
-                    $cleanPhone = substr($cleanPhone, strlen('++' . $countryCode));
-                }
-                
-                if (str_starts_with($cleanPhone, '+' . $countryCode)) {
-                    $cleanPhone = substr($cleanPhone, strlen('+' . $countryCode));
-                }
-                
-                // Try again with cleaned phone number
-                $phoneNumber = new PhoneNumber($cleanPhone, $countryCode);
+                // If that fails, try with just the phone number (in case it already includes country code)
+                $phoneNumber = new PhoneNumber($value, $countryCode);
                 
                 if (!$phoneNumber->isValid()) {
-                    \Log::error('PhoneValidationRule failed after cleaning', [
-                        'original_phone' => $value,
-                        'cleaned_phone' => $cleanPhone,
-                        'country_code' => $countryCode
-                    ]);
                     $fail('The phone number format is invalid for the selected country.');
                     return;
                 }
@@ -94,11 +69,6 @@ class PhoneValidationRule implements ValidationRule
             }
 
         } catch (\Exception $e) {
-            \Log::error('PhoneValidationRule exception', [
-                'phone' => $value,
-                'country_code' => $countryCode,
-                'exception' => $e->getMessage()
-            ]);
             $fail('The phone number format is invalid.');
         }
     }
