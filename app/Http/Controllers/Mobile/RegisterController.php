@@ -25,6 +25,16 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
+        \Log::info('=== MOBILE REGISTRATION CONTROLLER CALLED ===');
+        \Log::info('Mobile registration attempt started', [
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'country_code' => $request->country_code,
+            'method' => $request->method(),
+            'url' => $request->url(),
+            'all_data' => $request->all()
+        ]);
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',

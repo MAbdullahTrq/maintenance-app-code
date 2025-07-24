@@ -439,6 +439,40 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize
     initializePhoneInput();
+    
+    // Add form submission debugging
+    const form = document.getElementById('mobileRegisterForm');
+    form.addEventListener('submit', function(e) {
+        // Prevent the form from submitting so we can see the debug info
+        e.preventDefault();
+        
+        console.log('=== MOBILE FORM SUBMISSION DEBUG ===');
+        console.log('Mobile form submission attempted');
+        console.log('Form action:', form.action);
+        console.log('Form method:', form.method);
+        console.log('Submit button disabled:', mobileSubmitBtn.disabled);
+        console.log('Form action URL:', form.getAttribute('action'));
+        console.log('Current page URL:', window.location.href);
+        
+        // Show form data
+        const formData = new FormData(form);
+        console.log('Form data:');
+        for (let [key, value] of formData.entries()) {
+            console.log(key + ':', value);
+        }
+        
+        if (mobileSubmitBtn.disabled) {
+            console.log('❌ Form submission prevented - submit button is disabled');
+            return false;
+        }
+        
+        console.log('✅ Form submission would proceed...');
+        console.log('=== END DEBUG ===');
+        
+        // Now actually submit the form
+        console.log('Submitting mobile form now...');
+        form.submit();
+    });
 
     // Initial validation if there's an old value
     if (phoneInput.value) {
