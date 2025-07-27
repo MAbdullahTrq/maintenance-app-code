@@ -31,15 +31,17 @@
     /* Single Phone input styling for mobile */
     .phone-input-container {
         position: relative;
-        border: 1px solid #d1d5db;
-        border-radius: 0.5rem;
-        transition: all 0.2s ease;
-        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        background: #f9fafb;
     }
     
     .phone-input-container:focus-within {
         border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        background: white;
+        transform: translateY(-1px);
     }
     
     .phone-input-wrapper {
@@ -51,8 +53,8 @@
     .phone-country-code {
         width: 60px;
         border: none;
-        padding: 14px 8px 14px 16px;
-        font-size: 14px;
+        padding: 18px 8px 18px 20px;
+        font-size: 16px;
         outline: none;
         background: transparent;
         font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
@@ -70,8 +72,8 @@
     .phone-number-input {
         flex: 1;
         border: none;
-        padding: 14px 16px;
-        font-size: 14px;
+        padding: 18px 20px;
+        font-size: 16px;
         outline: none;
         background: transparent;
         font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
@@ -155,21 +157,32 @@
     
     /* Mobile form enhancements */
     .form-input {
-        border: 1px solid #d1d5db;
-        border-radius: 0.5rem;
-        padding: 14px 16px;
-        font-size: 14px;
-        transition: all 0.2s ease;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 18px 20px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        background-color: #f9fafb;
+        width: 100%;
+        box-sizing: border-box;
     }
     
     .form-input:focus {
         border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
         outline: none;
+        background-color: white;
+        transform: translateY(-1px);
     }
     
     .form-input.error {
         border-color: #dc2626;
+        box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15);
+    }
+    
+    .form-input::placeholder {
+        color: #9ca3af;
+        font-weight: 400;
     }
 </style>
 @endpush
@@ -251,7 +264,7 @@
                     <div class="text-red-500 text-xs text-center">{{ $message }}</div>
                 @enderror
                 
-                <button type="submit" id="mobileSubmitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-semibold text-sm transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                <button type="submit" id="mobileSubmitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 px-6 rounded-xl font-semibold text-base transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]">
                     Create Account
                 </button>
             </form>

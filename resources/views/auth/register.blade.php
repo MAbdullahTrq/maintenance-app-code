@@ -29,20 +29,53 @@
         }
     }
 
+    /* Modern form input styling */
+    .form-input {
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 16px 18px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        background-color: #f9fafb;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .form-input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        outline: none;
+        background-color: white;
+        transform: translateY(-1px);
+    }
+    
+    .form-input.error {
+        border-color: #dc2626;
+        box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15);
+    }
+    
+    .form-input::placeholder {
+        color: #9ca3af;
+        font-weight: 400;
+    }
+    
     /* Enhanced Phone input styling */
     .phone-container {
         position: relative;
         display: flex;
         gap: 0;
-        border: 1px solid #d1d5db;
-        border-radius: 0.375rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
         overflow: hidden;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
+        background: #f9fafb;
     }
     
     .phone-container:focus-within {
         border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        background: white;
+        transform: translateY(-1px);
     }
     
     .country-dropdown {
@@ -233,7 +266,7 @@
                     <div class="mb-4">
                         <label for="name" class="block text-gray-700 text-sm font-medium mb-2">Full Name</label>
                         <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus
-                            class="appearance-none border rounded-md w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 @error('name') border-red-500 @enderror"
+                            class="form-input @error('name') error @enderror"
                             placeholder="Enter your full name">
                         
                         @error('name')
@@ -244,7 +277,7 @@
                     <div class="mb-4">
                         <label for="email" class="block text-gray-700 text-sm font-medium mb-2">Email Address</label>
                         <input id="email" type="email" name="email" value="{{ old('email') }}" required
-                            class="appearance-none border rounded-md w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 @error('email') border-red-500 @enderror"
+                            class="form-input @error('email') error @enderror"
                             placeholder="Enter your email address">
                         
                         @error('email')
@@ -289,7 +322,7 @@
                     <div class="mb-4">
                         <label for="password" class="block text-gray-700 text-sm font-medium mb-2">Password</label>
                         <input id="password" type="password" name="password" required
-                            class="appearance-none border rounded-md w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 @error('password') border-red-500 @enderror"
+                            class="form-input @error('password') error @enderror"
                             placeholder="Enter your password">
                         
                         @error('password')
@@ -300,7 +333,7 @@
                     <div class="mb-4">
                         <label for="password_confirmation" class="block text-gray-700 text-sm font-medium mb-2">Confirm Password</label>
                         <input id="password_confirmation" type="password" name="password_confirmation" required
-                            class="appearance-none border rounded-md w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            class="form-input @error('password_confirmation') error @enderror"
                             placeholder="Confirm your password">
                     </div>
                     
@@ -320,7 +353,7 @@
                     </div>
                     
                     <div>
-                        <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200">
+                        <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-6 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
                             Create Account
                         </button>
                     </div>
