@@ -123,6 +123,7 @@ class RequestController extends Controller
             $q->where('slug', 'technician'); 
         })->where('invited_by', $workspaceOwner->id)->count();
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', \App\Models\Property::where('manager_id', $workspaceOwner->id)->pluck('id'))->count();
+        $teamMembersCount = $workspaceOwner->teamMembers()->count();
         
         return view('mobile.request', [
             'request' => $request,
@@ -130,6 +131,7 @@ class RequestController extends Controller
             'ownersCount' => $ownersCount,
             'techniciansCount' => $techniciansCount,
             'requestsCount' => $requestsCount,
+            'teamMembersCount' => $teamMembersCount,
         ]);
     }
 
