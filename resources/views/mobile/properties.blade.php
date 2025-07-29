@@ -37,12 +37,10 @@
         <div>
             <div class="flex justify-between items-center mb-4">
                 <div class="font-bold text-lg md:text-xl lg:text-2xl">All Properties</div>
-            </div>
-            
-            <!-- Owner Filter Dropdown -->
-            <div class="mb-4">
-                <form method="GET" action="{{ route('mobile.properties.index') }}" id="ownerFilterForm">
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                
+                <!-- Owner Filter Dropdown - Moved to right corner -->
+                <div class="flex items-center gap-2">
+                    <form method="GET" action="{{ route('mobile.properties.index') }}" id="ownerFilterForm">
                         <div class="flex items-center gap-2">
                             <label for="owner_id" class="text-sm font-medium text-gray-700">Filter by Owner:</label>
                             <select name="owner_id" id="owner_id" class="form-select" onchange="this.form.submit()">
@@ -54,17 +52,19 @@
                                 @endforeach
                             </select>
                         </div>
-                        @if($selectedOwnerId)
-                            <a href="{{ route('mobile.properties.index') }}" class="text-sm text-blue-600 hover:text-blue-800 underline">Clear Filter</a>
-                        @endif
-                    </div>
-                </form>
-                <div class="mt-2 text-sm text-gray-600">
-                    Showing {{ $properties->count() }} {{ Str::plural('property', $properties->count()) }}
+                    </form>
                     @if($selectedOwnerId)
-                        for selected owner
+                        <a href="{{ route('mobile.properties.index') }}" class="text-sm text-blue-600 hover:text-blue-800 underline">Clear</a>
                     @endif
                 </div>
+            </div>
+            
+            <!-- Property count display -->
+            <div class="mb-4 text-sm text-gray-600">
+                Showing {{ $properties->count() }} {{ Str::plural('property', $properties->count()) }}
+                @if($selectedOwnerId)
+                    for selected owner
+                @endif
             </div>
             
             <div class="overflow-x-auto w-full" style="overflow: visible;">
