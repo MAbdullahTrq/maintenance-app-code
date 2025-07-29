@@ -150,12 +150,26 @@ function toggleDropdown(button) {
     // Toggle the clicked dropdown
     const menu = button.nextElementSibling;
     const buttonRect = button.getBoundingClientRect();
+    const menuHeight = 200; // Approximate height of the dropdown menu
+    const windowHeight = window.innerHeight;
+    const spaceBelow = windowHeight - buttonRect.bottom;
+    const spaceAbove = buttonRect.top;
     
     // Position dropdown exactly at the button location
     menu.style.position = 'fixed';
-    menu.style.top = (buttonRect.bottom + 2) + 'px';
     menu.style.left = (buttonRect.left - 160) + 'px'; // Position to the left of button
     menu.style.zIndex = '9999';
+    
+    // Check if there's enough space below, if not, open upwards
+    if (spaceBelow >= menuHeight || spaceBelow > spaceAbove) {
+        // Open downwards
+        menu.style.top = (buttonRect.bottom + 2) + 'px';
+        menu.style.bottom = 'auto';
+    } else {
+        // Open upwards
+        menu.style.bottom = (windowHeight - buttonRect.top + 2) + 'px';
+        menu.style.top = 'auto';
+    }
     
     menu.classList.toggle('hidden');
 }
