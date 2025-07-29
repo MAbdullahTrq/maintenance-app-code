@@ -5,105 +5,103 @@
 @section('content')
 <div class="relative">
     <!-- Hero section with dark overlay -->
-    <div class="relative py-16 md:py-24 bg-gray-900 rounded-lg overflow-hidden">
-        <!-- Background gradient with overlay -->
-        <div class="absolute inset-0 bg-gradient-to-r from-blue-900 to-indigo-900 opacity-80"></div>
+    <div class="relative py-20 md:py-32 bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 rounded-lg overflow-hidden">
+        <!-- Background pattern -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 0%, transparent 50%);"></div>
+        </div>
         
         <!-- Content -->
-        <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
+        <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-5xl font-extrabold tracking-tight text-white sm:text-6xl md:text-7xl mb-6" style="text-shadow: 0 4px 8px rgba(0,0,0,0.3);">
                 Property Maintenance Management
             </h1>
-            <p class="mt-6 text-xl md:text-2xl text-white max-w-3xl mx-auto font-medium" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
-                For <span class="text-blue-300 underline">small</span> to <span class="text-blue-300 underline">medium</span> property managers
+            <p class="text-2xl md:text-3xl text-blue-100 max-w-4xl mx-auto font-medium mb-4" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                For <span class="text-blue-300 underline decoration-2 underline-offset-4">small</span> to <span class="text-blue-300 underline decoration-2 underline-offset-4">medium</span> property managers
             </p>
-            <p class="mt-4 text-lg md:text-xl text-white font-medium" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
+            <p class="text-xl md:text-2xl text-white font-semibold mb-12" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
                 A simple set of powerful tools
             </p>
             
             <!-- Feature tiles -->
-            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
-                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 border border-white border-opacity-20">
-                    <div class="text-blue-300 text-2xl mb-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
+                <div class="group bg-white bg-opacity-15 backdrop-blur-md rounded-xl p-6 border border-white border-opacity-25 hover:bg-opacity-20 transition-all duration-300 hover:scale-105 shadow-lg">
+                    <div class="text-blue-200 text-3xl mb-4 group-hover:text-white transition-colors">
                         <i class="fas fa-qrcode"></i>
                     </div>
-                    <p class="text-white text-sm font-medium">QR codes – submitting a request has never been easier</p>
+                    <p class="text-white text-base font-medium leading-relaxed">QR codes – submitting a request has never been easier</p>
                 </div>
-                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 border border-white border-opacity-20">
-                    <div class="text-blue-300 text-2xl mb-2">
+                <div class="group bg-white bg-opacity-15 backdrop-blur-md rounded-xl p-6 border border-white border-opacity-25 hover:bg-opacity-20 transition-all duration-300 hover:scale-105 shadow-lg">
+                    <div class="text-blue-200 text-3xl mb-4 group-hover:text-white transition-colors">
                         <i class="fas fa-tasks"></i>
                     </div>
-                    <p class="text-white text-sm font-medium">Assign tasks – to your preferred technicians</p>
+                    <p class="text-white text-base font-medium leading-relaxed">Assign tasks – to your preferred technicians</p>
                 </div>
-                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 border border-white border-opacity-20">
-                    <div class="text-blue-300 text-2xl mb-2">
+                <div class="group bg-white bg-opacity-15 backdrop-blur-md rounded-xl p-6 border border-white border-opacity-25 hover:bg-opacity-20 transition-all duration-300 hover:scale-105 shadow-lg">
+                    <div class="text-blue-200 text-3xl mb-4 group-hover:text-white transition-colors">
                         <i class="fas fa-bell"></i>
                     </div>
-                    <p class="text-white text-sm font-medium">Real-time notifications – keep everyone in the loop</p>
+                    <p class="text-white text-base font-medium leading-relaxed">Real-time notifications – keep everyone in the loop</p>
                 </div>
-                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 border border-white border-opacity-20">
-                    <div class="text-blue-300 text-2xl mb-2">
+                <div class="group bg-white bg-opacity-15 backdrop-blur-md rounded-xl p-6 border border-white border-opacity-25 hover:bg-opacity-20 transition-all duration-300 hover:scale-105 shadow-lg">
+                    <div class="text-blue-200 text-3xl mb-4 group-hover:text-white transition-colors">
                         <i class="fas fa-chart-bar"></i>
                     </div>
-                    <p class="text-white text-sm font-medium">Create reports – Admin is a breeze</p>
+                    <p class="text-white text-base font-medium leading-relaxed">Create reports – Admin is a breeze</p>
                 </div>
-                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 border border-white border-opacity-20">
-                    <div class="text-blue-300 text-2xl mb-2">
+                <div class="group bg-white bg-opacity-15 backdrop-blur-md rounded-xl p-6 border border-white border-opacity-25 hover:bg-opacity-20 transition-all duration-300 hover:scale-105 shadow-lg md:col-span-2 lg:col-span-1">
+                    <div class="text-blue-200 text-3xl mb-4 group-hover:text-white transition-colors">
                         <i class="fas fa-users"></i>
                     </div>
-                    <p class="text-white text-sm font-medium">Add team members – <span class="underline">role based permissions</span></p>
+                    <p class="text-white text-base font-medium leading-relaxed">Add team members – <span class="underline decoration-blue-300 underline-offset-2">role based permissions</span></p>
                 </div>
             </div
             @auth
                 <div class="mt-10 flex justify-center">
-                    <div class="inline-flex rounded-md shadow">
+                    <div class="inline-flex rounded-md shadow-lg">
                         @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
-                            <a href="{{ route('mobile.manager.dashboard') }}" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-                                <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
+                            <a href="{{ route('mobile.manager.dashboard') }}" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 shadow-lg">
+                                <i class="fas fa-tachometer-alt mr-3"></i>Go to Dashboard
                             </a>
                         @elseif(Auth::user() && method_exists(Auth::user(), 'isTechnician') && Auth::user()->isTechnician())
-                            <a href="{{ route('mobile.technician.dashboard') }}" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-                                <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
+                            <a href="{{ route('mobile.technician.dashboard') }}" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 shadow-lg">
+                                <i class="fas fa-tachometer-alt mr-3"></i>Go to Dashboard
                             </a>
                         @elseif(Auth::user() && Auth::user()->hasRole('admin'))
-                            <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-                                <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
+                            <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 shadow-lg">
+                                <i class="fas fa-tachometer-alt mr-3"></i>Go to Dashboard
                             </a>
                         @else
-                            <a href="/dashboard" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-                                <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
+                            <a href="/dashboard" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 shadow-lg">
+                                <i class="fas fa-tachometer-alt mr-3"></i>Go to Dashboard
                             </a>
                         @endif
                     </div>
                 </div>
             @else
-                <div class="mt-10 flex justify-center space-x-4">
-                    <div class="inline-flex rounded-md shadow">
-                        <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
-                            <i class="fas fa-sign-in-alt mr-2"></i>Login
-                        </a>
-                    </div>
-                    <div class="inline-flex rounded-md shadow">
-                        <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-800 hover:bg-blue-700">
-                            <i class="fas fa-user-plus mr-2"></i>Sign Up
-                        </a>
-                    </div>
+                <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                    <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-lg font-semibold rounded-xl text-white bg-transparent hover:bg-white hover:text-blue-900 transform hover:scale-105 transition-all duration-300 shadow-lg backdrop-blur-sm">
+                        <i class="fas fa-sign-in-alt mr-3"></i>Login
+                    </a>
+                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 shadow-lg">
+                        <i class="fas fa-user-plus mr-3"></i>Sign Up
+                    </a>
                 </div>
             @endauth
         </div>
     </div>
 
     <!-- Features section -->
-    <div class="py-16 bg-white">
+    <div class="py-20 bg-gradient-to-br from-gray-50 to-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
-                <h2 class="text-3xl font-bold text-blue-600 mb-4">BUILT FOR VACATION RENTAL MANAGERS</h2>
-                <p class="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight mb-6">
+                <h2 class="text-3xl font-bold text-blue-600 mb-6 tracking-wide">BUILT FOR VACATION RENTAL MANAGERS</h2>
+                <p class="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight mb-8 leading-tight">
                     Everything you need to stay on top of property maintenance
                 </p>
-                <p class="max-w-3xl mx-auto text-xl text-gray-600 leading-relaxed">
-                    Whether you manage a few vacation homes or a growing portfolio of <span class="underline font-medium">long term rental properties</span>, 
-                    <span class="text-red-600 underline font-bold">MaintainXtra</span> helps you track repairs, assign tasks, create reports, 
+                <p class="max-w-4xl mx-auto text-xl text-gray-600 leading-relaxed">
+                    Whether you manage a few vacation homes or a growing portfolio of <span class="underline decoration-blue-400 decoration-2 underline-offset-4 font-medium">long term rental properties</span>, 
+                    <span class="text-red-600 underline decoration-red-400 decoration-2 underline-offset-4 font-bold">MaintainXtra</span> helps you track repairs, assign tasks, create reports, 
                     and keep things running smoothly—without the overwhelm.
                 </p>
             </div>
