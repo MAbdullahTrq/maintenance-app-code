@@ -284,6 +284,10 @@ Route::prefix('m')->middleware('auth')->group(function () {
         Route::get('/requests/create', [RequestController::class, 'create'])->name('mobile.requests.create');
         Route::post('/requests/add', [RequestController::class, 'store'])->name('mobile.requests.store');
         
+        // Owner request routes
+        Route::get('/owner/requests/create', [App\Http\Controllers\Mobile\OwnerRequestController::class, 'create'])->name('mobile.owner.requests.create');
+        Route::post('/owner/requests/store', [App\Http\Controllers\Mobile\OwnerRequestController::class, 'store'])->name('mobile.owner.requests.store');
+        
         // Property manager routes with active subscription (mobile)
         Route::middleware(['subscription'])->group(function () {
             // Mobile owner management routes

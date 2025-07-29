@@ -169,6 +169,9 @@
                     <a href="{{ route('mobile.manager.all-requests') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
                         <i class="fas fa-file-alt text-gray-700 mr-2"></i> Requests
                     </a>
+                    <a href="{{ route('mobile.owner.requests.create') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-clipboard-list text-green-600 mr-2"></i> Submit Request
+                    </a>
                     
                     <!-- Team Management Section -->
                     <div class="border-t border-gray-200 my-1"></div>
@@ -193,6 +196,9 @@
                     </a>
                     <a href="{{ route('mobile.manager.all-requests') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
                         <i class="fas fa-file-alt text-gray-700 mr-2"></i> Requests
+                    </a>
+                    <a href="{{ route('mobile.owner.requests.create') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-clipboard-list text-green-600 mr-2"></i> Submit Request
                     </a>
                 @endif
                 <a href="/m/profile" class="block px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">Profile</a>
