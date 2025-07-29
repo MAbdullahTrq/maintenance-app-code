@@ -8,6 +8,19 @@
         <div x-data="{ showForm: false, search: '', dropdownOpen: false, dropdownTop: 0, dropdownLeft: 0, dropdownOwner: null, showDeleteConfirm: false, deleteForm: null }" x-init="dropdownOwner = null">
             <div class="flex justify-between items-center mb-4">
                 <div class="font-bold text-lg md:text-xl lg:text-2xl">All Owners</div>
+                
+                <!-- Add Owner Button -->
+                @if(Auth::user()->hasActiveSubscription() && !Auth::user()->isViewer())
+                <a href="/m/ao/create" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                    <i class="fas fa-plus mr-1"></i>Add
+                </a>
+                @elseif(Auth::user()->isViewer())
+                    <!-- Viewers see no add button -->
+                @else
+                <a href="{{ route('mobile.subscription.plans') }}" class="bg-gray-400 text-white px-4 py-2 rounded-lg shadow-lg text-sm font-medium" title="Subscription required">
+                    <i class="fas fa-lock mr-1"></i>Add
+                </a>
+                @endif
             </div>
             <input type="text" x-model="search" placeholder="Search" class="w-full border rounded p-2 md:p-3 lg:p-4 mb-4 text-sm md:text-base" />
             <div class="overflow-x-auto w-full">
@@ -90,12 +103,6 @@
         </div>
     </div>
 </div>
-
-@if(Auth::user()->hasActiveSubscription() && !Auth::user()->isViewer())
-<a href="/m/ao/create" class="fixed bottom-6 right-6 bg-blue-600 text-white rounded-full w-14 h-14 flex items-center justify-center text-3xl shadow-lg z-50 hover:bg-blue-700 transition-colors" title="Add Owner">
-    <i class="fas fa-plus"></i>
-</a>
-@endif
 
 <script>
 function toggleDropdown(button, ownerId) {

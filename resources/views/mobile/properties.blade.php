@@ -38,25 +38,38 @@
             <div class="flex justify-between items-center mb-4">
                 <div class="font-bold text-lg md:text-xl lg:text-2xl">All Properties</div>
                 
-                <!-- Owner Filter Dropdown - Moved to right corner -->
-                <div class="flex items-center gap-2">
-                    <form method="GET" action="{{ route('mobile.properties.index') }}" id="ownerFilterForm">
-                        <div class="flex items-center gap-2">
-                            <label for="owner_id" class="text-sm font-medium text-gray-700">Filter by Owner:</label>
-                            <select name="owner_id" id="owner_id" class="form-select" onchange="this.form.submit()">
-                                <option value="">All Owners</option>
-                                @foreach($owners as $owner)
-                                    <option value="{{ $owner->id }}" {{ $selectedOwnerId == $owner->id ? 'selected' : '' }}>
-                                        {{ $owner->displayName }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </form>
-                    @if($selectedOwnerId)
-                        <a href="{{ route('mobile.properties.index') }}" class="text-sm text-blue-600 hover:text-blue-800 underline">Clear</a>
-                    @endif
-                </div>
+                <!-- Add Property Button -->
+                @if(Auth::user()->hasActiveSubscription() && !Auth::user()->isViewer())
+                <a href="{{ route('mobile.properties.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                    <i class="fas fa-plus mr-1"></i>Add
+                </a>
+                @elseif(Auth::user()->isViewer())
+                    <!-- Viewers see no add button -->
+                @else
+                <a href="{{ route('mobile.subscription.plans') }}" class="bg-gray-400 text-white px-4 py-2 rounded-lg shadow-lg text-sm font-medium" title="Subscription required">
+                    <i class="fas fa-lock mr-1"></i>Add
+                </a>
+                @endif
+            </div>
+            
+            <!-- Owner Filter Dropdown - Moved down -->
+            <div class="flex items-center gap-2 mb-4">
+                <form method="GET" action="{{ route('mobile.properties.index') }}" id="ownerFilterForm">
+                    <div class="flex items-center gap-2">
+                        <label for="owner_id" class="text-sm font-medium text-gray-700">Filter by Owner:</label>
+                        <select name="owner_id" id="owner_id" class="form-select" onchange="this.form.submit()">
+                            <option value="">All Owners</option>
+                            @foreach($owners as $owner)
+                                <option value="{{ $owner->id }}" {{ $selectedOwnerId == $owner->id ? 'selected' : '' }}>
+                                    {{ $owner->displayName }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </form>
+                @if($selectedOwnerId)
+                    <a href="{{ route('mobile.properties.index') }}" class="text-sm text-blue-600 hover:text-blue-800 underline">Clear</a>
+                @endif
             </div>
             
             <!-- Property count display -->
@@ -73,6 +86,7 @@
                         <tr class="bg-gray-100 border-b border-gray-400">
                             <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Name</th>
                             <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Address</th>
+                            <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Owner</th>
                             <th class="p-2 md:p-3 lg:p-4 text-center">Actions</th>
                         </tr>
                     </thead>
