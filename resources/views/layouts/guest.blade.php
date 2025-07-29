@@ -115,7 +115,9 @@
                     <div class="flex">
                         <div class="flex-shrink-0 flex items-center">
                             <a href="/" class="flex items-center">
-                                <img src="{{ asset('images/logo.png') }}" alt="MaintainXtra Logo" class="h-12 w-auto">
+                                <span class="font-extrabold text-xl md:text-2xl lg:text-3xl">
+                                    <span class="text-blue-700">Maintain</span><span class="text-black">Xtra</span>
+                                </span>
                             </a>
                         </div>
                     </div>
