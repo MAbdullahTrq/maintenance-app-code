@@ -208,7 +208,7 @@
     @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager() || 
         Auth::user() && method_exists(Auth::user(), 'hasTeamMemberRole') && Auth::user()->hasTeamMemberRole())
     <nav class="bg-white shadow mb-2 rounded-b-xl">
-        <div class="grid {{ Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager() ? 'grid-cols-5' : 'grid-cols-4' }} divide-x divide-gray-200 text-center md:py-2">
+        <div class="grid grid-cols-4 divide-x divide-gray-200 text-center md:py-2">
             <!-- Owners -->
             <div class="flex flex-col items-center py-3 md:py-4">
                 <a href="/m/ao" class="flex flex-col items-center group">
@@ -282,26 +282,6 @@
                     </a>
                 @endif
             </div>
-            <!-- Team - Only show for property managers -->
-            @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
-            <div class="flex flex-col items-center py-3 md:py-4">
-                <a href="{{ route('mobile.team.index') }}" class="flex flex-col items-center group">
-                    <i class="fas fa-users text-2xl md:text-3xl lg:text-4xl text-blue-600 group-hover:underline"></i>
-                    <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ isset($teamMembersCount) ? $teamMembersCount : 0 }}</div>
-                </a>
-                @if(Auth::user()->hasActiveSubscription())
-                    <a href="{{ route('mobile.team.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
-                        <span class="text-black text-xl md:text-2xl lg:text-3xl font-bold leading-none">+</span>
-                        <span x-show="show" x-transition class="absolute left-full top-1/2 -translate-y-1/2 ml-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">Invite Assistant</span>
-                    </a>
-                @else
-                    <a href="{{ route('mobile.subscription.plans') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
-                        <span class="text-gray-400 text-xl md:text-2xl lg:text-3xl font-bold leading-none">🔒</span>
-                        <span x-show="show" x-transition class="absolute left-full top-1/2 -translate-y-1/2 ml-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">Subscription Required</span>
-                    </a>
-                @endif
-            </div>
-            @endif
         </div>
     </nav>
     @endif
