@@ -10,7 +10,7 @@
 <body class="bg-gray-50 min-h-screen flex items-center justify-center">
     <div class="text-center p-8">
         <div class="mb-8">
-            <img src="{{ asset('images/logo.png') }}" alt="MaintainXtra Logo" class="mx-auto h-24 w-auto mb-4">
+            <img src="{{ asset('images/logo.png') }}" alt="MaintainXtra Logo" class="mx-auto h-12 w-auto mb-4">
             <h1 class="text-3xl font-bold text-gray-900 mb-2">MaintainXtra</h1>
             <p class="text-gray-600">Property Maintenance Management</p>
         </div>
