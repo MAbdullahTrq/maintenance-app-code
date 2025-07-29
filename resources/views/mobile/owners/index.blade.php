@@ -100,25 +100,47 @@ function toggleDropdown(button, ownerId) {
         }
     });
     
-    const dropdown = document.getElementById(`dropdown-${ownerId}`);
+    // Toggle the clicked dropdown
+    const menu = document.getElementById(`dropdown-${ownerId}`);
     const buttonRect = button.getBoundingClientRect();
+    const menuHeight = 200; // Approximate height of the dropdown menu
+    const windowHeight = window.innerHeight;
+    const spaceBelow = windowHeight - buttonRect.bottom;
+    const spaceAbove = buttonRect.top;
     
     // Position dropdown exactly at the button location
-    dropdown.style.position = 'fixed';
-    dropdown.style.top = (buttonRect.bottom + 2) + 'px';
-    dropdown.style.left = (buttonRect.left - 160) + 'px'; // Position to the left of button
-    dropdown.style.zIndex = '9999';
+    menu.style.position = 'fixed';
+    menu.style.left = (buttonRect.left - 160) + 'px'; // Position to the left of button
+    menu.style.zIndex = '9999';
     
-    dropdown.classList.toggle('hidden');
+    // Check if there's enough space below, if not, open upwards
+    if (spaceBelow >= menuHeight || spaceBelow > spaceAbove) {
+        // Open downwards
+        menu.style.top = (buttonRect.bottom + 2) + 'px';
+        menu.style.bottom = 'auto';
+    } else {
+        // Open upwards
+        menu.style.bottom = (windowHeight - buttonRect.top + 2) + 'px';
+        menu.style.top = 'auto';
+    }
+    
+    menu.classList.toggle('hidden');
 }
 
-// Close dropdowns when clicking outside
+// Close dropdown when clicking outside
 document.addEventListener('click', function(event) {
-    if (!event.target.closest('.dropdown-btn') && !event.target.closest('.dropdown-menu')) {
+    if (!event.target.closest('.relative')) {
         document.querySelectorAll('.dropdown-menu').forEach(menu => {
             menu.classList.add('hidden');
         });
     }
+});
+
+// Prevent dropdown from closing when clicking inside it
+document.querySelectorAll('.dropdown-menu').forEach(menu => {
+    menu.addEventListener('click', function(event) {
+        event.stopPropagation();
+    });
 });
 </script>
 @endsection 

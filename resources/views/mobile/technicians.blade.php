@@ -45,7 +45,21 @@
                                         dropdownTech = {{ $tech->id }};
                                         dropdownTechActive = {{ $tech->is_active ? 'true' : 'false' }};
                                         const rect = $event.target.getBoundingClientRect();
-                                        dropdownTop = rect.bottom + window.scrollY;
+                                        const menuHeight = 200; // Approximate height of dropdown
+                                        const windowHeight = window.innerHeight;
+                                        const spaceBelow = windowHeight - rect.bottom;
+                                        const spaceAbove = rect.top;
+                                        
+                                        // Calculate vertical position
+                                        if (spaceBelow >= menuHeight || spaceBelow > spaceAbove) {
+                                            // Open downwards
+                                            dropdownTop = rect.bottom + window.scrollY + 2;
+                                        } else {
+                                            // Open upwards
+                                            dropdownTop = rect.top + window.scrollY - menuHeight - 2;
+                                        }
+                                        
+                                        // Calculate horizontal position
                                         let left = rect.left + window.scrollX;
                                         const menuWidth = 150;
                                         if (left + menuWidth > window.innerWidth) {
