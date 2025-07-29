@@ -169,7 +169,7 @@
                         </select>
                     </div>
                     <div class="flex gap-2">
-                        <button type="submit" class="w-1/2 bg-green-500 text-white py-2 rounded" :disabled="!tech">Assign & Accept</button>
+                        <button type="submit" class="w-1/2 bg-green-500 text-white py-2 rounded" :disabled="!tech">Assign</button>
                         <button type="button" onclick="document.getElementById('declineModal').classList.remove('hidden')" class="w-1/2 bg-gray-300 text-black py-2 rounded">Decline</button>
                     </div>
                 </form>

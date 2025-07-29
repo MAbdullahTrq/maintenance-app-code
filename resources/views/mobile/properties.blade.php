@@ -2,6 +2,35 @@
 
 @section('title', 'Properties')
 
+@push('styles')
+<style>
+    .form-select {
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background-color: #f9fafb;
+        width: auto;
+        min-width: 200px;
+        box-sizing: border-box;
+    }
+    
+    .form-select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        outline: none;
+        background-color: white;
+        transform: translateY(-1px);
+    }
+    
+    .form-select option {
+        padding: 8px 12px;
+        background-color: white;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-2 md:p-3 lg:p-4 w-full max-w-6xl mx-auto">
@@ -9,6 +38,35 @@
             <div class="flex justify-between items-center mb-4">
                 <div class="font-bold text-lg md:text-xl lg:text-2xl">All Properties</div>
             </div>
+            
+            <!-- Owner Filter Dropdown -->
+            <div class="mb-4">
+                <form method="GET" action="{{ route('mobile.properties.index') }}" id="ownerFilterForm">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                        <div class="flex items-center gap-2">
+                            <label for="owner_id" class="text-sm font-medium text-gray-700">Filter by Owner:</label>
+                            <select name="owner_id" id="owner_id" class="form-select" onchange="this.form.submit()">
+                                <option value="">All Owners</option>
+                                @foreach($owners as $owner)
+                                    <option value="{{ $owner->id }}" {{ $selectedOwnerId == $owner->id ? 'selected' : '' }}>
+                                        {{ $owner->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @if($selectedOwnerId)
+                            <a href="{{ route('mobile.properties.index') }}" class="text-sm text-blue-600 hover:text-blue-800 underline">Clear Filter</a>
+                        @endif
+                    </div>
+                </form>
+                <div class="mt-2 text-sm text-gray-600">
+                    Showing {{ $properties->count() }} {{ Str::plural('property', $properties->count()) }}
+                    @if($selectedOwnerId)
+                        for selected owner
+                    @endif
+                </div>
+            </div>
+            
             <div class="overflow-x-auto w-full" style="overflow: visible;">
                 <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded" style="overflow: visible;">
                     <thead>

@@ -18,14 +18,27 @@ class PropertyController extends Controller
         $this->imageService = $imageService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         
         // For team members, get the workspace owner's data
         $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
         
-        $properties = $workspaceOwner->managedProperties()->get();
+        // Get all properties with owner relationship
+        $propertiesQuery = $workspaceOwner->managedProperties()->with('owner');
+        
+        // Apply owner filter if selected
+        if ($request->filled('owner_id')) {
+            $propertiesQuery->where('owner_id', $request->owner_id);
+        }
+        
+        // Sort properties alphabetically by name
+        $properties = $propertiesQuery->orderBy('name', 'asc')->get();
+        
+        // Get all owners for the filter dropdown
+        $owners = $workspaceOwner->managedOwners()->orderBy('name', 'asc')->get();
+        
         $ownersCount = $workspaceOwner->managedOwners()->count();
         $techniciansCount = \App\Models\User::whereHas('role', function ($q) { $q->where('slug', 'technician'); })->where('invited_by', $workspaceOwner->id)->count();
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->count();
@@ -39,6 +52,8 @@ class PropertyController extends Controller
         
         return view('mobile.properties', [
             'properties' => $properties,
+            'owners' => $owners,
+            'selectedOwnerId' => $request->owner_id,
             'propertiesCount' => $properties->count(),
             'ownersCount' => $ownersCount,
             'techniciansCount' => $techniciansCount,
@@ -194,11 +209,36 @@ class PropertyController extends Controller
 
     public function qrcode($id)
     {
-        $property = Property::findOrFail($id);
-        if (!$property->qr_code) {
+        try {
+            $property = Property::findOrFail($id);
+            
             // Generate QR code if not exists
-            $property->generateQrCode();
+            if (!$property->qr_code) {
+                $property->generateQrCode();
+                $property->refresh(); // Refresh to get the updated qr_code
+            }
+            
+            // Check if the QR code file exists
+            $qrCodePath = storage_path('app/public/' . $property->qr_code);
+            if (!file_exists($qrCodePath)) {
+                // Regenerate QR code if file doesn't exist
+                $property->generateQrCode();
+                $property->refresh();
+                $qrCodePath = storage_path('app/public/' . $property->qr_code);
+            }
+            
+            // Return the QR code file
+            return response()->file($qrCodePath);
+            
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            \Log::error('QR Code generation failed for property ' . $id . ': ' . $e->getMessage());
+            
+            // Return a 404 or error response
+            return response()->json([
+                'error' => 'QR Code could not be generated',
+                'message' => 'Please try again later'
+            ], 500);
         }
-        return response()->file(storage_path('app/public/' . $property->qr_code));
     }
 }

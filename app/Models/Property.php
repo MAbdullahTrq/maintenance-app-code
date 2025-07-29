@@ -70,9 +70,26 @@ class Property extends Model
      */
     public function generateQrCode(): string
     {
-        // This would typically use a QR code generation library
-        // For now, we'll just return a placeholder
-        return 'qr_code_' . $this->id . '.png';
+        // Generate QR code content (property request URL)
+        $qrContent = $this->getRequestUrl();
+        
+        // Create QR code using SimpleSoftwareIO/simple-qrcode package
+        $qrCode = (new \SimpleSoftwareIO\QrCode\QrCode())
+            ->format('png')
+            ->size(300)
+            ->margin(10)
+            ->generate($qrContent);
+        
+        // Generate unique filename
+        $filename = 'qr_codes/property_' . $this->id . '_' . time() . '.png';
+        
+        // Store the QR code file
+        \Storage::disk('public')->put($filename, $qrCode);
+        
+        // Update the property with the QR code filename
+        $this->update(['qr_code' => $filename]);
+        
+        return $filename;
     }
 
     /**

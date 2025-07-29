@@ -168,6 +168,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\Smtp2goServiceProvider::class,
+        
+        /*
+         * Package Service Providers...
+         */
+        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
     ],
 
 ];
