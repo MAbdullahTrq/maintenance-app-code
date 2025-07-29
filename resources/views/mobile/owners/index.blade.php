@@ -47,7 +47,7 @@
                                             <i class="fas fa-edit mr-2 text-green-500"></i>Edit
                                         </a>
                                         <a href="{{ route('mobile.owner.requests.create') }}?owner_id={{ $owner->id }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
-                                            <i class="fas fa-clipboard-list mr-2 text-green-600"></i>Submit Request
+                                            <i class="fas fa-clipboard-list mr-2 text-green-600"></i>Request
                                         </a>
                                         <form action="{{ route('mobile.owners.destroy', $owner->id) }}" method="POST" class="block" onsubmit="return confirm('Are you sure you want to delete this owner?');">
                                             @csrf
