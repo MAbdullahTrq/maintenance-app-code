@@ -74,8 +74,8 @@ class Property extends Model
             // Generate QR code content (property request URL)
             $qrContent = $this->getRequestUrl();
             
-            // Create QR code using SimpleSoftwareIO/simple-qrcode package with facade
-            $qrCodeData = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')
+            // Create QR code using SimpleSoftwareIO/simple-qrcode package with SVG format (no imagick required)
+            $qrCodeData = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')
                 ->size(300)
                 ->margin(10)
                 ->generate($qrContent);
@@ -85,8 +85,8 @@ class Property extends Model
                 $qrCodeData = $qrCodeData->toHtml();
             }
             
-            // Generate unique filename
-            $filename = 'qr_codes/property_' . $this->id . '_' . time() . '.png';
+            // Generate unique filename with .svg extension
+            $filename = 'qr_codes/property_' . $this->id . '_' . time() . '.svg';
             
             // Store the QR code file
             \Storage::disk('public')->put($filename, $qrCodeData);

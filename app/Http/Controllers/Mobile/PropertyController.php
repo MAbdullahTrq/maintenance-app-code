@@ -229,8 +229,18 @@ class PropertyController extends Controller
                 $qrCodePath = storage_path('app/public/' . $property->qr_code);
             }
             
-            // Return the QR code file
-            return response()->file($qrCodePath);
+            // Return the QR code file with proper content type
+            $content = file_get_contents($qrCodePath);
+            $extension = pathinfo($property->qr_code, PATHINFO_EXTENSION);
+            
+            if ($extension === 'svg') {
+                return response($content, 200, [
+                    'Content-Type' => 'image/svg+xml',
+                    'Content-Disposition' => 'inline; filename="' . basename($property->qr_code) . '"'
+                ]);
+            } else {
+                return response()->file($qrCodePath);
+            }
             
         } catch (\Exception $e) {
             // Log the error for debugging
