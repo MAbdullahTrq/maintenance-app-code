@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', $owner->name)
-@section('header', $owner->name)
+@section('title', $owner->displayName)
+@section('header', $owner->displayName)
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
@@ -17,7 +17,7 @@
             <li aria-current="page">
                 <div class="flex items-center">
                     <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                    <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">{{ $owner->name }}</span>
+                    <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">{{ $owner->displayName }}</span>
                 </div>
             </li>
         </ol>
@@ -26,7 +26,7 @@
     <div class="bg-white shadow rounded-lg overflow-hidden">
         <div class="p-6">
             <div class="flex justify-between items-center mb-6">
-                <h1 class="text-2xl font-bold text-gray-800">{{ $owner->name }}</h1>
+                <h1 class="text-2xl font-bold text-gray-800">{{ $owner->displayName }}</h1>
                 <div class="flex space-x-2">
                     <a href="{{ route('owners.edit', $owner) }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                         <i class="fas fa-edit mr-2"></i>Edit Owner
@@ -57,11 +57,11 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-600">Phone</label>
-                            <p class="mt-1 text-lg text-gray-900">{{ $owner->phone ?? 'Not provided' }}</p>
+                            <p class="mt-1 text-lg text-gray-900">{{ $owner->phone ?? '-' }}</p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-600">Company</label>
-                            <p class="mt-1 text-lg text-gray-900">{{ $owner->company ?? 'Not provided' }}</p>
+                            <p class="mt-1 text-lg text-gray-900">{{ $owner->company ?? '-' }}</p>
                         </div>
                         @if($owner->address)
                         <div>

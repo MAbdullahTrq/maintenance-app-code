@@ -77,4 +77,15 @@ class Owner extends Model
     {
         return config('app.url') . '/owner/' . $this->id . '/info';
     }
+
+    /**
+     * Get the display name with company in parentheses if available.
+     */
+    public function getDisplayNameAttribute(): string
+    {
+        if ($this->company && !empty(trim($this->company))) {
+            return $this->name . ' (' . $this->company . ')';
+        }
+        return $this->name;
+    }
 }

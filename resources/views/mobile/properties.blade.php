@@ -47,7 +47,7 @@
                                 <option value="">All Owners</option>
                                 @foreach($owners as $owner)
                                     <option value="{{ $owner->id }}" {{ $selectedOwnerId == $owner->id ? 'selected' : '' }}>
-                                        {{ $owner->name }}
+                                        {{ $owner->displayName }}
                                     </option>
                                 @endforeach
                             </select>
@@ -90,6 +90,9 @@
                                 </div>
                             </td>
                             <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">{{ $property->address }}</td>
+                            <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
+                                <div class="text-gray-700">{{ $property->owner->displayName ?? '-' }}</div>
+                            </td>
                             <td class="p-2 md:p-3 lg:p-4 align-top text-center" style="position: relative; overflow: visible;" onclick="event.stopPropagation();">
                                 <div class="relative" style="overflow: visible;">
                                     <button onclick="toggleDropdown(this)" class="px-2 py-1 text-gray-600 hover:text-gray-800 text-lg md:text-xl focus:outline-none dropdown-btn">

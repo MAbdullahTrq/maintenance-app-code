@@ -41,16 +41,16 @@
                                         </div>
                                     </div>
                                     <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900">{{ $owner->name }}</div>
+                                        <div class="text-sm font-medium text-gray-900">{{ $owner->displayName }}</div>
                                         <div class="text-sm text-gray-500">{{ $owner->email }}</div>
                                     </div>
                                 </div>
                             </td>
                             <td class="px-6 py-4">
-                                <div class="text-sm text-gray-900">{{ $owner->phone ?? 'N/A' }}</div>
+                                <div class="text-sm text-gray-900">{{ $owner->phone ?? '-' }}</div>
                             </td>
-                            <td class="px-6 py-4">
-                                <div class="text-sm text-gray-900">{{ $owner->company ?? 'N/A' }}</div>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">{{ $owner->company ?? '-' }}</div>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-900">{{ $owner->properties->count() }} properties</div>

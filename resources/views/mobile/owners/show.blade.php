@@ -9,7 +9,7 @@
             <a href="#" onclick="window.history.back(); return false;" class="mr-2 text-blue-700 hover:underline flex items-center"><i class="fas fa-arrow-left mr-1"></i> Back</a>
         </div>
         
-        <h2 class="text-center text-xl md:text-2xl lg:text-3xl font-bold mb-2 md:mb-4 text-yellow-600">{{ $owner->name }}</h2>
+        <h2 class="text-center text-xl md:text-2xl lg:text-3xl font-bold mb-2 md:mb-4 text-yellow-600">{{ $owner->displayName }}</h2>
         
         <!-- Owner Details -->
         <div class="mb-4 md:mb-6">
@@ -18,10 +18,10 @@
                 <div>
                     <div class="mb-2"><span class="font-semibold text-sm md:text-base">Name:</span> <span class="text-sm md:text-base lg:text-lg">{{ $owner->name }}</span></div>
                     <div class="mb-2"><span class="font-semibold text-sm md:text-base">Email:</span> <span class="text-sm md:text-base lg:text-lg">{{ $owner->email }}</span></div>
-                    <div class="mb-1"><span class="font-semibold text-sm md:text-base">Phone:</span> <span class="text-sm md:text-base lg:text-lg">{{ $owner->phone ?? 'Not provided' }}</span></div>
+                    <div class="mb-1"><span class="font-semibold text-sm md:text-base">Phone:</span> <span class="text-sm md:text-base lg:text-lg">{{ $owner->phone ?? '-' }}</span></div>
                 </div>
                 <div>
-                    <div class="mb-2"><span class="font-semibold text-sm md:text-base">Company:</span> <span class="text-sm md:text-base lg:text-lg">{{ $owner->company ?? 'Not provided' }}</span></div>
+                    <div class="mb-2"><span class="font-semibold text-sm md:text-base">Company:</span> <span class="text-sm md:text-base lg:text-lg">{{ $owner->company ?? '-' }}</span></div>
                     @if($owner->address)
                     <div class="mb-2"><span class="font-semibold text-sm md:text-base">Address:</span> <span class="text-sm md:text-base lg:text-lg">{{ $owner->address }}</span></div>
                     @endif
@@ -95,7 +95,7 @@
             <div class="text-gray-500 mb-4">No properties assigned to this owner yet.</div>
             @if(!Auth::user()->isViewer())
             <a href="{{ route('mobile.properties.create') }}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                Add Property for {{ $owner->name }}
+                Add Property for {{ $owner->displayName }}
             </a>
             @endif
         </div>

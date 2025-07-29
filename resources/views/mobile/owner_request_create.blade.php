@@ -18,7 +18,7 @@
                     <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                         <p class="text-blue-800 text-sm">
                             <i class="fas fa-info-circle mr-1"></i>
-                            Submitting request for <strong>{{ $owner->name }}</strong>
+                            Submitting request for <strong>{{ $owner->displayName }}</strong>
                         </p>
                     </div>
                 @endif

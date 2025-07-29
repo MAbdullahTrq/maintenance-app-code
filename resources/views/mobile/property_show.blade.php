@@ -55,7 +55,7 @@
                         <span class="font-bold text-sm md:text-base">Owner details</span><br>
                         @if($property->owner)
                             <div class="mt-2 space-y-1">
-                                <div class="text-sm md:text-base lg:text-lg">{{ $property->owner->name }}</div>
+                                <div class="mb-2"><span class="font-semibold text-sm md:text-base">Owner:</span> <div class="text-sm md:text-base lg:text-lg">{{ $property->owner->displayName }}</div></div>
                                 @if($property->owner->email)
                                     <div class="text-sm md:text-base">
                                         <a href="mailto:{{ $property->owner->email }}" class="text-blue-600 hover:text-blue-800">{{ $property->owner->email }}</a>
@@ -63,9 +63,6 @@
                                 @endif
                                 @if($property->owner->phone)
                                     <div class="text-sm md:text-base">{{ $property->owner->phone }}</div>
-                                @endif
-                                @if($property->owner->company)
-                                    <div class="text-gray-600 text-sm">({{ $property->owner->company }})</div>
                                 @endif
                             </div>
                         @else

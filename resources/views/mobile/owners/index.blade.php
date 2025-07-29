@@ -24,14 +24,14 @@
                         @foreach($owners as $owner)
                         <tr x-show="search === '' || '{{ strtolower($owner->name . ' ' . $owner->email . ' ' . $owner->company) }}'.includes(search.toLowerCase())" class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" onclick="window.location.href='/m/ao/{{ $owner->id }}'">
                             <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
-                                <div class="font-semibold">{{ $owner->name }}</div>
+                                <div class="font-semibold">{{ $owner->displayName }}</div>
                                 <div class="text-gray-500 text-xs md:text-sm">{{ $owner->email }}</div>
                             </td>
                             <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
-                                <div class="text-gray-700">{{ $owner->phone ?? 'N/A' }}</div>
+                                <div class="text-gray-700">{{ $owner->phone ?? '-' }}</div>
                             </td>
                             <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
-                                <div class="text-gray-700">{{ $owner->company ?? 'N/A' }}</div>
+                                <div class="text-gray-700">{{ $owner->company ?? '-' }}</div>
                             </td>
                             <td class="p-2 md:p-3 lg:p-4 align-top text-center relative" onclick="event.stopPropagation();">
                                 <button onclick="toggleDropdown(this, {{ $owner->id }})" class="px-2 py-1 text-gray-600 hover:text-gray-800 text-lg md:text-xl focus:outline-none dropdown-btn">

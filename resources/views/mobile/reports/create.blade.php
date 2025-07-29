@@ -26,7 +26,7 @@
                         class="w-full border border-gray-300 rounded-lg px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="">Select Owner</option>
                     @foreach($owners as $owner)
-                        <option value="{{ $owner->id }}">{{ $owner->name }}</option>
+                        <option value="{{ $owner->id }}">{{ $owner->displayName }}</option>
                     @endforeach
                 </select>
             </div>

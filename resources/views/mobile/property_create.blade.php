@@ -20,7 +20,7 @@
                     <option value="">Select an owner</option>
                     @if(isset($owners))
                         @foreach($owners as $owner)
-                            <option value="{{ $owner->id }}">{{ $owner->name }}</option>
+                            <option value="{{ $owner->id }}">{{ $owner->displayName }}</option>
                         @endforeach
                     @endif
                 </select>

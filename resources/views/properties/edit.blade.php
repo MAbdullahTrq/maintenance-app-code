@@ -63,7 +63,7 @@
                     <option value="">Select an owner</option>
                     @foreach($owners as $owner)
                         <option value="{{ $owner->id }}" {{ old('owner_id', $property->owner_id) == $owner->id ? 'selected' : '' }}>
-                            {{ $owner->name }}
+                            {{ $owner->displayName }}
                         </option>
                     @endforeach
                 </select>
