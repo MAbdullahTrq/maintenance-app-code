@@ -298,6 +298,7 @@ Route::prefix('m')->middleware('auth')->group(function () {
             Route::get('/ao/{id}/edit', [MobileOwnerController::class, 'edit'])->name('mobile.owners.edit');
             Route::post('/ao/{id}/edit', [MobileOwnerController::class, 'update'])->name('mobile.owners.update');
             Route::delete('/ao/{id}', [MobileOwnerController::class, 'destroy'])->name('mobile.owners.destroy');
+            Route::get('/ao/{id}/qrcode', [MobileOwnerController::class, 'qrcode'])->name('mobile.owners.qrcode');
             
             // Mobile technician management routes
             Route::get('/at/create', [MobileTechnicianController::class, 'create'])->name('mobile.technicians.create');

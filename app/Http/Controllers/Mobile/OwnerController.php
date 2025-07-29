@@ -142,26 +142,60 @@ class OwnerController extends Controller
     }
 
     /**
-     * Remove the specified owner from storage.
+     * Destroy the specified owner.
      */
     public function destroy($id)
     {
         $owner = Owner::findOrFail($id);
         $this->authorize('delete', $owner);
         
-        // Check if owner has any properties
-        $properties = $owner->properties;
-        
-        if ($properties->count() > 0) {
-            $propertyNames = $properties->pluck('name')->implode(', ');
-            
-            return redirect()->back()->with('error', 
-                'This owner cannot be deleted because the following properties are owned by them: ' . $propertyNames
-            );
-        }
-        
         $owner->delete();
-
+        
         return redirect('/m/ao')->with('success', 'Owner deleted successfully.');
+    }
+
+    /**
+     * Generate and display QR code for the owner.
+     */
+    public function qrcode($id)
+    {
+        try {
+            $owner = Owner::findOrFail($id);
+            $this->authorize('view', $owner);
+            
+            if (!$owner->qr_code) {
+                \Log::info('Generating QR code for owner ' . $id);
+                $owner->generateQrCode();
+                $owner->refresh();
+            }
+            
+            $qrCodePath = storage_path('app/public/' . $owner->qr_code);
+            if (!file_exists($qrCodePath)) {
+                \Log::info('QR code file not found, regenerating for owner ' . $id);
+                $owner->generateQrCode();
+                $owner->refresh();
+                $qrCodePath = storage_path('app/public/' . $owner->qr_code);
+            }
+            
+            $content = file_get_contents($qrCodePath);
+            $extension = pathinfo($owner->qr_code, PATHINFO_EXTENSION);
+            
+            if ($extension === 'svg') {
+                return response($content, 200, [
+                    'Content-Type' => 'image/svg+xml',
+                    'Content-Disposition' => 'inline; filename="' . basename($owner->qr_code) . '"'
+                ]);
+            } else {
+                return response()->file($qrCodePath);
+            }
+        } catch (\Exception $e) {
+            \Log::error('QR Code generation failed for owner ' . $id . ': ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return response()->json([
+                'error' => 'QR Code could not be generated',
+                'message' => 'Please try again later',
+                'debug' => $e->getMessage()
+            ], 500);
+        }
     }
 }
