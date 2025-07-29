@@ -74,7 +74,7 @@ class Property extends Model
         $qrContent = $this->getRequestUrl();
         
         // Create QR code using SimpleSoftwareIO/simple-qrcode package
-        $qrCode = (new \SimpleSoftwareIO\QrCode\QrCode())
+        $qrCode = (new \SimpleSoftwareIO\QrCode\Generator())
             ->format('png')
             ->size(300)
             ->margin(10)
