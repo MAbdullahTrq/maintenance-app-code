@@ -10,6 +10,31 @@
                 <div class="font-bold text-lg md:text-xl lg:text-2xl">Submit Maintenance Request</div>
             </div>
             
+            @if($ownerId)
+                @php
+                    $owner = \App\Models\Owner::find($ownerId);
+                @endphp
+                @if($owner)
+                    <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <p class="text-blue-800 text-sm">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Submitting request for <strong>{{ $owner->name }}</strong>
+                        </p>
+                    </div>
+                @endif
+            @endif
+            
+            @if($properties->count() == 0)
+                <div class="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <p class="text-yellow-800 text-sm">
+                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                        No properties available for this owner. Please add properties first.
+                    </p>
+                    <a href="{{ route('mobile.properties.create') }}" class="inline-block mt-2 bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700">
+                        Add Property
+                    </a>
+                </div>
+            @else
             <form method="POST" action="{{ route('mobile.owner.requests.store') }}" enctype="multipart/form-data" id="owner-request-form">
                 @csrf
                 
@@ -134,6 +159,7 @@
                     </button>
                 </div>
             </form>
+            @endif
         </div>
     </div>
 </div>

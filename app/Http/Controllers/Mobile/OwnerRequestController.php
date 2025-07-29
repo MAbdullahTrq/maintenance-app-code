@@ -16,15 +16,34 @@ class OwnerRequestController extends Controller
     /**
      * Show the form for creating a new maintenance request for an owner.
      */
-    public function create()
+    public function create(Request $request)
     {
         $user = auth()->user();
         
         // For team members, get the workspace owner's data
         $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
         
-        // Get all properties managed by the workspace owner
-        $properties = $workspaceOwner->managedProperties()->orderBy('name', 'asc')->get();
+        // Get owner_id from query parameter
+        $ownerId = $request->query('owner_id');
+        
+        // Get properties based on owner_id if provided
+        if ($ownerId) {
+            // Verify the owner belongs to the workspace owner
+            $owner = \App\Models\Owner::where('id', $ownerId)
+                ->where('manager_id', $workspaceOwner->id)
+                ->firstOrFail();
+            
+            // Get properties for this specific owner
+            $properties = $workspaceOwner->managedProperties()
+                ->where('owner_id', $ownerId)
+                ->orderBy('name', 'asc')
+                ->get();
+        } else {
+            // Get all properties managed by the workspace owner
+            $properties = $workspaceOwner->managedProperties()
+                ->orderBy('name', 'asc')
+                ->get();
+        }
         
         // Get stats for the mobile layout
         $propertiesCount = $workspaceOwner->managedProperties()->count();
@@ -34,7 +53,7 @@ class OwnerRequestController extends Controller
         })->where('invited_by', $workspaceOwner->id)->count();
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $workspaceOwner->managedProperties()->pluck('id'))->count();
         
-        return view('mobile.owner_request_create', compact('properties', 'propertiesCount', 'ownersCount', 'techniciansCount', 'requestsCount'));
+        return view('mobile.owner_request_create', compact('properties', 'propertiesCount', 'ownersCount', 'techniciansCount', 'requestsCount', 'ownerId'));
     }
 
     /**

@@ -46,6 +46,9 @@
                                         <a href="/m/ao/{{ $owner->id }}/edit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
                                             <i class="fas fa-edit mr-2 text-green-500"></i>Edit
                                         </a>
+                                        <a href="{{ route('mobile.owner.requests.create') }}?owner_id={{ $owner->id }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                                            <i class="fas fa-clipboard-list mr-2 text-green-600"></i>Submit Request
+                                        </a>
                                         <form action="{{ route('mobile.owners.destroy', $owner->id) }}" method="POST" class="block" onsubmit="return confirm('Are you sure you want to delete this owner?');">
                                             @csrf
                                             @method('DELETE')
@@ -86,17 +89,9 @@
 </div>
 
 @if(Auth::user()->hasActiveSubscription() && !Auth::user()->isViewer())
-<div class="fixed bottom-6 right-6 flex gap-3">
-    <!-- Owner Request Button -->
-    <a href="{{ route('mobile.owner.requests.create') }}" class="bg-green-600 text-white rounded-full w-14 h-14 flex items-center justify-center text-2xl shadow-lg z-50 hover:bg-green-700 transition-colors" title="Submit Request">
-        <i class="fas fa-clipboard-list"></i>
-    </a>
-    
-    <!-- Add Owner Button -->
-    <a href="/m/ao/create" class="bg-blue-600 text-white rounded-full w-14 h-14 flex items-center justify-center text-3xl shadow-lg z-50 hover:bg-blue-700 transition-colors" title="Add Owner">
-        <i class="fas fa-plus"></i>
-    </a>
-</div>
+<a href="/m/ao/create" class="fixed bottom-6 right-6 bg-blue-600 text-white rounded-full w-14 h-14 flex items-center justify-center text-3xl shadow-lg z-50 hover:bg-blue-700 transition-colors" title="Add Owner">
+    <i class="fas fa-plus"></i>
+</a>
 @endif
 
 <script>
