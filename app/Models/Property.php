@@ -70,26 +70,36 @@ class Property extends Model
      */
     public function generateQrCode(): string
     {
-        // Generate QR code content (property request URL)
-        $qrContent = $this->getRequestUrl();
-        
-        // Create QR code using SimpleSoftwareIO/simple-qrcode package
-        $qrCode = (new \SimpleSoftwareIO\QrCode\Generator())
-            ->format('png')
-            ->size(300)
-            ->margin(10)
-            ->generate($qrContent);
-        
-        // Generate unique filename
-        $filename = 'qr_codes/property_' . $this->id . '_' . time() . '.png';
-        
-        // Store the QR code file
-        \Storage::disk('public')->put($filename, $qrCode);
-        
-        // Update the property with the QR code filename
-        $this->update(['qr_code' => $filename]);
-        
-        return $filename;
+        try {
+            // Generate QR code content (property request URL)
+            $qrContent = $this->getRequestUrl();
+            
+            // Create QR code using SimpleSoftwareIO/simple-qrcode package with facade
+            $qrCodeData = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')
+                ->size(300)
+                ->margin(10)
+                ->generate($qrContent);
+            
+            // If it's an HtmlString, get the raw content
+            if ($qrCodeData instanceof \Illuminate\Support\HtmlString) {
+                $qrCodeData = $qrCodeData->toHtml();
+            }
+            
+            // Generate unique filename
+            $filename = 'qr_codes/property_' . $this->id . '_' . time() . '.png';
+            
+            // Store the QR code file
+            \Storage::disk('public')->put($filename, $qrCodeData);
+            
+            // Update the property with the QR code filename
+            $this->update(['qr_code' => $filename]);
+            
+            return $filename;
+            
+        } catch (\Exception $e) {
+            \Log::error('QR Code generation failed for property ' . $this->id . ': ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     /**

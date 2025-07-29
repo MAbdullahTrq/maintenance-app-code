@@ -214,6 +214,7 @@ class PropertyController extends Controller
             
             // Generate QR code if not exists
             if (!$property->qr_code) {
+                \Log::info('Generating QR code for property ' . $id);
                 $property->generateQrCode();
                 $property->refresh(); // Refresh to get the updated qr_code
             }
@@ -221,6 +222,7 @@ class PropertyController extends Controller
             // Check if the QR code file exists
             $qrCodePath = storage_path('app/public/' . $property->qr_code);
             if (!file_exists($qrCodePath)) {
+                \Log::info('QR code file not found, regenerating for property ' . $id);
                 // Regenerate QR code if file doesn't exist
                 $property->generateQrCode();
                 $property->refresh();
@@ -233,11 +235,13 @@ class PropertyController extends Controller
         } catch (\Exception $e) {
             // Log the error for debugging
             \Log::error('QR Code generation failed for property ' . $id . ': ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
             
             // Return a 404 or error response
             return response()->json([
                 'error' => 'QR Code could not be generated',
-                'message' => 'Please try again later'
+                'message' => 'Please try again later',
+                'debug' => $e->getMessage()
             ], 500);
         }
     }
