@@ -20,7 +20,40 @@
             <p class="mt-4 text-lg md:text-xl text-white font-medium" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
                 A simple set of powerful tools
             </p>
-           
+            
+            <!-- Feature tiles -->
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 border border-white border-opacity-20">
+                    <div class="text-blue-300 text-2xl mb-2">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <p class="text-white text-sm font-medium">QR codes – submitting a request has never been easier</p>
+                </div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 border border-white border-opacity-20">
+                    <div class="text-blue-300 text-2xl mb-2">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <p class="text-white text-sm font-medium">Assign tasks – to your preferred technicians</p>
+                </div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 border border-white border-opacity-20">
+                    <div class="text-blue-300 text-2xl mb-2">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <p class="text-white text-sm font-medium">Real-time notifications – keep everyone in the loop</p>
+                </div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 border border-white border-opacity-20">
+                    <div class="text-blue-300 text-2xl mb-2">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <p class="text-white text-sm font-medium">Create reports – Admin is a breeze</p>
+                </div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 border border-white border-opacity-20">
+                    <div class="text-blue-300 text-2xl mb-2">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <p class="text-white text-sm font-medium">Add team members – <span class="underline">role based permissions</span></p>
+                </div>
+            </div
             @auth
                 <div class="mt-10 flex justify-center">
                     <div class="inline-flex rounded-md shadow">
@@ -60,47 +93,16 @@
         </div>
     </div>
 
-    <!-- Feature list section -->
-    <div class="py-16 bg-white">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">A simple set of powerful tools</h2>
-                <ul class="text-left text-gray-700 space-y-3 max-w-2xl mx-auto">
-                    <li class="flex items-start">
-                        <span class="text-blue-600 mr-3 mt-1">•</span>
-                        <span>QR codes – submitting a request has never been easier</span>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-blue-600 mr-3 mt-1">•</span>
-                        <span>Assign tasks – to your preferred technicians</span>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-blue-600 mr-3 mt-1">•</span>
-                        <span>Real-time notifications – keep everyone in the loop</span>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-blue-600 mr-3 mt-1">•</span>
-                        <span>Create reports – Admin is a breeze</span>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-blue-600 mr-3 mt-1">•</span>
-                        <span>Add team members – <span class="underline">role based permissions</span></span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
     <!-- Features section -->
     <div class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
-                <h2 class="text-4xl font-semibold text-blue-600 tracking-wide uppercase font-weight-bold">Built for vacation rental managers</h2>
-                <p class="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight">
+                <h2 class="text-3xl font-bold text-blue-600 mb-4">BUILT FOR VACATION RENTAL MANAGERS</h2>
+                <p class="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight mb-6">
                     Everything you need to stay on top of property maintenance
                 </p>
-                <p class="max-w-xl mt-5 mx-auto text-xl text-gray-500">
-                    Whether you manage a few vacation homes or a growing portfolio of <span class="underline">long term rental properties</span>, 
+                <p class="max-w-3xl mx-auto text-xl text-gray-600 leading-relaxed">
+                    Whether you manage a few vacation homes or a growing portfolio of <span class="underline font-medium">long term rental properties</span>, 
                     <span class="text-red-600 underline font-bold">MaintainXtra</span> helps you track repairs, assign tasks, create reports, 
                     and keep things running smoothly—without the overwhelm.
                 </p>
