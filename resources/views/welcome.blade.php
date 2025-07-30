@@ -5,11 +5,9 @@
 @section('content')
 <div class="relative">
     <!-- Hero section with dark overlay -->
-    <div class="relative py-20 md:py-32 bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 rounded-lg overflow-hidden">
-        <!-- Background pattern -->
-        <div class="absolute inset-0 opacity-10">
-            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 0%, transparent 50%);"></div>
-        </div>
+    <div class="relative py-20 md:py-32 bg-gray-900 rounded-lg overflow-hidden">
+        <!-- Background gradient with overlay -->
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-900 to-indigo-900 opacity-80"></div>
         
         <!-- Content -->
         <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
