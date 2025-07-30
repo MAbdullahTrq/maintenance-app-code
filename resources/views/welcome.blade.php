@@ -77,7 +77,7 @@
                     </div>
                 </div>
             @else
-                <div class="flex flex-col sm:flex-row justify-center items-center space-y-6 sm:space-y-0 sm:space-x-8">
+                <div class="flex flex-col sm:flex-row justify-center items-center space-y-8 sm:space-y-0 sm:space-x-12">
                     <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-lg font-semibold rounded-xl text-white bg-transparent hover:bg-white hover:text-blue-900 transform hover:scale-105 transition-all duration-300 shadow-lg backdrop-blur-sm">
                         <i class="fas fa-sign-in-alt mr-3"></i>Login
                     </a>
