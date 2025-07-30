@@ -15,7 +15,7 @@
                 Property Maintenance Management
             </h1>
             <p class="text-2xl md:text-3xl text-blue-100 max-w-4xl mx-auto font-medium mb-4" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
-                For <span class="text-blue-300 underline decoration-2 underline-offset-4">small</span> to <span class="text-blue-300 underline decoration-2 underline-offset-4">medium</span> property managers
+                For <span class="text-blue-300">small</span> to <span class="text-blue-300">medium</span> property managers
             </p>
             <p class="text-xl md:text-2xl text-white font-semibold mb-12" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
                 A simple set of powerful tools
@@ -51,7 +51,7 @@
                     <div class="text-blue-200 text-3xl mb-4 group-hover:text-white transition-colors">
                         <i class="fas fa-users"></i>
                     </div>
-                    <p class="text-white text-base font-medium leading-relaxed">Add team members – <span class="underline decoration-blue-300 underline-offset-2">role based permissions</span></p>
+                    <p class="text-white text-base font-medium leading-relaxed">Add team members – <span class="text-blue-300">role based permissions</span></p>
                 </div>
             </div
             @auth
@@ -77,7 +77,7 @@
                     </div>
                 </div>
             @else
-                <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                <div class="flex flex-col sm:flex-row justify-center items-center space-y-6 sm:space-y-0 sm:space-x-8">
                     <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-lg font-semibold rounded-xl text-white bg-transparent hover:bg-white hover:text-blue-900 transform hover:scale-105 transition-all duration-300 shadow-lg backdrop-blur-sm">
                         <i class="fas fa-sign-in-alt mr-3"></i>Login
                     </a>
@@ -98,8 +98,8 @@
                     Everything you need to stay on top of property maintenance
                 </p>
                 <p class="max-w-4xl mx-auto text-xl text-gray-600 leading-relaxed">
-                    Whether you manage a few vacation homes or a growing portfolio of <span class="underline decoration-blue-400 decoration-2 underline-offset-4 font-medium">long term rental properties</span>, 
-                    <span class="text-red-600 underline decoration-red-400 decoration-2 underline-offset-4 font-bold">MaintainXtra</span> helps you track repairs, assign tasks, create reports, 
+                    Whether you manage a few vacation homes or a growing portfolio of long term rental properties, 
+                    <span class="text-blue-700 font-bold">Maintain</span><span class="text-black font-bold">Xtra</span> helps you track repairs, assign tasks, create reports, 
                     and keep things running smoothly—without the overwhelm.
                 </p>
             </div>
