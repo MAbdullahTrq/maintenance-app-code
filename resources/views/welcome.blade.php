@@ -22,7 +22,7 @@
             </p>
             
             <!-- Feature tiles -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-6xl mx-auto mb-12">
                 <div class="group bg-white bg-opacity-15 backdrop-blur-md rounded-xl p-6 border border-white border-opacity-25 hover:bg-opacity-20 transition-all duration-300 hover:scale-105 shadow-lg">
                     <div class="text-blue-200 text-3xl mb-4 group-hover:text-white transition-colors">
                         <i class="fas fa-qrcode"></i>
