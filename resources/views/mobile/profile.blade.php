@@ -35,7 +35,7 @@
                 
                 <!-- File Upload Button -->
                 <div class="relative">
-                    <label class="w-full bg-blue-600 text-white px-4 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors cursor-pointer">
+                    <label for="profile-image-input" class="w-full bg-blue-600 text-white px-4 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors cursor-pointer">
                         <i class="fas fa-upload"></i>
                         Choose from Gallery
                     </label>
