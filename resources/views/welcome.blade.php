@@ -47,7 +47,7 @@
                     </div>
                     <p class="text-white text-base font-medium leading-relaxed">Create reports – Admin is a breeze</p>
                 </div>
-                <div class="group bg-white bg-opacity-15 backdrop-blur-md rounded-xl p-6 border border-white border-opacity-25 hover:bg-opacity-20 transition-all duration-300 hover:scale-105 shadow-lg md:col-span-2 lg:col-span-1">
+                <div class="group bg-white bg-opacity-15 backdrop-blur-md rounded-xl p-6 border border-white border-opacity-25 hover:bg-opacity-20 transition-all duration-300 hover:scale-105 shadow-lg">
                     <div class="text-blue-200 text-3xl mb-4 group-hover:text-white transition-colors">
                         <i class="fas fa-users"></i>
                     </div>
@@ -247,7 +247,7 @@
 
                     <div class="bg-gray-50 rounded-lg p-6 border border-gray-100 shadow-sm">
                         <div class="text-blue-600 mb-4">
-                            <i class="fas fa-user-hard-hat text-3xl"></i>
+                            <i class="fas fa-tools text-3xl"></i>
                         </div>
                         <h3 class="text-xl font-medium text-gray-900">Technician</h3>
                         <p class="mt-2 text-base text-gray-500">
