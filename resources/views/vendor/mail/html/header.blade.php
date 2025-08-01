@@ -12,9 +12,13 @@
     config('app.name') === 'MaintainXtra' ||
     config('app.name') === 'Laravel'
 )
-<img src="{{ config('app.url') }}/images/logo.png" class="logo" alt="MaintainXtra Logo" style="height: 60px; max-height: 60px; width: auto; max-width: 200px;">
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 28px; font-weight: bold; color: #3d4852; text-align: center;">
+    <span style="color: #3b82f6;">Maintain</span><span style="color: #000000;">Xtra</span>
+</div>
 @else
-{{ $slot }}
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 24px; font-weight: bold; color: #3d4852;">
+    <span style="color: #3b82f6;">Maintain</span><span style="color: #000000;">Xtra</span>
+</div>
 @endif
 </a>
 </td>
