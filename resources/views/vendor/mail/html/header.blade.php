@@ -13,11 +13,11 @@
     config('app.name') === 'Laravel'
 )
 <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 28px; font-weight: bold; color: #3d4852; text-align: center;">
-    <span style="color: #3b82f6;">Maintain</span><span style="color: #000000;">Xtra</span>
+    <span style="color: #1e40af;">Maintain</span><span style="color: #000000;">Xtra</span>
 </div>
 @else
 <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 24px; font-weight: bold; color: #3d4852;">
-    <span style="color: #3b82f6;">Maintain</span><span style="color: #000000;">Xtra</span>
+    <span style="color: #1e40af;">Maintain</span><span style="color: #000000;">Xtra</span>
 </div>
 @endif
 </a>
