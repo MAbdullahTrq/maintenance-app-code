@@ -227,6 +227,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the checklists created by the user.
+     */
+    public function checklists(): HasMany
+    {
+        return $this->hasMany(Checklist::class, 'manager_id');
+    }
+
+    /**
      * Check if the user has an active subscription.
      * For team members, check their workspace owner's subscription.
      */

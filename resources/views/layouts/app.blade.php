@@ -91,6 +91,10 @@
                                         <i class="fas fa-users-cog text-blue-500 w-5 text-center"></i>
                                         <span class="ml-2">Technicians</span>
                                     </a>
+                                    <a href="{{ route('checklists.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-clipboard-list text-orange-500 w-5 text-center"></i>
+                                        <span class="ml-2">Checklists</span>
+                                    </a>
                                     
                                     <!-- Team Settings Section -->
                                     <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100">

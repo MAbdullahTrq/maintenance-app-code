@@ -210,6 +210,13 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/properties/{property}', [App\Http\Controllers\PropertyController::class, 'update'])->name('properties.update');
             Route::delete('/properties/{property}', [App\Http\Controllers\PropertyController::class, 'destroy'])->name('properties.destroy');
             Route::get('/properties/{property}/qrcode', [App\Http\Controllers\PropertyController::class, 'downloadQrCode'])->name('properties.qrcode');
+            
+            // Checklist management routes
+            Route::resource('checklists', App\Http\Controllers\ChecklistController::class);
+            Route::post('/checklists/{checklist}/items', [App\Http\Controllers\ChecklistItemController::class, 'store'])->name('checklists.items.store');
+            Route::put('/checklists/{checklist}/items/{item}', [App\Http\Controllers\ChecklistItemController::class, 'update'])->name('checklists.items.update');
+            Route::delete('/checklists/{checklist}/items/{item}', [App\Http\Controllers\ChecklistItemController::class, 'destroy'])->name('checklists.items.destroy');
+            Route::post('/checklists/{checklist}/items/order', [App\Http\Controllers\ChecklistItemController::class, 'updateOrder'])->name('checklists.items.order');
         });
     });
 
@@ -232,6 +239,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/maintenance/{maintenance}/close', [MaintenanceRequestController::class, 'close'])->name('maintenance.close');
     Route::delete('/maintenance/image/{image}', [MaintenanceRequestController::class, 'deleteImage'])->name('maintenance.image.delete');
     Route::delete('/maintenance/comment/{comment}', [MaintenanceRequestController::class, 'deleteComment'])->name('maintenance.comment.delete');
+    
+    // Checklist response routes
+    Route::post('/maintenance/{maintenance}/checklist/{item}/response', [App\Http\Controllers\ChecklistResponseController::class, 'store'])->name('checklist.responses.store');
+    Route::put('/maintenance/{maintenance}/checklist/response/{response}', [App\Http\Controllers\ChecklistResponseController::class, 'update'])->name('checklist.responses.update');
+    Route::delete('/maintenance/{maintenance}/checklist/response/{response}', [App\Http\Controllers\ChecklistResponseController::class, 'destroy'])->name('checklist.responses.destroy');
 
     // Debug routes
     if (config('app.debug')) {

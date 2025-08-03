@@ -53,8 +53,9 @@ class MaintenanceRequestController extends Controller
     public function create()
     {
         $properties = Auth::user()->managedProperties()->get();
+        $checklists = Auth::user()->checklists()->withCount('items')->get();
         
-        return view('maintenance.create', compact('properties'));
+        return view('maintenance.create', compact('properties', 'checklists'));
     }
 
     /**
@@ -68,6 +69,7 @@ class MaintenanceRequestController extends Controller
             'location' => 'required|string|max:255',
             'priority' => 'required|in:low,medium,high',
             'property_id' => 'required|exists:properties,id',
+            'checklist_id' => 'nullable|exists:checklists,id',
             'images.*' => 'nullable|image|max:2048',
         ]);
 
@@ -75,12 +77,22 @@ class MaintenanceRequestController extends Controller
         $property = Property::findOrFail($request->property_id);
         $this->authorize('createRequest', $property);
 
+        // If checklist is selected, enhance the description
+        $description = $request->description;
+        if ($request->checklist_id) {
+            $checklist = \App\Models\Checklist::find($request->checklist_id);
+            if ($checklist) {
+                $description = $checklist->generateFormattedDescription();
+            }
+        }
+
         $maintenanceRequest = MaintenanceRequest::create([
             'title' => $request->title,
-            'description' => $request->description,
+            'description' => $description,
             'location' => $request->location,
             'priority' => $request->priority,
             'property_id' => $request->property_id,
+            'checklist_id' => $request->checklist_id,
             'requester_name' => Auth::user()->name,
             'requester_email' => Auth::user()->email,
             'requester_phone' => Auth::user()->phone,

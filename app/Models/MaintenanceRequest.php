@@ -25,6 +25,7 @@ class MaintenanceRequest extends Model
         'assigned_to',
         'approved_by',
         'completed_at',
+        'checklist_id',
     ];
 
     protected $casts = [
@@ -70,6 +71,22 @@ class MaintenanceRequest extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(RequestComment::class);
+    }
+
+    /**
+     * Get the checklist associated with this maintenance request.
+     */
+    public function checklist(): BelongsTo
+    {
+        return $this->belongsTo(Checklist::class);
+    }
+
+    /**
+     * Get the checklist responses for this maintenance request.
+     */
+    public function checklistResponses(): HasMany
+    {
+        return $this->hasMany(ChecklistResponse::class);
     }
 
     /**
@@ -241,5 +258,58 @@ class MaintenanceRequest extends Model
         ]);
 
         return $this;
+    }
+
+    /**
+     * Check if all required checklist items are completed.
+     */
+    public function areRequiredChecklistItemsCompleted(): bool
+    {
+        if (!$this->checklist) {
+            return true;
+        }
+
+        $requiredItems = $this->checklist->requiredCheckboxItems;
+        
+        if ($requiredItems->count() === 0) {
+            return true;
+        }
+
+        foreach ($requiredItems as $item) {
+            $response = $this->checklistResponses()
+                ->where('checklist_item_id', $item->id)
+                ->first();
+            
+            if (!$response || !$response->is_completed) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Get the checklist completion percentage.
+     */
+    public function getChecklistCompletionPercentage(): int
+    {
+        if (!$this->checklist) {
+            return 100;
+        }
+
+        $totalItems = $this->checklist->checkboxItems->count();
+        
+        if ($totalItems === 0) {
+            return 100;
+        }
+
+        $completedItems = $this->checklistResponses()
+            ->whereHas('checklistItem', function ($query) {
+                $query->where('type', 'checkbox');
+            })
+            ->where('is_completed', true)
+            ->count();
+
+        return (int) round(($completedItems / $totalItems) * 100);
     }
 } 
