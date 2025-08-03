@@ -63,19 +63,13 @@
                                     <a href="{{ route('owners.edit', $owner) }}" class="text-indigo-600 hover:text-indigo-900">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
-                                    @if($owner->properties->count() === 0)
-                                        <form method="POST" action="{{ route('owners.destroy', $owner) }}" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this owner?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900">
-                                                <i class="fas fa-trash"></i> Delete
-                                            </button>
-                                        </form>
-                                    @else
-                                        <span class="text-gray-400 cursor-not-allowed" title="Cannot delete owner with properties: {{ $owner->properties->pluck('name')->implode(', ') }}">
+                                    <form method="POST" action="{{ route('owners.destroy', $owner) }}" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this owner?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-600 hover:text-red-900">
                                             <i class="fas fa-trash"></i> Delete
-                                        </span>
-                                    @endif
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
