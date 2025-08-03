@@ -28,6 +28,21 @@ class Owner extends Model
     ];
 
     /**
+     * Boot the model.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Prevent deletion if owner has properties
+        static::deleting(function ($owner) {
+            if ($owner->properties()->count() > 0) {
+                throw new \Exception('Cannot delete owner with associated properties. Please remove or reassign the properties first.');
+            }
+        });
+    }
+
+    /**
      * Get the manager that owns the owner.
      */
     public function manager(): BelongsTo

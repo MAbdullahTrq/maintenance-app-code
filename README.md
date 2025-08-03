@@ -39,6 +39,11 @@ A Laravel-based application to handle maintenance requests submitted by guest us
   - Multiple subscription plans with different property and technician limits.
   - PayPal integration for payment processing.
 
+- **SMS Notifications**:
+  - Automatic SMS notifications to technicians when assigned to tasks.
+  - Powered by Twilio for reliable message delivery.
+  - Configurable and can be disabled if needed.
+
 ## Installation
 
 ### Prerequisites
@@ -93,7 +98,16 @@ A Laravel-based application to handle maintenance requests submitted by guest us
    PAYPAL_SANDBOX=true
    ```
 
-8. **Run database migrations and seeders**:
+8. **Configure Twilio SMS (Optional)**:
+   ```
+   TWILIO_ACCOUNT_SID=your_account_sid_here
+   TWILIO_AUTH_TOKEN=your_auth_token_here
+   TWILIO_FROM_NUMBER=+1234567890
+   TWILIO_SMS_ENABLED=true
+   ```
+   See [TWILIO_SETUP.md](TWILIO_SETUP.md) for detailed setup instructions.
+
+9. **Run database migrations and seeders**:
    ```bash
    php artisan migrate --seed
    ```

@@ -104,7 +104,8 @@ class OwnerController extends Controller
             $propertyNames = $properties->pluck('name')->implode(', ');
             
             return redirect()->back()->with('error', 
-                'This owner cannot be deleted because the following properties are owned by them: ' . $propertyNames
+                'This owner cannot be deleted because the following properties are owned by them: ' . $propertyNames . 
+                '. Please reassign these properties to another owner before deleting this owner.'
             );
         }
         

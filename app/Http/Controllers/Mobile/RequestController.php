@@ -151,8 +151,13 @@ class RequestController extends Controller
         $maintenance->status = 'assigned';
         $maintenance->approved_by = auth()->id();
         $maintenance->save();
-        // Send notification to technician
+        // Send email notification to technician
         Mail::to($technician->email)->send(new TechnicianAssignedNotification($maintenance));
+        
+        // Send SMS notification to technician
+        $sms_service = app(\App\Services\SmsService::class);
+        $sms_service->sendTechnicianAssignmentNotification($maintenance, $technician);
+        
         $maintenance->comments()->create([
             'user_id' => auth()->id(),
             'comment' => 'Request approved and assigned to ' . $technician->name . '.',

@@ -168,6 +168,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\Smtp2goServiceProvider::class,
+        App\Providers\TwilioServiceProvider::class,
         
         /*
          * Package Service Providers...

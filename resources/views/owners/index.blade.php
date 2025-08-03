@@ -63,13 +63,19 @@
                                     <a href="{{ route('owners.edit', $owner) }}" class="text-indigo-600 hover:text-indigo-900">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
-                                    <form method="POST" action="{{ route('owners.destroy', $owner) }}" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this owner?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900">
+                                    @if(can_delete_owner($owner))
+                                        <form method="POST" action="{{ route('owners.destroy', $owner) }}" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this owner?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 hover:text-red-900">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    @else
+                                        <span class="text-gray-400 cursor-not-allowed" title="Cannot delete owner with properties: {{ get_owner_properties_list($owner) }}">
                                             <i class="fas fa-trash"></i> Delete
-                                        </button>
-                                    </form>
+                                        </span>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

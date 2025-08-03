@@ -409,8 +409,12 @@ class MaintenanceRequestController extends Controller
             'comment' => 'Request assigned to ' . $technician->name . '.',
         ]);
 
-        // Send notification to technician
+        // Send email notification to technician
         Mail::to($technician->email)->send(new TechnicianAssignedNotification($maintenance));
+
+        // Send SMS notification to technician
+        $sms_service = app(\App\Services\SmsService::class);
+        $sms_service->sendTechnicianAssignmentNotification($maintenance, $technician);
 
         return redirect()->route('maintenance.show', $maintenance)
             ->with('success', 'Maintenance request assigned successfully.');

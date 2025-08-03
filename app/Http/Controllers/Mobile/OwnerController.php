@@ -149,6 +149,18 @@ class OwnerController extends Controller
         $owner = Owner::findOrFail($id);
         $this->authorize('delete', $owner);
         
+        // Check if owner has any properties
+        $properties = $owner->properties;
+        
+        if ($properties->count() > 0) {
+            $propertyNames = $properties->pluck('name')->implode(', ');
+            
+            return redirect()->back()->with('error', 
+                'This owner cannot be deleted because the following properties are owned by them: ' . $propertyNames . 
+                '. Please reassign these properties to another owner before deleting this owner.'
+            );
+        }
+        
         $owner->delete();
         
         return redirect('/m/ao')->with('success', 'Owner deleted successfully.');
