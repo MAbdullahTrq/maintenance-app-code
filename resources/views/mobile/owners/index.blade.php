@@ -65,7 +65,7 @@
                                         <a href="{{ route('mobile.owners.qrcode', $owner->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
                                             <i class="fas fa-qrcode mr-2 text-purple-500"></i>QR Code
                                         </a>
-                                        @if(can_delete_owner($owner))
+                                        @if($owner->properties->count() === 0)
                                             <form action="{{ route('mobile.owners.destroy', $owner->id) }}" method="POST" class="block" onsubmit="return confirm('Are you sure you want to delete this owner?');">
                                                 @csrf
                                                 @method('DELETE')
@@ -74,7 +74,7 @@
                                                 </button>
                                             </form>
                                         @else
-                                            <div class="w-full text-center block px-4 py-2 text-sm text-gray-400 cursor-not-allowed" title="Cannot delete owner with properties: {{ get_owner_properties_list($owner) }}">
+                                            <div class="w-full text-center block px-4 py-2 text-sm text-gray-400 cursor-not-allowed" title="Cannot delete owner with properties: {{ $owner->properties->pluck('name')->implode(', ') }}">
                                                 <i class="fas fa-trash-alt mr-2"></i>Delete
                                             </div>
                                         @endif
