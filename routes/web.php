@@ -241,7 +241,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/maintenance/comment/{comment}', [MaintenanceRequestController::class, 'deleteComment'])->name('maintenance.comment.delete');
     
     // Checklist response routes
-    Route::post('/maintenance/{maintenance}/checklist/{item}/response', [App\Http\Controllers\ChecklistResponseController::class, 'store'])->name('checklist.responses.store');
+    Route::post('/maintenance/{maintenance}/checklist/{checklistItem}/response', [App\Http\Controllers\ChecklistResponseController::class, 'store'])->name('checklist.responses.store');
     Route::put('/maintenance/{maintenance}/checklist/response/{response}', [App\Http\Controllers\ChecklistResponseController::class, 'update'])->name('checklist.responses.update');
     Route::delete('/maintenance/{maintenance}/checklist/response/{response}', [App\Http\Controllers\ChecklistResponseController::class, 'destroy'])->name('checklist.responses.destroy');
 

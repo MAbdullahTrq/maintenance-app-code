@@ -14,7 +14,7 @@ class ChecklistResponseController extends Controller
     /**
      * Store a checklist response.
      */
-    public function store(Request $request, MaintenanceRequest $maintenanceRequest, ChecklistItem $item)
+    public function store(Request $request, MaintenanceRequest $maintenanceRequest, ChecklistItem $checklistItem)
     {
         $this->authorize('update', $maintenanceRequest);
 
@@ -37,7 +37,7 @@ class ChecklistResponseController extends Controller
         $response = ChecklistResponse::updateOrCreate(
             [
                 'maintenance_request_id' => $maintenanceRequest->id,
-                'checklist_item_id' => $item->id,
+                'checklist_item_id' => $checklistItem->id,
             ],
             [
                 'is_completed' => $request->boolean('is_completed'),

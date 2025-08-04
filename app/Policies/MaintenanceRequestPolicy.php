@@ -81,6 +81,11 @@ class MaintenanceRequestPolicy
             return $maintenanceRequest->property->manager_id === $user->id;
         }
 
+        // Technicians can update requests assigned to them
+        if ($user->isTechnician()) {
+            return $maintenanceRequest->assigned_to === $user->id;
+        }
+
         return false;
     }
 
