@@ -166,6 +166,9 @@
                     <a href="/m/at" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
                         <i class="fas fa-users text-blue-600 mr-2"></i> Technicians
                     </a>
+                    <a href="/m/cl" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-clipboard-list text-orange-600 mr-2"></i> Checklists
+                    </a>
                     <a href="{{ route('mobile.manager.all-requests') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
                         <i class="fas fa-file-alt text-gray-700 mr-2"></i> Requests
                     </a>
@@ -190,6 +193,9 @@
                     </a>
                     <a href="/m/at" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
                         <i class="fas fa-users text-blue-600 mr-2"></i> Technicians
+                    </a>
+                    <a href="/m/cl" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-clipboard-list text-orange-600 mr-2"></i> Checklists
                     </a>
                     <a href="{{ route('mobile.manager.all-requests') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
                         <i class="fas fa-file-alt text-gray-700 mr-2"></i> Requests

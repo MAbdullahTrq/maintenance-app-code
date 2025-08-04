@@ -342,6 +342,19 @@ Route::prefix('m')->middleware('auth')->group(function () {
             Route::put('/team/member/{member}/role', [App\Http\Controllers\TeamController::class, 'updateMemberRole'])->name('mobile.team.member.role');
             Route::delete('/team/member/{member}', [App\Http\Controllers\TeamController::class, 'removeMember'])->name('mobile.team.member.remove');
             Route::delete('/team/invitation/{invitation}', [App\Http\Controllers\TeamController::class, 'cancelInvitation'])->name('mobile.team.invitation.cancel');
+            
+            // Mobile checklist management routes
+            Route::get('/cl', [App\Http\Controllers\Mobile\ChecklistController::class, 'index'])->name('mobile.checklists.index');
+            Route::get('/cl/create', [App\Http\Controllers\Mobile\ChecklistController::class, 'create'])->name('mobile.checklists.create');
+            Route::post('/cl/add', [App\Http\Controllers\Mobile\ChecklistController::class, 'store'])->name('mobile.checklists.store');
+            Route::get('/cl/{id}', [App\Http\Controllers\Mobile\ChecklistController::class, 'show'])->name('mobile.checklists.show');
+            Route::get('/cl/{id}/edit', [App\Http\Controllers\Mobile\ChecklistController::class, 'edit'])->name('mobile.checklists.edit');
+            Route::post('/cl/{id}/edit', [App\Http\Controllers\Mobile\ChecklistController::class, 'update'])->name('mobile.checklists.update');
+            Route::delete('/cl/{id}', [App\Http\Controllers\Mobile\ChecklistController::class, 'destroy'])->name('mobile.checklists.destroy');
+            
+            // Mobile checklist item routes
+            Route::post('/cl/{checklist}/items', [App\Http\Controllers\ChecklistItemController::class, 'store'])->name('mobile.checklists.items.store');
+            Route::delete('/cl/{checklist}/items/{item}', [App\Http\Controllers\ChecklistItemController::class, 'destroy'])->name('mobile.checklists.items.destroy');
         });
     });
 
