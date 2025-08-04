@@ -111,18 +111,25 @@
                         </td>
                         <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">{{ ucfirst($req->status) }}</td>
                         <td class="p-2 md:p-3 lg:p-4 align-top text-center">
-                            <a href="{{ route('mobile.request.show', $req->id) }}" class="text-blue-600 hover:text-blue-800 text-lg md:text-xl" onclick="event.stopPropagation();">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            @if(auth()->user()->isPropertyManager())
-                                <form action="{{ route('mobile.request.destroy', $req->id) }}" method="POST" class="inline ml-2" onclick="event.stopPropagation();">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-800 text-lg md:text-xl" onclick="return confirm('Are you sure you want to delete this request?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            @endif
+                            <div class="relative" x-data="{ open: false }">
+                                <button @click="open = !open; event.stopPropagation();" class="text-gray-600 hover:text-gray-800 text-lg md:text-xl">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-50 border">
+                                    <a href="{{ route('mobile.request.show', $req->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="event.stopPropagation();">
+                                        <i class="fas fa-eye mr-2"></i>View
+                                    </a>
+                                    @if(auth()->user()->isPropertyManager())
+                                        <form action="{{ route('mobile.request.destroy', $req->id) }}" method="POST" onclick="event.stopPropagation();">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100" onclick="return confirm('Are you sure you want to delete this request?')">
+                                                <i class="fas fa-trash mr-2"></i>Delete
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     @endforeach
