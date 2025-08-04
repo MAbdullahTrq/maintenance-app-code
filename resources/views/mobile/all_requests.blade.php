@@ -116,15 +116,15 @@
                                     <i class="fas fa-ellipsis-v"></i>
                                 </button>
                                 <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-50 border">
-                                    <a href="{{ route('mobile.request.show', $req->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="event.stopPropagation();">
-                                        <i class="fas fa-eye mr-2"></i>View
+                                    <a href="{{ route('mobile.request.show', $req->id) }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="event.stopPropagation();">
+                                        <i class="fas fa-eye w-4 mr-2"></i>View
                                     </a>
                                     @if(auth()->user()->isPropertyManager())
                                         <form action="{{ route('mobile.request.destroy', $req->id) }}" method="POST" onclick="event.stopPropagation();">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100" onclick="return confirm('Are you sure you want to delete this request?')">
-                                                <i class="fas fa-trash mr-2"></i>Delete
+                                            <button type="submit" class="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100" onclick="return confirm('Are you sure you want to delete this request?')">
+                                                <i class="fas fa-trash w-4 mr-2"></i>Delete
                                             </button>
                                         </form>
                                     @endif
