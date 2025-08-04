@@ -66,6 +66,20 @@ class ChecklistResponseController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
 
+            // Check if it's a database connection error
+            if (str_contains($e->getMessage(), 'No connection could be made') || 
+                str_contains($e->getMessage(), 'SQLSTATE[HY000] [2002]')) {
+                
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Database connection error. Please try again later.'
+                    ], 503);
+                }
+                
+                return redirect()->back()->with('error', 'Database connection error. Please try again later.');
+            }
+
             // Return JSON error response for AJAX requests
             if ($request->expectsJson()) {
                 return response()->json([

@@ -372,37 +372,37 @@ document.addEventListener('DOMContentLoaded', function() {
                  
                  return response.json();
              })
-            .then(data => {
-                if (data.success) {
-                    // Show success feedback
-                    const feedback = document.createElement('div');
-                    feedback.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50';
-                    feedback.textContent = isChecked ? 'Item completed!' : 'Item unchecked';
-                    document.body.appendChild(feedback);
-                    
-                    setTimeout(() => {
-                        feedback.remove();
-                    }, 2000);
-                } else {
-                    // Revert checkbox state on error
-                    this.checked = !isChecked;
-                    if (isChecked) {
-                        label.classList.remove('line-through', 'text-gray-500');
-                    } else {
-                        label.classList.add('line-through', 'text-gray-500');
-                    }
-                    
-                    // Show error feedback
-                    const feedback = document.createElement('div');
-                    feedback.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow-lg z-50';
-                    feedback.textContent = 'Error updating item';
-                    document.body.appendChild(feedback);
-                    
-                    setTimeout(() => {
-                        feedback.remove();
-                    }, 2000);
-                }
-            })
+                         .then(data => {
+                 if (data.success) {
+                     // Show success feedback
+                     const feedback = document.createElement('div');
+                     feedback.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50';
+                     feedback.textContent = isChecked ? 'Item completed!' : 'Item unchecked';
+                     document.body.appendChild(feedback);
+                     
+                     setTimeout(() => {
+                         feedback.remove();
+                     }, 2000);
+                 } else {
+                     // Revert checkbox state on error
+                     this.checked = !isChecked;
+                     if (isChecked) {
+                         label.classList.remove('line-through', 'text-gray-500');
+                     } else {
+                         label.classList.add('line-through', 'text-gray-500');
+                     }
+                     
+                     // Show error feedback with specific message
+                     const feedback = document.createElement('div');
+                     feedback.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow-lg z-50';
+                     feedback.textContent = data.message || 'Error updating item';
+                     document.body.appendChild(feedback);
+                     
+                     setTimeout(() => {
+                         feedback.remove();
+                     }, 3000);
+                 }
+             })
                          .catch(error => {
                  console.error('Error details:', error);
                  console.error('Error message:', error.message);

@@ -259,6 +259,24 @@ Route::middleware(['auth'])->group(function () {
                 'data' => $request->all()
             ]);
         })->name('debug.checklist.test');
+        
+        // Database connection test
+        Route::get('/debug/db-test', function () {
+            try {
+                \DB::connection()->getPdo();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Database connection successful',
+                    'database' => \DB::connection()->getDatabaseName()
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Database connection failed',
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+        })->name('debug.db.test');
     }
     Route::get('/debug/user', function () {
         $user = auth()->user();
