@@ -19,6 +19,7 @@ use App\Http\Controllers\Mobile\OwnerController as MobileOwnerController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Mobile\SubscriptionController as MobileSubscriptionController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
