@@ -114,6 +114,15 @@
                             <a href="{{ route('mobile.request.show', $req->id) }}" class="text-blue-600 hover:text-blue-800 text-lg md:text-xl" onclick="event.stopPropagation();">
                                 <i class="fas fa-eye"></i>
                             </a>
+                            @if($req->status === 'pending' && auth()->user()->isPropertyManager())
+                                <form action="{{ route('maintenance.destroy', $req->id) }}" method="POST" class="inline ml-2" onclick="event.stopPropagation();">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-800 text-lg md:text-xl" onclick="return confirm('Are you sure you want to delete this request?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            @endif
                         </td>
                     </tr>
                     @endforeach

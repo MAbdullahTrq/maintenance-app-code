@@ -208,6 +208,17 @@
                 <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded">Mark as Complete</button>
             </form>
             @endif
+            
+            {{-- Delete button for Property Managers on pending requests --}}
+            @if($request->status === 'pending' && auth()->user() && auth()->user()->isPropertyManager())
+            <form method="POST" action="{{ route('maintenance.destroy', $request->id) }}" class="mb-2">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="w-full bg-red-600 text-white py-2 rounded" onclick="return confirm('Are you sure you want to delete this request? This action cannot be undone.')">
+                    Delete Request
+                </button>
+            </form>
+            @endif
         </div>
     </div>
 </div>
