@@ -300,6 +300,32 @@ Route::middleware(['auth'])->group(function () {
                 ], 500);
             }
         })->name('debug.checklist.tables');
+        
+        // Test route model binding for ChecklistItem
+        Route::get('/debug/checklist-item/{checklistItem}', function (\App\Models\ChecklistItem $checklistItem) {
+            return response()->json([
+                'success' => true,
+                'item' => $checklistItem
+            ]);
+        })->name('debug.checklist.item');
+        
+        // Check if specific checklist item exists
+        Route::get('/debug/checklist-item-exists/{id}', function ($id) {
+            try {
+                $item = \App\Models\ChecklistItem::find($id);
+                return response()->json([
+                    'success' => true,
+                    'exists' => $item !== null,
+                    'item' => $item
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error checking item',
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+        })->name('debug.checklist.item.exists');
     }
     Route::get('/debug/user', function () {
         $user = auth()->user();
