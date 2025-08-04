@@ -286,6 +286,7 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::post('/r/{id}/start', [App\Http\Controllers\Mobile\RequestController::class, 'start'])->name('mobile.request.start');
     Route::post('/r/{id}/finish', [App\Http\Controllers\Mobile\RequestController::class, 'finish'])->name('mobile.request.finish');
     Route::post('/r/{id}/comment', [App\Http\Controllers\Mobile\RequestController::class, 'comment'])->name('mobile.request.comment');
+Route::delete('/r/{id}', [App\Http\Controllers\Mobile\RequestController::class, 'destroy'])->name('mobile.request.destroy');
     Route::get('/manager/all-requests', [App\Http\Controllers\Mobile\DashboardController::class, 'allRequests'])->name('mobile.manager.all-requests');
     Route::get('/profile', [App\Http\Controllers\Mobile\ProfileController::class, 'show'])->name('mobile.profile');
     Route::post('/profile/update-picture', [App\Http\Controllers\Mobile\ProfileController::class, 'updatePicture'])->name('mobile.profile.update-picture');

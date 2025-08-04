@@ -357,4 +357,22 @@ class RequestController extends Controller
 
         return redirect()->route('mobile.request.show', $id)->with('success', 'Comment added.');
     }
+
+    public function destroy($id)
+    {
+        $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);
+        
+        // Check authorization
+        $this->authorize('delete', $maintenance);
+        
+        // Delete all images
+        foreach ($maintenance->images as $image) {
+            \Illuminate\Support\Facades\Storage::delete('public/' . $image->image_path);
+        }
+        
+        $maintenance->delete();
+
+        return redirect()->route('mobile.manager.all-requests')
+            ->with('success', 'Maintenance request deleted successfully.');
+    }
 }

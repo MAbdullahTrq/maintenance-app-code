@@ -211,7 +211,7 @@
             
             {{-- Delete button for Property Managers (All Statuses) --}}
             @if(auth()->user() && auth()->user()->isPropertyManager())
-            <form method="POST" action="{{ route('maintenance.destroy', $request->id) }}" class="mb-2">
+            <form method="POST" action="{{ route('mobile.request.destroy', $request->id) }}" class="mb-2">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="w-full bg-red-600 text-white py-2 rounded" onclick="return confirm('Are you sure you want to delete this request? This action cannot be undone.')">
