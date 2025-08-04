@@ -340,10 +340,23 @@ Route::middleware(['auth'])->group(function () {
                     ], 404);
                 }
                 
+                // Test if we can access the models
+                \Log::info('Testing model access', [
+                    'maintenance_request' => $maintenanceRequest->toArray(),
+                    'checklist_item' => $checklistItem->toArray()
+                ]);
+                
+                // Test if we can create a controller instance
                 $controller = new \App\Http\Controllers\ChecklistResponseController();
+                
+                // Test if we can call the method
                 return $controller->store($request, $maintenanceRequest, $checklistItem);
                 
             } catch (\Exception $e) {
+                \Log::error('Debug route error: ' . $e->getMessage(), [
+                    'trace' => $e->getTraceAsString()
+                ]);
+                
                 return response()->json([
                     'success' => false,
                     'message' => 'Error testing controller',
