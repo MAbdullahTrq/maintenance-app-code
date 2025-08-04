@@ -352,7 +352,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
                          // Send AJAX request to update the response
-             fetch(`/maintenance/${requestId}/checklist/${itemId}/response`, {
+             fetch(`/debug/test-checklist-response`, {
                  method: 'POST',
                  headers: {
                      'Content-Type': 'application/json',

@@ -326,6 +326,32 @@ Route::middleware(['auth'])->group(function () {
                 ], 500);
             }
         })->name('debug.checklist.item.exists');
+        
+        // Test the controller method directly
+        Route::post('/debug/test-checklist-response', function (Request $request) {
+            try {
+                $maintenanceRequest = \App\Models\MaintenanceRequest::find(16);
+                $checklistItem = \App\Models\ChecklistItem::find(1);
+                
+                if (!$maintenanceRequest || !$checklistItem) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Maintenance request or checklist item not found'
+                    ], 404);
+                }
+                
+                $controller = new \App\Http\Controllers\ChecklistResponseController();
+                return $controller->store($request, $maintenanceRequest, $checklistItem);
+                
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error testing controller',
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
+                ], 500);
+            }
+        })->name('debug.test.checklist.response');
     }
     Route::get('/debug/user', function () {
         $user = auth()->user();
