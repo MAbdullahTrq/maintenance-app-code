@@ -158,47 +158,44 @@
             >
                 @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
                     <a href="/m/ao" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-user text-yellow-600 mr-2"></i> Owners
+                        Owners
                     </a>
                     <a href="/m/ap" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-building text-purple-600 mr-2"></i> Properties
+                        Properties
                     </a>
                     <a href="/m/at" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-users text-blue-600 mr-2"></i> Technicians
+                        Technicians
                     </a>
                     <a href="/m/cl" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-clipboard-list text-orange-600 mr-2"></i> Checklists
+                        Checklists
                     </a>
                     <a href="{{ route('mobile.manager.all-requests') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-file-alt text-gray-700 mr-2"></i> Requests
+                        Requests
                     </a>
                     
                     <!-- Team Management Section -->
                     <div class="border-t border-gray-200 my-1"></div>
-                    <div class="px-4 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                        Team Settings
-                    </div>
                     <a href="{{ route('mobile.team.index') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-users text-green-600 mr-2"></i> Team Assistants
+                        Team Assistants
                     </a>
                     <a href="{{ route('mobile.team.create') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-user-plus text-blue-600 mr-2"></i> Invite Assistant
+                        Invite Assistant
                     </a>
                 @elseif(Auth::user() && method_exists(Auth::user(), 'hasTeamMemberRole') && Auth::user()->hasTeamMemberRole())
                     <a href="/m/ao" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-user text-yellow-600 mr-2"></i> Owners
+                        Owners
                     </a>
                     <a href="/m/ap" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-building text-purple-600 mr-2"></i> Properties
+                        Properties
                     </a>
                     <a href="/m/at" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-users text-blue-600 mr-2"></i> Technicians
+                        Technicians
                     </a>
                     <a href="/m/cl" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-clipboard-list text-orange-600 mr-2"></i> Checklists
+                        Checklists
                     </a>
                     <a href="{{ route('mobile.manager.all-requests') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-file-alt text-gray-700 mr-2"></i> Requests
+                        Requests
                     </a>
                 @endif
                 <a href="/m/profile" class="block px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">Profile</a>
