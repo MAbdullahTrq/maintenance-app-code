@@ -351,18 +351,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 label.classList.remove('line-through', 'text-gray-500');
             }
             
-            // Send AJAX request to update the response
-            fetch(`/maintenance/${requestId}/checklist/${itemId}/response`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({
-                    is_completed: isChecked
-                })
-            })
-            .then(response => response.json())
+                         // Send AJAX request to update the response
+             fetch(`/maintenance/${requestId}/checklist/${itemId}/response`, {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json',
+                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                 },
+                 body: JSON.stringify({
+                     is_completed: isChecked
+                 })
+             })
+             .then(response => {
+                 console.log('Response status:', response.status);
+                 console.log('Response headers:', response.headers);
+                 
+                 if (!response.ok) {
+                     throw new Error(`HTTP error! status: ${response.status}`);
+                 }
+                 
+                 return response.json();
+             })
             .then(data => {
                 if (data.success) {
                     // Show success feedback
@@ -394,16 +403,29 @@ document.addEventListener('DOMContentLoaded', function() {
                     }, 2000);
                 }
             })
-            .catch(error => {
-                console.error('Error:', error);
-                // Revert checkbox state on error
-                this.checked = !isChecked;
-                if (isChecked) {
-                    label.classList.remove('line-through', 'text-gray-500');
-                } else {
-                    label.classList.add('line-through', 'text-gray-500');
-                }
-            });
+                         .catch(error => {
+                 console.error('Error details:', error);
+                 console.error('Error message:', error.message);
+                 console.error('Error stack:', error.stack);
+                 
+                 // Revert checkbox state on error
+                 this.checked = !isChecked;
+                 if (isChecked) {
+                     label.classList.remove('line-through', 'text-gray-500');
+                 } else {
+                     label.classList.add('line-through', 'text-gray-500');
+                 }
+                 
+                 // Show detailed error feedback
+                 const feedback = document.createElement('div');
+                 feedback.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow-lg z-50';
+                 feedback.textContent = `Error: ${error.message}`;
+                 document.body.appendChild(feedback);
+                 
+                 setTimeout(() => {
+                     feedback.remove();
+                 }, 5000);
+             });
         });
     });
 });

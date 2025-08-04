@@ -16,13 +16,14 @@ class ChecklistResponseController extends Controller
      */
     public function store(Request $request, MaintenanceRequest $maintenanceRequest, ChecklistItem $checklistItem)
     {
-        $this->authorize('update', $maintenanceRequest);
+        try {
+            $this->authorize('update', $maintenanceRequest);
 
-        $request->validate([
-            'is_completed' => 'required|boolean',
-            'text_response' => 'nullable|string|max:1000',
-            'response_attachment' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf,doc,docx|max:2048',
-        ]);
+            $request->validate([
+                'is_completed' => 'required|boolean',
+                'text_response' => 'nullable|string|max:1000',
+                'response_attachment' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf,doc,docx|max:2048',
+            ]);
 
         $response_attachment_path = null;
         
@@ -56,6 +57,25 @@ class ChecklistResponseController extends Controller
         }
 
         return redirect()->back()->with('success', 'Checklist item response saved successfully.');
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            \Log::error('Checklist response error: ' . $e->getMessage(), [
+                'request_id' => $maintenanceRequest->id,
+                'item_id' => $checklistItem->id,
+                'user_id' => auth()->id(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            // Return JSON error response for AJAX requests
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error updating checklist item: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->back()->with('error', 'Error updating checklist item: ' . $e->getMessage());
+        }
     }
 
     /**

@@ -250,6 +250,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/debug/roles', function () {
             return ['status' => 'success', 'roles' => \App\Models\Role::all()];
         });
+        
+        // Debug checklist response route
+        Route::post('/debug/checklist-test', function (Request $request) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Debug route working',
+                'data' => $request->all()
+            ]);
+        })->name('debug.checklist.test');
     }
     Route::get('/debug/user', function () {
         $user = auth()->user();
