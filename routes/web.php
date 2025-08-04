@@ -327,6 +327,15 @@ Route::middleware(['auth'])->group(function () {
             }
         })->name('debug.checklist.item.exists');
         
+        // Simple test route
+        Route::post('/debug/simple-test', function (Request $request) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Simple test route working',
+                'data' => $request->all()
+            ]);
+        })->name('debug.simple.test');
+        
         // Test the controller method directly
         Route::post('/debug/test-checklist-response', function (Request $request) {
             try {
