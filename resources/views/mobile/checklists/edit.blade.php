@@ -5,12 +5,6 @@
 @section('content')
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-2 md:p-3 lg:p-4 w-full max-w-4xl mx-auto">
-        @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                <span class="block sm:inline">{{ session('success') }}</span>
-            </div>
-        @endif
-
         <div class="mb-4">
             <a href="/m/cl" class="text-blue-500 hover:text-blue-700 text-sm">
                 <i class="fas fa-arrow-left mr-1"></i>Back to Checklists

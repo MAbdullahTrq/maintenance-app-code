@@ -353,8 +353,8 @@ Route::prefix('m')->middleware('auth')->group(function () {
             Route::delete('/cl/{id}', [App\Http\Controllers\Mobile\ChecklistController::class, 'destroy'])->name('mobile.checklists.destroy');
             
             // Mobile checklist item routes
-            Route::post('/cl/{checklist}/items', [App\Http\Controllers\ChecklistItemController::class, 'store'])->name('mobile.checklists.items.store');
-            Route::delete('/cl/{checklist}/items/{item}', [App\Http\Controllers\ChecklistItemController::class, 'destroy'])->name('mobile.checklists.items.destroy');
+            Route::post('/cl/{checklist}/items', [App\Http\Controllers\Mobile\ChecklistItemController::class, 'store'])->name('mobile.checklists.items.store');
+            Route::delete('/cl/{checklist}/items/{item}', [App\Http\Controllers\Mobile\ChecklistItemController::class, 'destroy'])->name('mobile.checklists.items.destroy');
         });
     });
 

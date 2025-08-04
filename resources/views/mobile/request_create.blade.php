@@ -36,6 +36,16 @@
                 </select>
             </div>
             <div class="mb-3">
+                <label class="block font-semibold mb-1">Use Checklist (Optional)</label>
+                <select name="checklist_id" class="w-full border rounded p-2">
+                    <option value="">No checklist</option>
+                    @foreach(auth()->user()->checklists as $checklist)
+                        <option value="{{ $checklist->id }}">{{ $checklist->name }} ({{ $checklist->items->count() }} items)</option>
+                    @endforeach
+                </select>
+                <div class="text-xs text-gray-500 mt-1">Select a checklist to add structured items to this request.</div>
+            </div>
+            <div class="mb-3">
                 <label class="block font-semibold mb-1">Images</label>
                 <input type="file" name="images[]" id="request-images-input" class="w-full border rounded p-2" multiple accept="image/*">
                 <div class="text-xs text-gray-500 mt-1">Images will be automatically optimized for upload</div>

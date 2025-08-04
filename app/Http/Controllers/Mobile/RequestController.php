@@ -59,6 +59,7 @@ class RequestController extends Controller
             'location' => 'required|string|max:255',
             'priority' => 'required|in:low,medium,high',
             'property_id' => 'required|exists:properties,id',
+            'checklist_id' => 'nullable|exists:checklists,id',
             'images.*' => 'nullable|image|max:10240', // Allow up to 10MB per image, will be resized
         ]);
 
@@ -72,12 +73,22 @@ class RequestController extends Controller
             abort(403, 'Unauthorized to create request for this property');
         }
 
+        // If checklist is selected, enhance the description
+        $description = $request->description;
+        if ($request->checklist_id) {
+            $checklist = \App\Models\Checklist::find($request->checklist_id);
+            if ($checklist) {
+                $description = $checklist->generateFormattedDescription();
+            }
+        }
+
         $maintenanceRequest = MaintenanceRequest::create([
             'title' => $request->title,
-            'description' => $request->description,
+            'description' => $description,
             'location' => $request->location,
             'priority' => $request->priority,
             'property_id' => $request->property_id,
+            'checklist_id' => $request->checklist_id,
             'requester_name' => $user->name,
             'requester_email' => $user->email,
             'requester_phone' => $user->phone,
