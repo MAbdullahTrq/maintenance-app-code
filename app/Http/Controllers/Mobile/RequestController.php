@@ -54,12 +54,12 @@ class RequestController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'location' => 'required|string|max:255',
             'priority' => 'required|in:low,medium,high',
             'property_id' => 'required|exists:properties,id',
             'checklist_id' => 'nullable|exists:checklists,id',
+            'title' => $request->checklist_id ? 'nullable|string|max:255' : 'required|string|max:255',
+            'description' => $request->checklist_id ? 'nullable|string' : 'required|string',
+            'location' => $request->checklist_id ? 'nullable|string|max:255' : 'required|string|max:255',
             'images.*' => 'nullable|image|max:10240', // Allow up to 10MB per image, will be resized
         ]);
 
@@ -73,19 +73,24 @@ class RequestController extends Controller
             abort(403, 'Unauthorized to create request for this property');
         }
 
-        // If checklist is selected, enhance the description
-        $description = $request->description;
+        // Determine title, description, and location based on checklist selection
         if ($request->checklist_id) {
+            // Use checklist data
             $checklist = \App\Models\Checklist::find($request->checklist_id);
-            if ($checklist) {
-                $description = $checklist->generateFormattedDescription();
-            }
+            $title = $checklist->name;
+            $description = $checklist->generateFormattedDescription();
+            $location = '-';
+        } else {
+            // Use manual form data
+            $title = $request->title;
+            $description = $request->description;
+            $location = $request->location;
         }
 
         $maintenanceRequest = MaintenanceRequest::create([
-            'title' => $request->title,
+            'title' => $title,
             'description' => $description,
-            'location' => $request->location,
+            'location' => $location,
             'priority' => $request->priority,
             'property_id' => $request->property_id,
             'checklist_id' => $request->checklist_id,

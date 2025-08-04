@@ -20,52 +20,9 @@
                 @csrf
                 
                 <div class="mb-6">
-                    <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Title</label>
-                    <input type="text" id="title" name="title" value="{{ old('title') }}" 
-                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                        placeholder="e.g., Broken Sink">
-                    @error('title')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div class="mb-6">
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                    <textarea id="description" name="description" rows="4" 
-                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                        placeholder="Describe the issue in detail...">{{ old('description') }}</textarea>
-                    @error('description')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div class="mb-6">
-                    <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                    <input type="text" id="location" name="location" value="{{ old('location') }}" 
-                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                        placeholder="e.g., Kitchen, Bathroom, Living Room">
-                    @error('location')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div class="mb-6">
-                    <label for="priority" class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
-                    <select id="priority" name="priority" 
-                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        <option value="low" {{ old('priority') == 'low' ? 'selected' : '' }}>Low</option>
-                        <option value="medium" {{ old('priority') == 'medium' ? 'selected' : '' }}>Medium</option>
-                        <option value="high" {{ old('priority') == 'high' ? 'selected' : '' }}>High</option>
-                    </select>
-                    @error('priority')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div class="mb-6">
-                    <label for="property_id" class="block text-sm font-medium text-gray-700 mb-1">Property</label>
+                    <label for="property_id" class="block text-sm font-medium text-gray-700 mb-1">Property*</label>
                     <select id="property_id" name="property_id" 
-                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
                         <option value="">Select a property</option>
                         @foreach(auth()->user()->managedProperties as $property)
                             <option value="{{ $property->id }}" {{ old('property_id') == $property->id ? 'selected' : '' }}>
@@ -78,19 +35,66 @@
                     @enderror
                 </div>
                 
-                <div class="mb-6">
-                    <label for="checklist_id" class="block text-sm font-medium text-gray-700 mb-1">Use Checklist (Optional)</label>
+                <!-- Checklist Selection (Primary Option) -->
+                <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <label for="checklist_id" class="block text-sm font-medium text-blue-800 mb-2">Use Checklist</label>
                     <select id="checklist_id" name="checklist_id" 
-                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        <option value="">No checklist</option>
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" onchange="toggleFormFields()">
+                        <option value="">No checklist - Fill form manually</option>
                         @foreach(auth()->user()->checklists as $checklist)
-                            <option value="{{ $checklist->id }}" {{ old('checklist_id') == $checklist->id ? 'selected' : '' }}>
+                            <option value="{{ $checklist->id }}" data-name="{{ $checklist->name }}" data-description="{{ $checklist->generateFormattedDescription() }}" {{ old('checklist_id') == $checklist->id ? 'selected' : '' }}>
                                 {{ $checklist->name }} ({{ $checklist->items->count() }} items)
                             </option>
                         @endforeach
                     </select>
-                    <p class="text-gray-500 text-xs mt-1">Select a checklist to add structured items to this request.</p>
+                    <p class="text-blue-600 text-xs mt-1">Select a checklist to auto-fill the request details</p>
                     @error('checklist_id')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                
+                <!-- Manual Form Fields -->
+                <div id="manual-fields">
+                    <div class="mb-6">
+                        <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Title*</label>
+                        <input type="text" id="title" name="title" value="{{ old('title') }}" 
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            placeholder="e.g., Broken Sink" required>
+                        @error('title')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description*</label>
+                        <textarea id="description" name="description" rows="4" 
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            placeholder="Describe the issue in detail..." required>{{ old('description') }}</textarea>
+                        @error('description')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location*</label>
+                        <input type="text" id="location" name="location" value="{{ old('location') }}" 
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            placeholder="e.g., Kitchen, Bathroom, Living Room" required>
+                        @error('location')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <label for="priority" class="block text-sm font-medium text-gray-700 mb-1">Priority*</label>
+                    <select id="priority" name="priority" 
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+                        <option value="low" {{ old('priority') == 'low' ? 'selected' : '' }}>Low</option>
+                        <option value="medium" {{ old('priority') == 'medium' ? 'selected' : '' }}>Medium</option>
+                        <option value="high" {{ old('priority') == 'high' ? 'selected' : '' }}>High</option>
+                    </select>
+                    @error('priority')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
@@ -120,6 +124,59 @@
 </div>
 
 <script>
+// Form field toggling based on checklist selection
+function toggleFormFields() {
+    const checklistSelect = document.getElementById('checklist_id');
+    const manualFields = document.getElementById('manual-fields');
+    const titleField = document.getElementById('title');
+    const descriptionField = document.getElementById('description');
+    const locationField = document.getElementById('location');
+    
+    if (checklistSelect.value) {
+        // Checklist selected - auto-fill and disable manual fields
+        const selectedOption = checklistSelect.options[checklistSelect.selectedIndex];
+        const checklistName = selectedOption.getAttribute('data-name');
+        const checklistDescription = selectedOption.getAttribute('data-description');
+        
+        titleField.value = checklistName;
+        descriptionField.value = checklistDescription;
+        locationField.value = '-';
+        
+        // Disable manual fields
+        titleField.disabled = true;
+        descriptionField.disabled = true;
+        locationField.disabled = true;
+        
+        // Remove required attributes
+        titleField.removeAttribute('required');
+        descriptionField.removeAttribute('required');
+        locationField.removeAttribute('required');
+        
+        // Visual feedback
+        manualFields.style.opacity = '0.6';
+        manualFields.style.pointerEvents = 'none';
+    } else {
+        // No checklist - enable manual fields
+        titleField.value = '';
+        descriptionField.value = '';
+        locationField.value = '';
+        
+        // Enable manual fields
+        titleField.disabled = false;
+        descriptionField.disabled = false;
+        locationField.disabled = false;
+        
+        // Add required attributes back
+        titleField.setAttribute('required', 'required');
+        descriptionField.setAttribute('required', 'required');
+        locationField.setAttribute('required', 'required');
+        
+        // Visual feedback
+        manualFields.style.opacity = '1';
+        manualFields.style.pointerEvents = 'auto';
+    }
+}
+
 // Image resize and preview functionality
 const input = document.getElementById('images');
 const form = document.getElementById('maintenance-form');

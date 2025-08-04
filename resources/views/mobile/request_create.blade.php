@@ -15,18 +15,35 @@
                     @endforeach
                 </select>
             </div>
-            <div class="mb-3">
-                <label class="block font-semibold mb-1">Title*</label>
-                <input type="text" name="title" class="w-full border rounded p-2" placeholder="e.g., Leaky faucet in kitchen" required>
+            
+            <!-- Checklist Selection (Primary Option) -->
+            <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <label class="block font-semibold mb-2 text-blue-800">Use Checklist</label>
+                <select name="checklist_id" id="checklist-select" class="w-full border rounded p-2" onchange="toggleFormFields()">
+                    <option value="">No checklist - Fill form manually</option>
+                    @foreach(auth()->user()->checklists as $checklist)
+                        <option value="{{ $checklist->id }}" data-name="{{ $checklist->name }}" data-description="{{ $checklist->generateFormattedDescription() }}">{{ $checklist->name }} ({{ $checklist->items->count() }} items)</option>
+                    @endforeach
+                </select>
+                <div class="text-xs text-blue-600 mt-1">Select a checklist to auto-fill the request details</div>
             </div>
-            <div class="mb-3">
-                <label class="block font-semibold mb-1">Description*</label>
-                <textarea name="description" class="w-full border rounded p-2" placeholder="Please describe the issue in detail..." required></textarea>
+            
+            <!-- Manual Form Fields -->
+            <div id="manual-fields">
+                <div class="mb-3">
+                    <label class="block font-semibold mb-1">Title*</label>
+                    <input type="text" name="title" id="title-field" class="w-full border rounded p-2" placeholder="e.g., Leaky faucet in kitchen" required>
+                </div>
+                <div class="mb-3">
+                    <label class="block font-semibold mb-1">Description*</label>
+                    <textarea name="description" id="description-field" class="w-full border rounded p-2" placeholder="Please describe the issue in detail..." required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="block font-semibold mb-1">Location*</label>
+                    <input type="text" name="location" id="location-field" class="w-full border rounded p-2" placeholder="e.g., Kitchen, Unit 2B, Basement" required>
+                </div>
             </div>
-            <div class="mb-3">
-                <label class="block font-semibold mb-1">Location*</label>
-                <input type="text" name="location" class="w-full border rounded p-2" placeholder="e.g., Kitchen, Unit 2B, Basement" required>
-            </div>
+            
             <div class="mb-3">
                 <label class="block font-semibold mb-1">Priority*</label>
                 <select name="priority" class="w-full border rounded p-2" required>
@@ -34,16 +51,6 @@
                     <option value="medium">Medium</option>
                     <option value="high">High</option>
                 </select>
-            </div>
-            <div class="mb-3">
-                <label class="block font-semibold mb-1">Use Checklist (Optional)</label>
-                <select name="checklist_id" class="w-full border rounded p-2">
-                    <option value="">No checklist</option>
-                    @foreach(auth()->user()->checklists as $checklist)
-                        <option value="{{ $checklist->id }}">{{ $checklist->name }} ({{ $checklist->items->count() }} items)</option>
-                    @endforeach
-                </select>
-                <div class="text-xs text-gray-500 mt-1">Select a checklist to add structured items to this request.</div>
             </div>
             <div class="mb-3">
                 <label class="block font-semibold mb-1">Images</label>
@@ -58,6 +65,59 @@
 </div>
 
 <script>
+// Form field toggling based on checklist selection
+function toggleFormFields() {
+    const checklistSelect = document.getElementById('checklist-select');
+    const manualFields = document.getElementById('manual-fields');
+    const titleField = document.getElementById('title-field');
+    const descriptionField = document.getElementById('description-field');
+    const locationField = document.getElementById('location-field');
+    
+    if (checklistSelect.value) {
+        // Checklist selected - auto-fill and disable manual fields
+        const selectedOption = checklistSelect.options[checklistSelect.selectedIndex];
+        const checklistName = selectedOption.getAttribute('data-name');
+        const checklistDescription = selectedOption.getAttribute('data-description');
+        
+        titleField.value = checklistName;
+        descriptionField.value = checklistDescription;
+        locationField.value = '-';
+        
+        // Disable manual fields
+        titleField.disabled = true;
+        descriptionField.disabled = true;
+        locationField.disabled = true;
+        
+        // Remove required attributes
+        titleField.removeAttribute('required');
+        descriptionField.removeAttribute('required');
+        locationField.removeAttribute('required');
+        
+        // Visual feedback
+        manualFields.style.opacity = '0.6';
+        manualFields.style.pointerEvents = 'none';
+    } else {
+        // No checklist - enable manual fields
+        titleField.value = '';
+        descriptionField.value = '';
+        locationField.value = '';
+        
+        // Enable manual fields
+        titleField.disabled = false;
+        descriptionField.disabled = false;
+        locationField.disabled = false;
+        
+        // Add required attributes back
+        titleField.setAttribute('required', 'required');
+        descriptionField.setAttribute('required', 'required');
+        locationField.setAttribute('required', 'required');
+        
+        // Visual feedback
+        manualFields.style.opacity = '1';
+        manualFields.style.pointerEvents = 'auto';
+    }
+}
+
 // Enhanced image resize and preview functionality for multiple images
 const input = document.getElementById('request-images-input');
 const form = document.getElementById('request-form');
