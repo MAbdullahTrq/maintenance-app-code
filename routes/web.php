@@ -250,131 +250,16 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/debug/roles', function () {
             return ['status' => 'success', 'roles' => \App\Models\Role::all()];
         });
-        
-        // Debug checklist response route
-        Route::post('/debug/checklist-test', function (Request $request) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Debug route working',
-                'data' => $request->all()
-            ]);
-        })->name('debug.checklist.test');
-        
-        // Database connection test
-        Route::get('/debug/db-test', function () {
-            try {
-                \DB::connection()->getPdo();
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Database connection successful',
-                    'database' => \DB::connection()->getDatabaseName()
-                ]);
-            } catch (\Exception $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Database connection failed',
-                    'error' => $e->getMessage()
-                ], 500);
-            }
-        })->name('debug.db.test');
-        
-        // Check if checklist tables exist
-        Route::get('/debug/checklist-tables', function () {
-            try {
-                $tables = [
-                    'checklists' => \Schema::hasTable('checklists'),
-                    'checklist_items' => \Schema::hasTable('checklist_items'),
-                    'checklist_responses' => \Schema::hasTable('checklist_responses'),
-                    'maintenance_requests' => \Schema::hasTable('maintenance_requests')
-                ];
-                
-                return response()->json([
-                    'success' => true,
-                    'tables_exist' => $tables
-                ]);
-            } catch (\Exception $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error checking tables',
-                    'error' => $e->getMessage()
-                ], 500);
-            }
-        })->name('debug.checklist.tables');
-        
-        // Test route model binding for ChecklistItem
-        Route::get('/debug/checklist-item/{checklistItem}', function (\App\Models\ChecklistItem $checklistItem) {
-            return response()->json([
-                'success' => true,
-                'item' => $checklistItem
-            ]);
-        })->name('debug.checklist.item');
-        
-        // Check if specific checklist item exists
-        Route::get('/debug/checklist-item-exists/{id}', function ($id) {
-            try {
-                $item = \App\Models\ChecklistItem::find($id);
-                return response()->json([
-                    'success' => true,
-                    'exists' => $item !== null,
-                    'item' => $item
-                ]);
-            } catch (\Exception $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error checking item',
-                    'error' => $e->getMessage()
-                ], 500);
-            }
-        })->name('debug.checklist.item.exists');
-        
-        // Simple test route
-        Route::post('/debug/simple-test', function (Request $request) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Simple test route working',
-                'data' => $request->all()
-            ]);
-        })->name('debug.simple.test');
-        
-        // Test the controller method directly
-        Route::post('/debug/test-checklist-response', function (Request $request) {
-            try {
-                $maintenanceRequest = \App\Models\MaintenanceRequest::find(16);
-                $checklistItem = \App\Models\ChecklistItem::find(1);
-                
-                if (!$maintenanceRequest || !$checklistItem) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Maintenance request or checklist item not found'
-                    ], 404);
-                }
-                
-                // Test if we can access the models
-                \Log::info('Testing model access', [
-                    'maintenance_request' => $maintenanceRequest->toArray(),
-                    'checklist_item' => $checklistItem->toArray()
-                ]);
-                
-                // Test if we can create a controller instance
-                $controller = new \App\Http\Controllers\ChecklistResponseController();
-                
-                // Test if we can call the method
-                return $controller->store($request, $maintenanceRequest, $checklistItem);
-                
-            } catch (\Exception $e) {
-                \Log::error('Debug route error: ' . $e->getMessage(), [
-                    'trace' => $e->getTraceAsString()
-                ]);
-                
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error testing controller',
-                    'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString()
-                ], 500);
-            }
-        })->name('debug.test.checklist.response');
     }
+    
+    // Simple test route (outside debug block)
+    Route::post('/debug/simple-test', function (Request $request) {
+        return response()->json([
+            'success' => true,
+            'message' => 'Simple test route working',
+            'data' => $request->all()
+        ]);
+    })->name('debug.simple.test');
     Route::get('/debug/user', function () {
         $user = auth()->user();
         return [
