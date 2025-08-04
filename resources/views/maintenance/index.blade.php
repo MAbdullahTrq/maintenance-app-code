@@ -132,15 +132,15 @@
                                             <a href="{{ route('maintenance.edit', $request) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">
                                                 Edit
                                             </a>
-                                            
-                                            <form action="{{ route('maintenance.destroy', $request) }}" method="POST" class="inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure you want to delete this request?')">
-                                                    Delete
-                                                </button>
-                                            </form>
                                         @endif
+                                        
+                                        <form action="{{ route('maintenance.destroy', $request) }}" method="POST" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure you want to delete this request?')">
+                                                Delete
+                                            </button>
+                                        </form>
                                     @endif
                                 </td>
                             </tr>

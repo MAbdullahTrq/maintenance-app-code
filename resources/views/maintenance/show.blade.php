@@ -387,17 +387,27 @@
                                 Decline Request
                             </button>
                         </div>
-                        <div class="mt-4">
-                            <form action="{{ route('maintenance.destroy', $maintenance) }}" method="POST" class="w-full">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700" onclick="return confirm('Are you sure you want to delete this request? This action cannot be undone.')">
-                                    Delete Request
-                                </button>
-                            </form>
-                        </div>
                     </div>
                 </div>
+            @endif
+
+            <!-- Delete Button for Property Managers (All Statuses) -->
+            @if(auth()->user()->isPropertyManager())
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
+                    <div class="p-6 border-b">
+                        <h2 class="text-xl font-bold text-gray-900">Delete Request</h2>
+                    </div>
+                    <div class="p-6">
+                        <form action="{{ route('maintenance.destroy', $maintenance) }}" method="POST" class="w-full">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700" onclick="return confirm('Are you sure you want to delete this request? This action cannot be undone.')">
+                                Delete Request
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @endif
 
                 <!-- Decline Modal -->
                 <div id="declineModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">

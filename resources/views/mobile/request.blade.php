@@ -209,8 +209,8 @@
             </form>
             @endif
             
-            {{-- Delete button for Property Managers on pending requests --}}
-            @if($request->status === 'pending' && auth()->user() && auth()->user()->isPropertyManager())
+            {{-- Delete button for Property Managers (All Statuses) --}}
+            @if(auth()->user() && auth()->user()->isPropertyManager())
             <form method="POST" action="{{ route('maintenance.destroy', $request->id) }}" class="mb-2">
                 @csrf
                 @method('DELETE')
