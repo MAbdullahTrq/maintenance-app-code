@@ -26,9 +26,7 @@ class ChecklistController extends Controller
         // Get counts for the top bar stats
         $ownersCount = \App\Models\Owner::where('manager_id', Auth::id())->count();
         $propertiesCount = \App\Models\Property::where('manager_id', Auth::id())->count();
-        $techniciansCount = \App\Models\User::where('role_id', 3)->whereHas('properties', function($query) {
-            $query->where('manager_id', Auth::id());
-        })->count();
+        $techniciansCount = \App\Models\User::where('role_id', 3)->count(); // Count all technicians
         $requestsCount = \App\Models\MaintenanceRequest::whereHas('property', function($query) {
             $query->where('manager_id', Auth::id());
         })->count();
@@ -75,9 +73,7 @@ class ChecklistController extends Controller
         // Get counts for the top bar stats
         $ownersCount = \App\Models\Owner::where('manager_id', Auth::id())->count();
         $propertiesCount = \App\Models\Property::where('manager_id', Auth::id())->count();
-        $techniciansCount = \App\Models\User::where('role_id', 3)->whereHas('properties', function($query) {
-            $query->where('manager_id', Auth::id());
-        })->count();
+        $techniciansCount = \App\Models\User::where('role_id', 3)->count(); // Count all technicians
         $requestsCount = \App\Models\MaintenanceRequest::whereHas('property', function($query) {
             $query->where('manager_id', Auth::id());
         })->count();
@@ -96,9 +92,7 @@ class ChecklistController extends Controller
         // Get counts for the top bar stats
         $ownersCount = \App\Models\Owner::where('manager_id', Auth::id())->count();
         $propertiesCount = \App\Models\Property::where('manager_id', Auth::id())->count();
-        $techniciansCount = \App\Models\User::where('role_id', 3)->whereHas('properties', function($query) {
-            $query->where('manager_id', Auth::id());
-        })->count();
+        $techniciansCount = \App\Models\User::where('role_id', 3)->count(); // Count all technicians
         $requestsCount = \App\Models\MaintenanceRequest::whereHas('property', function($query) {
             $query->where('manager_id', Auth::id());
         })->count();
