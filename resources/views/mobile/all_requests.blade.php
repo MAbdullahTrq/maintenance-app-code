@@ -94,7 +94,7 @@
                 </thead>
                 <tbody>
                     @foreach($allRequests as $req)
-                    <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" onclick="window.location.href='{{ route('mobile.request.show', $req->id) }}'">
+                    <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" onclick="if (!event.target.closest('.actions-cell')) window.location.href='{{ route('mobile.request.show', $req->id) }}'">
                         <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
                             <span class="font-semibold">{{ $req->property->name }}</span><br>
                             <span class="text-gray-500 text-xs md:text-sm">
@@ -110,7 +110,7 @@
                             <div class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($req->created_at)->format('H:i') }}</div>
                         </td>
                         <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">{{ ucfirst($req->status) }}</td>
-                        <td class="p-2 md:p-3 lg:p-4 align-top text-center">
+                        <td class="p-2 md:p-3 lg:p-4 align-top text-center actions-cell">
                             <div class="relative" x-data="{ open: false }">
                                 <button @click="open = !open; event.stopPropagation();" class="text-gray-600 hover:text-gray-800 text-lg md:text-xl">
                                     <i class="fas fa-ellipsis-v"></i>
