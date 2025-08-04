@@ -277,6 +277,29 @@ Route::middleware(['auth'])->group(function () {
                 ], 500);
             }
         })->name('debug.db.test');
+        
+        // Check if checklist tables exist
+        Route::get('/debug/checklist-tables', function () {
+            try {
+                $tables = [
+                    'checklists' => \Schema::hasTable('checklists'),
+                    'checklist_items' => \Schema::hasTable('checklist_items'),
+                    'checklist_responses' => \Schema::hasTable('checklist_responses'),
+                    'maintenance_requests' => \Schema::hasTable('maintenance_requests')
+                ];
+                
+                return response()->json([
+                    'success' => true,
+                    'tables_exist' => $tables
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error checking tables',
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+        })->name('debug.checklist.tables');
     }
     Route::get('/debug/user', function () {
         $user = auth()->user();
