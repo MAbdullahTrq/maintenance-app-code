@@ -18,14 +18,19 @@
             
             <!-- Checklist Selection (Primary Option) -->
             <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <label class="block font-semibold mb-2 text-blue-800">Use Checklist</label>
-                <select name="checklist_id" id="checklist-select" class="w-full border rounded p-2" onchange="toggleFormFields()">
-                    <option value="">No checklist - Fill form manually</option>
-                    @foreach(auth()->user()->checklists as $checklist)
-                        <option value="{{ $checklist->id }}" data-name="{{ $checklist->name }}" data-description="{{ $checklist->generateFormattedDescription() }}">{{ $checklist->name }} ({{ $checklist->items->count() }} items)</option>
-                    @endforeach
-                </select>
-                <div class="text-xs text-blue-600 mt-1">Select a checklist to auto-fill the request details</div>
+                <div class="flex items-center mb-3">
+                    <input type="checkbox" id="use-checklist" name="use_checklist" class="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" onchange="toggleChecklistSelection()">
+                    <label for="use-checklist" class="font-semibold text-blue-800">Use Checklist</label>
+                </div>
+                <div id="checklist-dropdown" class="hidden">
+                    <select name="checklist_id" id="checklist-select" class="w-full border rounded p-2" onchange="updateFormFields()">
+                        <option value="">Select a checklist</option>
+                        @foreach(auth()->user()->checklists as $checklist)
+                            <option value="{{ $checklist->id }}" data-name="{{ $checklist->name }}" data-description="{{ $checklist->generateFormattedDescription() }}">{{ $checklist->name }} ({{ $checklist->items->count() }} items)</option>
+                        @endforeach
+                    </select>
+                    <div class="text-xs text-blue-600 mt-1">Select a checklist to auto-fill the request details</div>
+                </div>
             </div>
             
             <!-- Manual Form Fields -->
@@ -65,23 +70,18 @@
 </div>
 
 <script>
-// Form field toggling based on checklist selection
-function toggleFormFields() {
-    const checklistSelect = document.getElementById('checklist-select');
+// Toggle checklist dropdown visibility
+function toggleChecklistSelection() {
+    const useChecklist = document.getElementById('use-checklist');
+    const checklistDropdown = document.getElementById('checklist-dropdown');
     const manualFields = document.getElementById('manual-fields');
     const titleField = document.getElementById('title-field');
     const descriptionField = document.getElementById('description-field');
     const locationField = document.getElementById('location-field');
     
-    if (checklistSelect.value) {
-        // Checklist selected - auto-fill and disable manual fields
-        const selectedOption = checklistSelect.options[checklistSelect.selectedIndex];
-        const checklistName = selectedOption.getAttribute('data-name');
-        const checklistDescription = selectedOption.getAttribute('data-description');
-        
-        titleField.value = checklistName;
-        descriptionField.value = checklistDescription;
-        locationField.value = '-';
+    if (useChecklist.checked) {
+        // Show checklist dropdown
+        checklistDropdown.classList.remove('hidden');
         
         // Disable manual fields
         titleField.disabled = true;
@@ -97,10 +97,11 @@ function toggleFormFields() {
         manualFields.style.opacity = '0.6';
         manualFields.style.pointerEvents = 'none';
     } else {
-        // No checklist - enable manual fields
-        titleField.value = '';
-        descriptionField.value = '';
-        locationField.value = '';
+        // Hide checklist dropdown
+        checklistDropdown.classList.add('hidden');
+        
+        // Clear checklist selection
+        document.getElementById('checklist-select').value = '';
         
         // Enable manual fields
         titleField.disabled = false;
@@ -112,9 +113,38 @@ function toggleFormFields() {
         descriptionField.setAttribute('required', 'required');
         locationField.setAttribute('required', 'required');
         
+        // Clear and enable manual fields
+        titleField.value = '';
+        descriptionField.value = '';
+        locationField.value = '';
+        
         // Visual feedback
         manualFields.style.opacity = '1';
         manualFields.style.pointerEvents = 'auto';
+    }
+}
+
+// Update form fields when checklist is selected
+function updateFormFields() {
+    const checklistSelect = document.getElementById('checklist-select');
+    const titleField = document.getElementById('title-field');
+    const descriptionField = document.getElementById('description-field');
+    const locationField = document.getElementById('location-field');
+    
+    if (checklistSelect.value) {
+        // Checklist selected - auto-fill fields
+        const selectedOption = checklistSelect.options[checklistSelect.selectedIndex];
+        const checklistName = selectedOption.getAttribute('data-name');
+        const checklistDescription = selectedOption.getAttribute('data-description');
+        
+        titleField.value = checklistName;
+        descriptionField.value = checklistDescription;
+        locationField.value = '-';
+    } else {
+        // No checklist selected - clear fields
+        titleField.value = '';
+        descriptionField.value = '';
+        locationField.value = '';
     }
 }
 
