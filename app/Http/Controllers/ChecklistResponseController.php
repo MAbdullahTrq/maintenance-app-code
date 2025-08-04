@@ -46,6 +46,15 @@ class ChecklistResponseController extends Controller
             ]
         );
 
+        // Return JSON response for AJAX requests
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Checklist item response saved successfully.',
+                'response' => $response
+            ]);
+        }
+
         return redirect()->back()->with('success', 'Checklist item response saved successfully.');
     }
 
@@ -81,6 +90,15 @@ class ChecklistResponseController extends Controller
             'text_response' => $request->text_response,
             'response_attachment_path' => $response_attachment_path,
         ]);
+
+        // Return JSON response for AJAX requests
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Checklist item response updated successfully.',
+                'response' => $response
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Checklist item response updated successfully.');
     }

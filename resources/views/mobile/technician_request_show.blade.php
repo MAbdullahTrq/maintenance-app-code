@@ -49,45 +49,66 @@
                 <!-- Checklist Items as Interactive Checkboxes -->
                 <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-2">
                     <div class="font-medium text-gray-900 text-base mb-3">Checklist Items:</div>
-                    <div class="space-y-3">
-                        @foreach($request->checklist->items as $item)
-                            @php
-                                $response = $request->checklistResponses()->where('checklist_item_id', $item->id)->first();
-                                $isCompleted = $response ? $response->is_completed : false;
-                            @endphp
-                            <div class="flex items-start space-x-3">
-                                <div class="flex-shrink-0 mt-1">
-                                    <input type="checkbox" 
-                                           id="item_{{ $item->id }}" 
-                                           class="checklist-item-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                                           data-item-id="{{ $item->id }}"
-                                           data-request-id="{{ $request->id }}"
-                                           {{ $isCompleted ? 'checked' : '' }}
-                                           {{ $request->status === 'completed' ? 'disabled' : '' }}>
-                                </div>
-                                <div class="flex-1">
-                                    <label for="item_{{ $item->id }}" class="text-sm font-medium text-gray-900 {{ $isCompleted ? 'line-through text-gray-500' : '' }}">
-                                        {{ $item->description }}
-                                        @if($item->is_required)
-                                            <span class="text-red-500 ml-1">*</span>
-                                        @endif
-                                    </label>
-                                    @if($item->attachment_path)
-                                        <div class="mt-1">
-                                            <a href="{{ $item->attachment_url }}" 
-                                               target="_blank"
-                                               class="text-xs text-blue-600 hover:text-blue-800">
-                                                <i class="fas fa-paperclip mr-1"></i>View Attachment
-                                            </a>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-                        @endforeach
+                                         <div class="space-y-3">
+                         @foreach($request->checklist->items as $item)
+                             @php
+                                 $response = $request->checklistResponses()->where('checklist_item_id', $item->id)->first();
+                                 $isCompleted = $response ? $response->is_completed : false;
+                             @endphp
+                             <div class="flex items-start space-x-3">
+                                 @if($item->type === 'checkbox')
+                                     <div class="flex-shrink-0 mt-1">
+                                         <input type="checkbox" 
+                                                id="item_{{ $item->id }}" 
+                                                class="checklist-item-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                                data-item-id="{{ $item->id }}"
+                                                data-request-id="{{ $request->id }}"
+                                                {{ $isCompleted ? 'checked' : '' }}
+                                                {{ $request->status === 'completed' ? 'disabled' : '' }}>
+                                     </div>
+                                     <div class="flex-1">
+                                         <label for="item_{{ $item->id }}" class="text-sm font-medium text-gray-900 {{ $isCompleted ? 'line-through text-gray-500' : '' }}">
+                                             {{ $item->description }}
+                                             @if($item->is_required)
+                                                 <span class="text-red-500 ml-1">*</span>
+                                             @endif
+                                         </label>
+                                         @if($item->attachment_path)
+                                             <div class="mt-1">
+                                                 <a href="{{ $item->attachment_url }}" 
+                                                    target="_blank"
+                                                    class="text-xs text-blue-600 hover:text-blue-800">
+                                                     <i class="fas fa-paperclip mr-1"></i>View Attachment
+                                                 </a>
+                                             </div>
+                                         @endif
+                                     </div>
+                                 @else
+                                     <!-- Text items - no checkbox, just display the text -->
+                                     <div class="flex-1">
+                                         <div class="text-sm font-medium text-gray-900">
+                                             {{ $item->description }}
+                                             @if($item->is_required)
+                                                 <span class="text-red-500 ml-1">*</span>
+                                             @endif
+                                         </div>
+                                         @if($item->attachment_path)
+                                             <div class="mt-1">
+                                                 <a href="{{ $item->attachment_url }}" 
+                                                    target="_blank"
+                                                    class="text-xs text-blue-600 hover:text-blue-800">
+                                                     <i class="fas fa-paperclip mr-1"></i>View Attachment
+                                                 </a>
+                                             </div>
+                                         @endif
+                                     </div>
+                                 @endif
+                             </div>
+                         @endforeach
                     </div>
-                    <div class="mt-3 text-xs text-gray-500">
-                        <span class="text-red-500">*</span> Required items must be completed
-                    </div>
+                                         <div class="mt-3 text-xs text-gray-500">
+                         <span class="text-red-500">*</span> Required checkbox items must be completed
+                     </div>
                 </div>
             @else
                 <!-- Regular Description -->
