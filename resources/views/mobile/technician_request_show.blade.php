@@ -45,7 +45,54 @@
         </div>
         <div class="mb-4">
             <div class="font-semibold text-gray-600">Description</div>
-            <div class="font-medium text-gray-900 text-base mb-2">{{ $request->description ?? '' }}</div>
+            @if($request->checklist)
+                <!-- Checklist Items as Interactive Checkboxes -->
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-2">
+                    <div class="font-medium text-gray-900 text-base mb-3">Checklist Items:</div>
+                    <div class="space-y-3">
+                        @foreach($request->checklist->items as $item)
+                            @php
+                                $response = $request->checklistResponses()->where('checklist_item_id', $item->id)->first();
+                                $isCompleted = $response ? $response->is_completed : false;
+                            @endphp
+                            <div class="flex items-start space-x-3">
+                                <div class="flex-shrink-0 mt-1">
+                                    <input type="checkbox" 
+                                           id="item_{{ $item->id }}" 
+                                           class="checklist-item-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                           data-item-id="{{ $item->id }}"
+                                           data-request-id="{{ $request->id }}"
+                                           {{ $isCompleted ? 'checked' : '' }}
+                                           {{ $request->status === 'completed' ? 'disabled' : '' }}>
+                                </div>
+                                <div class="flex-1">
+                                    <label for="item_{{ $item->id }}" class="text-sm font-medium text-gray-900 {{ $isCompleted ? 'line-through text-gray-500' : '' }}">
+                                        {{ $item->description }}
+                                        @if($item->is_required)
+                                            <span class="text-red-500 ml-1">*</span>
+                                        @endif
+                                    </label>
+                                    @if($item->attachment_path)
+                                        <div class="mt-1">
+                                            <a href="{{ $item->attachment_url }}" 
+                                               target="_blank"
+                                               class="text-xs text-blue-600 hover:text-blue-800">
+                                                <i class="fas fa-paperclip mr-1"></i>View Attachment
+                                            </a>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="mt-3 text-xs text-gray-500">
+                        <span class="text-red-500">*</span> Required items must be completed
+                    </div>
+                </div>
+            @else
+                <!-- Regular Description -->
+                <div class="font-medium text-gray-900 text-base mb-2">{{ $request->description ?? '' }}</div>
+            @endif
         </div>
         <div class="mb-4">
             <div class="font-semibold text-gray-600">Location</div>
@@ -263,6 +310,81 @@ document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         closeMediaModal();
     }
+});
+
+// Checklist checkbox functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.checklist-item-checkbox');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const itemId = this.getAttribute('data-item-id');
+            const requestId = this.getAttribute('data-request-id');
+            const isChecked = this.checked;
+            const label = this.closest('.flex').querySelector('label');
+            
+            // Update visual state immediately
+            if (isChecked) {
+                label.classList.add('line-through', 'text-gray-500');
+            } else {
+                label.classList.remove('line-through', 'text-gray-500');
+            }
+            
+            // Send AJAX request to update the response
+            fetch(`/maintenance/${requestId}/checklist/${itemId}/response`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    is_completed: isChecked
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success feedback
+                    const feedback = document.createElement('div');
+                    feedback.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50';
+                    feedback.textContent = isChecked ? 'Item completed!' : 'Item unchecked';
+                    document.body.appendChild(feedback);
+                    
+                    setTimeout(() => {
+                        feedback.remove();
+                    }, 2000);
+                } else {
+                    // Revert checkbox state on error
+                    this.checked = !isChecked;
+                    if (isChecked) {
+                        label.classList.remove('line-through', 'text-gray-500');
+                    } else {
+                        label.classList.add('line-through', 'text-gray-500');
+                    }
+                    
+                    // Show error feedback
+                    const feedback = document.createElement('div');
+                    feedback.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow-lg z-50';
+                    feedback.textContent = 'Error updating item';
+                    document.body.appendChild(feedback);
+                    
+                    setTimeout(() => {
+                        feedback.remove();
+                    }, 2000);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Revert checkbox state on error
+                this.checked = !isChecked;
+                if (isChecked) {
+                    label.classList.remove('line-through', 'text-gray-500');
+                } else {
+                    label.classList.add('line-through', 'text-gray-500');
+                }
+            });
+        });
+    });
 });
 </script>
 @endsection 

@@ -233,7 +233,7 @@ class TechnicianController extends Controller
     public function showRequest($id)
     {
         $user = Auth::user();
-        $request = \App\Models\MaintenanceRequest::with(['property', 'images', 'comments', 'property.manager'])
+        $request = \App\Models\MaintenanceRequest::with(['property', 'images', 'comments', 'property.manager', 'checklist.items', 'checklistResponses'])
             ->where('id', $id)
             ->where('assigned_to', $user->id)
             ->firstOrFail();

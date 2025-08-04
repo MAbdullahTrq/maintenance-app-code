@@ -133,7 +133,7 @@ class MaintenanceRequestController extends Controller
     {
         $this->authorize('view', $maintenance);
         
-        $maintenance->load(['property', 'assignedTechnician', 'approvedBy', 'images', 'comments.user']);
+        $maintenance->load(['property', 'assignedTechnician', 'approvedBy', 'images', 'comments.user', 'checklist.items', 'checklistResponses']);
         
         $technicians = [];
         if (Auth::user()->isPropertyManager() || Auth::user()->isAdmin()) {
