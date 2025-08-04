@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Mobile;
 
 use App\Http\Controllers\Controller;
 use App\Models\Checklist;
+use App\Models\Owner;
+use App\Models\Property;
+use App\Models\User;
+use App\Models\MaintenanceRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,7 +23,17 @@ class ChecklistController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('mobile.checklists.index', compact('checklists'));
+        // Get counts for the top bar stats
+        $ownersCount = \App\Models\Owner::where('manager_id', Auth::id())->count();
+        $propertiesCount = \App\Models\Property::where('manager_id', Auth::id())->count();
+        $techniciansCount = \App\Models\User::where('role_id', 3)->whereHas('properties', function($query) {
+            $query->where('manager_id', Auth::id());
+        })->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereHas('property', function($query) {
+            $query->where('manager_id', Auth::id());
+        })->count();
+
+        return view('mobile.checklists.index', compact('checklists', 'ownersCount', 'propertiesCount', 'techniciansCount', 'requestsCount'));
     }
 
     /**
@@ -58,7 +72,17 @@ class ChecklistController extends Controller
         $checklist = Checklist::with('items')->findOrFail($id);
         $this->authorize('view', $checklist);
 
-        return view('mobile.checklists.show', compact('checklist'));
+        // Get counts for the top bar stats
+        $ownersCount = \App\Models\Owner::where('manager_id', Auth::id())->count();
+        $propertiesCount = \App\Models\Property::where('manager_id', Auth::id())->count();
+        $techniciansCount = \App\Models\User::where('role_id', 3)->whereHas('properties', function($query) {
+            $query->where('manager_id', Auth::id());
+        })->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereHas('property', function($query) {
+            $query->where('manager_id', Auth::id());
+        })->count();
+
+        return view('mobile.checklists.show', compact('checklist', 'ownersCount', 'propertiesCount', 'techniciansCount', 'requestsCount'));
     }
 
     /**
@@ -69,7 +93,17 @@ class ChecklistController extends Controller
         $checklist = Checklist::with('items')->findOrFail($id);
         $this->authorize('update', $checklist);
 
-        return view('mobile.checklists.edit', compact('checklist'));
+        // Get counts for the top bar stats
+        $ownersCount = \App\Models\Owner::where('manager_id', Auth::id())->count();
+        $propertiesCount = \App\Models\Property::where('manager_id', Auth::id())->count();
+        $techniciansCount = \App\Models\User::where('role_id', 3)->whereHas('properties', function($query) {
+            $query->where('manager_id', Auth::id());
+        })->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereHas('property', function($query) {
+            $query->where('manager_id', Auth::id());
+        })->count();
+
+        return view('mobile.checklists.edit', compact('checklist', 'ownersCount', 'propertiesCount', 'techniciansCount', 'requestsCount'));
     }
 
     /**
