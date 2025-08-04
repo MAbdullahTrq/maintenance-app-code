@@ -198,6 +198,7 @@
                         Requests
                     </a>
                 @endif
+                <div class="border-t border-gray-200 my-1"></div>
                 <a href="/m/profile" class="block px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">Profile</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
