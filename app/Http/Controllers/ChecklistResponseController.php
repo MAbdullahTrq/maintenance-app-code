@@ -17,13 +17,25 @@ class ChecklistResponseController extends Controller
     public function store(Request $request, MaintenanceRequest $maintenanceRequest, ChecklistItem $checklistItem)
     {
         try {
+            // Log the incoming request for debugging
+            \Log::info('Checklist response store called', [
+                'request_id' => $maintenanceRequest->id,
+                'item_id' => $checklistItem->id,
+                'user_id' => auth()->id(),
+                'request_data' => $request->all()
+            ]);
+            
             $this->authorize('update', $maintenanceRequest);
 
+            \Log::info('About to validate request');
+            
             $request->validate([
                 'is_completed' => 'required|boolean',
                 'text_response' => 'nullable|string|max:1000',
                 'response_attachment' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf,doc,docx|max:2048',
             ]);
+            
+            \Log::info('Validation passed');
 
         $response_attachment_path = null;
         
@@ -34,6 +46,8 @@ class ChecklistResponseController extends Controller
             $response_attachment_path = $path;
         }
 
+        \Log::info('About to perform database operation');
+        
         // Update or create response
         $response = ChecklistResponse::updateOrCreate(
             [
@@ -46,6 +60,8 @@ class ChecklistResponseController extends Controller
                 'response_attachment_path' => $response_attachment_path,
             ]
         );
+        
+        \Log::info('Database operation completed successfully');
 
         // Return JSON response for AJAX requests
         if ($request->expectsJson()) {
