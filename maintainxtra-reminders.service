@@ -1,0 +1,16 @@
+[Unit]
+Description=MaintainXtra Trial Reminder Service
+After=network.target
+
+[Service]
+Type=oneshot
+User=www-data
+Group=www-data
+WorkingDirectory=/path/to/your/maintainxtra/project
+ExecStart=/usr/bin/php artisan trials:send-reminders
+StandardOutput=append:/path/to/your/maintainxtra/project/storage/logs/trial-reminders.log
+StandardError=append:/path/to/your/maintainxtra/project/storage/logs/trial-reminders.log
+Environment=APP_ENV=production
+
+[Install]
+WantedBy=multi-user.target 

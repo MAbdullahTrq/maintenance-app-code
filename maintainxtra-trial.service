@@ -1,0 +1,16 @@
+[Unit]
+Description=MaintainXtra Trial System Service
+After=network.target
+
+[Service]
+Type=oneshot
+User=www-data
+Group=www-data
+WorkingDirectory=/path/to/your/maintainxtra/project
+ExecStart=/usr/bin/php artisan trials:process-expiration
+StandardOutput=append:/path/to/your/maintainxtra/project/storage/logs/trial-expiration.log
+StandardError=append:/path/to/your/maintainxtra/project/storage/logs/trial-expiration.log
+Environment=APP_ENV=production
+
+[Install]
+WantedBy=multi-user.target 
