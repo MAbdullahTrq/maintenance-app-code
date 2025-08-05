@@ -130,14 +130,14 @@
                 
                 <div class="mb-6">
                     <h3 class="text-gray-700 text-sm font-medium mb-4">Contact Information (Optional)</h3>
-                    <p class="text-sm text-gray-600 mb-4">If not provided, we'll use your owner contact information.</p>
+                    <p class="text-sm text-gray-600 mb-4">Add your details if you would like to be updated.</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="name" class="block text-gray-700 text-sm font-medium mb-2">Your Name</label>
                             <input id="name" type="text" name="name" value="{{ old('name') }}"
                                 class="appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 @error('name') border-red-500 @enderror"
-                                placeholder="{{ $owner->name }}">
+                                placeholder="Your name">
                             
                             @error('name')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -148,7 +148,7 @@
                             <label for="email" class="block text-gray-700 text-sm font-medium mb-2">Email Address</label>
                             <input id="email" type="email" name="email" value="{{ old('email') }}"
                                 class="appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 @error('email') border-red-500 @enderror"
-                                placeholder="{{ $owner->email }}">
+                                placeholder="Your email address">
                             
                             @error('email')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -160,7 +160,7 @@
                         <label for="phone" class="block text-gray-700 text-sm font-medium mb-2">Phone Number</label>
                         <input id="phone" type="tel" name="phone" value="{{ old('phone') }}"
                             class="appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 @error('phone') border-red-500 @enderror"
-                            placeholder="{{ $owner->phone }}">
+                            placeholder="Your phone number">
                         
                         @error('phone')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>

@@ -55,9 +55,9 @@ class OwnerRequestController extends Controller
             'location' => $request->location,
             'priority' => $request->priority,
             'property_id' => $property->id,
-            'requester_name' => $request->name ?: $owner->name,
-            'requester_email' => $request->email ?: $owner->email,
-            'requester_phone' => $request->phone ?: $owner->phone,
+            'requester_name' => $request->name,
+            'requester_email' => $request->email,
+            'requester_phone' => $request->phone,
             'status' => 'pending', // Set initial status to pending
         ]);
 
