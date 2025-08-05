@@ -11,7 +11,7 @@
                 <p class="text-gray-600 mt-2">Owner: <span class="font-semibold">{{ $owner->display_name }}</span></p>
             </div>
             
-            <form method="POST" action="{{ route('owner.request.submit', $owner->id) }}" enctype="multipart/form-data" id="owner-request-form">
+            <form method="POST" action="{{ route('generic.request.submit', $owner->unique_identifier) }}" enctype="multipart/form-data" id="owner-request-form">
                 @csrf
                 
                 <div class="mb-6">

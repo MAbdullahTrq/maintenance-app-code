@@ -51,6 +51,13 @@ Route::post('/owner/{ownerId}/request', [App\Http\Controllers\OwnerRequestContro
 Route::get('/owner/{ownerId}/request/success', [App\Http\Controllers\OwnerRequestController::class, 'showSuccessPage'])->name('owner.request.success');
 Route::get('/owner/{ownerId}/request/status/{requestId}', [App\Http\Controllers\OwnerRequestController::class, 'showRequestStatus'])->name('owner.request.status');
 
+// Generic request routes (public) - for QR codes
+Route::get('/{identifier}', [App\Http\Controllers\GenericRequestController::class, 'showRequestForm'])->name('generic.request.form');
+Route::post('/{identifier}', [App\Http\Controllers\GenericRequestController::class, 'submitRequest'])->name('generic.request.submit');
+Route::get('/{identifier}/success', [App\Http\Controllers\GenericRequestController::class, 'showSuccessPage'])->name('generic.request.success');
+Route::get('/{identifier}/status/{requestId}', [App\Http\Controllers\GenericRequestController::class, 'showRequestStatus'])->name('generic.request.status');
+Route::get('/{identifier}/info', [App\Http\Controllers\GenericRequestController::class, 'showOwnerInfo'])->name('generic.info');
+
 // Authentication routes
 // Email verification routes (accessible to both guests and authenticated users)
 Route::get('/email/verify', [EmailVerificationController::class, 'notice'])->name('verification.notice');

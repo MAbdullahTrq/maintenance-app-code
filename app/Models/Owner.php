@@ -25,6 +25,7 @@ class Owner extends Model
         'notes',
         'manager_id',
         'qr_code',
+        'unique_identifier',
     ];
 
     /**
@@ -90,7 +91,35 @@ class Owner extends Model
      */
     public function getOwnerUrl(): string
     {
-        return config('app.url') . '/owner/' . $this->id . '/request';
+        return config('app.url') . '/' . $this->unique_identifier;
+    }
+
+    /**
+     * Generate a unique identifier for the owner.
+     */
+    public function generateUniqueIdentifier(): string
+    {
+        $identifier = strtolower(str_replace(' ', '-', $this->name)) . '-' . substr(md5($this->id . time()), 0, 8);
+        
+        // Ensure uniqueness
+        $counter = 1;
+        $originalIdentifier = $identifier;
+        while (static::where('unique_identifier', $identifier)->where('id', '!=', $this->id)->exists()) {
+            $identifier = $originalIdentifier . '-' . $counter;
+            $counter++;
+        }
+        
+        return $identifier;
+    }
+
+    /**
+     * Set the unique identifier if not already set.
+     */
+    public function ensureUniqueIdentifier(): void
+    {
+        if (empty($this->unique_identifier)) {
+            $this->update(['unique_identifier' => $this->generateUniqueIdentifier()]);
+        }
     }
 
     /**

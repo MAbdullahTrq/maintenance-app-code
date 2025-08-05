@@ -19,7 +19,7 @@ class RedirectIfMobile
         $agent = new Agent();
 
         // If user is on mobile and not already on a mobile route
-        if ($agent->isMobile() && !$request->is('mobile*') && !$request->is('m/*') && !$request->is('owner/*') && !$request->is('request/*')) {
+        if ($agent->isMobile() && !$request->is('mobile*') && !$request->is('m/*') && !$request->is('owner/*') && !$request->is('request/*') && !$request->is('{identifier}*')) {
             return redirect('/mobile');
         }
 

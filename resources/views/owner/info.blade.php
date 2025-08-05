@@ -51,7 +51,7 @@
                     @if($owner->properties->count() > 0)
                         <div class="space-y-4">
                             <div class="text-center">
-                                <a href="{{ route('owner.request.form', $owner->id) }}" 
+                                <a href="{{ route('generic.request.form', $owner->unique_identifier) }}" 
                                    class="inline-flex items-center justify-center w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200">
                                     <i class="fas fa-plus-circle mr-2"></i>
                                     Submit Maintenance Request

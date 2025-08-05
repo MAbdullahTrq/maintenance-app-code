@@ -10,14 +10,17 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NewRequestNotification;
 
-class OwnerRequestController extends Controller
+class GenericRequestController extends Controller
 {
     /**
-     * Show the form for creating a new maintenance request for an owner.
+     * Show the form for creating a new maintenance request using generic URL.
      */
-    public function showRequestForm($ownerId)
+    public function showRequestForm($identifier)
     {
-        $owner = Owner::findOrFail($ownerId);
+        $owner = Owner::where('unique_identifier', $identifier)->firstOrFail();
+        
+        // Ensure the owner has a unique identifier
+        $owner->ensureUniqueIdentifier();
         
         // Check if owner has properties
         if ($owner->properties->count() === 0) {
@@ -28,11 +31,11 @@ class OwnerRequestController extends Controller
     }
 
     /**
-     * Store a newly created maintenance request in storage for an owner.
+     * Store a newly created maintenance request in storage using generic URL.
      */
-    public function submitRequest(Request $request, $ownerId)
+    public function submitRequest(Request $request, $identifier)
     {
-        $owner = Owner::findOrFail($ownerId);
+        $owner = Owner::where('unique_identifier', $identifier)->firstOrFail();
         
         $request->validate([
             'title' => 'required|string|max:255',
@@ -77,15 +80,15 @@ class OwnerRequestController extends Controller
         // Send notification to property manager
         Mail::to($property->manager->email)->send(new NewRequestNotification($maintenanceRequest));
 
-        return redirect()->route('generic.request.success', $owner->unique_identifier);
+        return redirect()->route('generic.request.success', $identifier);
     }
 
     /**
      * Show the success page after submitting a maintenance request.
      */
-    public function showSuccessPage($ownerId)
+    public function showSuccessPage($identifier)
     {
-        $owner = Owner::findOrFail($ownerId);
+        $owner = Owner::where('unique_identifier', $identifier)->firstOrFail();
         
         return view('owner.request-success', compact('owner'));
     }
@@ -93,9 +96,9 @@ class OwnerRequestController extends Controller
     /**
      * Show the status of a maintenance request.
      */
-    public function showRequestStatus($ownerId, $requestId)
+    public function showRequestStatus($identifier, $requestId)
     {
-        $owner = Owner::findOrFail($ownerId);
+        $owner = Owner::where('unique_identifier', $identifier)->firstOrFail();
         $maintenanceRequest = MaintenanceRequest::where('id', $requestId)
             ->whereHas('property', function ($query) use ($owner) {
                 $query->where('owner_id', $owner->id);
@@ -108,10 +111,10 @@ class OwnerRequestController extends Controller
     /**
      * Show owner information page (for QR code).
      */
-    public function showOwnerInfo($ownerId)
+    public function showOwnerInfo($identifier)
     {
-        $owner = Owner::findOrFail($ownerId);
+        $owner = Owner::where('unique_identifier', $identifier)->firstOrFail();
         
         return view('owner.info', compact('owner'));
     }
-} 
+}
