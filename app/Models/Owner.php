@@ -90,7 +90,7 @@ class Owner extends Model
      */
     public function getOwnerUrl(): string
     {
-        return config('app.url') . '/owner/' . $this->id . '/info';
+        return config('app.url') . '/owner/' . $this->id . '/request';
     }
 
     /**

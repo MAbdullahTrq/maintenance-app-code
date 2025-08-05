@@ -44,6 +44,13 @@ Route::post('/request/{accessLink}', [GuestRequestController::class, 'submitRequ
 Route::get('/request/{accessLink}/success', [GuestRequestController::class, 'showSuccessPage'])->name('guest.request.success');
 Route::get('/request/{accessLink}/status/{requestId}', [GuestRequestController::class, 'showRequestStatus'])->name('guest.request.status');
 
+// Owner maintenance request routes
+Route::get('/owner/{ownerId}/info', [OwnerRequestController::class, 'showOwnerInfo'])->name('owner.info');
+Route::get('/owner/{ownerId}/request', [OwnerRequestController::class, 'showRequestForm'])->name('owner.request.form');
+Route::post('/owner/{ownerId}/request', [OwnerRequestController::class, 'submitRequest'])->name('owner.request.submit');
+Route::get('/owner/{ownerId}/request/success', [OwnerRequestController::class, 'showSuccessPage'])->name('owner.request.success');
+Route::get('/owner/{ownerId}/request/status/{requestId}', [OwnerRequestController::class, 'showRequestStatus'])->name('owner.request.status');
+
 // Authentication routes
 // Email verification routes (accessible to both guests and authenticated users)
 Route::get('/email/verify', [EmailVerificationController::class, 'notice'])->name('verification.notice');
