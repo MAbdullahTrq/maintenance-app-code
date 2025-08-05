@@ -112,7 +112,8 @@
                 </div>
                 
                 <div class="mb-6">
-                    <h3 class="text-gray-700 text-sm font-medium mb-4">Contact Information (Optional)</h3>
+                    <h3 class="text-gray-700 text-sm font-medium mb-2">Contact Information (Optional)</h3>
+                    <p class="text-gray-600 text-sm mb-4">Add your details if you would like to be updated.</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
