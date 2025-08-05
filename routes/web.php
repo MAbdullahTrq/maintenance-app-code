@@ -58,6 +58,14 @@ Route::get('/{identifier}/success', [App\Http\Controllers\GenericRequestControll
 Route::get('/{identifier}/status/{requestId}', [App\Http\Controllers\GenericRequestController::class, 'showRequestStatus'])->name('generic.request.status');
 Route::get('/{identifier}/info', [App\Http\Controllers\GenericRequestController::class, 'showOwnerInfo'])->name('generic.info');
 
+// Trial routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/trial/status', [App\Http\Controllers\TrialController::class, 'showStatus'])->name('trial.status');
+    Route::post('/trial/extend', [App\Http\Controllers\TrialController::class, 'extendTrial'])->name('trial.extend');
+    Route::get('/trial/reactivate', [App\Http\Controllers\TrialController::class, 'reactivate'])->name('trial.reactivate');
+    Route::get('/trial/expired', [App\Http\Controllers\TrialController::class, 'showExpired'])->name('trial.expired');
+});
+
 // Authentication routes
 // Email verification routes (accessible to both guests and authenticated users)
 Route::get('/email/verify', [EmailVerificationController::class, 'notice'])->name('verification.notice');

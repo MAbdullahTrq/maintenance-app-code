@@ -38,6 +38,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\RedirectIfMobile::class,
+            \App\Http\Middleware\TrialStatusMiddleware::class,
         ],
 
         'api' => [
@@ -72,5 +73,6 @@ class Kernel extends HttpKernel
         'technician' => \App\Http\Middleware\TechnicianMiddleware::class,
         'subscription' => \App\Http\Middleware\CheckSubscription::class,
         'viewer' => \App\Http\Middleware\ViewerMiddleware::class,
+        'trial.status' => \App\Http\Middleware\TrialStatusMiddleware::class,
     ];
 } 

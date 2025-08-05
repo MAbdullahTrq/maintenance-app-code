@@ -288,7 +288,7 @@
                         Ready to streamline your maintenance process?
                     </h2>
                     <p class="mt-4 text-lg md:text-xl text-white font-medium" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.6);">
-                        Every request, task, and update easy to find, in one place.
+                        Start your 30-day free trial — no credit card required.
                     </p>
                     <div class="mt-8 flex justify-center">
                         <div class="inline-flex rounded-md shadow">
@@ -315,8 +315,8 @@
                                     </a>
                                 @endif
                             @else
-                                <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
-                                    Get Started Today
+                                <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
+                                    Get Started Free
                                 </a>
                             @endauth
                     </div>

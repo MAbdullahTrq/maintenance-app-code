@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\EmailVerificationMail;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class EmailVerificationController extends Controller
@@ -82,8 +83,11 @@ class EmailVerificationController extends Controller
 
         \Log::info('User verified successfully', ['user_id' => $user->id]);
 
-        return redirect()->route('login')
-            ->with('success', 'Email verified successfully! You can now log in to your account.');
+        // Log the user in immediately after verification
+        Auth::login($user);
+
+        return redirect()->route('dashboard')
+            ->with('success', 'Email verified successfully! Welcome to MaintainXtra. Your 30-day free trial has started.');
     }
 
     /**

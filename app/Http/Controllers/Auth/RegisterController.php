@@ -100,6 +100,9 @@ class RegisterController extends Controller
                 'is_active' => false, // Account starts as inactive
             ]);
 
+            // Start the free trial
+            $user->startTrial();
+
             \Log::info('User created successfully', ['user_id' => $user->id]);
 
             // Generate verification token

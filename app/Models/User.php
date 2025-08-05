@@ -31,6 +31,13 @@ class User extends Authenticatable
         'is_active',
         'verification_token',
         'verification_token_expires_at',
+        'trial_started_at',
+        'trial_expires_at',
+        'trial_extended',
+        'account_locked_at',
+        'data_deletion_at',
+        'reminder_emails_sent',
+        'last_reminder_sent_at',
     ];
 
     /**
@@ -69,6 +76,12 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_active' => 'boolean',
             'verification_token_expires_at' => 'datetime',
+            'trial_started_at' => 'datetime',
+            'trial_expires_at' => 'datetime',
+            'trial_extended' => 'boolean',
+            'account_locked_at' => 'datetime',
+            'data_deletion_at' => 'datetime',
+            'last_reminder_sent_at' => 'datetime',
         ];
     }
 
@@ -377,5 +390,164 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPasswordNotification($token));
+    }
+
+    // Trial-related methods
+    public function startTrial(): void
+    {
+        $this->update([
+            'trial_started_at' => now(),
+            'trial_expires_at' => now()->addDays(30),
+            'is_active' => true,
+        ]);
+    }
+
+    public function isOnTrial(): bool
+    {
+        return $this->trial_started_at && 
+               $this->trial_expires_at && 
+               now()->lt($this->trial_expires_at);
+    }
+
+    public function isInGracePeriod(): bool
+    {
+        if (!$this->trial_expires_at) {
+            return false;
+        }
+
+        $gracePeriodEnd = $this->trial_expires_at->addDays(7);
+        return now()->gte($this->trial_expires_at) && now()->lt($gracePeriodEnd);
+    }
+
+    public function isAccountLocked(): bool
+    {
+        return $this->account_locked_at !== null;
+    }
+
+    public function lockAccount(): void
+    {
+        $this->update([
+            'account_locked_at' => now(),
+            'data_deletion_at' => now()->addDays(90),
+        ]);
+    }
+
+    public function unlockAccount(): void
+    {
+        $this->update([
+            'account_locked_at' => null,
+            'data_deletion_at' => null,
+        ]);
+    }
+
+    public function shouldDeleteData(): bool
+    {
+        return $this->data_deletion_at && now()->gte($this->data_deletion_at);
+    }
+
+    public function canAccessSystem(): bool
+    {
+        // Admin users always have access
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        // If user has active subscription, they can access
+        if ($this->hasActiveSubscription()) {
+            return true;
+        }
+
+        // If on trial, they can access
+        if ($this->isOnTrial()) {
+            return true;
+        }
+
+        // If in grace period, they can access but should be prompted to subscribe
+        if ($this->isInGracePeriod()) {
+            return true;
+        }
+
+        // Account is locked
+        return false;
+    }
+
+    public function getTrialStatus(): string
+    {
+        if ($this->isOnTrial()) {
+            $daysLeft = now()->diffInDays($this->trial_expires_at, false);
+            return $daysLeft > 0 ? "trial_active" : "trial_expired";
+        }
+
+        if ($this->isInGracePeriod()) {
+            return "grace_period";
+        }
+
+        if ($this->isAccountLocked()) {
+            return "account_locked";
+        }
+
+        return "no_trial";
+    }
+
+    public function getTrialDaysLeft(): int
+    {
+        if (!$this->trial_expires_at) {
+            return 0;
+        }
+
+        return max(0, now()->diffInDays($this->trial_expires_at, false));
+    }
+
+    public function getGracePeriodDaysLeft(): int
+    {
+        if (!$this->trial_expires_at) {
+            return 0;
+        }
+
+        $gracePeriodEnd = $this->trial_expires_at->addDays(7);
+        return max(0, now()->diffInDays($gracePeriodEnd, false));
+    }
+
+    public function extendTrial(): void
+    {
+        if ($this->trial_extended) {
+            throw new \Exception('Trial can only be extended once.');
+        }
+
+        $this->update([
+            'trial_expires_at' => $this->trial_expires_at->addDays(7),
+            'trial_extended' => true,
+        ]);
+    }
+
+    public function incrementReminderEmails(): void
+    {
+        $this->increment('reminder_emails_sent');
+        $this->update(['last_reminder_sent_at' => now()]);
+    }
+
+    public function canSendReminderEmail(): bool
+    {
+        if ($this->reminder_emails_sent >= 3) {
+            return false;
+        }
+
+        if (!$this->last_reminder_sent_at) {
+            return true;
+        }
+
+        // Send reminder emails at specific intervals
+        $daysSinceLastReminder = now()->diffInDays($this->last_reminder_sent_at);
+        
+        switch ($this->reminder_emails_sent) {
+            case 0: // First reminder - Day 37
+                return $daysSinceLastReminder >= 7;
+            case 1: // Second reminder - Day 60
+                return $daysSinceLastReminder >= 23;
+            case 2: // Third reminder - Day 85
+                return $daysSinceLastReminder >= 25;
+            default:
+                return false;
+        }
     }
 }
