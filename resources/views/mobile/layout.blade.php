@@ -219,7 +219,7 @@
             <div class="flex flex-col items-center py-3 md:py-4">
                 <a href="/m/ao" class="flex flex-col items-center group">
                     <i class="fas fa-user text-2xl md:text-3xl lg:text-4xl text-yellow-600 group-hover:underline"></i>
-                    <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ isset($owners) ? $owners->count() : (isset($ownersCount) ? $ownersCount : 0) }}</div>
+                    <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ $ownersCount ?? 0 }}</div>
                 </a>
                 @if(Auth::user()->hasActiveSubscription() && !Auth::user()->isViewer())
                     <a href="/m/ao/create" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
@@ -239,7 +239,7 @@
             <div class="flex flex-col items-center py-3 md:py-4">
                 <a href="{{ route('mobile.properties.index') }}" class="flex flex-col items-center group">
                     <i class="fas fa-home text-2xl md:text-3xl lg:text-4xl text-green-600 group-hover:underline"></i>
-                    <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ isset($properties) ? $properties->count() : (isset($propertiesCount) ? $propertiesCount : 0) }}</div>
+                    <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ $propertiesCount ?? 0 }}</div>
                 </a>
                 @if(Auth::user()->hasActiveSubscription() && !Auth::user()->isViewer())
                     <a href="{{ route('mobile.properties.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
@@ -259,7 +259,7 @@
             <div class="flex flex-col items-center py-3 md:py-4">
                 <a href="{{ route('mobile.technicians.index') }}" class="flex flex-col items-center group">
                     <i class="fas fa-user-cog text-2xl md:text-3xl lg:text-4xl text-gray-700 group-hover:underline"></i>
-                    <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ isset($technicians) ? $technicians->count() : (isset($techniciansCount) ? $techniciansCount : 0) }}</div>
+                    <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ $techniciansCount ?? 0 }}</div>
                 </a>
                 @if(Auth::user()->hasActiveSubscription() && !Auth::user()->isViewer())
                     <a href="{{ route('mobile.technicians.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
@@ -279,7 +279,7 @@
             <div class="flex flex-col items-center py-3 md:py-4">
                 <a href="{{ route('mobile.manager.all-requests') }}" class="flex flex-col items-center group">
                     <i class="fas fa-file-alt text-2xl md:text-3xl lg:text-4xl text-gray-700 group-hover:underline"></i>
-                    <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ isset($requestsCount) ? $requestsCount : 0 }}</div>
+                    <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ $requestsCount ?? 0 }}</div>
                 </a>
                 @if(!Auth::user()->isViewer())
                     <a href="{{ route('mobile.requests.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
