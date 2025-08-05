@@ -19,6 +19,11 @@ class OwnerRequestController extends Controller
     {
         $owner = Owner::findOrFail($ownerId);
         
+        // Check if owner has properties
+        if ($owner->properties->count() === 0) {
+            abort(404, 'No properties found for this owner.');
+        }
+        
         return view('owner.request-form', compact('owner'));
     }
 
