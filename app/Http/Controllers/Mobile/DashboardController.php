@@ -14,6 +14,7 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
+        
         // Allow property managers and team members
         if (!$user || (!$user->isPropertyManager() && !$user->hasTeamMemberRole())) {
             abort(403);

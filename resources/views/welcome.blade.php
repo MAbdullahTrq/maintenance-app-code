@@ -55,6 +55,7 @@
                 </div>
             </div
             @auth
+                
                 <div class="mt-10 flex justify-center">
                     <div class="inline-flex rounded-md shadow-lg">
                         @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
@@ -69,8 +70,12 @@
                             <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 shadow-lg">
                                 <i class="fas fa-tachometer-alt mr-3"></i>Go to Dashboard
                             </a>
+                        @elseif(Auth::user() && method_exists(Auth::user(), 'hasTeamMemberRole') && Auth::user()->hasTeamMemberRole())
+                            <a href="{{ route('mobile.manager.dashboard') }}" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 shadow-lg">
+                                <i class="fas fa-tachometer-alt mr-3"></i>Go to Dashboard
+                            </a>
                         @else
-                            <a href="/dashboard" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 shadow-lg">
+                            <a href="/m/dash" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 shadow-lg">
                                 <i class="fas fa-tachometer-alt mr-3"></i>Go to Dashboard
                             </a>
                         @endif
@@ -287,9 +292,33 @@
                     </p>
                     <div class="mt-8 flex justify-center">
                         <div class="inline-flex rounded-md shadow">
-                            <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
-                                Get Started Today
-                            </a>
+                            @auth
+                                @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
+                                    <a href="{{ route('mobile.manager.dashboard') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
+                                        Go to Dashboard
+                                    </a>
+                                @elseif(Auth::user() && method_exists(Auth::user(), 'isTechnician') && Auth::user()->isTechnician())
+                                    <a href="{{ route('mobile.technician.dashboard') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
+                                        Go to Dashboard
+                                    </a>
+                                @elseif(Auth::user() && Auth::user()->hasRole('admin'))
+                                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
+                                        Go to Dashboard
+                                    </a>
+                                @elseif(Auth::user() && method_exists(Auth::user(), 'hasTeamMemberRole') && Auth::user()->hasTeamMemberRole())
+                                    <a href="{{ route('mobile.manager.dashboard') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
+                                        Go to Dashboard
+                                    </a>
+                                @else
+                                    <a href="/dashboard" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
+                                        Go to Dashboard
+                                    </a>
+                                @endif
+                            @else
+                                <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-blue-50">
+                                    Get Started Today
+                                </a>
+                            @endauth
                     </div>
                 </div>
             </div>

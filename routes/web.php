@@ -119,6 +119,9 @@ Route::middleware(['auth'])->group(function () {
                 return redirect()->route('mobile.subscription.plans');
             }
             return redirect()->route('mobile.manager.dashboard');
+        } elseif ($user->hasTeamMemberRole()) {
+            // Team members (editors, viewers) should go to manager dashboard
+            return redirect()->route('mobile.manager.dashboard');
         } else {
             return redirect()->route('mobile.technician.dashboard');
         }
@@ -251,6 +254,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/debug/roles', function () {
             return ['status' => 'success', 'roles' => \App\Models\Role::all()];
         });
+        
+
     }
     
     // Simple test route (outside debug block)

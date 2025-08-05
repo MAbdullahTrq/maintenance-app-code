@@ -19,12 +19,12 @@ class RedirectIfMobile
         $agent = new Agent();
 
         // If user is on mobile and not already on a mobile route
-        if ($agent->isMobile() && !$request->is('mobile*')) {
+        if ($agent->isMobile() && !$request->is('mobile*') && !$request->is('m/*')) {
             return redirect('/mobile');
         }
 
         // If user is on desktop and tries to access mobile route, redirect to home
-        if (!$agent->isMobile() && $request->is('mobile*')) {
+        if (!$agent->isMobile() && ($request->is('mobile*') || $request->is('m/*'))) {
             return redirect('/');
         }
 
