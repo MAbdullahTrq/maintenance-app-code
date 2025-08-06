@@ -145,16 +145,22 @@ function toggleFormFields() {
         // Disable manual fields (except location)
         titleField.disabled = true;
         descriptionField.disabled = true;
-        // locationField.disabled = false; // Keep location field enabled
+        locationField.disabled = false; // Explicitly keep location field enabled
         
         // Remove required attributes (except location)
         titleField.removeAttribute('required');
         descriptionField.removeAttribute('required');
-        // locationField.setAttribute('required', 'required'); // Keep location required
+        locationField.setAttribute('required', 'required'); // Explicitly keep location required
         
-        // Visual feedback
-        manualFields.style.opacity = '0.6';
-        manualFields.style.pointerEvents = 'none';
+        // Visual feedback - only apply to title and description fields, not location
+        titleField.style.opacity = '0.6';
+        descriptionField.style.opacity = '0.6';
+        titleField.style.pointerEvents = 'none';
+        descriptionField.style.pointerEvents = 'none';
+        
+        // Keep location field fully functional
+        locationField.style.opacity = '1';
+        locationField.style.pointerEvents = 'auto';
     } else {
         // No checklist - enable manual fields
         titleField.value = '';
@@ -171,9 +177,13 @@ function toggleFormFields() {
         descriptionField.setAttribute('required', 'required');
         locationField.setAttribute('required', 'required');
         
-        // Visual feedback
-        manualFields.style.opacity = '1';
-        manualFields.style.pointerEvents = 'auto';
+        // Visual feedback - reset all fields
+        titleField.style.opacity = '1';
+        descriptionField.style.opacity = '1';
+        locationField.style.opacity = '1';
+        titleField.style.pointerEvents = 'auto';
+        descriptionField.style.pointerEvents = 'auto';
+        locationField.style.pointerEvents = 'auto';
     }
 }
 
