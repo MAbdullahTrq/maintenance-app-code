@@ -114,7 +114,21 @@
                 <div class="flex justify-between h-16">
                     <div class="flex">
                         <div class="flex-shrink-0 flex items-center">
-                            <a href="/" class="flex items-center">
+                            <a href="@auth
+                                @if(Auth::user() && Auth::user()->isAdmin())
+                                    {{ route('admin.dashboard') }}
+                                @elseif(Auth::user() && Auth::user()->isPropertyManager())
+                                    {{ route('manager.dashboard') }}
+                                @elseif(Auth::user() && Auth::user()->isTechnician())
+                                    {{ route('technician.dashboard') }}
+                                @elseif(Auth::user() && method_exists(Auth::user(), 'hasTeamMemberRole') && Auth::user()->hasTeamMemberRole())
+                                    {{ route('manager.dashboard') }}
+                                @else
+                                    {{ route('dashboard') }}
+                                @endif
+                            @else
+                                /
+                            @endauth" class="flex items-center">
                                 <span class="font-extrabold text-xl md:text-2xl lg:text-3xl">
                                     <span class="text-blue-700">Maintain</span><span class="text-black">Xtra</span>
                                 </span>

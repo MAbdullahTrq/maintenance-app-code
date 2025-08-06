@@ -91,8 +91,10 @@
                 {{ route('mobile.technician.dashboard') }}
             @elseif(Auth::user() && method_exists(Auth::user(), 'hasTeamMemberRole') && Auth::user()->hasTeamMemberRole())
                 {{ route('mobile.manager.dashboard') }}
+            @elseif(Auth::user() && Auth::user()->hasRole('admin'))
+                {{ route('admin.dashboard') }}
             @else
-                /
+                {{ route('dashboard') }}
             @endif
         @else
             /
@@ -129,19 +131,7 @@
             }"
             class="relative flex items-center gap-2"
         >
-            @php
-                $isManagerDashboard = request()->routeIs('mobile.manager.dashboard');
-                $isTechnicianDashboard = request()->routeIs('mobile.technician.dashboard');
-            @endphp
-            @if((Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager()) || (Auth::user() && method_exists(Auth::user(), 'hasTeamMemberRole') && Auth::user()->hasTeamMemberRole()) && !$isManagerDashboard)
-                <a href="{{ route('mobile.manager.dashboard') }}" class="mr-2 md:mr-3 lg:mr-4" title="Dashboard">
-                    <img src="/icons/dash.png" alt="Dashboard" class="inline-block align-middle w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10" />
-                </a>
-            @elseif(Auth::user() && method_exists(Auth::user(), 'isTechnician') && Auth::user()->isTechnician() && !$isTechnicianDashboard)
-                <a href="{{ route('mobile.technician.dashboard') }}" class="mr-2 md:mr-3 lg:mr-4" title="Dashboard">
-                    <img src="/icons/dash.png" alt="Dashboard" class="inline-block align-middle w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10" />
-                </a>
-            @endif
+
             <button
                 x-ref="dropdownButton"
                 @click="open = !open; initPopper();"

@@ -31,7 +31,21 @@
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center">
-                    <a href="/" class="flex items-center">
+                    <a href="@auth
+                        @if(Auth::user() && Auth::user()->isAdmin())
+                            {{ route('admin.dashboard') }}
+                        @elseif(Auth::user() && Auth::user()->isPropertyManager())
+                            {{ route('manager.dashboard') }}
+                        @elseif(Auth::user() && Auth::user()->isTechnician())
+                            {{ route('technician.dashboard') }}
+                        @elseif(Auth::user() && method_exists(Auth::user(), 'hasTeamMemberRole') && Auth::user()->hasTeamMemberRole())
+                            {{ route('manager.dashboard') }}
+                        @else
+                            {{ route('dashboard') }}
+                        @endif
+                    @else
+                        /
+                    @endauth" class="flex items-center">
                         <span class="font-extrabold text-xl md:text-2xl lg:text-3xl">
                             <span class="text-blue-700">Maintain</span><span class="text-black">Xtra</span>
                         </span>
@@ -40,20 +54,6 @@
                 
                 <nav class="flex items-center">
                     @auth
-                        @if(Auth::user()->isAdmin() && !Route::is('admin.dashboard'))
-                            <a href="{{ route('admin.dashboard') }}" class="mr-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
-                                <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
-                            </a>
-                        @elseif(Auth::user()->isPropertyManager() && !Route::is('manager.dashboard'))
-                            <a href="{{ route('manager.dashboard') }}" class="mr-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
-                                <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
-                            </a>
-                        @elseif(Auth::user()->isTechnician() && !Route::is('technician.dashboard'))
-                            <a href="{{ route('technician.dashboard') }}" class="mr-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
-                                <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
-                            </a>
-                        @endif
-                        
                         @if(Auth::user()->isPropertyManager() && Auth::user()->hasActiveSubscription())
                             <a href="{{ route('team.index') }}" class="mr-6 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center">
                                 <i class="fas fa-users mr-2"></i>Team
