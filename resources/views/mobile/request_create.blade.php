@@ -81,17 +81,17 @@ function toggleFormFields() {
         
         titleField.value = checklistName;
         descriptionField.value = checklistDescription;
-        locationField.value = '-';
+        // Location field remains enabled and required
         
-        // Disable manual fields
+        // Disable manual fields (except location)
         titleField.disabled = true;
         descriptionField.disabled = true;
-        locationField.disabled = true;
+        // locationField.disabled = false; // Keep location field enabled
         
-        // Remove required attributes
+        // Remove required attributes (except location)
         titleField.removeAttribute('required');
         descriptionField.removeAttribute('required');
-        locationField.removeAttribute('required');
+        // locationField.setAttribute('required', 'required'); // Keep location required
         
         // Visual feedback
         manualFields.style.opacity = '0.6';

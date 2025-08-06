@@ -69,7 +69,7 @@ class MaintenanceRequestController extends Controller
             'checklist_id' => 'nullable|exists:checklists,id',
             'title' => $request->checklist_id ? 'nullable|string|max:255' : 'required|string|max:255',
             'description' => $request->checklist_id ? 'nullable|string' : 'required|string',
-            'location' => $request->checklist_id ? 'nullable|string|max:255' : 'required|string|max:255',
+            'location' => 'required|string|max:255',
             'images.*' => 'nullable|image|max:2048',
         ]);
 
@@ -79,11 +79,11 @@ class MaintenanceRequestController extends Controller
 
         // Determine title, description, and location based on checklist selection
         if ($request->checklist_id) {
-            // Use checklist data
+            // Use checklist data for title and description, but location from form
             $checklist = \App\Models\Checklist::find($request->checklist_id);
             $title = $checklist->name;
             $description = $checklist->generateFormattedDescription();
-            $location = '-';
+            $location = $request->location;
         } else {
             // Use manual form data
             $title = $request->title;
