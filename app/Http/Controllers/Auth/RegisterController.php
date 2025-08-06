@@ -90,18 +90,21 @@ class RegisterController extends Controller
         \Log::info('Phone number formatted successfully', ['formatted_phone' => $formattedPhone]);
 
         try {
-            // Create user account as inactive by default
+            // Create user account
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $formattedPhone,
                 'password' => Hash::make($request->password),
                 'role_id' => $role->id,
-                'is_active' => false, // Account starts as inactive
+                'is_active' => false, // Account starts as inactive until email verification
             ]);
 
-            // Start the free trial
-            $user->startTrial();
+            // Start the free trial (but don't activate account yet)
+            $user->update([
+                'trial_started_at' => now(),
+                'trial_expires_at' => now()->addDays(30),
+            ]);
 
             \Log::info('User created successfully', ['user_id' => $user->id]);
 

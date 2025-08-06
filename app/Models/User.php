@@ -452,6 +452,11 @@ class User extends Authenticatable
             return true;
         }
 
+        // Check if user is active (email verified)
+        if (!$this->is_active) {
+            return false;
+        }
+
         // If user has active subscription, they can access
         if ($this->hasActiveSubscription()) {
             return true;

@@ -72,11 +72,19 @@ class EmailVerificationController extends Controller
                 ->with('email', $user->email);
         }
 
-        // Activate the user account
+        // Activate the user account and ensure trial is active
         $user->update([
             'is_active' => true,
             'email_verified_at' => now(),
         ]);
+
+        // Ensure trial is started if not already
+        if (!$user->trial_started_at) {
+            $user->update([
+                'trial_started_at' => now(),
+                'trial_expires_at' => now()->addDays(30),
+            ]);
+        }
 
         // Clear the verification token
         $user->clearVerificationToken();
@@ -86,7 +94,7 @@ class EmailVerificationController extends Controller
         // Log the user in immediately after verification
         Auth::login($user);
 
-        return redirect()->route('dashboard')
+        return redirect()->route('mobile.manager.dashboard')
             ->with('success', 'Email verified successfully! Welcome to MaintainXtra. Your 30-day free trial has started.');
     }
 
