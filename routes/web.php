@@ -59,6 +59,12 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [App\Http\Controllers\Mobile\RegisterController::class, 'register'])->name('register.submit');
 });
 
+// Logout route (must come before generic routes)
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/logout', function() {
+    return redirect()->route('login')->with('error', 'Please use the logout button to sign out.');
+})->name('logout.get');
+
 // Generic request routes (public) - for QR codes
 Route::get('/{identifier}', [App\Http\Controllers\GenericRequestController::class, 'showRequestForm'])->name('generic.request.form');
 Route::post('/{identifier}', [App\Http\Controllers\GenericRequestController::class, 'submitRequest'])->name('generic.request.submit');
@@ -132,8 +138,6 @@ Route::middleware('guest')->group(function () {
     Route::get('/team/invitation/{token}', [App\Http\Controllers\TeamController::class, 'acceptInvitation'])->name('team.accept');
     Route::post('/team/invitation/{token}', [App\Http\Controllers\TeamController::class, 'processInvitation'])->name('team.process-invitation');
 });
-
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Protected routes
 Route::middleware(['auth'])->group(function () {
