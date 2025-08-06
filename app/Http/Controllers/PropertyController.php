@@ -42,6 +42,18 @@ class PropertyController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        $user = Auth::user();
+        
+        // Check if user can create a new property
+        if (!$user->canCreateProperty()) {
+            $limits = $user->getSubscriptionLimits();
+            $currentCount = $user->getCurrentPropertyCount();
+            
+            return back()->withErrors([
+                'limit' => "You have reached your property limit ({$currentCount}/{$limits['property_limit']}). Please upgrade your plan to add more properties."
+            ])->withInput();
+        }
+
         $data = [
             'name' => $request->name,
             'address' => $request->address,
@@ -54,7 +66,7 @@ class PropertyController extends Controller
             $data['image'] = $imagePath;
         }
 
-        $property = Auth::user()->managedProperties()->create($data);
+        $property = $user->managedProperties()->create($data);
 
         // Generate QR code
         $this->generateQrCode($property);

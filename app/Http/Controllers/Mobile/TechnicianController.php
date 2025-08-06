@@ -77,6 +77,17 @@ class TechnicianController extends Controller
         ]);
         
         $user = auth()->user();
+        
+        // Check if user can create a new technician
+        if (!$user->canCreateTechnician()) {
+            $limits = $user->getSubscriptionLimits();
+            $currentCount = $user->getCurrentTechnicianCount();
+            
+            return back()->withErrors([
+                'limit' => "You have reached your technician limit ({$currentCount}/{$limits['technician_limit']}). Please upgrade your plan to add more technicians."
+            ])->withInput();
+        }
+        
         // For team members, use the workspace owner's ID
         $managerId = $user->isTeamMember() ? $user->getWorkspaceOwner()->id : $user->id;
         

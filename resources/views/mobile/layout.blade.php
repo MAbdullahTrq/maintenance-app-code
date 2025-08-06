@@ -232,10 +232,23 @@
                     <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ $propertiesCount ?? 0 }}</div>
                 </a>
                 @if((Auth::user()->hasActiveSubscription() || Auth::user()->isOnTrial()) && !Auth::user()->isViewer())
-                    <a href="{{ route('mobile.properties.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
-                        <span class="text-black text-xl md:text-2xl lg:text-3xl font-bold leading-none">+</span>
-                        <span x-show="show" x-transition class="absolute right-full top-1/2 -translate-y-1/2 mr-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">New Property</span>
-                    </a>
+                    @if(Auth::user()->canCreateProperty())
+                        <a href="{{ route('mobile.properties.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <span class="text-black text-xl md:text-2xl lg:text-3xl font-bold leading-none">+</span>
+                            <span x-show="show" x-transition class="absolute right-full top-1/2 -translate-y-1/2 mr-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">New Property</span>
+                        </a>
+                    @else
+                        <div x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer">
+                            <span class="text-red-500 text-xl md:text-2xl lg:text-3xl font-bold leading-none">⚠️</span>
+                            <span x-show="show" x-transition class="absolute right-full top-1/2 -translate-y-1/2 mr-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">
+                                @php
+                                    $limits = Auth::user()->getSubscriptionLimits();
+                                    $currentCount = Auth::user()->getCurrentPropertyCount();
+                                @endphp
+                                Limit Reached ({{ $currentCount }}/{{ $limits['property_limit'] }})
+                            </span>
+                        </div>
+                    @endif
                 @elseif(Auth::user()->isViewer())
                     <!-- Viewers see no add button -->
                 @else
@@ -252,10 +265,23 @@
                     <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ $techniciansCount ?? 0 }}</div>
                 </a>
                 @if((Auth::user()->hasActiveSubscription() || Auth::user()->isOnTrial()) && !Auth::user()->isViewer())
-                    <a href="{{ route('mobile.technicians.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
-                        <span class="text-black text-xl md:text-2xl lg:text-3xl font-bold leading-none">+</span>
-                        <span x-show="show" x-transition class="absolute left-full top-1/2 -translate-y-1/2 ml-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">New Technician</span>
-                    </a>
+                    @if(Auth::user()->canCreateTechnician())
+                        <a href="{{ route('mobile.technicians.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <span class="text-black text-xl md:text-2xl lg:text-3xl font-bold leading-none">+</span>
+                            <span x-show="show" x-transition class="absolute left-full top-1/2 -translate-y-1/2 ml-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">New Technician</span>
+                        </a>
+                    @else
+                        <div x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer">
+                            <span class="text-red-500 text-xl md:text-2xl lg:text-3xl font-bold leading-none">⚠️</span>
+                            <span x-show="show" x-transition class="absolute left-full top-1/2 -translate-y-1/2 ml-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">
+                                @php
+                                    $limits = Auth::user()->getSubscriptionLimits();
+                                    $currentCount = Auth::user()->getCurrentTechnicianCount();
+                                @endphp
+                                Limit Reached ({{ $currentCount }}/{{ $limits['technician_limit'] }})
+                            </span>
+                        </div>
+                    @endif
                 @elseif(Auth::user()->isViewer())
                     <!-- Viewers see no add button -->
                 @else
@@ -299,6 +325,26 @@
         <div class="p-2" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)">
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                 <span class="block sm:inline">{{ session('error') }}</span>
+                <button @click="show = false" class="absolute top-0 right-0 px-4 py-3">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    @endif
+
+    @if($errors->has('limit'))
+        <div class="p-2" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 8000)">
+            <div class="bg-orange-100 border border-orange-400 text-orange-700 px-4 py-3 rounded relative" role="alert">
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                    <span class="block sm:inline">{{ $errors->first('limit') }}</span>
+                </div>
+                <div class="mt-2">
+                    <a href="{{ route('mobile.subscription.plans') }}" class="inline-flex items-center px-3 py-1 bg-orange-600 text-white text-sm rounded hover:bg-orange-700 transition-colors">
+                        <i class="fas fa-arrow-up mr-1"></i>
+                        Upgrade Plan
+                    </a>
+                </div>
                 <button @click="show = false" class="absolute top-0 right-0 px-4 py-3">
                     <i class="fas fa-times"></i>
                 </button>

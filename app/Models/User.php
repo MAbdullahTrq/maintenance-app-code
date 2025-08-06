@@ -555,4 +555,139 @@ class User extends Authenticatable
                 return false;
         }
     }
+
+    /**
+     * Get the current property count for the user.
+     */
+    public function getCurrentPropertyCount(): int
+    {
+        // For team members, get the workspace owner's property count
+        if ($this->isTeamMember()) {
+            $workspaceOwner = $this->getWorkspaceOwner();
+            return $workspaceOwner->managedProperties()->count();
+        }
+        
+        return $this->managedProperties()->count();
+    }
+
+    /**
+     * Get the current technician count for the user.
+     */
+    public function getCurrentTechnicianCount(): int
+    {
+        // For team members, get the workspace owner's technician count
+        if ($this->isTeamMember()) {
+            $workspaceOwner = $this->getWorkspaceOwner();
+            return $workspaceOwner->technicians()->count();
+        }
+        
+        return $this->technicians()->count();
+    }
+
+    /**
+     * Get the subscription limits for the user.
+     */
+    public function getSubscriptionLimits(): array
+    {
+        // For team members, get the workspace owner's subscription limits
+        if ($this->isTeamMember()) {
+            $workspaceOwner = $this->getWorkspaceOwner();
+            return $workspaceOwner->getSubscriptionLimits();
+        }
+        
+        $subscription = $this->subscriptions()
+            ->where('status', 'active')
+            ->where('ends_at', '>', now())
+            ->with('plan')
+            ->first();
+        
+        return [
+            'property_limit' => $subscription?->plan?->property_limit ?? 0,
+            'technician_limit' => $subscription?->plan?->technician_limit ?? 0,
+        ];
+    }
+
+    /**
+     * Check if the user can create a new property.
+     */
+    public function canCreateProperty(): bool
+    {
+        // Admin users can always create properties
+        if ($this->isAdmin()) {
+            return true;
+        }
+        
+        // Trial users get unlimited access
+        if ($this->isOnTrial()) {
+            return true;
+        }
+        
+        // Users with active subscriptions are limited by their plan
+        if ($this->hasActiveSubscription()) {
+            $limits = $this->getSubscriptionLimits();
+            return $this->getCurrentPropertyCount() < $limits['property_limit'];
+        }
+        
+        // Users without active subscriptions cannot create properties
+        return false;
+    }
+
+    /**
+     * Check if the user can create a new technician.
+     */
+    public function canCreateTechnician(): bool
+    {
+        // Admin users can always create technicians
+        if ($this->isAdmin()) {
+            return true;
+        }
+        
+        // Trial users get unlimited access
+        if ($this->isOnTrial()) {
+            return true;
+        }
+        
+        // Users with active subscriptions are limited by their plan
+        if ($this->hasActiveSubscription()) {
+            $limits = $this->getSubscriptionLimits();
+            return $this->getCurrentTechnicianCount() < $limits['technician_limit'];
+        }
+        
+        // Users without active subscriptions cannot create technicians
+        return false;
+    }
+
+    /**
+     * Get the remaining property slots available.
+     */
+    public function getRemainingPropertySlots(): int
+    {
+        if ($this->isAdmin() || $this->isOnTrial()) {
+            return -1; // Unlimited
+        }
+        
+        if ($this->hasActiveSubscription()) {
+            $limits = $this->getSubscriptionLimits();
+            return max(0, $limits['property_limit'] - $this->getCurrentPropertyCount());
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Get the remaining technician slots available.
+     */
+    public function getRemainingTechnicianSlots(): int
+    {
+        if ($this->isAdmin() || $this->isOnTrial()) {
+            return -1; // Unlimited
+        }
+        
+        if ($this->hasActiveSubscription()) {
+            $limits = $this->getSubscriptionLimits();
+            return max(0, $limits['technician_limit'] - $this->getCurrentTechnicianCount());
+        }
+        
+        return 0;
+    }
 }

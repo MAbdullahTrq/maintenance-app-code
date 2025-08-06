@@ -95,6 +95,17 @@ class PropertyController extends Controller
         ]);
         
         $user = auth()->user();
+        
+        // Check if user can create a new property
+        if (!$user->canCreateProperty()) {
+            $limits = $user->getSubscriptionLimits();
+            $currentCount = $user->getCurrentPropertyCount();
+            
+            return back()->withErrors([
+                'limit' => "You have reached your property limit ({$currentCount}/{$limits['property_limit']}). Please upgrade your plan to add more properties."
+            ])->withInput();
+        }
+        
         // For team members, use the workspace owner's ID
         $managerId = $user->isTeamMember() ? $user->getWorkspaceOwner()->id : $user->id;
         

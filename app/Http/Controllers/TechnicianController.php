@@ -36,6 +36,18 @@ class TechnicianController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        $user = auth()->user();
+        
+        // Check if user can create a new technician
+        if (!$user->canCreateTechnician()) {
+            $limits = $user->getSubscriptionLimits();
+            $currentCount = $user->getCurrentTechnicianCount();
+            
+            return back()->withErrors([
+                'limit' => "You have reached your technician limit ({$currentCount}/{$limits['technician_limit']}). Please upgrade your plan to add more technicians."
+            ])->withInput();
+        }
+
         $role = Role::where('slug', 'technician')->first();
 
         $userData = [
@@ -43,7 +55,7 @@ class TechnicianController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make('password'), // Temporary password, will be changed via verification
-            'invited_by' => auth()->id(),
+            'invited_by' => $user->id,
             'role_id' => $role->id,
             'is_active' => true,
         ];
@@ -58,7 +70,7 @@ class TechnicianController extends Controller
 
         // Generate verification token and send welcome email
         $verificationToken = $technician->generateVerificationToken();
-        $manager = auth()->user();
+        $manager = $user;
         
         try {
             Mail::to($technician->email)->send(new TechnicianWelcomeMail($technician, $manager, $verificationToken));
