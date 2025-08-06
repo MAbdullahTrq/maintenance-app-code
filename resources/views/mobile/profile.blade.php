@@ -93,20 +93,37 @@
                         @endif
                     </div>
                     
-                    <!-- Usage Information -->
-                    <div class="mt-3 pt-3 border-t border-blue-200">
-                        <div class="text-xs text-blue-600 mb-2">Current Usage:</div>
-                        <div class="space-y-1">
-                            <div class="flex justify-between text-xs">
-                                <span>Properties:</span>
-                                <span class="font-medium">{{ $user->getCurrentPropertyCount() }} / Unlimited</span>
-                            </div>
-                            <div class="flex justify-between text-xs">
-                                <span>Technicians:</span>
-                                <span class="font-medium">{{ $user->getCurrentTechnicianCount() }} / Unlimited</span>
-                            </div>
-                        </div>
-                    </div>
+                                         <!-- Usage Information -->
+                     <div class="mt-3 pt-3 border-t border-blue-200">
+                         <div class="text-xs text-blue-600 mb-2">Current Usage:</div>
+                         <div class="space-y-1">
+                             @php
+                                 $limits = $user->getSubscriptionLimits();
+                                 $propertyCount = $user->getCurrentPropertyCount();
+                                 $technicianCount = $user->getCurrentTechnicianCount();
+                                 $propertyRemaining = $limits['property_limit'] - $propertyCount;
+                                 $technicianRemaining = $limits['technician_limit'] - $technicianCount;
+                             @endphp
+                             <div class="flex justify-between text-xs">
+                                 <span>Properties:</span>
+                                 <span class="font-medium {{ $propertyRemaining <= 0 ? 'text-red-600' : 'text-blue-600' }}">
+                                     {{ $propertyCount }} / {{ $limits['property_limit'] }}
+                                     @if($propertyRemaining > 0)
+                                         <span class="text-gray-500">({{ $propertyRemaining }} left)</span>
+                                     @endif
+                                 </span>
+                             </div>
+                             <div class="flex justify-between text-xs">
+                                 <span>Technicians:</span>
+                                 <span class="font-medium {{ $technicianRemaining <= 0 ? 'text-red-600' : 'text-blue-600' }}">
+                                     {{ $technicianCount }} / {{ $limits['technician_limit'] }}
+                                     @if($technicianRemaining > 0)
+                                         <span class="text-gray-500">({{ $technicianRemaining }} left)</span>
+                                     @endif
+                                 </span>
+                             </div>
+                         </div>
+                     </div>
                     
                     <div class="mt-3">
                         <a href="{{ route('mobile.subscription.plans') }}" class="block w-full bg-green-600 text-white py-2 rounded-lg font-semibold text-center hover:bg-green-700 transition-colors text-sm">

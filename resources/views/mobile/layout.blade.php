@@ -244,8 +244,9 @@
                                 @php
                                     $limits = Auth::user()->getSubscriptionLimits();
                                     $currentCount = Auth::user()->getCurrentPropertyCount();
+                                    $planType = Auth::user()->isOnTrial() ? 'Trial' : 'Plan';
                                 @endphp
-                                Limit Reached ({{ $currentCount }}/{{ $limits['property_limit'] }})
+                                {{ $planType }} Limit Reached ({{ $currentCount }}/{{ $limits['property_limit'] }})
                             </span>
                         </div>
                     @endif
@@ -277,8 +278,9 @@
                                 @php
                                     $limits = Auth::user()->getSubscriptionLimits();
                                     $currentCount = Auth::user()->getCurrentTechnicianCount();
+                                    $planType = Auth::user()->isOnTrial() ? 'Trial' : 'Plan';
                                 @endphp
-                                Limit Reached ({{ $currentCount }}/{{ $limits['technician_limit'] }})
+                                {{ $planType }} Limit Reached ({{ $currentCount }}/{{ $limits['technician_limit'] }})
                             </span>
                         </div>
                     @endif

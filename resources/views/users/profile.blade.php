@@ -156,7 +156,39 @@
                                                         Expired on {{ $user->trial_expires_at->format('M d, Y \a\t g:i A') }}
                                                     @endif
                                                 </p>
-                                                                                        @endif
+                                            @endif
+                                        </div>
+                                        
+                                        <!-- Usage Information -->
+                                        <div class="mt-3 pt-3 border-t border-blue-200">
+                                            <div class="text-xs text-blue-600 mb-2">Current Usage:</div>
+                                            <div class="space-y-1">
+                                                @php
+                                                    $limits = $user->getSubscriptionLimits();
+                                                    $propertyCount = $user->getCurrentPropertyCount();
+                                                    $technicianCount = $user->getCurrentTechnicianCount();
+                                                    $propertyRemaining = $limits['property_limit'] - $propertyCount;
+                                                    $technicianRemaining = $limits['technician_limit'] - $technicianCount;
+                                                @endphp
+                                                <div class="flex justify-between text-xs">
+                                                    <span>Properties:</span>
+                                                    <span class="font-medium {{ $propertyRemaining <= 0 ? 'text-red-600' : 'text-blue-600' }}">
+                                                        {{ $propertyCount }} / {{ $limits['property_limit'] }}
+                                                        @if($propertyRemaining > 0)
+                                                            <span class="text-gray-500">({{ $propertyRemaining }} left)</span>
+                                                        @endif
+                                                    </span>
+                                                </div>
+                                                <div class="flex justify-between text-xs">
+                                                    <span>Technicians:</span>
+                                                    <span class="font-medium {{ $technicianRemaining <= 0 ? 'text-red-600' : 'text-blue-600' }}">
+                                                        {{ $technicianCount }} / {{ $limits['technician_limit'] }}
+                                                        @if($technicianRemaining > 0)
+                                                            <span class="text-gray-500">({{ $technicianRemaining }} left)</span>
+                                                        @endif
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="mt-3">
                                             <a href="{{ route('subscription.plans') }}" class="inline-flex items-center px-3 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
@@ -185,6 +217,38 @@
                                             @if($activeSubscription->plan)
                                                 <p class="font-medium">€{{ number_format($activeSubscription->plan->price, 2) }}/month</p>
                                             @endif
+                                        </div>
+                                        
+                                        <!-- Usage Information -->
+                                        <div class="mt-3 pt-3 border-t border-green-200">
+                                            <div class="text-xs text-green-600 mb-2">Current Usage:</div>
+                                            <div class="space-y-1">
+                                                @php
+                                                    $limits = $user->getSubscriptionLimits();
+                                                    $propertyCount = $user->getCurrentPropertyCount();
+                                                    $technicianCount = $user->getCurrentTechnicianCount();
+                                                    $propertyRemaining = $limits['property_limit'] - $propertyCount;
+                                                    $technicianRemaining = $limits['technician_limit'] - $technicianCount;
+                                                @endphp
+                                                <div class="flex justify-between text-xs">
+                                                    <span>Properties:</span>
+                                                    <span class="font-medium {{ $propertyRemaining <= 0 ? 'text-red-600' : ($propertyRemaining <= 2 ? 'text-yellow-600' : 'text-green-600') }}">
+                                                        {{ $propertyCount }} / {{ $limits['property_limit'] }}
+                                                        @if($propertyRemaining > 0)
+                                                            <span class="text-gray-500">({{ $propertyRemaining }} left)</span>
+                                                        @endif
+                                                    </span>
+                                                </div>
+                                                <div class="flex justify-between text-xs">
+                                                    <span>Technicians:</span>
+                                                    <span class="font-medium {{ $technicianRemaining <= 0 ? 'text-red-600' : ($technicianRemaining <= 3 ? 'text-yellow-600' : 'text-green-600') }}">
+                                                        {{ $technicianCount }} / {{ $limits['technician_limit'] }}
+                                                        @if($technicianRemaining > 0)
+                                                            <span class="text-gray-500">({{ $technicianRemaining }} left)</span>
+                                                        @endif
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 @else

@@ -335,6 +335,16 @@
                         <p class="text-sm text-blue-700">
                             Start your free trial today! No credit card required. Full access to all features for 30 days.
                         </p>
+                        <div class="mt-2 text-sm text-blue-600">
+                            <div class="flex justify-between">
+                                <span>Properties:</span>
+                                <span class="font-medium">1 included</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Technicians:</span>
+                                <span class="font-medium">2 included</span>
+                            </div>
+                        </div>
                     </div>
                     
                     <div>

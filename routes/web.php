@@ -414,6 +414,7 @@ Route::delete('/r/{id}', [App\Http\Controllers\Mobile\RequestController::class, 
 // Technician mobile dashboard routes
 Route::prefix('t')->middleware(['auth', 'technician'])->group(function () {
     Route::get('/', [App\Http\Controllers\Mobile\TechnicianController::class, 'dashboard'])->name('mobile.technician.dashboard');
+    Route::get('', [App\Http\Controllers\Mobile\TechnicianController::class, 'dashboard'])->name('mobile.technician.dashboard.alt');
     Route::get('/r/{id}', [App\Http\Controllers\Mobile\TechnicianController::class, 'showRequest'])->name('mobile.technician.request.show');
     Route::post('/r/{id}/accept', [App\Http\Controllers\Mobile\TechnicianController::class, 'acceptRequest'])->name('mobile.technician.request.accept');
     Route::post('/r/{id}/decline', [App\Http\Controllers\Mobile\TechnicianController::class, 'declineRequest'])->name('mobile.technician.request.decline');

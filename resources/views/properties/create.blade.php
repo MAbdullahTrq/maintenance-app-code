@@ -32,6 +32,33 @@
     <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow">
         <h1 class="text-2xl font-bold mb-6">Create New Property</h1>
         
+        <!-- Usage Information -->
+        @php
+            $user = Auth::user();
+            $limits = $user->getSubscriptionLimits();
+            $currentCount = $user->getCurrentPropertyCount();
+            $remaining = $user->getRemainingPropertySlots();
+            $planType = $user->isOnTrial() ? 'Trial' : 'Plan';
+        @endphp
+        <div class="mb-6 p-4 bg-gray-50 rounded-lg border">
+            <div class="text-sm text-gray-600 mb-2 font-medium">{{ $planType }} Usage:</div>
+            <div class="flex justify-between items-center">
+                <span class="text-sm">Properties:</span>
+                <span class="text-sm font-medium {{ $remaining <= 0 ? 'text-red-600' : ($remaining <= 1 ? 'text-yellow-600' : 'text-green-600') }}">
+                    {{ $currentCount }} / {{ $limits['property_limit'] }}
+                    @if($remaining > 0)
+                        <span class="text-gray-500">({{ $remaining }} left)</span>
+                    @endif
+                </span>
+            </div>
+            @if($remaining <= 0)
+                <div class="mt-2 text-sm text-red-600">
+                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                    You've reached your {{ strtolower($planType) }} limit. <a href="{{ route('subscription.plans') }}" class="underline">Upgrade to add more properties.</a>
+                </div>
+            @endif
+        </div>
+        
         @if(auth()->user()->isAdmin())
             <form action="{{ route('admin.properties.store') }}" method="POST" enctype="multipart/form-data">
         @else

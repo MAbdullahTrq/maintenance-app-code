@@ -4,6 +4,33 @@
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-4 max-w-md w-full">
         <h2 class="text-center text-lg font-bold mb-4">Add Property</h2>
+        
+        <!-- Usage Information -->
+        @php
+            $user = Auth::user();
+            $limits = $user->getSubscriptionLimits();
+            $currentCount = $user->getCurrentPropertyCount();
+            $remaining = $user->getRemainingPropertySlots();
+            $planType = $user->isOnTrial() ? 'Trial' : 'Plan';
+        @endphp
+        <div class="mb-4 p-3 bg-gray-50 rounded-lg border">
+            <div class="text-sm text-gray-600 mb-2">{{ $planType }} Usage:</div>
+            <div class="flex justify-between items-center">
+                <span class="text-sm">Properties:</span>
+                <span class="text-sm font-medium {{ $remaining <= 0 ? 'text-red-600' : ($remaining <= 1 ? 'text-yellow-600' : 'text-green-600') }}">
+                    {{ $currentCount }} / {{ $limits['property_limit'] }}
+                    @if($remaining > 0)
+                        <span class="text-gray-500">({{ $remaining }} left)</span>
+                    @endif
+                </span>
+            </div>
+            @if($remaining <= 0)
+                <div class="mt-2 text-xs text-red-600">
+                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                    You've reached your {{ strtolower($planType) }} limit. <a href="{{ route('mobile.subscription.plans') }}" class="underline">Upgrade to add more properties.</a>
+                </div>
+            @endif
+        </div>
         <form method="POST" action="{{ route('mobile.properties.store') }}" enctype="multipart/form-data" id="property-form">
             @csrf
             <div class="mb-3">

@@ -595,6 +595,14 @@ class User extends Authenticatable
             return $workspaceOwner->getSubscriptionLimits();
         }
         
+        // Trial users have specific limits
+        if ($this->isOnTrial()) {
+            return [
+                'property_limit' => 1,
+                'technician_limit' => 2,
+            ];
+        }
+        
         $subscription = $this->subscriptions()
             ->where('status', 'active')
             ->where('ends_at', '>', now())
@@ -617,9 +625,9 @@ class User extends Authenticatable
             return true;
         }
         
-        // Trial users get unlimited access
+        // Trial users are limited to 1 property
         if ($this->isOnTrial()) {
-            return true;
+            return $this->getCurrentPropertyCount() < 1;
         }
         
         // Users with active subscriptions are limited by their plan
@@ -642,9 +650,9 @@ class User extends Authenticatable
             return true;
         }
         
-        // Trial users get unlimited access
+        // Trial users are limited to 2 technicians
         if ($this->isOnTrial()) {
-            return true;
+            return $this->getCurrentTechnicianCount() < 2;
         }
         
         // Users with active subscriptions are limited by their plan
@@ -662,8 +670,12 @@ class User extends Authenticatable
      */
     public function getRemainingPropertySlots(): int
     {
-        if ($this->isAdmin() || $this->isOnTrial()) {
+        if ($this->isAdmin()) {
             return -1; // Unlimited
+        }
+        
+        if ($this->isOnTrial()) {
+            return max(0, 1 - $this->getCurrentPropertyCount());
         }
         
         if ($this->hasActiveSubscription()) {
@@ -679,8 +691,12 @@ class User extends Authenticatable
      */
     public function getRemainingTechnicianSlots(): int
     {
-        if ($this->isAdmin() || $this->isOnTrial()) {
+        if ($this->isAdmin()) {
             return -1; // Unlimited
+        }
+        
+        if ($this->isOnTrial()) {
+            return max(0, 2 - $this->getCurrentTechnicianCount());
         }
         
         if ($this->hasActiveSubscription()) {

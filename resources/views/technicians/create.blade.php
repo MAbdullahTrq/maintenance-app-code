@@ -46,6 +46,32 @@
             </h2>
         </div>
         <div class="p-6">
+            <!-- Usage Information -->
+            @php
+                $user = Auth::user();
+                $limits = $user->getSubscriptionLimits();
+                $currentCount = $user->getCurrentTechnicianCount();
+                $remaining = $user->getRemainingTechnicianSlots();
+                $planType = $user->isOnTrial() ? 'Trial' : 'Plan';
+            @endphp
+            <div class="mb-6 p-4 bg-gray-50 rounded-lg border">
+                <div class="text-sm text-gray-600 mb-2 font-medium">{{ $planType }} Usage:</div>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm">Technicians:</span>
+                    <span class="text-sm font-medium {{ $remaining <= 0 ? 'text-red-600' : ($remaining <= 2 ? 'text-yellow-600' : 'text-green-600') }}">
+                        {{ $currentCount }} / {{ $limits['technician_limit'] }}
+                        @if($remaining > 0)
+                            <span class="text-gray-500">({{ $remaining }} left)</span>
+                        @endif
+                    </span>
+                </div>
+                @if($remaining <= 0)
+                    <div class="mt-2 text-sm text-red-600">
+                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                        You've reached your {{ strtolower($planType) }} limit. <a href="{{ route('subscription.plans') }}" class="underline">Upgrade to add more technicians.</a>
+                    </div>
+                @endif
+            </div>
             @if($errors->any())
                 <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
                     <div class="flex items-start">
