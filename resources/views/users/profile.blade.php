@@ -156,10 +156,18 @@
                                                         Expired on {{ $user->trial_expires_at->format('M d, Y \a\t g:i A') }}
                                                     @endif
                                                 </p>
-                                            @endif
+                                                                                        @endif
                                         </div>
-                                </div>
-                            @elseif($user->hasActiveSubscription())
+                                        <div class="mt-3">
+                                            <a href="{{ route('subscription.plans') }}" class="inline-flex items-center px-3 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                                </svg>
+                                                Upgrade to Paid Plan
+                                            </a>
+                                        </div>
+                                    </div>
+                                @elseif($user->hasActiveSubscription())
                                 @php
                                     $activeSubscription = $user->subscriptions()->where('status', 'active')->where('ends_at', '>', now())->first();
                                 @endphp

@@ -92,6 +92,11 @@
                             </p>
                         @endif
                     </div>
+                    <div class="mt-3">
+                        <a href="{{ route('mobile.subscription.plans') }}" class="block w-full bg-green-600 text-white py-2 rounded-lg font-semibold text-center hover:bg-green-700 transition-colors text-sm">
+                            <i class="fas fa-credit-card mr-2"></i>Upgrade to Paid Plan
+                        </a>
+                    </div>
                 </div>
             @elseif($user->hasActiveSubscription())
                 @php
