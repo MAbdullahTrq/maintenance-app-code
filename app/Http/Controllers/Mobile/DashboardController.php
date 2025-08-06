@@ -23,7 +23,10 @@ class DashboardController extends Controller
         // For team members, get the workspace owner's data
         $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
         
+        // Check if user has active subscription OR is on trial
         $hasActiveSubscription = method_exists($user, 'hasActiveSubscription') ? $user->hasActiveSubscription() : false;
+        $isOnTrial = method_exists($user, 'isOnTrial') ? $user->isOnTrial() : false;
+        $canAccessFeatures = $hasActiveSubscription || $isOnTrial;
         $properties = $workspaceOwner->managedProperties()->get();
         $owners = $workspaceOwner->managedOwners()->get();
         $technicians = User::where('invited_by', $workspaceOwner->id)
@@ -48,7 +51,7 @@ class DashboardController extends Controller
             'technicians' => $technicians,
             'pendingRequests' => $pendingRequests,
             'requestsCount' => $requestsCount,
-            'hasActiveSubscription' => $hasActiveSubscription,
+            'hasActiveSubscription' => $canAccessFeatures,
             'teamMembersCount' => $teamMembersCount,
         ]);
     }
