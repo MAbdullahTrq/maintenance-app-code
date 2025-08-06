@@ -150,11 +150,11 @@
                                                     $daysLeft = now()->diffInDays($user->trial_expires_at, false);
                                                 @endphp
                                                 @if($daysLeft > 0)
-                                                    {{ $daysLeft }} {{ Str::plural('day', $daysLeft) }} remaining
+                                                    Expires on {{ $user->trial_expires_at->format('M d, Y \a\t g:i A') }}
                                                 @elseif($daysLeft == 0)
-                                                    Expires today
+                                                    Expires today at {{ $user->trial_expires_at->format('g:i A') }}
                                                 @else
-                                                    Expired {{ abs($daysLeft) }} {{ Str::plural('day', abs($daysLeft)) }} ago
+                                                    Expired on {{ $user->trial_expires_at->format('M d, Y \a\t g:i A') }}
                                                 @endif
                                             </p>
                                         @endif
@@ -173,8 +173,8 @@
                                             </span>
                                         </div>
                                         <div class="text-sm text-green-700">
-                                            <p class="mb-1">Started: {{ $activeSubscription->created_at->format('M d, Y') }}</p>
-                                            <p class="mb-1">Next billing: {{ $activeSubscription->ends_at->format('M d, Y') }}</p>
+                                            <p class="mb-1">Started: {{ $activeSubscription->created_at->format('M d, Y \a\t g:i A') }}</p>
+                                            <p class="mb-1">Next billing: {{ $activeSubscription->ends_at->format('M d, Y \a\t g:i A') }}</p>
                                             @if($activeSubscription->plan)
                                                 <p class="font-medium">€{{ number_format($activeSubscription->plan->price, 2) }}/month</p>
                                             @endif
@@ -195,17 +195,18 @@
                                             Expired
                                         </span>
                                     </div>
-                                    <div class="text-sm text-yellow-700">
-                                        <p class="mb-1">Trial expired on: {{ $user->trial_expires_at ? $user->trial_expires_at->format('M d, Y') : 'N/A' }}</p>
-                                        @php
-                                            $graceDaysLeft = now()->diffInDays($user->trial_expires_at->addDays(7), false);
-                                        @endphp
-                                        @if($graceDaysLeft > 0)
-                                            <p class="font-medium">{{ $graceDaysLeft }} {{ Str::plural('day', $graceDaysLeft) }} left in grace period</p>
-                                        @else
-                                            <p class="font-medium">Grace period ended</p>
-                                        @endif
-                                    </div>
+                                                                            <div class="text-sm text-yellow-700">
+                                            <p class="mb-1">Trial expired on: {{ $user->trial_expires_at ? $user->trial_expires_at->format('M d, Y \a\t g:i A') : 'N/A' }}</p>
+                                            @php
+                                                $graceEndDate = $user->trial_expires_at ? $user->trial_expires_at->addDays(7) : null;
+                                                $graceDaysLeft = $graceEndDate ? now()->diffInDays($graceEndDate, false) : 0;
+                                            @endphp
+                                            @if($graceDaysLeft > 0)
+                                                <p class="font-medium">Grace period ends on {{ $graceEndDate->format('M d, Y \a\t g:i A') }}</p>
+                                            @else
+                                                <p class="font-medium">Grace period ended on {{ $graceEndDate ? $graceEndDate->format('M d, Y \a\t g:i A') : 'N/A' }}</p>
+                                            @endif
+                                        </div>
                                 </div>
                             @else
                                 <div class="bg-red-50 border border-red-200 rounded-lg p-3">
