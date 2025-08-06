@@ -320,9 +320,26 @@
                         @enderror
                     </div>
                     
+                    <!-- Trial Information -->
+                    <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div class="flex items-center mb-2">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-blue-800">30-Day Free Trial</h3>
+                            </div>
+                        </div>
+                        <p class="text-sm text-blue-700">
+                            Start your free trial today! No credit card required. Full access to all features for 30 days.
+                        </p>
+                    </div>
+                    
                     <div>
                         <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200">
-                            Create Account
+                            Start Free Trial
                         </button>
                     </div>
                 </form>

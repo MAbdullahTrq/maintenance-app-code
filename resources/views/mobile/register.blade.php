@@ -230,8 +230,25 @@
                     <div class="text-red-500 text-xs text-center">{{ $message }}</div>
                 @enderror
                 
+                <!-- Trial Information -->
+                <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div class="flex items-center mb-2">
+                        <div class="flex-shrink-0">
+                            <svg class="h-4 w-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-2">
+                            <h3 class="text-xs font-medium text-blue-800">30-Day Free Trial</h3>
+                        </div>
+                    </div>
+                    <p class="text-xs text-blue-700">
+                        Start your free trial today! No credit card required.
+                    </p>
+                </div>
+                
                 <button type="submit" id="mobileSubmitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-semibold text-sm transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed">
-                    Create Account
+                    Start Free Trial
                 </button>
             </form>
             
