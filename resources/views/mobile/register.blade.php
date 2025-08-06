@@ -28,7 +28,55 @@
         }
     }
 
-
+    /* Single Phone input styling for mobile */
+    .phone-input-container {
+        position: relative;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        background: white;
+    }
+    
+    .phone-input-container:focus-within {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .phone-input-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0;
+    }
+    
+    .phone-country-code {
+        width: 60px;
+        border: none;
+        padding: 12px 8px 12px 16px;
+        font-size: 14px;
+        outline: none;
+        background: transparent;
+        font-weight: 600;
+        color: #374151;
+        border-right: 1px solid #d1d5db;
+        text-align: center;
+    }
+    
+    .phone-country-code::placeholder {
+        color: #9ca3af;
+    }
+    
+    .phone-number-input {
+        flex: 1;
+        border: none;
+        padding: 12px 16px;
+        font-size: 14px;
+        outline: none;
+        background: transparent;
+    }
+    
+    .phone-number-input::placeholder {
+        color: #9ca3af;
+    }
     
     .phone-input {
         flex: 1;
@@ -136,11 +184,19 @@
                 </div>
                 <div>
                     <label for="mobile_phone" class="sr-only">Phone Number</label>
-                    <input type="tel" name="phone" id="mobile_phone" 
-                        class="w-full border border-gray-300 rounded-lg p-3 text-sm placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('phone') border-red-500 @enderror"
-                        placeholder="+1 555 123 4567" value="{{ old('phone') }}" required>
-                    <input type="hidden" name="country_code" id="mobile_country_code" value="{{ old('country_code', $userCountry) }}">
+                    <div class="phone-input-container @error('phone') border-red-500 @enderror">
+                        <div class="phone-input-wrapper">
+                            <input type="text" id="mobile_country_code_input" 
+                                class="phone-country-code"
+                                placeholder="+1">
+                            <input type="tel" name="phone" id="mobile_phone" 
+                                class="phone-number-input"
+                                placeholder="555 123 4567" value="{{ old('phone') }}" required>
+                        </div>
+                        <input type="hidden" name="country_code" id="mobile_country_code" value="{{ old('country_code', $userCountry) }}">
+                    </div>
                     <div id="mobile-phone-feedback" class="phone-feedback" style="margin-top: 15px;"></div>
+                    <div id="mobile-phone-example" class="phone-example" style="margin-top: 15px;"></div>
                     @error('phone')
                         <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
                     @enderror

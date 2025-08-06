@@ -31,7 +31,155 @@
 
 
     
-
+    /* Enhanced Phone input styling */
+    .phone-container {
+        position: relative;
+        display: flex;
+        gap: 0;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: all 0.2s ease;
+        background: white;
+    }
+    
+    .phone-container:focus-within {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .country-dropdown {
+        position: relative;
+        width: 140px;
+        background: #f9fafb;
+        border-right: 1px solid #e5e7eb;
+    }
+    
+    .country-select-button {
+        width: 100%;
+        padding: 12px 8px 12px 12px;
+        background: transparent;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        color: #374151;
+        transition: background-color 0.2s ease;
+    }
+    
+    .country-select-button:hover {
+        background: #f3f4f6;
+    }
+    
+    .country-flag {
+        font-size: 16px;
+        margin-right: 4px;
+    }
+    
+    .country-code {
+        font-weight: 600;
+        color: #1f2937;
+    }
+    
+    .country-dropdown-arrow {
+        font-size: 10px;
+        color: #6b7280;
+        transition: transform 0.2s ease;
+    }
+    
+    .country-dropdown.open .country-dropdown-arrow {
+        transform: rotate(180deg);
+    }
+    
+    .country-options {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        max-height: 240px;
+        overflow-y: auto;
+        display: none !important;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.2s ease;
+    }
+    
+    .country-options.show {
+        display: block !important;
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .country-search {
+        padding: 8px 12px;
+        border: none;
+        border-bottom: 1px solid #e5e7eb;
+        width: 100%;
+        font-size: 14px;
+        outline: none;
+        background: white;
+    }
+    
+    .country-search:focus {
+        background: white;
+    }
+    
+    .country-option {
+        padding: 10px 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        font-size: 13px;
+        transition: background-color 0.15s ease;
+        border-bottom: 1px solid #f3f4f6;
+    }
+    
+    .country-option:hover {
+        background: #f3f4f6;
+    }
+    
+    .country-option:last-child {
+        border-bottom: none;
+    }
+    
+    .country-option-flag {
+        font-size: 16px;
+        margin-right: 8px;
+        width: 20px;
+    }
+    
+    .country-option-name {
+        flex: 1;
+        color: #374151;
+        margin-right: 8px;
+    }
+    
+    .country-option-code {
+        font-weight: 600;
+        color: #6b7280;
+        font-size: 12px;
+    }
+    
+    .phone-input {
+        flex: 1;
+        border: none;
+        padding: 12px 16px;
+        font-size: 14px;
+        outline: none;
+        background: transparent;
+    }
+    
+    .phone-input::placeholder {
+        color: #9ca3af;
+    }
     
     .phone-feedback {
         font-size: 12px;
@@ -107,10 +255,29 @@
                     
                     <div class="mb-4">
                         <label for="phone" class="block text-gray-700 text-sm font-medium mb-2">Phone Number</label>
-                        <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" required
-                            class="w-full border border-gray-300 rounded-lg p-3 text-sm placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('phone') border-red-500 @enderror"
-                            placeholder="+1 555 123 4567">
-                        <input type="hidden" name="country_code" id="country_code" value="{{ old('country_code', $userCountry) }}">
+                        <div class="phone-container @error('phone') border-red-500 @enderror @error('country_code') border-red-500 @enderror">
+                            <div class="country-dropdown" id="countryDropdown">
+                                <button type="button" class="country-select-button" id="countrySelectButton">
+                                    <div class="flex items-center">
+                                        <span class="country-flag" id="selectedFlag">🇺🇸</span>
+                                        <span class="country-code" id="selectedCode">+1</span>
+                                    </div>
+                                    <span class="country-dropdown-arrow">▼</span>
+                                </button>
+                                
+                                <div class="country-options" id="countryOptions">
+                                    <input type="text" class="country-search" id="countrySearch" placeholder="Search countries...">
+                                    <div id="countryList">
+                                        <!-- Countries will be populated by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <input type="hidden" name="country_code" id="country_code" value="{{ old('country_code', $userCountry) }}">
+                            <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" required
+                                class="phone-input"
+                                placeholder="Enter phone number">
+                        </div>
                         <div id="phone-feedback" class="phone-feedback"></div>
                         @error('phone')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
