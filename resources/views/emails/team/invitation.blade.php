@@ -28,15 +28,25 @@
         }
         .button {
             display: inline-block;
-            background: #007bff;
-            color: white;
+            background: #007bff !important;
+            color: white !important;
             padding: 12px 24px;
             text-decoration: none;
             border-radius: 6px;
             margin: 20px 0;
+            font-weight: bold;
+            text-align: center;
+            border: none;
         }
         .button:hover {
-            background: #0056b3;
+            background: #0056b3 !important;
+            color: white !important;
+        }
+        .button:visited {
+            color: white !important;
+        }
+        .button:active {
+            color: white !important;
         }
         .footer {
             margin-top: 20px;
