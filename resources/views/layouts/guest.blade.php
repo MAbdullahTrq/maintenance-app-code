@@ -118,11 +118,11 @@
                                 @if(Auth::user() && Auth::user()->isAdmin())
                                     {{ route('admin.dashboard') }}
                                 @elseif(Auth::user() && Auth::user()->isPropertyManager())
-                                    {{ route('manager.dashboard') }}
+                                    {{ route('mobile.manager.dashboard') }}
                                 @elseif(Auth::user() && Auth::user()->isTechnician())
-                                    {{ route('technician.dashboard') }}
+                                    {{ route('mobile.technician.dashboard') }}
                                 @elseif(Auth::user() && method_exists(Auth::user(), 'hasTeamMemberRole') && Auth::user()->hasTeamMemberRole())
-                                    {{ route('manager.dashboard') }}
+                                    {{ route('mobile.manager.dashboard') }}
                                 @else
                                     {{ route('dashboard') }}
                                 @endif
