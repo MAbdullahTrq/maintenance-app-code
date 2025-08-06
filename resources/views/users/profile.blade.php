@@ -129,6 +129,109 @@
                                 </span>
                             @endif
                         </div>
+                        
+                        <!-- Subscription Information -->
+                        <div class="border-t pt-4 mt-4">
+                            <p class="text-sm font-medium text-gray-500 mb-2">Subscription</p>
+                            @if($user->isOnTrial())
+                                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-sm font-medium text-blue-800">Free Trial</span>
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            Active
+                                        </span>
+                                    </div>
+                                    <div class="text-sm text-blue-700">
+                                        <p class="mb-1">Started: {{ $user->trial_started_at ? $user->trial_started_at->format('M d, Y') : 'N/A' }}</p>
+                                        <p class="mb-1">Expires: {{ $user->trial_expires_at ? $user->trial_expires_at->format('M d, Y') : 'N/A' }}</p>
+                                        @if($user->trial_expires_at)
+                                            <p class="font-medium">
+                                                @php
+                                                    $daysLeft = now()->diffInDays($user->trial_expires_at, false);
+                                                @endphp
+                                                @if($daysLeft > 0)
+                                                    {{ $daysLeft }} {{ Str::plural('day', $daysLeft) }} remaining
+                                                @elseif($daysLeft == 0)
+                                                    Expires today
+                                                @else
+                                                    Expired {{ abs($daysLeft) }} {{ Str::plural('day', abs($daysLeft)) }} ago
+                                                @endif
+                                            </p>
+                                        @endif
+                                    </div>
+                                </div>
+                            @elseif($user->hasActiveSubscription())
+                                @php
+                                    $activeSubscription = $user->subscriptions()->where('status', 'active')->where('ends_at', '>', now())->first();
+                                @endphp
+                                @if($activeSubscription)
+                                    <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-sm font-medium text-green-800">{{ $activeSubscription->plan->name ?? 'Active Plan' }}</span>
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                Active
+                                            </span>
+                                        </div>
+                                        <div class="text-sm text-green-700">
+                                            <p class="mb-1">Started: {{ $activeSubscription->created_at->format('M d, Y') }}</p>
+                                            <p class="mb-1">Next billing: {{ $activeSubscription->ends_at->format('M d, Y') }}</p>
+                                            @if($activeSubscription->plan)
+                                                <p class="font-medium">€{{ number_format($activeSubscription->plan->price, 2) }}/month</p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                                        <div class="text-sm text-gray-600">
+                                            <p>No active subscription found.</p>
+                                        </div>
+                                    </div>
+                                @endif
+                            @elseif($user->isInGracePeriod())
+                                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-sm font-medium text-yellow-800">Grace Period</span>
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                            Expired
+                                        </span>
+                                    </div>
+                                    <div class="text-sm text-yellow-700">
+                                        <p class="mb-1">Trial expired on: {{ $user->trial_expires_at ? $user->trial_expires_at->format('M d, Y') : 'N/A' }}</p>
+                                        @php
+                                            $graceDaysLeft = now()->diffInDays($user->trial_expires_at->addDays(7), false);
+                                        @endphp
+                                        @if($graceDaysLeft > 0)
+                                            <p class="font-medium">{{ $graceDaysLeft }} {{ Str::plural('day', $graceDaysLeft) }} left in grace period</p>
+                                        @else
+                                            <p class="font-medium">Grace period ended</p>
+                                        @endif
+                                    </div>
+                                </div>
+                            @else
+                                <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-sm font-medium text-red-800">No Active Subscription</span>
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            Inactive
+                                        </span>
+                                    </div>
+                                    <div class="text-sm text-red-700">
+                                        <p>Your account is not active. Please subscribe to continue.</p>
+                                    </div>
+                                </div>
+                            @endif
+                            
+                            @if(!$user->hasActiveSubscription() && !$user->isOnTrial())
+                                <div class="mt-3">
+                                    <a href="{{ route('subscription.plans') }}" class="inline-flex items-center px-3 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                        </svg>
+                                        Subscribe Now
+                                    </a>
+                                </div>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>

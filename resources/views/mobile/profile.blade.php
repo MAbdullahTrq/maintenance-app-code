@@ -60,6 +60,110 @@
             </div>
         </form>
         
+        <!-- Subscription Information -->
+        <div class="bg-gray-50 rounded-lg p-4 mb-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                <i class="fas fa-credit-card mr-2 text-blue-600"></i>
+                Subscription Status
+            </h3>
+            
+            @if($user->isOnTrial())
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-blue-800">Free Trial</span>
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            Active
+                        </span>
+                    </div>
+                    <div class="text-sm text-blue-700">
+                        <p class="mb-1">Started: {{ $user->trial_started_at ? $user->trial_started_at->format('M d, Y') : 'N/A' }}</p>
+                        <p class="mb-1">Expires: {{ $user->trial_expires_at ? $user->trial_expires_at->format('M d, Y') : 'N/A' }}</p>
+                        @if($user->trial_expires_at)
+                            <p class="font-medium">
+                                @php
+                                    $daysLeft = now()->diffInDays($user->trial_expires_at, false);
+                                @endphp
+                                @if($daysLeft > 0)
+                                    {{ $daysLeft }} {{ Str::plural('day', $daysLeft) }} remaining
+                                @elseif($daysLeft == 0)
+                                    Expires today
+                                @else
+                                    Expired {{ abs($daysLeft) }} {{ Str::plural('day', abs($daysLeft)) }} ago
+                                @endif
+                            </p>
+                        @endif
+                    </div>
+                </div>
+            @elseif($user->hasActiveSubscription())
+                @php
+                    $activeSubscription = $user->subscriptions()->where('status', 'active')->where('ends_at', '>', now())->first();
+                @endphp
+                @if($activeSubscription)
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-green-800">{{ $activeSubscription->plan->name ?? 'Active Plan' }}</span>
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                Active
+                            </span>
+                        </div>
+                        <div class="text-sm text-green-700">
+                            <p class="mb-1">Started: {{ $activeSubscription->created_at->format('M d, Y') }}</p>
+                            <p class="mb-1">Next billing: {{ $activeSubscription->ends_at->format('M d, Y') }}</p>
+                            @if($activeSubscription->plan)
+                                <p class="font-medium">€{{ number_format($activeSubscription->plan->price, 2) }}/month</p>
+                            @endif
+                        </div>
+                    </div>
+                @else
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                        <div class="text-sm text-gray-600">
+                            <p>No active subscription found.</p>
+                        </div>
+                    </div>
+                @endif
+            @elseif($user->isInGracePeriod())
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-yellow-800">Grace Period</span>
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                            Expired
+                        </span>
+                    </div>
+                    <div class="text-sm text-yellow-700">
+                        <p class="mb-1">Trial expired on: {{ $user->trial_expires_at ? $user->trial_expires_at->format('M d, Y') : 'N/A' }}</p>
+                        @php
+                            $graceDaysLeft = now()->diffInDays($user->trial_expires_at->addDays(7), false);
+                        @endphp
+                        @if($graceDaysLeft > 0)
+                            <p class="font-medium">{{ $graceDaysLeft }} {{ Str::plural('day', $graceDaysLeft) }} left in grace period</p>
+                        @else
+                            <p class="font-medium">Grace period ended</p>
+                        @endif
+                    </div>
+                </div>
+            @else
+                <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-red-800">No Active Subscription</span>
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                            Inactive
+                        </span>
+                    </div>
+                    <div class="text-sm text-red-700">
+                        <p>Your account is not active. Please subscribe to continue.</p>
+                    </div>
+                </div>
+            @endif
+            
+            @if(!$user->hasActiveSubscription() && !$user->isOnTrial())
+                <div class="mt-3">
+                    <a href="{{ route('mobile.subscription.plans') }}" class="block w-full bg-blue-600 text-white py-2 rounded-lg font-semibold text-center hover:bg-blue-700 transition-colors text-sm">
+                        <i class="fas fa-credit-card mr-2"></i>Subscribe Now
+                    </a>
+                </div>
+            @endif
+        </div>
+        
         <div class="space-y-3">
             <a href="{{ route('mobile.profile.change-password') }}" class="block w-full bg-yellow-500 text-white py-3 rounded-lg font-semibold text-center hover:bg-yellow-600 transition-colors">
                 <i class="fas fa-key mr-2"></i>Change Password
