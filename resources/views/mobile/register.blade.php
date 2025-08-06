@@ -31,17 +31,15 @@
     /* Single Phone input styling for mobile */
     .phone-input-container {
         position: relative;
-        border: 2px solid #e5e7eb;
-        border-radius: 12px;
-        transition: all 0.3s ease;
-        background: #f9fafb;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        background: white;
     }
     
     .phone-input-container:focus-within {
         border-color: #3b82f6;
-        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
-        background: white;
-        transform: translateY(-1px);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
     
     .phone-input-wrapper {
@@ -53,14 +51,14 @@
     .phone-country-code {
         width: 60px;
         border: none;
-        padding: 18px 8px 18px 20px;
-        font-size: 16px;
+        padding: 12px 8px 12px 16px;
+        font-size: 14px;
         outline: none;
         background: transparent;
         font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
         font-weight: 600;
         color: #374151;
-        border-right: 1px solid #e5e7eb;
+        border-right: 1px solid #d1d5db;
         text-align: center;
     }
     
@@ -72,8 +70,8 @@
     .phone-number-input {
         flex: 1;
         border: none;
-        padding: 18px 20px;
-        font-size: 16px;
+        padding: 12px 16px;
+        font-size: 14px;
         outline: none;
         background: transparent;
         font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
@@ -155,35 +153,7 @@
         scroll-behavior: smooth;
     }
     
-    /* Mobile form enhancements */
-    .form-input {
-        border: 2px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 18px 20px;
-        font-size: 16px;
-        transition: all 0.3s ease;
-        background-color: #f9fafb;
-        width: 100%;
-        box-sizing: border-box;
-    }
-    
-    .form-input:focus {
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
-        outline: none;
-        background-color: white;
-        transform: translateY(-1px);
-    }
-    
-    .form-input.error {
-        border-color: #dc2626;
-        box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15);
-    }
-    
-    .form-input::placeholder {
-        color: #9ca3af;
-        font-weight: 400;
-    }
+
 </style>
 @endpush
 
@@ -201,7 +171,7 @@
                 <div>
                     <label for="name" class="sr-only">Full Name</label>
                     <input type="text" name="name" id="name" 
-                        class="form-input w-full placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('name') error @enderror" 
+                        class="w-full border border-gray-300 rounded-lg p-3 text-sm placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('name') border-red-500 @enderror" 
                         placeholder="Full Name" value="{{ old('name') }}" required autofocus>
                     @error('name')
                         <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
@@ -210,7 +180,7 @@
                 <div>
                     <label for="email" class="sr-only">Email address</label>
                     <input type="email" name="email" id="email" 
-                        class="form-input w-full placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('email') error @enderror" 
+                        class="w-full border border-gray-300 rounded-lg p-3 text-sm placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('email') border-red-500 @enderror" 
                         placeholder="Email address" value="{{ old('email') }}" required>
                     @error('email')
                         <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
@@ -238,7 +208,7 @@
                 <div>
                     <label for="password" class="sr-only">Password</label>
                     <input type="password" name="password" id="password" 
-                        class="form-input w-full placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('password') error @enderror" 
+                        class="w-full border border-gray-300 rounded-lg p-3 text-sm placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('password') border-red-500 @enderror" 
                         placeholder="Password" required>
                     @error('password')
                         <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
@@ -247,7 +217,7 @@
                 <div>
                     <label for="password_confirmation" class="sr-only">Confirm Password</label>
                     <input type="password" name="password_confirmation" id="password_confirmation" 
-                        class="form-input w-full placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                        class="w-full border border-gray-300 rounded-lg p-3 text-sm placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
                         placeholder="Confirm Password" required>
                 </div>
                 
@@ -264,7 +234,7 @@
                     <div class="text-red-500 text-xs text-center">{{ $message }}</div>
                 @enderror
                 
-                <button type="submit" id="mobileSubmitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 px-6 rounded-xl font-semibold text-base transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]">
+                <button type="submit" id="mobileSubmitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-semibold text-sm transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed">
                     Create Account
                 </button>
             </form>

@@ -29,53 +29,23 @@
         }
     }
 
-    /* Modern form input styling */
-    .form-input {
-        border: 2px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 16px 18px;
-        font-size: 16px;
-        transition: all 0.3s ease;
-        background-color: #f9fafb;
-        width: 100%;
-        box-sizing: border-box;
-    }
-    
-    .form-input:focus {
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
-        outline: none;
-        background-color: white;
-        transform: translateY(-1px);
-    }
-    
-    .form-input.error {
-        border-color: #dc2626;
-        box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15);
-    }
-    
-    .form-input::placeholder {
-        color: #9ca3af;
-        font-weight: 400;
-    }
+
     
     /* Enhanced Phone input styling */
     .phone-container {
         position: relative;
         display: flex;
         gap: 0;
-        border: 2px solid #e5e7eb;
-        border-radius: 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
         overflow: hidden;
-        transition: all 0.3s ease;
-        background: #f9fafb;
+        transition: all 0.2s ease;
+        background: white;
     }
     
     .phone-container:focus-within {
         border-color: #3b82f6;
-        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
-        background: white;
-        transform: translateY(-1px);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
     
     .country-dropdown {
@@ -266,7 +236,7 @@
                     <div class="mb-4">
                         <label for="name" class="block text-gray-700 text-sm font-medium mb-2">Full Name</label>
                         <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus
-                            class="form-input @error('name') error @enderror"
+                            class="w-full border border-gray-300 rounded-lg p-3 text-sm placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('name') border-red-500 @enderror"
                             placeholder="Enter your full name">
                         
                         @error('name')
@@ -277,7 +247,7 @@
                     <div class="mb-4">
                         <label for="email" class="block text-gray-700 text-sm font-medium mb-2">Email Address</label>
                         <input id="email" type="email" name="email" value="{{ old('email') }}" required
-                            class="form-input @error('email') error @enderror"
+                            class="w-full border border-gray-300 rounded-lg p-3 text-sm placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('email') border-red-500 @enderror"
                             placeholder="Enter your email address">
                         
                         @error('email')
@@ -322,7 +292,7 @@
                     <div class="mb-4">
                         <label for="password" class="block text-gray-700 text-sm font-medium mb-2">Password</label>
                         <input id="password" type="password" name="password" required
-                            class="form-input @error('password') error @enderror"
+                            class="w-full border border-gray-300 rounded-lg p-3 text-sm placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('password') border-red-500 @enderror"
                             placeholder="Enter your password">
                         
                         @error('password')
@@ -333,7 +303,7 @@
                     <div class="mb-4">
                         <label for="password_confirmation" class="block text-gray-700 text-sm font-medium mb-2">Confirm Password</label>
                         <input id="password_confirmation" type="password" name="password_confirmation" required
-                            class="form-input @error('password_confirmation') error @enderror"
+                            class="w-full border border-gray-300 rounded-lg p-3 text-sm placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('password_confirmation') border-red-500 @enderror"
                             placeholder="Confirm your password">
                     </div>
                     
@@ -353,7 +323,7 @@
                     </div>
                     
                     <div>
-                        <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-6 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
+                        <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200">
                             Create Account
                         </button>
                     </div>
