@@ -51,6 +51,14 @@ Route::post('/owner/{ownerId}/request', [App\Http\Controllers\OwnerRequestContro
 Route::get('/owner/{ownerId}/request/success', [App\Http\Controllers\OwnerRequestController::class, 'showSuccessPage'])->name('owner.request.success');
 Route::get('/owner/{ownerId}/request/status/{requestId}', [App\Http\Controllers\OwnerRequestController::class, 'showRequestStatus'])->name('owner.request.status');
 
+// Authentication routes (must come before generic routes)
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [App\Http\Controllers\Mobile\LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [App\Http\Controllers\Mobile\LoginController::class, 'login'])->name('login.submit');
+    Route::get('/register', [App\Http\Controllers\Mobile\RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [App\Http\Controllers\Mobile\RegisterController::class, 'register'])->name('register.submit');
+});
+
 // Generic request routes (public) - for QR codes
 Route::get('/{identifier}', [App\Http\Controllers\GenericRequestController::class, 'showRequestForm'])->name('generic.request.form');
 Route::post('/{identifier}', [App\Http\Controllers\GenericRequestController::class, 'submitRequest'])->name('generic.request.submit');
@@ -397,13 +405,6 @@ Route::delete('/r/{id}', [App\Http\Controllers\Mobile\RequestController::class, 
     });
 
     Route::get('/subscription/plans', [MobileSubscriptionController::class, 'plans'])->name('mobile.subscription.plans');
-});
-
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [App\Http\Controllers\Mobile\LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [App\Http\Controllers\Mobile\LoginController::class, 'login'])->name('login.submit');
-    Route::get('/register', [App\Http\Controllers\Mobile\RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [App\Http\Controllers\Mobile\RegisterController::class, 'register'])->name('register.submit');
 });
 
 // Technician mobile dashboard routes
