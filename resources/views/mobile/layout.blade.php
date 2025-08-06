@@ -211,7 +211,7 @@
                     <i class="fas fa-user text-2xl md:text-3xl lg:text-4xl text-yellow-600 group-hover:underline"></i>
                     <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ $ownersCount ?? 0 }}</div>
                 </a>
-                @if(Auth::user()->hasActiveSubscription() && !Auth::user()->isViewer())
+                @if((Auth::user()->hasActiveSubscription() || Auth::user()->isOnTrial()) && !Auth::user()->isViewer())
                     <a href="/m/ao/create" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
                         <span class="text-black text-xl md:text-2xl lg:text-3xl font-bold leading-none">+</span>
                         <span x-show="show" x-transition class="absolute right-full top-1/2 -translate-y-1/2 mr-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">New Owner</span>
@@ -231,7 +231,7 @@
                     <i class="fas fa-home text-2xl md:text-3xl lg:text-4xl text-green-600 group-hover:underline"></i>
                     <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ $propertiesCount ?? 0 }}</div>
                 </a>
-                @if(Auth::user()->hasActiveSubscription() && !Auth::user()->isViewer())
+                @if((Auth::user()->hasActiveSubscription() || Auth::user()->isOnTrial()) && !Auth::user()->isViewer())
                     <a href="{{ route('mobile.properties.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
                         <span class="text-black text-xl md:text-2xl lg:text-3xl font-bold leading-none">+</span>
                         <span x-show="show" x-transition class="absolute right-full top-1/2 -translate-y-1/2 mr-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">New Property</span>
@@ -251,7 +251,7 @@
                     <i class="fas fa-user-cog text-2xl md:text-3xl lg:text-4xl text-gray-700 group-hover:underline"></i>
                     <div class="font-bold text-sm md:text-lg lg:text-xl mt-1">{{ $techniciansCount ?? 0 }}</div>
                 </a>
-                @if(Auth::user()->hasActiveSubscription() && !Auth::user()->isViewer())
+                @if((Auth::user()->hasActiveSubscription() || Auth::user()->isOnTrial()) && !Auth::user()->isViewer())
                     <a href="{{ route('mobile.technicians.create') }}" x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" @click="show = !show" class="relative mt-3 p-2 hover:bg-gray-100 rounded-full transition-colors">
                         <span class="text-black text-xl md:text-2xl lg:text-3xl font-bold leading-none">+</span>
                         <span x-show="show" x-transition class="absolute left-full top-1/2 -translate-y-1/2 ml-2 bg-white text-black text-xs md:text-sm px-2 py-1 rounded shadow border border-gray-200 z-10 whitespace-nowrap">New Technician</span>
