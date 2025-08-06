@@ -20,7 +20,7 @@ class CheckSubscription
             return $next($request);
         }
         
-        if (!$request->user() || !$request->user()->hasActiveSubscription()) {
+        if (!$request->user() || (!$request->user()->hasActiveSubscription() && !$request->user()->isOnTrial())) {
             // Check if this is a mobile route request
             $isMobileRoute = $request->is('m/*') || $request->is('mobile/*');
             

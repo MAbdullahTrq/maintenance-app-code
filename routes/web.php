@@ -148,8 +148,8 @@ Route::middleware(['auth'])->group(function () {
         if ($user->isAdmin()) {
             return redirect()->route('admin.dashboard');
         } elseif ($user->isPropertyManager()) {
-            // Check if property manager has an active subscription
-            if (!$user->hasActiveSubscription()) {
+            // Check if property manager has an active subscription or is on trial
+            if (!$user->hasActiveSubscription() && !$user->isOnTrial()) {
                 return redirect()->route('mobile.subscription.plans');
             }
             return redirect()->route('mobile.manager.dashboard');
