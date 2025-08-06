@@ -157,11 +157,21 @@ class RequestController extends Controller
             'technician_id' => 'required|exists:users,id',
         ]);
         $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);
+        
+        // Check if user can approve this request
+        $user = auth()->user();
+        if (!$user->can('approve', $maintenance)) {
+            abort(403, 'You are not authorized to approve this request.');
+        }
+        
         $technician = \App\Models\User::findOrFail($request->technician_id);
         
-        // Security check: Property managers can only assign technicians they invited
-        if (auth()->user()->isPropertyManager() && $technician->invited_by !== auth()->id()) {
-            abort(403, 'You can only assign technicians you have invited.');
+        // Security check: Users can only assign technicians invited by their workspace owner
+        $user = auth()->user();
+        $managerId = $user->isPropertyManager() ? $user->id : $user->getWorkspaceOwner()->id;
+        
+        if ($technician->invited_by !== $managerId) {
+            abort(403, 'You can only assign technicians invited by your workspace owner.');
         }
         $maintenance->assigned_to = $technician->id;
         $maintenance->status = 'assigned';
@@ -185,14 +195,20 @@ class RequestController extends Controller
     public function decline(Request $request, $id)
     {
         $request->validate([
-            'decline_reason' => 'required|string',
+            'comment' => 'required|string',
         ]);
         $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);
+        
+        // Check if user can decline this request
+        $user = auth()->user();
+        if (!$user->can('approve', $maintenance)) {
+            abort(403, 'You are not authorized to decline this request.');
+        }
         $maintenance->status = 'declined';
         $maintenance->save();
         $maintenance->comments()->create([
             'user_id' => auth()->id(),
-            'comment' => 'Request declined: ' . $request->decline_reason,
+            'comment' => 'Request declined: ' . $request->comment,
         ]);
 
         return redirect()->route('mobile.request.show', $id)->with('success', 'Request declined.');
@@ -201,6 +217,12 @@ class RequestController extends Controller
     public function complete(Request $request, $id)
     {
         $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);
+        
+        // Check if user can complete this request
+        $user = auth()->user();
+        if (!$user->can('approve', $maintenance)) {
+            abort(403, 'You are not authorized to complete this request.');
+        }
         $maintenance->status = 'completed';
         $maintenance->completed_at = now();
         $maintenance->save();
@@ -215,6 +237,12 @@ class RequestController extends Controller
     public function close(Request $request, $id)
     {
         $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);
+        
+        // Check if user can close this request
+        $user = auth()->user();
+        if (!$user->can('approve', $maintenance)) {
+            abort(403, 'You are not authorized to close this request.');
+        }
         $maintenance->status = 'closed';
         $maintenance->save();
         $maintenance->comments()->create([

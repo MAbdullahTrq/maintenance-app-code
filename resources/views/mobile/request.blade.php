@@ -156,14 +156,17 @@
         <hr class="my-4 border-gray-300">
         {{-- ACTIONS SECTION --}}
         <div class="mb-2">
-            @if($request->status === 'pending' && auth()->user() && auth()->user()->isPropertyManager())
+            @if($request->status === 'pending' && auth()->user() && auth()->user()->canAssignTasks())
                 <form method="POST" action="{{ route('mobile.request.approve', $request->id) }}" class="mb-2 flex flex-col gap-2" x-data="{ tech: '' }">
                     @csrf
                     <div class="mb-2">
                         <label class="block font-semibold mb-1">Assign Technician*</label>
                         <select name="technician_id" class="w-full border rounded p-2" x-model="tech">
                             <option value="">Select Technician</option>
-                            @foreach(App\Models\User::whereHas('role', function($q){$q->where('slug','technician');})->where('invited_by', auth()->id())->get() as $tech)
+                            @php
+                                $managerId = auth()->user()->isPropertyManager() ? auth()->id() : auth()->user()->getWorkspaceOwner()->id;
+                            @endphp
+                            @foreach(App\Models\User::whereHas('role', function($q){$q->where('slug','technician');})->where('invited_by', $managerId)->get() as $tech)
                                 <option value="{{ $tech->id }}">{{ $tech->name }}</option>
                             @endforeach
                         </select>
@@ -202,7 +205,7 @@
 
             @endif
             {{-- Always show Mark as Complete if eligible --}}
-            @if(auth()->user() && auth()->user()->isPropertyManager() && in_array($request->status, ['pending', 'assigned', 'started', 'acknowledged', 'accepted']))
+            @if(auth()->user() && auth()->user()->canAssignTasks() && in_array($request->status, ['pending', 'assigned', 'started', 'acknowledged', 'accepted']))
             <form method="POST" action="{{ route('mobile.request.complete', $request->id) }}" class="mb-2">
                 @csrf
                 <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded">Mark as Complete</button>

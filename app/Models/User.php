@@ -339,6 +339,17 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if the user can assign tasks to technicians.
+     * This includes property managers and team members with editor role.
+     *
+     * @return bool
+     */
+    public function canAssignTasks()
+    {
+        return $this->isPropertyManager() || $this->isEditor();
+    }
+
+    /**
      * Generate a verification token for the user.
      *
      * @return string

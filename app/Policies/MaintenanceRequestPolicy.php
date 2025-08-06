@@ -127,6 +127,12 @@ class MaintenanceRequestPolicy
             return true;
         }
 
+        // Team members with editor role can approve requests for their workspace owner's properties
+        if ($user->isEditor()) {
+            $workspaceOwner = $user->getWorkspaceOwner();
+            return $maintenanceRequest->property->manager_id === $workspaceOwner->id;
+        }
+
         return false;
     }
 
@@ -148,6 +154,12 @@ class MaintenanceRequestPolicy
         // Property managers can assign requests for their properties
         if ($user->isPropertyManager() && $maintenanceRequest->property->manager_id === $user->id) {
             return true;
+        }
+
+        // Team members with editor role can assign requests for their workspace owner's properties
+        if ($user->isEditor()) {
+            $workspaceOwner = $user->getWorkspaceOwner();
+            return $maintenanceRequest->property->manager_id === $workspaceOwner->id;
         }
 
         return false;
