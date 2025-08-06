@@ -141,24 +141,23 @@
                                             Active
                                         </span>
                                     </div>
-                                    <div class="text-sm text-blue-700">
-                                        <p class="mb-1">Started: {{ $user->trial_started_at ? $user->trial_started_at->format('M d, Y') : 'N/A' }}</p>
-                                        <p class="mb-1">Expires: {{ $user->trial_expires_at ? $user->trial_expires_at->format('M d, Y') : 'N/A' }}</p>
-                                        @if($user->trial_expires_at)
-                                            <p class="font-medium">
-                                                @php
-                                                    $daysLeft = now()->diffInDays($user->trial_expires_at, false);
-                                                @endphp
-                                                @if($daysLeft > 0)
-                                                    Expires on {{ $user->trial_expires_at->format('M d, Y \a\t g:i A') }}
-                                                @elseif($daysLeft == 0)
-                                                    Expires today at {{ $user->trial_expires_at->format('g:i A') }}
-                                                @else
-                                                    Expired on {{ $user->trial_expires_at->format('M d, Y \a\t g:i A') }}
-                                                @endif
-                                            </p>
-                                        @endif
-                                    </div>
+                                                                            <div class="text-sm text-blue-700">
+                                            <p class="mb-1">Started: {{ $user->trial_started_at ? $user->trial_started_at->format('M d, Y \a\t g:i A') : 'N/A' }}</p>
+                                            @if($user->trial_expires_at)
+                                                <p class="font-medium">
+                                                    @php
+                                                        $daysLeft = now()->diffInDays($user->trial_expires_at, false);
+                                                    @endphp
+                                                    @if($daysLeft > 0)
+                                                        Expires on {{ $user->trial_expires_at->format('M d, Y \a\t g:i A') }}
+                                                    @elseif($daysLeft == 0)
+                                                        Expires today at {{ $user->trial_expires_at->format('g:i A') }}
+                                                    @else
+                                                        Expired on {{ $user->trial_expires_at->format('M d, Y \a\t g:i A') }}
+                                                    @endif
+                                                </p>
+                                            @endif
+                                        </div>
                                 </div>
                             @elseif($user->hasActiveSubscription())
                                 @php

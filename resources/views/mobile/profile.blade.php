@@ -76,8 +76,7 @@
                         </span>
                     </div>
                     <div class="text-sm text-blue-700">
-                        <p class="mb-1">Started: {{ $user->trial_started_at ? $user->trial_started_at->format('M d, Y') : 'N/A' }}</p>
-                        <p class="mb-1">Expires: {{ $user->trial_expires_at ? $user->trial_expires_at->format('M d, Y') : 'N/A' }}</p>
+                        <p class="mb-1">Started: {{ $user->trial_started_at ? $user->trial_started_at->format('M d, Y \a\t g:i A') : 'N/A' }}</p>
                         @if($user->trial_expires_at)
                             <p class="font-medium">
                                 @php
