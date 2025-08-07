@@ -18,17 +18,26 @@ class ChecklistController extends Controller
      */
     public function index()
     {
-        $checklists = Checklist::where('manager_id', Auth::id())
+        $user = Auth::user();
+        
+        // For team members, get the workspace owner's data
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
+        // Get all checklists from the workspace (manager + team members)
+        $workspaceUserIds = [$workspaceOwner->id];
+        $workspaceUserIds = array_merge($workspaceUserIds, $workspaceOwner->teamMembers()->pluck('users.id')->toArray());
+        
+        $checklists = Checklist::whereIn('manager_id', $workspaceUserIds)
             ->withCount('items')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         // Get counts for the top bar stats
-        $ownersCount = \App\Models\Owner::where('manager_id', Auth::id())->count();
-        $propertiesCount = \App\Models\Property::where('manager_id', Auth::id())->count();
-        $techniciansCount = \App\Models\User::where('role_id', 3)->count(); // Count all technicians
-        $requestsCount = \App\Models\MaintenanceRequest::whereHas('property', function($query) {
-            $query->where('manager_id', Auth::id());
+        $ownersCount = \App\Models\Owner::where('manager_id', $workspaceOwner->id)->count();
+        $propertiesCount = \App\Models\Property::where('manager_id', $workspaceOwner->id)->count();
+        $techniciansCount = \App\Models\User::where('role_id', 3)->where('invited_by', $workspaceOwner->id)->count(); // Count workspace technicians
+        $requestsCount = \App\Models\MaintenanceRequest::whereHas('property', function($query) use ($workspaceOwner) {
+            $query->where('manager_id', $workspaceOwner->id);
         })->count();
 
         return view('mobile.checklists.index', compact('checklists', 'ownersCount', 'propertiesCount', 'techniciansCount', 'requestsCount'));
@@ -67,15 +76,18 @@ class ChecklistController extends Controller
      */
     public function show($id)
     {
+        $user = Auth::user();
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
         $checklist = Checklist::with('items')->findOrFail($id);
         $this->authorize('view', $checklist);
 
         // Get counts for the top bar stats
-        $ownersCount = \App\Models\Owner::where('manager_id', Auth::id())->count();
-        $propertiesCount = \App\Models\Property::where('manager_id', Auth::id())->count();
-        $techniciansCount = \App\Models\User::where('role_id', 3)->count(); // Count all technicians
-        $requestsCount = \App\Models\MaintenanceRequest::whereHas('property', function($query) {
-            $query->where('manager_id', Auth::id());
+        $ownersCount = \App\Models\Owner::where('manager_id', $workspaceOwner->id)->count();
+        $propertiesCount = \App\Models\Property::where('manager_id', $workspaceOwner->id)->count();
+        $techniciansCount = \App\Models\User::where('role_id', 3)->where('invited_by', $workspaceOwner->id)->count(); // Count workspace technicians
+        $requestsCount = \App\Models\MaintenanceRequest::whereHas('property', function($query) use ($workspaceOwner) {
+            $query->where('manager_id', $workspaceOwner->id);
         })->count();
 
         return view('mobile.checklists.show', compact('checklist', 'ownersCount', 'propertiesCount', 'techniciansCount', 'requestsCount'));
@@ -86,15 +98,18 @@ class ChecklistController extends Controller
      */
     public function edit($id)
     {
+        $user = Auth::user();
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
         $checklist = Checklist::with('items')->findOrFail($id);
         $this->authorize('update', $checklist);
 
         // Get counts for the top bar stats
-        $ownersCount = \App\Models\Owner::where('manager_id', Auth::id())->count();
-        $propertiesCount = \App\Models\Property::where('manager_id', Auth::id())->count();
-        $techniciansCount = \App\Models\User::where('role_id', 3)->count(); // Count all technicians
-        $requestsCount = \App\Models\MaintenanceRequest::whereHas('property', function($query) {
-            $query->where('manager_id', Auth::id());
+        $ownersCount = \App\Models\Owner::where('manager_id', $workspaceOwner->id)->count();
+        $propertiesCount = \App\Models\Property::where('manager_id', $workspaceOwner->id)->count();
+        $techniciansCount = \App\Models\User::where('role_id', 3)->where('invited_by', $workspaceOwner->id)->count(); // Count workspace technicians
+        $requestsCount = \App\Models\MaintenanceRequest::whereHas('property', function($query) use ($workspaceOwner) {
+            $query->where('manager_id', $workspaceOwner->id);
         })->count();
 
         return view('mobile.checklists.edit', compact('checklist', 'ownersCount', 'propertiesCount', 'techniciansCount', 'requestsCount'));

@@ -38,6 +38,11 @@ class RequestController extends Controller
         
         $properties = \App\Models\Property::where('manager_id', $workspaceOwner->id)->get();
         
+        // Get all checklists from the workspace (manager + team members)
+        $workspaceUserIds = [$workspaceOwner->id];
+        $workspaceUserIds = array_merge($workspaceUserIds, $workspaceOwner->teamMembers()->pluck('users.id')->toArray());
+        $checklists = \App\Models\Checklist::whereIn('manager_id', $workspaceUserIds)->get();
+        
         // Calculate all stats for mobile layout
         $ownersCount = $workspaceOwner->managedOwners()->count();
         $propertiesCount = $properties->count();
@@ -45,7 +50,7 @@ class RequestController extends Controller
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->count();
         $teamMembersCount = $workspaceOwner->teamMembers()->count();
         
-        return view('mobile.request_create', compact('properties', 'ownersCount', 'propertiesCount', 'techniciansCount', 'requestsCount', 'teamMembersCount'));
+        return view('mobile.request_create', compact('properties', 'checklists', 'ownersCount', 'propertiesCount', 'techniciansCount', 'requestsCount', 'teamMembersCount'));
     }
 
     /**

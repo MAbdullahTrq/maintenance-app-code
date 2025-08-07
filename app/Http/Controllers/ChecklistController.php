@@ -13,7 +13,16 @@ class ChecklistController extends Controller
      */
     public function index()
     {
-        $checklists = Checklist::where('manager_id', Auth::id())
+        $user = Auth::user();
+        
+        // For team members, get the workspace owner's data
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
+        // Get all checklists from the workspace (manager + team members)
+        $workspaceUserIds = [$workspaceOwner->id];
+        $workspaceUserIds = array_merge($workspaceUserIds, $workspaceOwner->teamMembers()->pluck('users.id')->toArray());
+        
+        $checklists = Checklist::whereIn('manager_id', $workspaceUserIds)
             ->withCount('items')
             ->orderBy('created_at', 'desc')
             ->paginate(10);

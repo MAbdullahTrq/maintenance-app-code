@@ -52,8 +52,17 @@ class MaintenanceRequestController extends Controller
      */
     public function create()
     {
-        $properties = Auth::user()->managedProperties()->get();
-        $checklists = Auth::user()->checklists()->withCount('items')->get();
+        $user = Auth::user();
+        
+        // For team members, get the workspace owner's data
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
+        $properties = $workspaceOwner->managedProperties()->get();
+        
+        // Get all checklists from the workspace (manager + team members)
+        $workspaceUserIds = [$workspaceOwner->id];
+        $workspaceUserIds = array_merge($workspaceUserIds, $workspaceOwner->teamMembers()->pluck('users.id')->toArray());
+        $checklists = \App\Models\Checklist::whereIn('manager_id', $workspaceUserIds)->withCount('items')->get();
         
         return view('maintenance.create', compact('properties', 'checklists'));
     }

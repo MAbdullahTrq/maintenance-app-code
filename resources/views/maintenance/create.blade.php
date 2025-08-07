@@ -24,7 +24,7 @@
                     <select id="property_id" name="property_id" 
                         class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
                         <option value="">Select a property</option>
-                        @foreach(auth()->user()->managedProperties as $property)
+                        @foreach($properties as $property)
                             <option value="{{ $property->id }}" {{ old('property_id') == $property->id ? 'selected' : '' }}>
                                 {{ $property->name }}
                             </option>
@@ -41,7 +41,7 @@
                     <select id="checklist_id" name="checklist_id" 
                         class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" onchange="toggleFormFields()">
                         <option value="">No checklist - Fill form manually</option>
-                        @foreach(auth()->user()->checklists as $checklist)
+                        @foreach($checklists as $checklist)
                             <option value="{{ $checklist->id }}" data-name="{{ $checklist->name }}" data-description="{{ $checklist->generateFormattedDescription() }}" {{ old('checklist_id') == $checklist->id ? 'selected' : '' }}>
                                 {{ $checklist->name }} ({{ $checklist->items->count() }} items)
                             </option>

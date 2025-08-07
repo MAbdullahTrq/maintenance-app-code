@@ -44,7 +44,9 @@
                             <p class="text-gray-600 text-xs md:text-sm mb-2">
                                 {{ Str::limit($checklist->description, 100) ?: 'No description' }}
                             </p>
-                            <p class="text-gray-400 text-xs">Created {{ $checklist->created_at->diffForHumans() }}</p>
+                            <p class="text-gray-400 text-xs">
+                                Created by {{ $checklist->manager->name }} {{ $checklist->created_at->diffForHumans() }}
+                            </p>
                         </div>
                         <div class="flex space-x-2 ml-4">
                             <a href="/m/cl/{{ $checklist->id }}" class="text-blue-600 hover:text-blue-800 p-2">

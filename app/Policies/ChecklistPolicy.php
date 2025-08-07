@@ -15,7 +15,7 @@ class ChecklistPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->isPropertyManager() && $user->hasActiveSubscription();
+        return ($user->isPropertyManager() || $user->hasTeamMemberRole()) && $user->hasActiveSubscription();
     }
 
     /**
@@ -23,9 +23,22 @@ class ChecklistPolicy
      */
     public function view(User $user, Checklist $checklist): bool
     {
-        return $user->isPropertyManager() && 
-               $user->hasActiveSubscription() && 
-               $checklist->manager_id === $user->id;
+        if (!$user->hasActiveSubscription()) {
+            return false;
+        }
+        
+        if ($user->isPropertyManager()) {
+            return $checklist->manager_id === $user->id;
+        }
+        
+        if ($user->hasTeamMemberRole()) {
+            $workspaceOwner = $user->getWorkspaceOwner();
+            $workspaceUserIds = [$workspaceOwner->id];
+            $workspaceUserIds = array_merge($workspaceUserIds, $workspaceOwner->teamMembers()->pluck('users.id')->toArray());
+            return in_array($checklist->manager_id, $workspaceUserIds);
+        }
+        
+        return false;
     }
 
     /**
@@ -33,7 +46,7 @@ class ChecklistPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isPropertyManager() && $user->hasActiveSubscription();
+        return ($user->isPropertyManager() || $user->hasTeamMemberRole()) && $user->hasActiveSubscription();
     }
 
     /**
@@ -41,9 +54,22 @@ class ChecklistPolicy
      */
     public function update(User $user, Checklist $checklist): bool
     {
-        return $user->isPropertyManager() && 
-               $user->hasActiveSubscription() && 
-               $checklist->manager_id === $user->id;
+        if (!$user->hasActiveSubscription()) {
+            return false;
+        }
+        
+        if ($user->isPropertyManager()) {
+            return $checklist->manager_id === $user->id;
+        }
+        
+        if ($user->hasTeamMemberRole()) {
+            $workspaceOwner = $user->getWorkspaceOwner();
+            $workspaceUserIds = [$workspaceOwner->id];
+            $workspaceUserIds = array_merge($workspaceUserIds, $workspaceOwner->teamMembers()->pluck('users.id')->toArray());
+            return in_array($checklist->manager_id, $workspaceUserIds);
+        }
+        
+        return false;
     }
 
     /**
@@ -51,9 +77,22 @@ class ChecklistPolicy
      */
     public function delete(User $user, Checklist $checklist): bool
     {
-        return $user->isPropertyManager() && 
-               $user->hasActiveSubscription() && 
-               $checklist->manager_id === $user->id;
+        if (!$user->hasActiveSubscription()) {
+            return false;
+        }
+        
+        if ($user->isPropertyManager()) {
+            return $checklist->manager_id === $user->id;
+        }
+        
+        if ($user->hasTeamMemberRole()) {
+            $workspaceOwner = $user->getWorkspaceOwner();
+            $workspaceUserIds = [$workspaceOwner->id];
+            $workspaceUserIds = array_merge($workspaceUserIds, $workspaceOwner->teamMembers()->pluck('users.id')->toArray());
+            return in_array($checklist->manager_id, $workspaceUserIds);
+        }
+        
+        return false;
     }
 
     /**
@@ -61,9 +100,22 @@ class ChecklistPolicy
      */
     public function restore(User $user, Checklist $checklist): bool
     {
-        return $user->isPropertyManager() && 
-               $user->hasActiveSubscription() && 
-               $checklist->manager_id === $user->id;
+        if (!$user->hasActiveSubscription()) {
+            return false;
+        }
+        
+        if ($user->isPropertyManager()) {
+            return $checklist->manager_id === $user->id;
+        }
+        
+        if ($user->hasTeamMemberRole()) {
+            $workspaceOwner = $user->getWorkspaceOwner();
+            $workspaceUserIds = [$workspaceOwner->id];
+            $workspaceUserIds = array_merge($workspaceUserIds, $workspaceOwner->teamMembers()->pluck('users.id')->toArray());
+            return in_array($checklist->manager_id, $workspaceUserIds);
+        }
+        
+        return false;
     }
 
     /**
@@ -71,8 +123,21 @@ class ChecklistPolicy
      */
     public function forceDelete(User $user, Checklist $checklist): bool
     {
-        return $user->isPropertyManager() && 
-               $user->hasActiveSubscription() && 
-               $checklist->manager_id === $user->id;
+        if (!$user->hasActiveSubscription()) {
+            return false;
+        }
+        
+        if ($user->isPropertyManager()) {
+            return $checklist->manager_id === $user->id;
+        }
+        
+        if ($user->hasTeamMemberRole()) {
+            $workspaceOwner = $user->getWorkspaceOwner();
+            $workspaceUserIds = [$workspaceOwner->id];
+            $workspaceUserIds = array_merge($workspaceUserIds, $workspaceOwner->teamMembers()->pluck('users.id')->toArray());
+            return in_array($checklist->manager_id, $workspaceUserIds);
+        }
+        
+        return false;
     }
 }

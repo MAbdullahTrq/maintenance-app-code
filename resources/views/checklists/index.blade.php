@@ -35,7 +35,7 @@
                                     </div>
                                     <div class="ml-4">
                                         <div class="text-sm font-medium text-gray-900">{{ $checklist->name }}</div>
-                                        <div class="text-sm text-gray-500">Created {{ $checklist->created_at->diffForHumans() }}</div>
+                                        <div class="text-sm text-gray-500">Created by {{ $checklist->manager->name }} {{ $checklist->created_at->diffForHumans() }}</div>
                                     </div>
                                 </div>
                             </td>

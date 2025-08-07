@@ -21,7 +21,7 @@
                 <label class="block font-semibold mb-2 text-blue-800">Use Checklist</label>
                 <select name="checklist_id" id="checklist-select" class="w-full border rounded p-2" onchange="toggleFormFields()">
                     <option value="">No checklist - Fill form manually</option>
-                    @foreach(auth()->user()->checklists as $checklist)
+                    @foreach($checklists as $checklist)
                         <option value="{{ $checklist->id }}" data-name="{{ $checklist->name }}" data-description="{{ $checklist->generateFormattedDescription() }}">{{ $checklist->name }} ({{ $checklist->items->count() }} items)</option>
                     @endforeach
                 </select>
