@@ -71,7 +71,7 @@
                                                data-item-id="{{ $item->id }}"
                                                data-request-id="{{ $request->id }}"
                                                {{ $isCompleted ? 'checked' : '' }}
-                                               {{ ($request->status === 'completed' || (auth()->user()->isTechnician() && !in_array($request->status, ['acknowledged', 'accepted', 'started']))) ? 'disabled' : '' }}>
+                                                                                                  {{ ($request->status === 'completed' || (auth()->user()->isTechnician() && $request->status !== 'started')) ? 'disabled' : '' }}>
                                     </div>
                                     <div class="flex-1">
                                         <label for="mobile_item_{{ $item->id }}" class="text-sm font-medium text-gray-900 {{ $isCompleted ? 'line-through text-gray-500' : '' }}">
@@ -115,9 +115,9 @@
                     </div>
                     <div class="mt-2 text-xs text-gray-500">
                         <span class="text-red-500">*</span> Required checkbox items must be completed
-                        @if(auth()->user()->isTechnician() && !in_array($request->status, ['acknowledged', 'accepted', 'started', 'completed']))
-                            <br><span class="text-orange-600">⚠️ Checklist items will become available after you accept this job</span>
-                        @endif
+                                                    @if(auth()->user()->isTechnician() && $request->status !== 'started' && $request->status !== 'completed')
+                                <br><span class="text-orange-600">⚠️ Checklist items will become available after you start this job</span>
+                            @endif
                     </div>
                 </div>
             @else
