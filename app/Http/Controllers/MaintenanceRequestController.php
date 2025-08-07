@@ -320,6 +320,12 @@ class MaintenanceRequestController extends Controller
             'images.*' => 'nullable|image|max:2048',
         ]);
 
+        // Check if all required checklist items are completed
+        if ($maintenance->checklist && !$maintenance->areRequiredChecklistItemsCompleted()) {
+            return redirect()->route('maintenance.show', $maintenance)
+                ->with('error', 'Cannot mark as completed. All required checklist items must be checked first.');
+        }
+
         $maintenance->markAsCompleted();
 
         // Add comment
@@ -574,6 +580,12 @@ class MaintenanceRequestController extends Controller
             'comment' => 'required|string',
             'images.*' => 'nullable|image|max:2048',
         ]);
+
+        // Check if all required checklist items are completed
+        if ($maintenance->checklist && !$maintenance->areRequiredChecklistItemsCompleted()) {
+            return redirect()->back()
+                ->with('error', 'Cannot mark as completed. All required checklist items must be checked first.');
+        }
 
         $maintenance->markAsCompleted();
         

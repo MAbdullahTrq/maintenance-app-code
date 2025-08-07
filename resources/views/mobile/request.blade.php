@@ -52,7 +52,75 @@
             <div class="font-semibold">Request title</div>
             <div>{{ $request->title }}</div>
             <div class="font-semibold mt-2">Description</div>
-            <div>{{ $request->description }}</div>
+            @if($request->checklist && (auth()->user()->isTechnician() || auth()->user()->isPropertyManager() || auth()->user()->hasTeamMemberRole()))
+                <!-- Checklist Items as Interactive Checkboxes for Technicians, Managers, and Team Members -->
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 mt-2">
+                    <div class="font-medium text-gray-900 text-sm mb-3">Checklist Items:</div>
+                    <div class="space-y-2">
+                        @foreach($request->checklist->items as $item)
+                            @php
+                                $response = $request->checklistResponses()->where('checklist_item_id', $item->id)->first();
+                                $isCompleted = $response ? $response->is_completed : false;
+                            @endphp
+                            <div class="flex items-start space-x-2">
+                                @if($item->type === 'checkbox')
+                                    <div class="flex-shrink-0 mt-1">
+                                        <input type="checkbox" 
+                                               id="mobile_item_{{ $item->id }}" 
+                                               class="mobile-checklist-item-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                               data-item-id="{{ $item->id }}"
+                                               data-request-id="{{ $request->id }}"
+                                               {{ $isCompleted ? 'checked' : '' }}
+                                               {{ $request->status === 'completed' ? 'disabled' : '' }}>
+                                    </div>
+                                    <div class="flex-1">
+                                        <label for="mobile_item_{{ $item->id }}" class="text-sm font-medium text-gray-900 {{ $isCompleted ? 'line-through text-gray-500' : '' }}">
+                                            {{ $item->description }}
+                                            @if($item->is_required)
+                                                <span class="text-red-500 ml-1">*</span>
+                                            @endif
+                                        </label>
+                                        @if($item->attachment_path)
+                                            <div class="mt-1">
+                                                <a href="{{ $item->attachment_url }}" 
+                                                   target="_blank"
+                                                   class="text-xs text-blue-600 hover:text-blue-800">
+                                                    <i class="fas fa-paperclip mr-1"></i>View Attachment
+                                                </a>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @else
+                                    <!-- Text items - no checkbox, just display the text -->
+                                    <div class="flex-1">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            {{ $item->description }}
+                                            @if($item->is_required)
+                                                <span class="text-red-500 ml-1">*</span>
+                                            @endif
+                                        </div>
+                                        @if($item->attachment_path)
+                                            <div class="mt-1">
+                                                <a href="{{ $item->attachment_url }}" 
+                                                   target="_blank"
+                                                   class="text-xs text-blue-600 hover:text-blue-800">
+                                                    <i class="fas fa-paperclip mr-1"></i>View Attachment
+                                                </a>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="mt-2 text-xs text-gray-500">
+                        <span class="text-red-500">*</span> Required checkbox items must be completed
+                    </div>
+                </div>
+            @else
+                <!-- Regular Description for non-checklist requests -->
+                <div>{{ $request->description }}</div>
+            @endif
             <div class="font-semibold mt-2">Location</div>
             <div>{{ $request->location }}</div>
         </div>
@@ -306,5 +374,77 @@ document.addEventListener('keydown', function(e) {
         closeMediaModal();
     }
 });
+
+// Mobile checklist checkbox functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileCheckboxes = document.querySelectorAll('.mobile-checklist-item-checkbox');
+    
+    mobileCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const itemId = this.getAttribute('data-item-id');
+            const requestId = this.getAttribute('data-request-id');
+            const isChecked = this.checked;
+            const label = this.closest('.flex').querySelector('label');
+            
+            // Update visual state immediately
+            if (isChecked) {
+                label.classList.add('line-through', 'text-gray-500');
+            } else {
+                label.classList.remove('line-through', 'text-gray-500');
+            }
+            
+            // Send AJAX request to update the response
+            fetch(`/maintenance/${requestId}/checklist/${itemId}/response`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    is_completed: isChecked
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success feedback
+                    showMobileFeedback(isChecked ? 'Item completed!' : 'Item unchecked', 'success');
+                } else {
+                    // Revert checkbox state on error
+                    this.checked = !isChecked;
+                    if (isChecked) {
+                        label.classList.remove('line-through', 'text-gray-500');
+                    } else {
+                        label.classList.add('line-through', 'text-gray-500');
+                    }
+                    showMobileFeedback('Error updating item', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Revert checkbox state on error
+                this.checked = !isChecked;
+                if (isChecked) {
+                    label.classList.remove('line-through', 'text-gray-500');
+                } else {
+                    label.classList.add('line-through', 'text-gray-500');
+                }
+                showMobileFeedback('Error updating item', 'error');
+            });
+        });
+    });
+});
+
+// Mobile feedback function
+function showMobileFeedback(message, type) {
+    const feedback = document.createElement('div');
+    feedback.className = `fixed top-4 right-4 px-4 py-2 rounded shadow-lg z-50 text-white ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+    feedback.textContent = message;
+    document.body.appendChild(feedback);
+    
+    setTimeout(() => {
+        feedback.remove();
+    }, 2000);
+}
 </script>
 @endsection 

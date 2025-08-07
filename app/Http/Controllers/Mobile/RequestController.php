@@ -228,6 +228,13 @@ class RequestController extends Controller
         if (!$user->can('approve', $maintenance)) {
             abort(403, 'You are not authorized to complete this request.');
         }
+        
+        // Check if all required checklist items are completed
+        if ($maintenance->checklist && !$maintenance->areRequiredChecklistItemsCompleted()) {
+            return redirect()->route('mobile.request.show', $id)
+                ->with('error', 'Cannot mark as completed. All required checklist items must be checked first.');
+        }
+        
         $maintenance->status = 'completed';
         $maintenance->completed_at = now();
         $maintenance->save();
@@ -300,6 +307,13 @@ class RequestController extends Controller
         ]);
         
         $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);
+        
+        // Check if all required checklist items are completed
+        if ($maintenance->checklist && !$maintenance->areRequiredChecklistItemsCompleted()) {
+            return redirect()->route('mobile.request.show', $id)
+                ->with('error', 'Cannot mark as completed. All required checklist items must be checked first.');
+        }
+        
         $maintenance->status = 'completed';
         $maintenance->completed_at = now();
         $maintenance->save();

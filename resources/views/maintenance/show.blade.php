@@ -54,8 +54,8 @@
                 <div class="p-6">
                     <div class="mb-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-2">Description</h2>
-                        @if($maintenance->checklist && auth()->user()->isTechnician())
-                            <!-- Checklist Items as Interactive Checkboxes for Technicians -->
+                        @if($maintenance->checklist && (auth()->user()->isTechnician() || auth()->user()->isPropertyManager() || auth()->user()->hasTeamMemberRole()))
+                            <!-- Checklist Items as Interactive Checkboxes for Technicians, Managers, and Team Members -->
                             <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
                                 <div class="font-medium text-gray-900 text-base mb-3">Checklist Items:</div>
                                 <div class="space-y-3">
@@ -120,7 +120,7 @@
                                 </div>
                             </div>
                         @else
-                            <!-- Regular Description for non-technicians or non-checklist requests -->
+                            <!-- Regular Description for non-checklist requests -->
                             <p class="text-gray-700 whitespace-pre-line">{{ $maintenance->description }}</p>
                         @endif
                     </div>
