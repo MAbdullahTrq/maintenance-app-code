@@ -72,8 +72,8 @@
                                                            class="checklist-item-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                                                            data-item-id="{{ $item->id }}"
                                                            data-request-id="{{ $maintenance->id }}"
-                                                           {{ $isCompleted ? 'checked' : '' }}
-                                                           {{ $maintenance->status === 'completed' ? 'disabled' : '' }}>
+                                                                                                      {{ $isCompleted ? 'checked' : '' }}
+                                           {{ ($maintenance->status === 'completed' || (auth()->user()->isTechnician() && !in_array($maintenance->status, ['acknowledged', 'accepted', 'started']))) ? 'disabled' : '' }}>
                                                 </div>
                                                 <div class="flex-1">
                                                     <label for="item_{{ $item->id }}" class="text-sm font-medium text-gray-900 {{ $isCompleted ? 'line-through text-gray-500' : '' }}">
@@ -117,6 +117,9 @@
                                 </div>
                                 <div class="mt-3 text-xs text-gray-500">
                                     <span class="text-red-500">*</span> Required checkbox items must be completed
+                                    @if(auth()->user()->isTechnician() && !in_array($maintenance->status, ['acknowledged', 'accepted', 'started', 'completed']))
+                                        <br><span class="text-orange-600">⚠️ Checklist items will become available after you accept this job</span>
+                                    @endif
                                 </div>
                             </div>
                         @else
