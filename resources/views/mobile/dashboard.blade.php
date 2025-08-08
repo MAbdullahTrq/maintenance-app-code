@@ -45,7 +45,8 @@
         <div class="overflow-x-auto w-full">
             <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-hidden table-fixed">
                 <colgroup>
-                    <col class="w-2/5">
+                    <col class="w-1/4">
+                    <col class="w-1/4">
                     <col class="w-1/6">
                     <col class="w-1/6">
                     <col class="w-1/12">
@@ -53,6 +54,7 @@
                 <thead>
                     <tr class="bg-gray-100 border-b border-gray-400">
                         <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Property</th>
+                        <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Request</th>
                         <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-center">Priority</th>
                         <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-center">Date</th>
                         <th class="p-2 md:p-3 lg:p-4 text-center">Actions</th>
@@ -62,11 +64,15 @@
                     @foreach($pendingRequests as $req)
                     <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" onclick="window.location.href='{{ route('mobile.request.show', $req->id) }}'">
                         <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
-                            <span class="font-semibold">{{ $req->property->name }}</span><br>
+                            <span class="font-semibold">{{ Str::limit($req->property->name, 15) }}</span><br>
                             <span class="text-gray-500 text-xs md:text-sm">
                                 <span class="md:hidden">{{ Str::limit($req->property->address, 15) }}</span>
                                 <span class="sm:hidden md:block">{{ Str::limit($req->property->address, 30) }}</span>
                             </span>
+                        </td>
+                        <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
+                            <span class="font-bold text-black">{{ Str::limit($req->title, 15) }}</span><br>
+                            <span class="text-gray-700 text-xs md:text-sm">{{ Str::limit($req->description, 15) }}</span>
                         </td>
                         <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center {{ $req->priority == 'high' ? 'bg-red-500 text-white' : ($req->priority == 'low' ? 'bg-yellow-200' : ($req->priority == 'medium' ? 'bg-yellow-100' : '')) }}">
                             {{ ucfirst($req->priority) }}
