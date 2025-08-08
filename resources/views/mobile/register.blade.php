@@ -245,16 +245,6 @@
                     <p class="text-xs text-blue-700">
                         Start your free trial today! No credit card required.
                     </p>
-                    <div class="mt-2 text-xs text-blue-600">
-                        <div class="flex justify-between">
-                            <span>Properties:</span>
-                            <span class="font-medium">100 included</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Technicians:</span>
-                            <span class="font-medium">30 included</span>
-                        </div>
-                    </div>
                 </div>
                 
                 <button type="submit" id="mobileSubmitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-semibold text-sm transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed">
