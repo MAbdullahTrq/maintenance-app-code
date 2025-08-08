@@ -39,7 +39,7 @@
         @if(!Auth::user()->isViewer())
         <div class="flex gap-2 md:gap-3 lg:gap-4 mb-4">
             <a href="/m/ao/{{ $owner->id }}/edit" class="flex-1 bg-blue-100 text-blue-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-blue-200 transition text-center text-sm md:text-base">Edit Owner</a>
-            <a href="{{ route('mobile.owner.requests.create') }}?owner_id={{ $owner->id }}" class="flex-1 bg-green-100 text-green-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-green-200 transition text-center text-sm md:text-base">Submit Request</a>
+            <a href="{{ $owner->getOwnerUrl() }}" target="_blank" class="flex-1 bg-green-100 text-green-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-green-200 transition text-center text-sm md:text-base">Submit Request</a>
             <a href="{{ route('mobile.owners.qrcode', $owner->id) }}" class="flex-1 bg-purple-100 text-purple-800 font-semibold py-2 md:py-3 lg:py-4 rounded-lg shadow hover:bg-purple-200 transition text-center text-sm md:text-base">QR Code</a>
             <form action="{{ route('mobile.owners.destroy', $owner->id) }}" method="POST" class="flex-1" onsubmit="return confirm('Are you sure you want to delete this owner?');">
                 @csrf
