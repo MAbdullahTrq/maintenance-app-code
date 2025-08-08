@@ -51,6 +51,21 @@
             </form>
         </div>
 
+        <!-- Checklist Usage Information -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <h3 class="text-lg font-semibold text-blue-800 mb-2">
+                <i class="fas fa-info-circle mr-2"></i>How to Use This Checklist
+            </h3>
+            <div class="text-sm text-blue-700 space-y-2">
+                <p><strong>Adding Items:</strong> Click the "+ Add Item" button or press Enter in any description field to quickly add new items.</p>
+                <p><strong>Item Types:</strong> Choose between "Check" (checkbox for completion) or "Text" (text input for responses).</p>
+                <p><strong>Required Items:</strong> Check the "Required" box for items that must be completed before marking a request as finished.</p>
+                <p><strong>Editing:</strong> Click the yellow edit button to save changes to existing items.</p>
+                <p><strong>Deleting:</strong> Click the red X button to remove items (existing items will be permanently deleted).</p>
+                <p><strong>Search:</strong> Use the search bar to quickly find specific checklist items.</p>
+            </div>
+        </div>
+
         <!-- Dynamic Checklist Items Editor -->
         <div class="bg-white rounded-lg border border-gray-200 p-4 mb-6">
             <div class="flex items-center justify-between mb-4">
@@ -95,13 +110,14 @@
                             </select>
                         </div>
                         
-                        <!-- Description Field -->
-                        <div class="flex-1">
-                            <input type="text" 
-                                   class="item-description w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500" 
-                                   placeholder="Enter checklist item description..."
-                                   onkeypress="handleEnterKey(event, this)">
-                        </div>
+                                                 <!-- Description Field -->
+                         <div class="flex-1">
+                             <input type="text" 
+                                    class="item-description w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500" 
+                                    placeholder="Enter checklist item description..."
+                                    onkeypress="handleEnterKey(event, this)"
+                                    onkeydown="handleKeyDown(event, this)">
+                         </div>
                         
                         <!-- Required Checkbox -->
                         <div class="flex-shrink-0">
@@ -194,7 +210,16 @@ function handleEnterKey(event, input) {
         event.preventDefault();
         const row = input.closest('.checklist-item-row');
         const saveBtn = row.querySelector('.save-item-btn');
-        saveItem(saveBtn);
+        if (saveBtn) {
+            saveItem(saveBtn);
+        }
+    }
+}
+
+function handleKeyDown(event, input) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        event.stopPropagation();
     }
 }
 
