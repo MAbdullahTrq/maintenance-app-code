@@ -110,14 +110,13 @@
                             </select>
                         </div>
                         
-                                                 <!-- Description Field -->
-                         <div class="flex-1">
-                             <input type="text" 
-                                    class="item-description w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500" 
-                                    placeholder="Enter checklist item description..."
-                                    onkeypress="handleEnterKey(event, this)"
-                                    onkeydown="handleKeyDown(event, this)">
-                         </div>
+                        <!-- Description Field -->
+                        <div class="flex-1">
+                            <input type="text" 
+                                   class="item-description w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500" 
+                                   placeholder="Enter checklist item description..."
+                                   onkeydown="handleKeyDown(event, this)">
+                        </div>
                         
                         <!-- Required Checkbox -->
                         <div class="flex-shrink-0">
@@ -205,21 +204,16 @@ function addNewItemRow() {
     addItemRow();
 }
 
-function handleEnterKey(event, input) {
+function handleKeyDown(event, input) {
     if (event.key === 'Enter') {
         event.preventDefault();
+        event.stopPropagation();
+        
         const row = input.closest('.checklist-item-row');
         const saveBtn = row.querySelector('.save-item-btn');
         if (saveBtn) {
             saveItem(saveBtn);
         }
-    }
-}
-
-function handleKeyDown(event, input) {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        event.stopPropagation();
     }
 }
 
@@ -273,8 +267,6 @@ function saveItem(button) {
             button.onclick = () => updateItem(button, data.item.id);
             button.disabled = false;
             
-                         // Item added successfully
-            
             // Clear the input for next item
             descriptionInput.value = '';
             requiredCheckbox.checked = false;
@@ -318,7 +310,7 @@ function updateItem(button, itemId) {
     button.disabled = true;
     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
     
-         fetch(`{{ route('mobile.checklists.items.update', [$checklist, 'ITEM_ID']) }}`.replace('ITEM_ID', itemId), {
+    fetch(`{{ route('mobile.checklists.items.update', [$checklist, 'ITEM_ID']) }}`.replace('ITEM_ID', itemId), {
         method: 'POST',
         body: formData,
         headers: {
@@ -337,8 +329,6 @@ function updateItem(button, itemId) {
             button.disabled = false;
             button.innerHTML = '<i class="fas fa-edit"></i>';
             showNotification('Item updated successfully!', 'success');
-            
-                         // Item updated successfully
         } else {
             throw new Error(data.message || 'Failed to update item');
         }
@@ -378,8 +368,8 @@ function removeItemRow(button) {
             })
             .then(data => {
                 if (data.success) {
-                                         row.remove();
-                     updateItemCount();
+                    row.remove();
+                    updateItemCount();
                     showNotification('Item deleted successfully!', 'success');
                 } else {
                     throw new Error(data.message || 'Failed to delete item');
@@ -396,8 +386,6 @@ function removeItemRow(button) {
         updateItemCount();
     }
 }
-
-
 
 function updateItemCount() {
     const container = document.getElementById('checklistItemsContainer');
@@ -434,7 +422,5 @@ function showNotification(message, type) {
         notification.remove();
     }, 3000);
 }
-
-
 </script>
 @endsection 
