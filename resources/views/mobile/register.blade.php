@@ -248,11 +248,11 @@
                     <div class="mt-2 text-xs text-blue-600">
                         <div class="flex justify-between">
                             <span>Properties:</span>
-                            <span class="font-medium">1 included</span>
+                            <span class="font-medium">100 included</span>
                         </div>
                         <div class="flex justify-between">
                             <span>Technicians:</span>
-                            <span class="font-medium">2 included</span>
+                            <span class="font-medium">30 included</span>
                         </div>
                     </div>
                 </div>

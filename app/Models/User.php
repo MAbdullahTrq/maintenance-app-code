@@ -606,11 +606,11 @@ class User extends Authenticatable
             return $workspaceOwner->getSubscriptionLimits();
         }
         
-        // Trial users have specific limits
+        // Trial users have Premium package limits
         if ($this->isOnTrial()) {
             return [
-                'property_limit' => 1,
-                'technician_limit' => 2,
+                'property_limit' => 100,
+                'technician_limit' => 30,
             ];
         }
         
@@ -636,9 +636,9 @@ class User extends Authenticatable
             return true;
         }
         
-        // Trial users are limited to 1 property
+        // Trial users have Premium package limits (100 properties)
         if ($this->isOnTrial()) {
-            return $this->getCurrentPropertyCount() < 1;
+            return $this->getCurrentPropertyCount() < 100;
         }
         
         // Users with active subscriptions are limited by their plan
@@ -661,9 +661,9 @@ class User extends Authenticatable
             return true;
         }
         
-        // Trial users are limited to 2 technicians
+        // Trial users have Premium package limits (30 technicians)
         if ($this->isOnTrial()) {
-            return $this->getCurrentTechnicianCount() < 2;
+            return $this->getCurrentTechnicianCount() < 30;
         }
         
         // Users with active subscriptions are limited by their plan
@@ -686,7 +686,7 @@ class User extends Authenticatable
         }
         
         if ($this->isOnTrial()) {
-            return max(0, 1 - $this->getCurrentPropertyCount());
+            return max(0, 100 - $this->getCurrentPropertyCount());
         }
         
         if ($this->hasActiveSubscription()) {
@@ -707,7 +707,7 @@ class User extends Authenticatable
         }
         
         if ($this->isOnTrial()) {
-            return max(0, 2 - $this->getCurrentTechnicianCount());
+            return max(0, 30 - $this->getCurrentTechnicianCount());
         }
         
         if ($this->hasActiveSubscription()) {
