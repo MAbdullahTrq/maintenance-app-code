@@ -15,7 +15,7 @@
         <div class="bg-white rounded-lg border border-gray-200 p-4 mb-6">
             <h3 class="text-lg font-semibold mb-4">Checklist Details</h3>
 
-            <form action="{{ route('mobile.checklists.update', $checklist->id) }}" method="POST">
+            <form action="{{ route('mobile.checklists.update', $checklist->id) }}" method="POST" id="checklistDetailsForm">
                 @csrf
 
                 <div class="mb-4">
@@ -114,8 +114,7 @@
                         <div class="flex-1">
                             <input type="text" 
                                    class="item-description w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500" 
-                                   placeholder="Enter checklist item description..."
-                                   onkeypress="handleKeyPress(event, this)">
+                                   placeholder="Enter checklist item description...">
                         </div>
                         
                         <!-- Required Checkbox -->
@@ -155,12 +154,32 @@ document.addEventListener('DOMContentLoaded', function() {
     // Setup search functionality
     setupSearch();
     
-    // Prevent form submission on Enter key in checklist items
+    // Prevent form submission on Enter key globally
     document.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter' && event.target.classList.contains('item-description')) {
+        if (event.key === 'Enter') {
+            const target = event.target;
+            
+            // If it's a checklist item description field, handle it specially
+            if (target.classList.contains('item-description')) {
+                event.preventDefault();
+                event.stopPropagation();
+                event.stopImmediatePropagation();
+                
+                const row = target.closest('.checklist-item-row');
+                const saveBtn = row.querySelector('.save-item-btn');
+                if (saveBtn) {
+                    saveItem(saveBtn);
+                }
+                return false;
+            }
+            
+            // If it's in the checklist details form, allow normal submission
+            if (target.closest('#checklistDetailsForm')) {
+                return true;
+            }
+            
+            // For all other Enter keys, prevent default
             event.preventDefault();
-            event.stopPropagation();
-            event.stopImmediatePropagation();
             return false;
         }
     }, true);
@@ -212,21 +231,6 @@ function addItemRow(existingItem = null) {
 
 function addNewItemRow() {
     addItemRow();
-}
-
-function handleKeyPress(event, input) {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-        
-        const row = input.closest('.checklist-item-row');
-        const saveBtn = row.querySelector('.save-item-btn');
-        if (saveBtn) {
-            saveItem(saveBtn);
-        }
-        return false;
-    }
 }
 
 function saveItem(button) {
