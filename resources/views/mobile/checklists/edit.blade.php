@@ -346,7 +346,7 @@ function updateItem(button, itemId) {
     button.disabled = true;
     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
     
-    fetch(`{{ route('mobile.checklists.items.update', [$checklist, '']) }}`.replace('/items/', `/items/${itemId}`), {
+         fetch(`{{ route('mobile.checklists.items.update', [$checklist, 'ITEM_ID']) }}`.replace('ITEM_ID', itemId), {
         method: 'POST',
         body: formData,
         headers: {
@@ -395,7 +395,7 @@ function removeItemRow(button) {
             formData.append('_token', '{{ csrf_token() }}');
             formData.append('_method', 'DELETE');
             
-            fetch(`{{ route('mobile.checklists.items.destroy', [$checklist, '']) }}`.replace('/items/', `/items/${itemId}`), {
+            fetch(`{{ route('mobile.checklists.items.destroy', [$checklist, 'ITEM_ID']) }}`.replace('ITEM_ID', itemId), {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -528,7 +528,7 @@ function deleteExistingItem(itemId) {
         formData.append('_token', '{{ csrf_token() }}');
         formData.append('_method', 'DELETE');
         
-        fetch(`{{ route('mobile.checklists.items.destroy', [$checklist, '']) }}`.replace('/items/', `/items/${itemId}`), {
+        fetch(`{{ route('mobile.checklists.items.destroy', [$checklist, 'ITEM_ID']) }}`.replace('ITEM_ID', itemId), {
             method: 'POST',
             body: formData,
             headers: {
