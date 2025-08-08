@@ -129,58 +129,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Existing Items -->
-        <div class="bg-white rounded-lg border border-gray-200 p-4">
-            <h3 class="text-lg font-semibold mb-4">Checklist Items ({{ $checklist->items->count() }})</h3>
-
-            @if($checklist->items->count() > 0)
-                <div class="space-y-4">
-                    @foreach($checklist->items as $item)
-                        <div class="border border-gray-200 rounded-lg p-4">
-                            <div class="flex items-start justify-between">
-                                <div class="flex-1">
-                                    <div class="flex items-center mb-2">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $item->type === 'checkbox' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800' }}">
-                                            {{ ucfirst($item->type) }}
-                                        </span>
-                                        @if($item->is_required)
-                                            <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                                Required
-                                            </span>
-                                        @endif
-                                    </div>
-                                    <p class="text-sm font-medium text-gray-900">{{ $item->description }}</p>
-                                    @if($item->attachment_path)
-                                        <div class="mt-2">
-                                            <a href="{{ $item->attachment_url }}" 
-                                               target="_blank"
-                                               class="text-sm text-blue-600 hover:text-blue-800">
-                                                <i class="fas fa-paperclip mr-1"></i>View Attachment
-                                            </a>
-                                        </div>
-                                    @endif
-                                </div>
-                                <div class="flex space-x-2 ml-4">
-                                    <form method="POST" 
-                                          action="{{ route('mobile.checklists.items.destroy', [$checklist->id, $item->id]) }}" 
-                                          class="inline"
-                                          onsubmit="return confirm('Are you sure you want to delete this item?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-800 p-2">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-gray-500 text-center py-4">No items added yet. Add your first checklist item above.</p>
-            @endif
-        </div>
     </div>
 </div>
 
@@ -300,8 +248,7 @@ function saveItem(button) {
             button.onclick = () => updateItem(button, data.item.id);
             button.disabled = false;
             
-            // Add to existing items display
-            addToExistingItemsDisplay(data.item);
+                         // Item added successfully
             
             // Clear the input for next item
             descriptionInput.value = '';
@@ -366,12 +313,7 @@ function updateItem(button, itemId) {
             button.innerHTML = '<i class="fas fa-edit"></i>';
             showNotification('Item updated successfully!', 'success');
             
-            // Update existing items display
-            updateExistingItemsDisplay(itemId, {
-                type: typeSelect.value,
-                description: descriptionInput.value.trim(),
-                is_required: requiredCheckbox.checked
-            });
+                         // Item updated successfully
         } else {
             throw new Error(data.message || 'Failed to update item');
         }
@@ -411,9 +353,8 @@ function removeItemRow(button) {
             })
             .then(data => {
                 if (data.success) {
-                    row.remove();
-                    removeFromExistingItemsDisplay(itemId);
-                    updateItemCount();
+                                         row.remove();
+                     updateItemCount();
                     showNotification('Item deleted successfully!', 'success');
                 } else {
                     throw new Error(data.message || 'Failed to delete item');
@@ -431,60 +372,7 @@ function removeItemRow(button) {
     }
 }
 
-function addToExistingItemsDisplay(item) {
-    const container = document.getElementById('existingItemsContainer');
-    const itemHtml = `
-        <div class="border border-gray-200 rounded-lg p-4" data-existing-item-id="${item.id}">
-            <div class="flex items-start justify-between">
-                <div class="flex-1">
-                    <div class="flex items-center mb-2">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.type === 'checkbox' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}">
-                            ${item.type.charAt(0).toUpperCase() + item.type.slice(1)}
-                        </span>
-                        ${item.is_required ? '<span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Required</span>' : ''}
-                    </div>
-                    <p class="text-sm font-medium text-gray-900">${item.description}</p>
-                </div>
-                <div class="flex space-x-2 ml-4">
-                    <button onclick="deleteExistingItem(${item.id})" class="text-red-600 hover:text-red-800 p-2">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    `;
-    container.insertAdjacentHTML('beforeend', itemHtml);
-}
 
-function updateExistingItemsDisplay(itemId, data) {
-    const itemElement = document.querySelector(`[data-existing-item-id="${itemId}"]`);
-    if (itemElement) {
-        const typeSpan = itemElement.querySelector('.inline-flex');
-        const descriptionP = itemElement.querySelector('.text-sm.font-medium');
-        const requiredSpan = itemElement.querySelector('.bg-red-100');
-        
-        typeSpan.className = `inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${data.type === 'checkbox' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`;
-        typeSpan.textContent = data.type.charAt(0).toUpperCase() + data.type.slice(1);
-        descriptionP.textContent = data.description;
-        
-        if (data.is_required) {
-            if (!requiredSpan) {
-                typeSpan.insertAdjacentHTML('afterend', '<span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Required</span>');
-            }
-        } else {
-            if (requiredSpan) {
-                requiredSpan.remove();
-            }
-        }
-    }
-}
-
-function removeFromExistingItemsDisplay(itemId) {
-    const itemElement = document.querySelector(`[data-existing-item-id="${itemId}"]`);
-    if (itemElement) {
-        itemElement.remove();
-    }
-}
 
 function updateItemCount() {
     const container = document.getElementById('checklistItemsContainer');
@@ -522,40 +410,6 @@ function showNotification(message, type) {
     }, 3000);
 }
 
-function deleteExistingItem(itemId) {
-    if (confirm('Are you sure you want to delete this item?')) {
-        const formData = new FormData();
-        formData.append('_token', '{{ csrf_token() }}');
-        formData.append('_method', 'DELETE');
-        
-        fetch(`{{ route('mobile.checklists.items.destroy', [$checklist, 'ITEM_ID']) }}`.replace('ITEM_ID', itemId), {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json'
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                removeFromExistingItemsDisplay(itemId);
-                updateItemCount();
-                showNotification('Item deleted successfully!', 'success');
-            } else {
-                throw new Error(data.message || 'Failed to delete item');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showNotification('Error deleting item: ' + error.message, 'error');
-        });
-    }
-}
+
 </script>
 @endsection 
