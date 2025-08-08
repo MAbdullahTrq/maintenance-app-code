@@ -115,7 +115,7 @@
                             <input type="text" 
                                    class="item-description w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500" 
                                    placeholder="Enter checklist item description..."
-                                   onkeydown="handleKeyDown(event, this)">
+                                   onkeypress="handleKeyPress(event, this)">
                         </div>
                         
                         <!-- Required Checkbox -->
@@ -154,6 +154,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Setup search functionality
     setupSearch();
+    
+    // Prevent form submission on Enter key in checklist items
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter' && event.target.classList.contains('item-description')) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+            return false;
+        }
+    }, true);
 });
 
 function loadExistingItems() {
@@ -204,16 +214,18 @@ function addNewItemRow() {
     addItemRow();
 }
 
-function handleKeyDown(event, input) {
+function handleKeyPress(event, input) {
     if (event.key === 'Enter') {
         event.preventDefault();
         event.stopPropagation();
+        event.stopImmediatePropagation();
         
         const row = input.closest('.checklist-item-row');
         const saveBtn = row.querySelector('.save-item-btn');
         if (saveBtn) {
             saveItem(saveBtn);
         }
+        return false;
     }
 }
 
