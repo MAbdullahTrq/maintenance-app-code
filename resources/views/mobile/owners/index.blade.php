@@ -59,9 +59,9 @@
                                         <a href="/m/ao/{{ $owner->id }}/edit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
                                             <i class="fas fa-edit mr-2 text-green-500"></i>Edit
                                         </a>
-                                        <a href="{{ $owner->getOwnerUrl() }}" target="_blank" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
-                                            <i class="fas fa-clipboard-list mr-2 text-green-600"></i>Request
-                                        </a>
+                                                                                 <a href="{{ $owner->getOwnerUrl() }}" target="_blank" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                                             <i class="fas fa-link mr-2 text-green-600"></i>Public Link
+                                         </a>
                                         <a href="{{ route('mobile.owners.qrcode', $owner->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
                                             <i class="fas fa-qrcode mr-2 text-purple-500"></i>QR Code
                                         </a>
