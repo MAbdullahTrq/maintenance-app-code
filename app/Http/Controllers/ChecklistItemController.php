@@ -43,6 +43,14 @@ class ChecklistItemController extends Controller
             'order' => $order,
         ]);
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Checklist item added successfully.',
+                'item' => $checklist->items()->latest()->first()
+            ]);
+        }
+        
         return redirect()->route('checklists.edit', $checklist)
             ->with('success', 'Checklist item added successfully.');
     }
@@ -82,6 +90,14 @@ class ChecklistItemController extends Controller
             'attachment_path' => $attachment_path,
         ]);
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Checklist item updated successfully.',
+                'item' => $item->fresh()
+            ]);
+        }
+        
         return redirect()->route('checklists.edit', $checklist)
             ->with('success', 'Checklist item updated successfully.');
     }
@@ -100,6 +116,13 @@ class ChecklistItemController extends Controller
 
         $item->delete();
 
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Checklist item deleted successfully.'
+            ]);
+        }
+        
         return redirect()->route('checklists.edit', $checklist)
             ->with('success', 'Checklist item deleted successfully.');
     }

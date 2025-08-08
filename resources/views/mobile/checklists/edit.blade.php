@@ -191,6 +191,69 @@ document.addEventListener('DOMContentLoaded', function() {
 
     itemDescription.addEventListener('input', checkFormValidity);
     typeSelect.addEventListener('change', checkFormValidity);
+    
+    // Add Enter key support for quick item addition
+    itemDescription.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !addItemBtn.disabled) {
+            e.preventDefault();
+            addItemBtn.click();
+        }
+    });
 });
+
+// Enhanced form submission with AJAX
+document.getElementById('addItemForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const addItemBtn = document.getElementById('addItemBtn');
+    
+    // Show loading state
+    addItemBtn.disabled = true;
+    addItemBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+    
+    fetch(this.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Reset form
+            this.reset();
+            document.getElementById('requiredField').style.display = 'none';
+            
+            // Reload page to show new item (or implement dynamic addition)
+            location.reload();
+            
+            showNotification('Item added successfully!', 'success');
+        } else {
+            throw new Error(data.message || 'Failed to add item');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Error adding item: ' + error.message, 'error');
+    })
+    .finally(() => {
+        // Reset button
+        addItemBtn.disabled = false;
+        addItemBtn.innerHTML = 'Add Item';
+    });
+});
+
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 px-4 py-2 rounded shadow-lg z-50 text-white ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
 </script>
 @endsection 
