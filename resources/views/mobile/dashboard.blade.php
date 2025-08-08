@@ -74,7 +74,7 @@
                             <span class="font-bold text-black">{{ Str::limit($req->title, 15) }}</span><br>
                             <span class="text-gray-700 text-xs md:text-sm">{{ Str::limit($req->description, 15) }}</span>
                         </td>
-                        <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center {{ $req->priority == 'high' ? 'bg-red-500 text-white' : ($req->priority == 'low' ? 'bg-yellow-200' : ($req->priority == 'medium' ? 'bg-yellow-100' : '')) }}">
+                        <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center {{ $req->priority == 'high' ? 'bg-red-100' : ($req->priority == 'low' ? 'bg-blue-50' : ($req->priority == 'medium' ? 'bg-yellow-50' : '')) }}" style="{{ $req->priority == 'high' ? 'background-color: #fef2f2;' : ($req->priority == 'low' ? 'background-color: #eff6ff;' : ($req->priority == 'medium' ? 'background-color: #fffbeb;' : '')) }}">
                             {{ ucfirst($req->priority) }}
                         </td>
                         <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">
