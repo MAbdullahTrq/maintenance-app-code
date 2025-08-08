@@ -409,6 +409,7 @@ Route::delete('/r/{id}', [App\Http\Controllers\Mobile\RequestController::class, 
             
             // Mobile checklist item routes
             Route::post('/cl/{checklist}/items', [App\Http\Controllers\Mobile\ChecklistItemController::class, 'store'])->name('mobile.checklists.items.store');
+            Route::put('/cl/{checklist}/items/{item}', [App\Http\Controllers\Mobile\ChecklistItemController::class, 'update'])->name('mobile.checklists.items.update');
             Route::delete('/cl/{checklist}/items/{item}', [App\Http\Controllers\Mobile\ChecklistItemController::class, 'destroy'])->name('mobile.checklists.items.destroy');
         });
     });

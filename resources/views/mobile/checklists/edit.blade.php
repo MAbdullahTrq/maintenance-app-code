@@ -346,7 +346,7 @@ function updateItem(button, itemId) {
     button.disabled = true;
     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
     
-    fetch(`{{ route('mobile.checklists.items.store', $checklist) }}/${itemId}`, {
+    fetch(`{{ route('mobile.checklists.items.update', [$checklist, '']) }}`.replace('/items/', `/items/${itemId}`), {
         method: 'POST',
         body: formData,
         headers: {
