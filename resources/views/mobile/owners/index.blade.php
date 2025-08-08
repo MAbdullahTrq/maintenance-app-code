@@ -121,9 +121,9 @@ function toggleDropdown(button, ownerId) {
     const spaceBelow = windowHeight - buttonRect.bottom;
     const spaceAbove = buttonRect.top;
     
-    // Position dropdown exactly at the button location
+    // Position dropdown to the left of the button
     menu.style.position = 'fixed';
-    menu.style.left = buttonRect.left + 'px'; // Position at button's left edge
+    menu.style.left = (buttonRect.left - 160) + 'px'; // Position 160px to the left of button
     menu.style.zIndex = '9999';
     
     // Check if there's enough space below, if not, open upwards
