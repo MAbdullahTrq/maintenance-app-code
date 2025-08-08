@@ -220,9 +220,16 @@ function addItemRow(existingItem = null) {
         saveBtn.classList.add('bg-yellow-500', 'hover:bg-yellow-600');
         saveBtn.onclick = () => updateItem(saveBtn, existingItem.id);
     } else {
-        // New item - focus on description field
-        const descriptionInput = newRow.querySelector('.item-description');
-        setTimeout(() => descriptionInput.focus(), 100);
+        // New item - only focus if the current row is empty
+        const currentRows = container.querySelectorAll('.checklist-item-row');
+        const lastRow = currentRows[currentRows.length - 1];
+        const lastDescriptionInput = lastRow ? lastRow.querySelector('.item-description') : null;
+        
+        // Only focus on new row if the last row is empty
+        if (!lastDescriptionInput || !lastDescriptionInput.value.trim()) {
+            const descriptionInput = newRow.querySelector('.item-description');
+            setTimeout(() => descriptionInput.focus(), 100);
+        }
     }
     
     container.appendChild(newRow);
@@ -283,8 +290,8 @@ function saveItem(button) {
             button.onclick = () => updateItem(button, data.item.id);
             button.disabled = false;
             
-            // Clear the input for next item
-            descriptionInput.value = '';
+            // Keep the current text in the field for the next item
+            // Don't clear the input - let user continue typing
             requiredCheckbox.checked = false;
             
             // Add new row for next item
