@@ -50,28 +50,28 @@
                                 <button onclick="toggleDropdown(this, {{ $owner->id }})" class="px-2 py-1 text-gray-600 hover:text-gray-800 text-lg md:text-xl focus:outline-none dropdown-btn">
                                     <i class="fas fa-ellipsis-v"></i>
                                 </button>
-                                                                 <div id="dropdown-{{ $owner->id }}" class="dropdown-menu absolute top-full mt-1 w-40 bg-white rounded-md shadow-lg border border-gray-200 z-[9999] hidden">
+                                <div id="dropdown-{{ $owner->id }}" class="dropdown-menu absolute right-0 top-full mt-1 w-40 bg-white rounded-md shadow-lg border border-gray-200 z-[9999] hidden">
                                     <div class="py-1">
-                                        <a href="/m/ao/{{ $owner->id }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
-                                            <i class="fas fa-eye mr-2 text-blue-500"></i>View
-                                        </a>
-                                        @if(!Auth::user()->isViewer())
-                                        <a href="/m/ao/{{ $owner->id }}/edit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
-                                            <i class="fas fa-edit mr-2 text-green-500"></i>Edit
-                                        </a>
-                                                                                 <a href="{{ $owner->getOwnerUrl() }}" target="_blank" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                                                                                 <a href="/m/ao/{{ $owner->id }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors text-left">
+                                             <i class="fas fa-eye mr-2 text-blue-500"></i>View
+                                         </a>
+                                         @if(!Auth::user()->isViewer())
+                                         <a href="/m/ao/{{ $owner->id }}/edit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors text-left">
+                                             <i class="fas fa-edit mr-2 text-green-500"></i>Edit
+                                         </a>
+                                         <a href="{{ $owner->getOwnerUrl() }}" target="_blank" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors text-left">
                                              <i class="fas fa-link mr-2 text-green-600"></i>Public Link
                                          </a>
-                                        <a href="{{ route('mobile.owners.qrcode', $owner->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
-                                            <i class="fas fa-qrcode mr-2 text-purple-500"></i>QR Code
-                                        </a>
-                                                                                 <form action="{{ route('mobile.owners.destroy', $owner->id) }}" method="POST" class="block" onsubmit="return confirm('Are you sure you want to delete this owner?');">
-                                             @csrf
-                                             @method('DELETE')
-                                             <button type="submit" class="w-full text-center block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors">
-                                                 <i class="fas fa-trash-alt mr-2"></i>Delete
-                                             </button>
-                                         </form>
+                                         <a href="{{ route('mobile.owners.qrcode', $owner->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors text-left">
+                                             <i class="fas fa-qrcode mr-2 text-purple-500"></i>QR Code
+                                         </a>
+                                                                                  <form action="{{ route('mobile.owners.destroy', $owner->id) }}" method="POST" class="block" onsubmit="return confirm('Are you sure you want to delete this owner?');">
+                                              @csrf
+                                              @method('DELETE')
+                                              <button type="submit" class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors">
+                                                  <i class="fas fa-trash-alt mr-2"></i>Delete
+                                              </button>
+                                          </form>
                                         @endif
                                     </div>
                                 </div>
@@ -121,9 +121,9 @@ function toggleDropdown(button, ownerId) {
     const spaceBelow = windowHeight - buttonRect.bottom;
     const spaceAbove = buttonRect.top;
     
-    // Position dropdown to the left of the button
+    // Position dropdown exactly at the button location
     menu.style.position = 'fixed';
-    menu.style.left = (buttonRect.left - 200) + 'px'; // Position 200px to the left of button
+    menu.style.left = (buttonRect.left - 160) + 'px'; // Position to the left of button
     menu.style.zIndex = '9999';
     
     // Check if there's enough space below, if not, open upwards
