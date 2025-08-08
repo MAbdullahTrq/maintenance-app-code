@@ -395,7 +395,7 @@ function removeItemRow(button) {
             formData.append('_token', '{{ csrf_token() }}');
             formData.append('_method', 'DELETE');
             
-            fetch(`{{ route('mobile.checklists.items.store', $checklist) }}/${itemId}`, {
+            fetch(`{{ route('mobile.checklists.items.destroy', [$checklist, '']) }}`.replace('/items/', `/items/${itemId}`), {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -528,7 +528,7 @@ function deleteExistingItem(itemId) {
         formData.append('_token', '{{ csrf_token() }}');
         formData.append('_method', 'DELETE');
         
-        fetch(`{{ route('mobile.checklists.items.store', $checklist) }}/${itemId}`, {
+        fetch(`{{ route('mobile.checklists.items.destroy', [$checklist, '']) }}`.replace('/items/', `/items/${itemId}`), {
             method: 'POST',
             body: formData,
             headers: {
