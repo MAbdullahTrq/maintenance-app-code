@@ -17,7 +17,6 @@
 
             <form action="{{ route('mobile.checklists.update', $checklist->id) }}" method="POST">
                 @csrf
-                @method('PUT')
 
                 <div class="mb-4">
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Checklist Name *</label>
