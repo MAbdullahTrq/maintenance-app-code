@@ -78,20 +78,20 @@
                         <i class="fas fa-plus mr-1"></i>Add Item
                     </button>
                 </div>
-            </div>
+                    </div>
 
             <!-- Search/Filter Bar -->
             <div class="mb-4">
                 <div class="relative">
-                    <input type="text" 
+                        <input type="text" 
                            id="searchItems" 
                            placeholder="Search checklist items..." 
                            class="w-full px-3 py-2 pl-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fas fa-search text-gray-400"></i>
                     </div>
+                    </div>
                 </div>
-            </div>
 
             <!-- Dynamic Items Container -->
             <div id="checklistItemsContainer" class="space-y-3">
@@ -115,17 +115,17 @@
                             <input type="text" 
                                    class="item-description w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500" 
                                    placeholder="Enter checklist item description...">
-                        </div>
-                        
+                </div>
+
                         <!-- Required Checkbox -->
                         <div class="flex-shrink-0">
-                            <label class="flex items-center">
-                                <input type="checkbox" 
+                    <label class="flex items-center">
+                        <input type="checkbox" 
                                        class="item-required rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                                 <span class="ml-1 text-xs text-gray-600">Required</span>
-                            </label>
-                        </div>
-                        
+                    </label>
+                </div>
+
                         <!-- Action Buttons -->
                         <div class="flex-shrink-0 flex items-center space-x-1">
                             <button type="button" 
@@ -137,11 +137,11 @@
                                     onclick="removeItemRow(this)" 
                                     class="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition-colors">
                                 <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
+                    </button>
                 </div>
-            </div>
+                                </div>
+                            </div>
+                        </div>
         </div>
     </div>
 </div>
