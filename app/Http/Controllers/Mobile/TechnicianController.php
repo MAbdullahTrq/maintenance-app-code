@@ -229,13 +229,20 @@ class TechnicianController extends Controller
             ->with('property')
             ->orderBy($sortBy, $sortDirection)
             ->get();
+        // All requests: all requests assigned to this technician
+        $allRequests = \App\Models\MaintenanceRequest::where('assigned_to', $user->id)
+            ->with('property')
+            ->orderBy($sortBy, $sortDirection)
+            ->get();
         return view('mobile.technician_dashboard', [
             'assignedRequests' => $assignedRequests,
             'acceptedRequests' => $acceptedRequests,
             'completedRequests' => $completedRequests,
+            'allRequests' => $allRequests,
             'assignedCount' => $assignedRequests->count(),
             'acceptedCount' => $acceptedRequests->count(),
             'completedCount' => $completedRequests->count(),
+            'allCount' => $allRequests->count(),
             'sortBy' => $sortBy,
             'sortDirection' => $sortDirection,
         ]);
