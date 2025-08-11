@@ -188,8 +188,8 @@
                                     </div>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center" 
-                                    :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-100' : (req.priority?.toLowerCase() === 'low' ? 'bg-blue-50' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-50' : ''))"
-                                    :style="req.priority?.toLowerCase() === 'high' ? 'background-color: #fef2f2;' : (req.priority?.toLowerCase() === 'low' ? 'background-color: #eff6ff;' : (req.priority?.toLowerCase() === 'medium' ? 'background-color: #fffbeb;' : ''))">
+                                    :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-200' : (req.priority?.toLowerCase() === 'low' ? 'bg-blue-200' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-200' : ''))"
+                                    :style="req.priority?.toLowerCase() === 'high' ? 'background-color: #fecaca;' : (req.priority?.toLowerCase() === 'low' ? 'background-color: #bfdbfe;' : (req.priority?.toLowerCase() === 'medium' ? 'background-color: #fde68a;' : ''))">
                                     <span x-text="req.priority ? req.priority.charAt(0).toUpperCase() + req.priority.slice(1) : ''"></span>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">
@@ -245,8 +245,8 @@
                                     </div>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center" 
-                                    :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-100' : (req.priority?.toLowerCase() === 'low' ? 'bg-blue-50' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-50' : ''))"
-                                    :style="req.priority?.toLowerCase() === 'high' ? 'background-color: #fef2f2;' : (req.priority?.toLowerCase() === 'low' ? 'background-color: #eff6ff;' : (req.priority?.toLowerCase() === 'medium' ? 'background-color: #fffbeb;' : ''))">
+                                    :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-200' : (req.priority?.toLowerCase() === 'low' ? 'bg-blue-200' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-200' : ''))"
+                                    :style="req.priority?.toLowerCase() === 'high' ? 'background-color: #fecaca;' : (req.priority?.toLowerCase() === 'low' ? 'background-color: #bfdbfe;' : (req.priority?.toLowerCase() === 'medium' ? 'background-color: #fde68a;' : ''))">
                                     <span x-text="req.priority ? req.priority.charAt(0).toUpperCase() + req.priority.slice(1) : ''"></span>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">
@@ -302,8 +302,8 @@
                                     </div>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center" 
-                                    :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-100' : (req.priority?.toLowerCase() === 'low' ? 'bg-blue-50' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-50' : ''))"
-                                    :style="req.priority?.toLowerCase() === 'high' ? 'background-color: #fef2f2;' : (req.priority?.toLowerCase() === 'low' ? 'background-color: #eff6ff;' : (req.priority?.toLowerCase() === 'medium' ? 'background-color: #fffbeb;' : ''))">
+                                    :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-200' : (req.priority?.toLowerCase() === 'low' ? 'bg-blue-200' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-200' : ''))"
+                                    :style="req.priority?.toLowerCase() === 'high' ? 'background-color: #fecaca;' : (req.priority?.toLowerCase() === 'low' ? 'background-color: #bfdbfe;' : (req.priority?.toLowerCase() === 'medium' ? 'background-color: #fde68a;' : ''))">
                                     <span x-text="req.priority ? req.priority.charAt(0).toUpperCase() + req.priority.slice(1) : ''"></span>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">
