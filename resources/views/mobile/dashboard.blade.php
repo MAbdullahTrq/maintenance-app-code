@@ -45,8 +45,8 @@
         <div class="overflow-x-auto w-full">
             <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-hidden table-fixed">
                 <colgroup>
-                    <col class="w-1/4">
-                    <col class="w-1/4">
+                    <col class="w-1/5">
+                    <col class="w-2/5">
                     <col class="w-1/6">
                     <col class="w-1/6">
                     <col class="w-1/12">
@@ -71,8 +71,8 @@
                             </span>
                         </td>
                         <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
-                            <span class="font-bold text-black">{{ Str::limit($req->title, 15) }}</span><br>
-                            <span class="text-gray-700 text-xs md:text-sm">{{ Str::limit($req->description, 15) }}</span>
+                            <span class="font-bold text-black">{{ Str::limit($req->title, 25) }}</span><br>
+                            <span class="text-gray-700 text-xs md:text-sm">{{ Str::limit($req->description, 25) }}</span>
                         </td>
                         <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center {{ $req->priority == 'high' ? 'bg-red-200' : ($req->priority == 'low' ? 'bg-blue-200' : ($req->priority == 'medium' ? 'bg-yellow-200' : '')) }}" style="{{ $req->priority == 'high' ? 'background-color: #fecaca;' : ($req->priority == 'low' ? 'background-color: #bfdbfe;' : ($req->priority == 'medium' ? 'background-color: #fde68a;' : '')) }}">
                             {{ ucfirst($req->priority) }}
