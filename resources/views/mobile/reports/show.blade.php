@@ -134,8 +134,8 @@
                             <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
                                 <span class="font-semibold">{{ $request->property->name ?? 'N/A' }}</span><br>
                                 <span class="text-gray-500 text-xs md:text-sm">
-                                    <span class="md:hidden">{{ Str::limit($request->property->address, 15) }}</span>
-                                    <span class="hidden md:inline">{{ Str::limit($request->property->address, 30) }}</span>
+                                    <span class="block md:hidden lg:hidden">{{ Str::limit($request->property->address, 15) }}</span>
+                                    <span class="hidden md:block lg:block">{{ Str::limit($request->property->address, 30) }}</span>
                                 </span>
                             </td>
                             <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center {{ $request->priority == 'high' ? 'bg-red-500 text-white' : ($request->priority == 'low' ? 'bg-yellow-200' : ($request->priority == 'medium' ? 'bg-yellow-100' : '')) }}">
