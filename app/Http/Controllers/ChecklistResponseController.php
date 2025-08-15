@@ -14,23 +14,23 @@ class ChecklistResponseController extends Controller
     /**
      * Store a checklist response.
      */
-    public function store(Request $request, MaintenanceRequest $maintenanceRequest, ChecklistItem $checklistItem)
+    public function store(Request $request, MaintenanceRequest $maintenance, ChecklistItem $checklistItem)
     {
         try {
             // Log the incoming request for debugging
             \Log::info('Checklist response store called', [
-                'request_id' => $maintenanceRequest->id,
+                'request_id' => $maintenance->id,
                 'item_id' => $checklistItem->id,
                 'user_id' => auth()->id(),
                 'request_data' => $request->all()
             ]);
             
-            $this->authorize('update', $maintenanceRequest);
+            $this->authorize('update', $maintenance);
 
             \Log::info('About to validate request');
             
             $request->validate([
-                'is_completed' => 'required|boolean',
+                'is_completed' => 'required',
                 'text_response' => 'nullable|string|max:1000',
                 'response_attachment' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf,doc,docx|max:2048',
             ]);
@@ -51,7 +51,7 @@ class ChecklistResponseController extends Controller
         // Update or create response
         $response = ChecklistResponse::updateOrCreate(
             [
-                'maintenance_request_id' => $maintenanceRequest->id,
+                'maintenance_request_id' => $maintenance->id,
                 'checklist_item_id' => $checklistItem->id,
             ],
             [
@@ -76,7 +76,7 @@ class ChecklistResponseController extends Controller
         } catch (\Exception $e) {
             // Log the error for debugging
             \Log::error('Checklist response error: ' . $e->getMessage(), [
-                'request_id' => $maintenanceRequest->id,
+                'request_id' => $maintenance->id,
                 'item_id' => $checklistItem->id,
                 'user_id' => auth()->id(),
                 'trace' => $e->getTraceAsString()
@@ -111,12 +111,12 @@ class ChecklistResponseController extends Controller
     /**
      * Update a checklist response.
      */
-    public function update(Request $request, MaintenanceRequest $maintenanceRequest, ChecklistResponse $response)
+    public function update(Request $request, MaintenanceRequest $maintenance, ChecklistResponse $response)
     {
-        $this->authorize('update', $maintenanceRequest);
+        $this->authorize('update', $maintenance);
 
         $request->validate([
-            'is_completed' => 'required|boolean',
+            'is_completed' => 'required',
             'text_response' => 'nullable|string|max:1000',
             'response_attachment' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf,doc,docx|max:2048',
         ]);
@@ -156,9 +156,9 @@ class ChecklistResponseController extends Controller
     /**
      * Delete a checklist response.
      */
-    public function destroy(MaintenanceRequest $maintenanceRequest, ChecklistResponse $response)
+    public function destroy(MaintenanceRequest $maintenance, ChecklistResponse $response)
     {
-        $this->authorize('update', $maintenanceRequest);
+        $this->authorize('update', $maintenance);
 
         // Delete attachment if exists
         if ($response->response_attachment_path && Storage::disk('public')->exists($response->response_attachment_path)) {

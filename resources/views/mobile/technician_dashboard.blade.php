@@ -125,7 +125,7 @@
                                         <template x-if="req.property?.address">
                                             <div>
                                                 <span class="md:hidden" x-text="(req.property.address.length > 15) ? req.property.address.substring(0, 15) + '...' : req.property.address"></span>
-                                                <span class="sm:hidden md:block" x-text="(req.property.address.length > 30) ? req.property.address.substring(0, 30) + '...' : req.property.address"></span>
+                                                <span class="hidden md:block" x-text="(req.property.address.length > 30) ? req.property.address.substring(0, 30) + '...' : req.property.address"></span>
                                             </div>
                                         </template>
                                     </div>
@@ -182,7 +182,7 @@
                                         <template x-if="req.property?.address">
                                             <div>
                                                 <span class="md:hidden" x-text="(req.property.address.length > 15) ? req.property.address.substring(0, 15) + '...' : req.property.address"></span>
-                                                <span class="sm:hidden md:block" x-text="(req.property.address.length > 30) ? req.property.address.substring(0, 30) + '...' : req.property.address"></span>
+                                                <span class="hidden md:block" x-text="(req.property.address.length > 30) ? req.property.address.substring(0, 30) + '...' : req.property.address"></span>
                                             </div>
                                         </template>
                                     </div>
@@ -239,7 +239,7 @@
                                         <template x-if="req.property?.address">
                                             <div>
                                                 <span class="md:hidden" x-text="(req.property.address.length > 15) ? req.property.address.substring(0, 15) + '...' : req.property.address"></span>
-                                                <span class="sm:hidden md:block" x-text="(req.property.address.length > 30) ? req.property.address.substring(0, 30) + '...' : req.property.address"></span>
+                                                <span class="hidden md:block" x-text="(req.property.address.length > 30) ? req.property.address.substring(0, 30) + '...' : req.property.address"></span>
                                             </div>
                                         </template>
                                     </div>
@@ -296,7 +296,7 @@
                                         <template x-if="req.property?.address">
                                             <div>
                                                 <span class="md:hidden" x-text="(req.property.address.length > 15) ? req.property.address.substring(0, 15) + '...' : req.property.address"></span>
-                                                <span class="sm:hidden md:block" x-text="(req.property.address.length > 30) ? req.property.address.substring(0, 30) + '...' : req.property.address"></span>
+                                                <span class="hidden md:block" x-text="(req.property.address.length > 30) ? req.property.address.substring(0, 30) + '...' : req.property.address"></span>
                                             </div>
                                         </template>
                                     </div>
