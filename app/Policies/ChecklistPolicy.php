@@ -11,6 +11,17 @@ class ChecklistPolicy
     use HandlesAuthorization;
 
     /**
+     * Get all user IDs in the workspace (manager + team members).
+     */
+    private function getWorkspaceUserIds(User $user): array
+    {
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        $workspaceUserIds = [$workspaceOwner->id];
+        $teamMemberIds = $workspaceOwner->teamMembers()->pluck('users.id')->toArray();
+        return array_merge($workspaceUserIds, $teamMemberIds);
+    }
+
+    /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
@@ -27,14 +38,8 @@ class ChecklistPolicy
             return false;
         }
         
-        if ($user->isPropertyManager()) {
-            return $checklist->manager_id === $user->id;
-        }
-        
-        if ($user->hasTeamMemberRole()) {
-            $workspaceOwner = $user->getWorkspaceOwner();
-            $workspaceUserIds = [$workspaceOwner->id];
-            $workspaceUserIds = array_merge($workspaceUserIds, $workspaceOwner->teamMembers()->pluck('users.id')->toArray());
+        if ($user->isPropertyManager() || $user->hasTeamMemberRole()) {
+            $workspaceUserIds = $this->getWorkspaceUserIds($user);
             return in_array($checklist->manager_id, $workspaceUserIds);
         }
         
@@ -58,14 +63,8 @@ class ChecklistPolicy
             return false;
         }
         
-        if ($user->isPropertyManager()) {
-            return $checklist->manager_id === $user->id;
-        }
-        
-        if ($user->hasTeamMemberRole()) {
-            $workspaceOwner = $user->getWorkspaceOwner();
-            $workspaceUserIds = [$workspaceOwner->id];
-            $workspaceUserIds = array_merge($workspaceUserIds, $workspaceOwner->teamMembers()->pluck('users.id')->toArray());
+        if ($user->isPropertyManager() || $user->hasTeamMemberRole()) {
+            $workspaceUserIds = $this->getWorkspaceUserIds($user);
             return in_array($checklist->manager_id, $workspaceUserIds);
         }
         
@@ -81,14 +80,8 @@ class ChecklistPolicy
             return false;
         }
         
-        if ($user->isPropertyManager()) {
-            return $checklist->manager_id === $user->id;
-        }
-        
-        if ($user->hasTeamMemberRole()) {
-            $workspaceOwner = $user->getWorkspaceOwner();
-            $workspaceUserIds = [$workspaceOwner->id];
-            $workspaceUserIds = array_merge($workspaceUserIds, $workspaceOwner->teamMembers()->pluck('users.id')->toArray());
+        if ($user->isPropertyManager() || $user->hasTeamMemberRole()) {
+            $workspaceUserIds = $this->getWorkspaceUserIds($user);
             return in_array($checklist->manager_id, $workspaceUserIds);
         }
         
@@ -104,14 +97,8 @@ class ChecklistPolicy
             return false;
         }
         
-        if ($user->isPropertyManager()) {
-            return $checklist->manager_id === $user->id;
-        }
-        
-        if ($user->hasTeamMemberRole()) {
-            $workspaceOwner = $user->getWorkspaceOwner();
-            $workspaceUserIds = [$workspaceOwner->id];
-            $workspaceUserIds = array_merge($workspaceUserIds, $workspaceOwner->teamMembers()->pluck('users.id')->toArray());
+        if ($user->isPropertyManager() || $user->hasTeamMemberRole()) {
+            $workspaceUserIds = $this->getWorkspaceUserIds($user);
             return in_array($checklist->manager_id, $workspaceUserIds);
         }
         
@@ -127,14 +114,8 @@ class ChecklistPolicy
             return false;
         }
         
-        if ($user->isPropertyManager()) {
-            return $checklist->manager_id === $user->id;
-        }
-        
-        if ($user->hasTeamMemberRole()) {
-            $workspaceOwner = $user->getWorkspaceOwner();
-            $workspaceUserIds = [$workspaceOwner->id];
-            $workspaceUserIds = array_merge($workspaceUserIds, $workspaceOwner->teamMembers()->pluck('users.id')->toArray());
+        if ($user->isPropertyManager() || $user->hasTeamMemberRole()) {
+            $workspaceUserIds = $this->getWorkspaceUserIds($user);
             return in_array($checklist->manager_id, $workspaceUserIds);
         }
         
