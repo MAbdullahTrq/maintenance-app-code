@@ -71,7 +71,11 @@
                                                data-item-id="{{ $item->id }}"
                                                data-request-id="{{ $request->id }}"
                                                {{ $isCompleted ? 'checked' : '' }}
-                                                                                                  {{ ($request->status === 'completed' || (auth()->user()->isTechnician() && $request->status !== 'started')) ? 'disabled' : '' }}>
+                                                                                                  @php
+                                                   $isDisabled = $request->status === 'completed' || 
+                                                                (auth()->user()->isTechnician() && $request->status !== 'started');
+                                               @endphp
+                                               {{ $isDisabled ? 'disabled' : '' }}>
                                     </div>
                                     <div class="flex-1">
                                         <label for="mobile_item_{{ $item->id }}" class="text-sm font-medium text-gray-900 {{ $isCompleted ? 'line-through text-gray-500' : '' }}">

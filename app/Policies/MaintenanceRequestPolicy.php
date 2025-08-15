@@ -44,6 +44,13 @@ class MaintenanceRequestPolicy
             return true;
         }
 
+        // Team members can view requests for their workspace owner's properties
+        if ($user->hasTeamMemberRole()) {
+            $workspaceOwner = $user->getWorkspaceOwner();
+            $properties = $workspaceOwner->managedProperties()->pluck('id');
+            return $properties->contains($maintenanceRequest->property_id);
+        }
+
         // Technicians can view requests assigned to them
         if ($user->isTechnician()) {
             return $maintenanceRequest->assigned_to === $user->id;
@@ -79,6 +86,12 @@ class MaintenanceRequestPolicy
         // Property managers can update requests for their properties
         if ($user->isPropertyManager()) {
             return $maintenanceRequest->property->manager_id === $user->id;
+        }
+
+        // Team members can update requests for their workspace owner's properties
+        if ($user->hasTeamMemberRole()) {
+            $workspaceOwner = $user->getWorkspaceOwner();
+            return $maintenanceRequest->property->manager_id === $workspaceOwner->id;
         }
 
         // Technicians can update requests assigned to them
