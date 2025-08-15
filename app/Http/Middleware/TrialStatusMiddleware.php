@@ -36,8 +36,9 @@ class TrialStatusMiddleware
         // If user is in grace period, redirect to subscription page
         if ($user->isInGracePeriod()) {
             // Don't redirect if already on subscription or payment pages
-            if (!$request->is('subscription*') && !$request->is('payment*') && !$request->is('trial*')) {
-                return redirect()->route('subscription.plans')->with('warning', 'Your free trial has ended. Subscribe now to keep your data.');
+            if (!$request->is('subscription*') && !$request->is('payment*') && !$request->is('trial*') && !$request->is('m/subscription*')) {
+                $redirectRoute = $request->is('m/*') ? 'mobile.subscription.plans' : 'subscription.plans';
+                return redirect()->route($redirectRoute)->with('warning', 'Your free trial has ended. Subscribe now to keep your data.');
             }
         }
 

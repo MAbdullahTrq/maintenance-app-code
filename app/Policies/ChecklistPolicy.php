@@ -15,7 +15,7 @@ class ChecklistPolicy
      */
     public function viewAny(User $user): bool
     {
-        return ($user->isPropertyManager() || $user->hasTeamMemberRole()) && $user->hasActiveSubscription();
+        return ($user->isPropertyManager() || $user->hasTeamMemberRole()) && $user->canAccessSystem();
     }
 
     /**
@@ -23,7 +23,7 @@ class ChecklistPolicy
      */
     public function view(User $user, Checklist $checklist): bool
     {
-        if (!$user->hasActiveSubscription()) {
+        if (!$user->canAccessSystem()) {
             return false;
         }
         
@@ -46,7 +46,7 @@ class ChecklistPolicy
      */
     public function create(User $user): bool
     {
-        return ($user->isPropertyManager() || $user->hasTeamMemberRole()) && $user->hasActiveSubscription();
+        return ($user->isPropertyManager() || $user->hasTeamMemberRole()) && $user->canAccessSystem();
     }
 
     /**
@@ -54,7 +54,7 @@ class ChecklistPolicy
      */
     public function update(User $user, Checklist $checklist): bool
     {
-        if (!$user->hasActiveSubscription()) {
+        if (!$user->canAccessSystem()) {
             return false;
         }
         
@@ -77,7 +77,7 @@ class ChecklistPolicy
      */
     public function delete(User $user, Checklist $checklist): bool
     {
-        if (!$user->hasActiveSubscription()) {
+        if (!$user->canAccessSystem()) {
             return false;
         }
         
@@ -100,7 +100,7 @@ class ChecklistPolicy
      */
     public function restore(User $user, Checklist $checklist): bool
     {
-        if (!$user->hasActiveSubscription()) {
+        if (!$user->canAccessSystem()) {
             return false;
         }
         
@@ -123,7 +123,7 @@ class ChecklistPolicy
      */
     public function forceDelete(User $user, Checklist $checklist): bool
     {
-        if (!$user->hasActiveSubscription()) {
+        if (!$user->canAccessSystem()) {
             return false;
         }
         

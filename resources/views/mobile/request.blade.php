@@ -19,7 +19,7 @@
         </div>
         <hr class="my-4 border-gray-300">
         <div class="grid grid-cols-2 border border-gray-400 rounded mb-4 md:mb-6">
-            <div class="py-2 md:py-3 lg:py-4 border-r border-gray-400 text-sm md:text-base lg:text-lg font-semibold {{ $request->priority == 'high' ? 'bg-red-500 text-white' : ($request->priority == 'low' ? 'bg-yellow-200' : ($request->priority == 'medium' ? 'bg-yellow-100' : '')) }} flex items-center justify-center">
+            <div class="py-2 md:py-3 lg:py-4 border-r border-gray-400 text-sm md:text-base lg:text-lg font-semibold {{ $request->priority == 'high' ? 'bg-red-200' : ($request->priority == 'low' ? 'bg-blue-200' : ($request->priority == 'medium' ? 'bg-yellow-200' : '')) }} flex items-center justify-center" style="{{ $request->priority == 'high' ? 'background-color: #fecaca;' : ($request->priority == 'low' ? 'background-color: #bfdbfe;' : ($request->priority == 'medium' ? 'background-color: #fde68a;' : '')) }}">
                 {{ ucfirst($request->priority) }}
             </div>
             <div class="py-2 md:py-3 lg:py-4 text-xs md:text-sm pl-3">
