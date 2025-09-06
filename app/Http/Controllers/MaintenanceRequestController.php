@@ -547,6 +547,29 @@ class MaintenanceRequestController extends Controller
     }
 
     /**
+     * Reopen the maintenance request.
+     */
+    public function reopen(Request $request, MaintenanceRequest $maintenance)
+    {
+        $this->authorize('reopen', $maintenance);
+        
+        $request->validate([
+            'comment' => 'required|string',
+        ]);
+
+        $maintenance->reopen();
+
+        RequestComment::create([
+            'maintenance_request_id' => $maintenance->id,
+            'user_id' => Auth::id(),
+            'comment' => 'Request reopened: ' . $request->comment,
+        ]);
+
+        return redirect()->route('maintenance.show', $maintenance)
+            ->with('success', 'Request reopened successfully.');
+    }
+
+    /**
      * Start working on the maintenance request.
      */
     public function startTask(MaintenanceRequest $maintenance)

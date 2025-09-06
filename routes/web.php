@@ -280,6 +280,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/maintenance/{maintenance}/complete', [MaintenanceRequestController::class, 'complete'])->name('maintenance.complete');
     Route::post('/maintenance/{maintenance}/comment', [MaintenanceRequestController::class, 'addComment'])->name('maintenance.comment');
     Route::post('/maintenance/{maintenance}/close', [MaintenanceRequestController::class, 'close'])->name('maintenance.close');
+    Route::post('/maintenance/{maintenance}/reopen', [MaintenanceRequestController::class, 'reopen'])->name('maintenance.reopen');
     Route::delete('/maintenance/image/{image}', [MaintenanceRequestController::class, 'deleteImage'])->name('maintenance.image.delete');
     Route::delete('/maintenance/comment/{comment}', [MaintenanceRequestController::class, 'deleteComment'])->name('maintenance.comment.delete');
     
@@ -326,6 +327,7 @@ Route::prefix('m')->middleware('auth')->group(function () {
     Route::post('/r/{id}/decline', [App\Http\Controllers\Mobile\RequestController::class, 'decline'])->name('mobile.request.decline');
     Route::post('/r/{id}/complete', [App\Http\Controllers\Mobile\RequestController::class, 'complete'])->name('mobile.request.complete');
     Route::post('/r/{id}/close', [App\Http\Controllers\Mobile\RequestController::class, 'close'])->name('mobile.request.close');
+    Route::post('/r/{id}/reopen', [App\Http\Controllers\Mobile\RequestController::class, 'reopen'])->name('mobile.request.reopen');
     Route::post('/r/{id}/accept', [App\Http\Controllers\Mobile\RequestController::class, 'accept'])->name('mobile.request.accept');
     Route::post('/r/{id}/start', [App\Http\Controllers\Mobile\RequestController::class, 'start'])->name('mobile.request.start');
     Route::post('/r/{id}/finish', [App\Http\Controllers\Mobile\RequestController::class, 'finish'])->name('mobile.request.finish');

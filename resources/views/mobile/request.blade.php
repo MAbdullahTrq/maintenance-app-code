@@ -287,6 +287,13 @@
             </form>
             @endif
             
+            {{-- Reopen button for completed/closed requests --}}
+            @if(auth()->user() && (auth()->user()->isPropertyManager() || auth()->user()->isEditor()) && in_array($request->status, ['completed', 'closed']))
+            <button type="button" onclick="document.getElementById('reopenModal').classList.remove('hidden')" class="w-full bg-orange-500 text-white py-2 rounded mb-2">
+                Reopen Request
+            </button>
+            @endif
+
             {{-- Delete button for Property Managers (All Statuses) --}}
             @if(auth()->user() && auth()->user()->isPropertyManager())
             <form method="POST" action="{{ route('mobile.request.destroy', $request->id) }}" class="mb-2">
@@ -310,6 +317,21 @@
         <div id="modalContent"></div>
     </div>
 </div>
+
+<!-- Reopen Modal -->
+@if(auth()->user() && (auth()->user()->isPropertyManager() || auth()->user()->isEditor()) && in_array($request->status, ['completed', 'closed']))
+<div id="reopenModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <form method="POST" action="{{ route('mobile.request.reopen', $request->id) }}" class="bg-white p-4 rounded shadow max-w-xs w-full">
+        @csrf
+        <div class="mb-2 font-semibold">Reason for Reopening</div>
+        <textarea name="comment" class="w-full border rounded p-2 mb-2" required placeholder="Please explain why this request needs to be reopened..."></textarea>
+        <div class="flex gap-2">
+            <button type="submit" class="w-1/2 bg-orange-500 text-white py-2 rounded">Reopen</button>
+            <button type="button" onclick="document.getElementById('reopenModal').classList.add('hidden')" class="w-1/2 bg-gray-300 text-black py-2 rounded">Cancel</button>
+        </div>
+    </form>
+</div>
+@endif
 
 <script>
 // Media preview functionality

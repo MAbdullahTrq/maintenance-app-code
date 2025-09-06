@@ -265,6 +265,29 @@ class RequestController extends Controller
         return redirect()->route('mobile.request.show', $id)->with('success', 'Request closed.');
     }
 
+    public function reopen(Request $request, $id)
+    {
+        $request->validate([
+            'comment' => 'required|string',
+        ]);
+        
+        $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);
+        
+        // Check if user can reopen this request
+        $user = auth()->user();
+        if (!$user->can('reopen', $maintenance)) {
+            abort(403, 'You are not authorized to reopen this request.');
+        }
+        
+        $maintenance->reopen();
+        $maintenance->comments()->create([
+            'user_id' => auth()->id(),
+            'comment' => 'Request reopened: ' . $request->comment,
+        ]);
+
+        return redirect()->route('mobile.request.show', $id)->with('success', 'Request reopened successfully.');
+    }
+
     public function accept(Request $request, $id)
     {
         $maintenance = \App\Models\MaintenanceRequest::findOrFail($id);

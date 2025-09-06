@@ -241,6 +241,19 @@ class MaintenanceRequest extends Model
     }
 
     /**
+     * Reopen the request by setting status back to assigned.
+     */
+    public function reopen(): self
+    {
+        $this->update([
+            'status' => 'assigned',
+            'completed_at' => null, // Clear completion timestamp
+        ]);
+
+        return $this;
+    }
+
+    /**
      * Check if the request is closed.
      */
     public function isClosed(): bool

@@ -558,18 +558,35 @@
                 </div>
             @endif
 
-            @if($maintenance->status == 'completed' && auth()->user()->isPropertyManager())
+            @if($maintenance->status == 'completed' && (auth()->user()->isPropertyManager() || auth()->user()->isEditor()))
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
                     <div class="p-6 border-b">
-                        <h2 class="text-xl font-bold text-gray-900">Close Request</h2>
+                        <h2 class="text-xl font-bold text-gray-900">Request Actions</h2>
                     </div>
-                    <div class="p-6">
+                    <div class="p-6 space-y-4">
                         <form action="{{ route('maintenance.close', $maintenance) }}" method="POST">
                             @csrf
                             <button type="submit" class="w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
                                 Close Request
                             </button>
                         </form>
+                        
+                        <button type="button" onclick="document.getElementById('reopenModal').classList.remove('hidden')" class="w-full px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+                            Reopen Request
+                        </button>
+                    </div>
+                </div>
+            @endif
+
+            @if($maintenance->status == 'closed' && (auth()->user()->isPropertyManager() || auth()->user()->isEditor()))
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
+                    <div class="p-6 border-b">
+                        <h2 class="text-xl font-bold text-gray-900">Request Actions</h2>
+                    </div>
+                    <div class="p-6">
+                        <button type="button" onclick="document.getElementById('reopenModal').classList.remove('hidden')" class="w-full px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+                            Reopen Request
+                        </button>
                     </div>
                 </div>
             @endif
@@ -599,6 +616,32 @@
                     </button>
                     <button type="submit" class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
                         Complete
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+
+<!-- Reopen Request Modal -->
+@if((auth()->user()->isPropertyManager() || auth()->user()->isEditor()) && in_array($maintenance->status, ['completed', 'closed']))
+<div id="reopenModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Reopen Request</h3>
+            <form action="{{ route('maintenance.reopen', $maintenance) }}" method="POST">
+                @csrf
+                <div class="mb-4">
+                    <label for="reopen_comment" class="block text-sm font-medium text-gray-700 mb-1">Reason for Reopening</label>
+                    <textarea name="comment" id="reopen_comment" rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required placeholder="Please explain why this request needs to be reopened..."></textarea>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="document.getElementById('reopenModal').classList.add('hidden')" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+                        Reopen Request
                     </button>
                 </div>
             </form>

@@ -288,4 +288,33 @@ class MaintenanceRequestPolicy
         
         return false;
     }
+
+    /**
+     * Determine whether the user can reopen the maintenance request.
+     */
+    public function reopen(User $user, MaintenanceRequest $maintenanceRequest): bool
+    {
+        // Only completed or closed requests can be reopened
+        if (!in_array($maintenanceRequest->status, ['completed', 'closed'])) {
+            return false;
+        }
+
+        // Admin can reopen any request
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        // Property managers can reopen requests for their properties
+        if ($user->isPropertyManager() && $maintenanceRequest->property->manager_id === $user->id) {
+            return true;
+        }
+
+        // Team members with editor role can reopen requests for their workspace owner's properties
+        if ($user->isEditor()) {
+            $workspaceOwner = $user->getWorkspaceOwner();
+            return $maintenanceRequest->property->manager_id === $workspaceOwner->id;
+        }
+
+        return false;
+    }
 } 
