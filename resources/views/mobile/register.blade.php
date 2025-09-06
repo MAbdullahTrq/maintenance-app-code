@@ -230,6 +230,27 @@
                     <div class="text-red-500 text-xs text-center">{{ $message }}</div>
                 @enderror
                 
+                <!-- Terms of Service -->
+                <div class="mb-4">
+                    <div class="flex items-start">
+                        <div class="flex items-center h-5">
+                            <input id="mobile_terms_accepted" type="checkbox" name="terms_accepted" value="1" required
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 @error('terms_accepted') border-red-500 @enderror">
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="mobile_terms_accepted" class="text-gray-700">
+                                I agree to the 
+                                <button type="button" onclick="document.getElementById('mobileTermsModal').classList.remove('hidden')" class="text-blue-600 hover:text-blue-800 underline">
+                                    Terms of Service
+                                </button>
+                            </label>
+                            @error('terms_accepted')
+                                <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Trial Information -->
                 <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                     <div class="flex items-center mb-2">
@@ -476,4 +497,51 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
+<!-- Mobile Terms of Service Modal -->
+<div id="mobileTermsModal" class="hidden fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50">
+    <div class="bg-white p-4 rounded shadow max-w-xs w-full mx-4 max-h-96 overflow-y-auto">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-lg font-medium text-gray-900">Terms of Service</h3>
+            <button type="button" onclick="document.getElementById('mobileTermsModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="text-xs text-gray-700 leading-relaxed">
+            <h4 class="font-semibold mb-2">MaintainXtra Terms of Service</h4>
+            <p class="text-xs text-gray-500 mb-3">Last updated: 10 August 2025</p>
+            
+            <p class="mb-3">These Terms of Service govern access to and use of the MaintainXtra website and services. By using the Service, you agree to these Terms.</p>
+            
+            <p class="mb-3 font-semibold">Summary: MaintainXtra is a monthly subscription SaaS for property managers. Your plan auto-renews each month until cancelled. You own your data; we license the software.</p>
+            
+            <h5 class="font-semibold mb-1">1. Eligibility & Accounts</h5>
+            <p class="mb-2">You must be at least 18 years old. You are responsible for maintaining account security and all activities under your account.</p>
+            
+            <h5 class="font-semibold mb-1">2. Subscription & Billing</h5>
+            <p class="mb-2">Monthly subscription with auto-renewal. You authorize us to charge your payment method for fees and taxes.</p>
+            
+            <h5 class="font-semibold mb-1">3. Free Trial</h5>
+            <p class="mb-2">30-day free trial, no credit card required. 7-day grace period after trial ends. Account locks after Day 38 without payment.</p>
+            
+            <h5 class="font-semibold mb-1">4. Data & Privacy</h5>
+            <p class="mb-2">You own your data. We may use it to provide the Service. Data retained for 90 days after trial expiration.</p>
+            
+            <h5 class="font-semibold mb-1">5. Service Disclaimer</h5>
+            <p class="mb-2">Service provided "AS IS" without warranties. We are not liable for indirect or consequential damages.</p>
+            
+            <h5 class="font-semibold mb-1">6. Contact</h5>
+            <p class="mb-3">Questions? Contact us at admin@maintainxtra.com</p>
+            
+            <p class="text-xs text-gray-600">By using the Service, you acknowledge that you have read and agree to these Terms.</p>
+        </div>
+        <div class="flex justify-end mt-3">
+            <button type="button" onclick="document.getElementById('mobileTermsModal').classList.add('hidden')" class="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
 @endsection 

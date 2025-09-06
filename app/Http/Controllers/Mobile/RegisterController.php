@@ -45,7 +45,8 @@ class RegisterController extends Controller
                 'email' => 'required|string|email|max:255|unique:users',
                 'phone' => ['required', new \App\Rules\PhoneValidationRule],
                 'password' => 'required|string|min:8|confirmed',
-                'cf-turnstile-response' => 'required|string'
+                'cf-turnstile-response' => 'required|string',
+                'terms_accepted' => 'required|accepted'
             ]);
             \Log::info('✅ Validation passed');
             

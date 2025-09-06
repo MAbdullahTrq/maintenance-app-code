@@ -320,6 +320,27 @@
                         @enderror
                     </div>
                     
+                    <!-- Terms of Service -->
+                    <div class="mb-4">
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input id="terms_accepted" type="checkbox" name="terms_accepted" value="1" required
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 @error('terms_accepted') border-red-500 @enderror">
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="terms_accepted" class="text-gray-700">
+                                    I agree to the 
+                                    <button type="button" onclick="document.getElementById('termsModal').classList.remove('hidden')" class="text-blue-600 hover:text-blue-800 underline">
+                                        Terms of Service
+                                    </button>
+                                </label>
+                                @error('terms_accepted')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Trial Information -->
                     <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                         <div class="flex items-center mb-2">
@@ -630,4 +651,72 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+<!-- Terms of Service Modal -->
+<div id="termsModal" class="fixed inset-0 backdrop-blur-sm overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-4 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium text-gray-900">Terms of Service</h3>
+                <button type="button" onclick="document.getElementById('termsModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="max-h-96 overflow-y-auto text-sm text-gray-700 leading-relaxed">
+                <div class="prose prose-sm max-w-none">
+                    <h2 class="text-lg font-semibold mb-3">MaintainXtra Terms of Service</h2>
+                    <p class="text-xs text-gray-500 mb-4">Last updated: 10 August 2025</p>
+                    
+                    <p class="mb-4">These Terms of Service (the "Terms") govern access to and use of the MaintainXtra website at www.maintainxtra.com and related applications, platforms, and services (collectively, the "Service"). These Terms form a binding agreement between MaintainXtra ("we," "us," or "our") and the entity or person agreeing to these Terms ("Customer," "you," or "your"). If you use the Service on behalf of an organization, you represent that you have authority to bind that organization to these Terms.</p>
+                    
+                    <p class="mb-4 font-semibold">Summary (not legally binding): MaintainXtra is a monthly subscription SaaS built for property managers and vacation rental managers. Your plan auto-renews each month until cancelled. You own your data; we license the software. Please use the Service lawfully and responsibly.</p>
+                    
+                    <h3 class="font-semibold mb-2">1. The Service; Accounts</h3>
+                    <p class="mb-2"><strong>1.1 Eligibility.</strong> You must be at least 18 years old and able to enter into contracts to use the Service.</p>
+                    <p class="mb-2"><strong>1.2 Account Registration.</strong> To use the Service, you must create an account and provide accurate, complete information. You are responsible for maintaining the confidentiality of your login credentials and for all activities under your account.</p>
+                    <p class="mb-4"><strong>1.3 Authorized Users.</strong> You may allow your employees or contractors ("Authorized Users") to access the Service under your account, and you are responsible for their compliance with these Terms.</p>
+                    
+                    <h3 class="font-semibold mb-2">2. Subscription Plans, Billing & Taxes</h3>
+                    <p class="mb-2"><strong>2.1 Plans.</strong> The Service is offered on a monthly subscription basis. Current plan features and pricing are presented during checkout or in your billing settings (the "Plan").</p>
+                    <p class="mb-2"><strong>2.2 Auto-Renewal.</strong> Subscriptions automatically renew month-to-month unless cancelled prior to the end of the current billing period.</p>
+                    <p class="mb-2"><strong>2.3 Billing.</strong> You authorize us and our payment processor to charge your payment method for all subscription fees, applicable taxes, and any add-ons or overage fees. Fees are payable in advance for each monthly period.</p>
+                    <p class="mb-4"><strong>2.4 Price Changes.</strong> We may change pricing or features by providing advance notice via the Service or email. Changes take effect on your next renewal unless otherwise stated.</p>
+                    
+                    <h3 class="font-semibold mb-2">3. Free Trial, Grace Period, Cancellations & Refunds</h3>
+                    <p class="mb-2"><strong>3.1 30-Day Free Trial (no credit card).</strong> When you sign up with your name, email, and password, your trial begins immediately and ends 30 days later. During Day 0–30, you have full access to the features included in your Plan.</p>
+                    <p class="mb-2"><strong>3.2 Post-Trial Grace Period (Days 31–37).</strong> From the day after your trial expires through Day 37, your account enters a 7-day grace period. On login you will be redirected to the payment screen with the notice: "Your free trial has ended. Subscribe now to keep your data."</p>
+                    <p class="mb-2"><strong>3.3 Account Lock (from Day 38).</strong> If payment is not completed by Day 38 after trial expiration, your account is locked. Locked accounts cannot access the Service and will see: "Your trial has expired. Reactivate anytime to continue."</p>
+                    <p class="mb-4"><strong>3.4 Cancellation (Paid Plans).</strong> You can cancel any paid subscription at any time via billing settings. Cancellation becomes effective at the end of the current billing period; you will retain access until then.</p>
+                    
+                    <h3 class="font-semibold mb-2">4. Access Rights; Acceptable Use</h3>
+                    <p class="mb-2"><strong>4.1 License.</strong> Subject to these Terms and your payment of applicable fees, we grant you a limited, non-exclusive, non-transferable, revocable right to access and use the Service for your internal business purposes.</p>
+                    <p class="mb-4"><strong>4.2 Restrictions.</strong> You will not (and will not permit anyone to): (a) copy, modify, or create derivative works of the Service; (b) reverse engineer, decompile, or attempt to extract source code; (c) resell, lease, or provide the Service to third parties as a service bureau; (d) access the Service for competitive benchmarking; or (e) use the Service in violation of law or these Terms.</p>
+                    
+                    <h3 class="font-semibold mb-2">5. Customer Data, Privacy & Retention</h3>
+                    <p class="mb-2"><strong>5.1 Customer Data Ownership.</strong> You retain all right, title, and interest in and to data, content, files, and information submitted to the Service ("Customer Data").</p>
+                    <p class="mb-2"><strong>5.2 Our Use of Customer Data.</strong> You grant us a worldwide, non-exclusive license to host, process, transmit, display, and otherwise use Customer Data to provide and maintain the Service; to prevent or address security, support, or technical issues; and as otherwise permitted by these Terms.</p>
+                    <p class="mb-4"><strong>5.3 Privacy.</strong> Our collection and use of personal data is described in our Privacy Notice. You are responsible for providing notices and obtaining any required consents from your end users.</p>
+                    
+                    <h3 class="font-semibold mb-2">6. Warranties & Disclaimers</h3>
+                    <p class="mb-4"><strong>6.1 Service Disclaimer.</strong> THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE," WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE SERVICE WILL BE UNINTERRUPTED, ERROR-FREE, OR SECURE.</p>
+                    
+                    <h3 class="font-semibold mb-2">7. Limitation of Liability</h3>
+                    <p class="mb-4">TO THE MAXIMUM EXTENT PERMITTED BY LAW: (a) NEITHER PARTY WILL BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, COVER, OR PUNITIVE DAMAGES, OR LOSS OF PROFITS, REVENUE, DATA, OR GOODWILL, EVEN IF ADVISED OF THE POSSIBILITY; AND (b) EACH PARTY'S TOTAL LIABILITY ARISING OUT OF OR RELATED TO THESE TERMS WILL NOT EXCEED THE AMOUNTS PAID OR PAYABLE BY YOU TO US FOR THE SERVICE IN THE TWELVE (12) MONTHS PRECEDING THE EVENT GIVING RISE TO LIABILITY.</p>
+                    
+                    <h3 class="font-semibold mb-2">8. Contact</h3>
+                    <p class="mb-4">Questions about these Terms? Contact us at admin@maintainxtra.com</p>
+                    
+                    <p class="text-sm text-gray-600 mt-4">By using the Service, you acknowledge that you have read and agree to these Terms.</p>
+                </div>
+            </div>
+            <div class="flex justify-end mt-4">
+                <button type="button" onclick="document.getElementById('termsModal').classList.add('hidden')" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection 

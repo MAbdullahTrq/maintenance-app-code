@@ -51,6 +51,7 @@ class RegisterController extends Controller
             'phone' => ['required', new \App\Rules\PhoneValidationRule()],
             'country_code' => ['required', 'string', 'size:2'],
             'cf-turnstile-response' => ['required', new TurnstileRule],
+            'terms_accepted' => ['required', 'accepted'],
         ]);
 
         \Log::info('Validation passed, proceeding with user creation');
