@@ -29,9 +29,9 @@
             </div>
         </div>
         <div class="grid grid-cols-5 gap-0 mb-4 border border-gray-400 rounded overflow-hidden">
-            <a href="?status=declined{{ request('sort') ? '&sort=' . request('sort') : '' }}{{ request('direction') ? '&direction=' . request('direction') : '' }}" class="text-center p-2 md:p-3 border-r border-gray-400 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'declined') ? 'bg-blue-100 font-bold' : '' }}">
-                <div class="font-semibold text-xs md:text-sm">Declined</div>
-                <div class="text-sm md:text-lg lg:text-xl font-bold">{{ $declinedCount }}</div>
+            <a href="?status=pending{{ request('sort') ? '&sort=' . request('sort') : '' }}{{ request('direction') ? '&direction=' . request('direction') : '' }}" class="text-center p-2 md:p-3 border-r border-gray-400 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'pending') ? 'bg-blue-100 font-bold' : '' }}">
+                <div class="font-semibold text-xs md:text-sm">Pending</div>
+                <div class="text-sm md:text-lg lg:text-xl font-bold">{{ $pendingCount }}</div>
             </a>
             <a href="?status=assigned{{ request('sort') ? '&sort=' . request('sort') : '' }}{{ request('direction') ? '&direction=' . request('direction') : '' }}" class="text-center p-2 md:p-3 border-r border-gray-400 block focus:outline-none {{ (isset($selectedStatus) && $selectedStatus === 'assigned') ? 'bg-blue-100 font-bold' : '' }}">
                 <div class="font-semibold text-xs md:text-sm">Assigned</div>

@@ -85,7 +85,7 @@ class DashboardController extends Controller
         }
         
         $query = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'));
-        if ($status && in_array($status, ['declined', 'assigned', 'accepted', 'started', 'completed'])) {
+        if ($status && in_array($status, ['pending', 'assigned', 'accepted', 'started', 'completed'])) {
             $query->where('status', $status);
         }
         
@@ -120,7 +120,7 @@ class DashboardController extends Controller
         // Count by status (for tabs)
         $allRequestsForCount = MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->get();
         $requestsCount = $allRequestsForCount->count(); // Always show total count, not filtered count
-        $declinedCount = $allRequestsForCount->where('status', 'declined')->count();
+        $pendingCount = $allRequestsForCount->where('status', 'pending')->count();
         $assignedCount = $allRequestsForCount->where('status', 'assigned')->count();
         $acceptedCount = $allRequestsForCount->where('status', 'accepted')->count();
         $startedCount = $allRequestsForCount->where('status', 'started')->count();
@@ -132,7 +132,7 @@ class DashboardController extends Controller
             'techniciansCount' => $techniciansCount,
             'teamMembersCount' => $teamMembersCount,
             'requestsCount' => $requestsCount,
-            'declinedCount' => $declinedCount,
+            'pendingCount' => $pendingCount,
             'assignedCount' => $assignedCount,
             'acceptedCount' => $acceptedCount,
             'startedCount' => $startedCount,
