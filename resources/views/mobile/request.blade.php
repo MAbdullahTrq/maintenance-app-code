@@ -443,6 +443,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.success) {
                     // Show success feedback
                     showMobileFeedback(isChecked ? 'Item completed!' : 'Item unchecked', 'success');
+                    // Refresh the page to ensure synchronization
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
                 } else {
                     // Revert checkbox state on error
                     this.checked = !isChecked;

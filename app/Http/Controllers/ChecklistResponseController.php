@@ -22,27 +22,13 @@ class ChecklistResponseController extends Controller
                 $checklistItem = ChecklistItem::findOrFail($checklistItem);
             }
             
-            // Log the incoming request for debugging
-            \Log::info('Checklist response store called', [
-                'request_id' => $maintenance->id,
-                'item_id' => $checklistItem->id,
-                'user_id' => auth()->id(),
-                'request_data' => $request->all(),
-                'url' => $request->url(),
-                'method' => $request->method()
-            ]);
-            
             $this->authorize('update', $maintenance);
-
-            \Log::info('About to validate request');
             
             $request->validate([
                 'is_completed' => 'required',
                 'text_response' => 'nullable|string|max:1000',
                 'response_attachment' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf,doc,docx|max:2048',
             ]);
-            
-            \Log::info('Validation passed');
 
         $response_attachment_path = null;
         
@@ -53,8 +39,6 @@ class ChecklistResponseController extends Controller
             $response_attachment_path = $path;
         }
 
-        \Log::info('About to perform database operation');
-        
         // Update or create response
         $response = ChecklistResponse::updateOrCreate(
             [
@@ -67,8 +51,6 @@ class ChecklistResponseController extends Controller
                 'response_attachment_path' => $response_attachment_path,
             ]
         );
-        
-        \Log::info('Database operation completed successfully');
 
         // Return JSON response for AJAX requests
         if ($request->expectsJson()) {
@@ -81,16 +63,6 @@ class ChecklistResponseController extends Controller
 
         return redirect()->back()->with('success', 'Checklist item response saved successfully.');
         } catch (\Exception $e) {
-            // Log the error for debugging
-            \Log::error('Checklist response error: ' . $e->getMessage(), [
-                'request_id' => $maintenance->id ?? 'unknown',
-                'item_id' => $checklistItem->id ?? 'unknown',
-                'user_id' => auth()->id(),
-                'trace' => $e->getTraceAsString(),
-                'request_data' => $request->all(),
-                'url' => $request->url(),
-                'method' => $request->method()
-            ]);
 
             // Check if it's a database connection error
             if (str_contains($e->getMessage(), 'No connection could be made') || 

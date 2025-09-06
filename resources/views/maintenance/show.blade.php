@@ -696,7 +696,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     setTimeout(() => {
                         feedback.remove();
-                    }, 2000);
+                        // Refresh the page to ensure synchronization
+                        window.location.reload();
+                    }, 1000);
                 } else {
                     // Revert checkbox state on error
                     this.checked = !isChecked;
