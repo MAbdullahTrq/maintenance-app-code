@@ -654,7 +654,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Terms of Service Modal -->
 <div id="termsModal" class="fixed inset-0 backdrop-blur-sm overflow-y-auto h-full w-full hidden z-50">
-    <div class="relative top-4 mx-auto p-6 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
+    <div class="relative top-4 mx-auto p-6 border w-11/12 max-w-7xl shadow-lg rounded-md bg-white">
         <div class="mt-3">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-2xl font-bold text-gray-900">Terms of Service</h3>

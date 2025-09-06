@@ -500,7 +500,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Mobile Terms of Service Modal -->
 <div id="mobileTermsModal" class="hidden fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50">
-    <div class="bg-white p-4 rounded shadow max-w-sm w-full mx-4 max-h-[80vh] overflow-y-auto">
+    <div class="bg-white p-4 rounded shadow max-w-md w-full mx-4 max-h-[80vh] overflow-y-auto">
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-xl font-bold text-gray-900">Terms of Service</h3>
             <button type="button" onclick="document.getElementById('mobileTermsModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
