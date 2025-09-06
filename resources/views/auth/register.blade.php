@@ -654,41 +654,48 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Terms of Service Modal -->
 <div id="termsModal" class="fixed inset-0 backdrop-blur-sm overflow-y-auto h-full w-full hidden z-50">
-    <div class="relative top-4 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white">
+    <div class="relative top-4 mx-auto p-6 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
         <div class="mt-3">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-medium text-gray-900">Terms of Service</h3>
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-900">Terms of Service</h3>
                 <button type="button" onclick="document.getElementById('termsModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
-            <div class="max-h-96 overflow-y-auto text-sm text-gray-700 leading-relaxed">
-                <div class="prose prose-sm max-w-none">
-                    <h2 class="text-lg font-semibold mb-3">MaintainXtra Terms of Service</h2>
-                    <p class="text-xs text-gray-500 mb-4">Last updated: 10 August 2025</p>
+            <div class="max-h-[70vh] overflow-y-auto text-base text-gray-700 leading-relaxed">
+                <div class="prose prose-lg max-w-none">
+                    <h2 class="text-2xl font-bold mb-4">MaintainXtra Terms of Service</h2>
+                    <p class="text-sm text-gray-500 mb-6">Last updated: 10 August 2025</p>
                     
-                    <p class="mb-4">These Terms of Service (the "Terms") govern access to and use of the MaintainXtra website at www.maintainxtra.com and related applications, platforms, and services (collectively, the "Service"). These Terms form a binding agreement between MaintainXtra ("we," "us," or "our") and the entity or person agreeing to these Terms ("Customer," "you," or "your"). If you use the Service on behalf of an organization, you represent that you have authority to bind that organization to these Terms.</p>
+                    <p class="mb-6 text-lg">These Terms of Service (the "Terms") govern access to and use of the MaintainXtra website at www.maintainxtra.com and related applications, platforms, and services (collectively, the "Service"). These Terms form a binding agreement between MaintainXtra ("we," "us," or "our") and the entity or person agreeing to these Terms ("Customer," "you," or "your"). If you use the Service on behalf of an organization, you represent that you have authority to bind that organization to these Terms.</p>
                     
-                    <p class="mb-4 font-semibold">Summary (not legally binding): MaintainXtra is a monthly subscription SaaS built for property managers and vacation rental managers. Your plan auto-renews each month until cancelled. You own your data; we license the software. Please use the Service lawfully and responsibly.</p>
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                        <p class="font-semibold text-lg">Summary (not legally binding):</p>
+                        <p class="text-lg">MaintainXtra is a monthly subscription SaaS built for property managers and vacation rental managers. Your plan auto-renews each month until cancelled. You own your data; we license the software. Please use the Service lawfully and responsibly.</p>
+                    </div>
                     
-                    <h3 class="font-semibold mb-2">1. The Service; Accounts</h3>
-                    <p class="mb-2"><strong>1.1 Eligibility.</strong> You must be at least 18 years old and able to enter into contracts to use the Service.</p>
-                    <p class="mb-2"><strong>1.2 Account Registration.</strong> To use the Service, you must create an account and provide accurate, complete information. You are responsible for maintaining the confidentiality of your login credentials and for all activities under your account.</p>
-                    <p class="mb-4"><strong>1.3 Authorized Users.</strong> You may allow your employees or contractors ("Authorized Users") to access the Service under your account, and you are responsible for their compliance with these Terms.</p>
+                    <h3 class="text-xl font-bold mb-4 mt-8">1. The Service; Accounts</h3>
+                    <p class="mb-3"><strong>1.1 Eligibility.</strong> You must be at least 18 years old and able to enter into contracts to use the Service.</p>
+                    <p class="mb-3"><strong>1.2 Account Registration.</strong> To use the Service, you must create an account and provide accurate, complete information. You are responsible for maintaining the confidentiality of your login credentials and for all activities under your account.</p>
+                    <p class="mb-6"><strong>1.3 Authorized Users.</strong> You may allow your employees or contractors ("Authorized Users") to access the Service under your account, and you are responsible for their compliance with these Terms.</p>
                     
-                    <h3 class="font-semibold mb-2">2. Subscription Plans, Billing & Taxes</h3>
-                    <p class="mb-2"><strong>2.1 Plans.</strong> The Service is offered on a monthly subscription basis. Current plan features and pricing are presented during checkout or in your billing settings (the "Plan").</p>
-                    <p class="mb-2"><strong>2.2 Auto-Renewal.</strong> Subscriptions automatically renew month-to-month unless cancelled prior to the end of the current billing period.</p>
-                    <p class="mb-2"><strong>2.3 Billing.</strong> You authorize us and our payment processor to charge your payment method for all subscription fees, applicable taxes, and any add-ons or overage fees. Fees are payable in advance for each monthly period.</p>
-                    <p class="mb-4"><strong>2.4 Price Changes.</strong> We may change pricing or features by providing advance notice via the Service or email. Changes take effect on your next renewal unless otherwise stated.</p>
+                    <h3 class="text-xl font-bold mb-4 mt-8">2. Subscription Plans, Billing & Taxes</h3>
+                    <p class="mb-3"><strong>2.1 Plans.</strong> The Service is offered on a monthly subscription basis. Current plan features and pricing are presented during checkout or in your billing settings (the "Plan").</p>
+                    <p class="mb-3"><strong>2.2 Auto-Renewal.</strong> Subscriptions automatically renew month-to-month unless cancelled prior to the end of the current billing period.</p>
+                    <p class="mb-3"><strong>2.3 Billing.</strong> You authorize us and our payment processor to charge your payment method for all subscription fees, applicable taxes, and any add-ons or overage fees. Fees are payable in advance for each monthly period.</p>
+                    <p class="mb-3"><strong>2.4 Price Changes.</strong> We may change pricing or features by providing advance notice via the Service or email. Changes take effect on your next renewal unless otherwise stated.</p>
+                    <p class="mb-3"><strong>2.5 Taxes.</strong> Fees are exclusive of taxes, levies, duties, or similar governmental assessments (collectively, "Taxes"). You are responsible for all Taxes associated with your purchase, except for taxes based on our net income.</p>
+                    <p class="mb-6"><strong>2.6 Upgrades & Downgrades.</strong> Upgrades take effect immediately and may be prorated for the remainder of the current period. Downgrades take effect at the next renewal and may impact features, limits, or storage.</p>
                     
-                    <h3 class="font-semibold mb-2">3. Free Trial, Grace Period, Cancellations & Refunds</h3>
-                    <p class="mb-2"><strong>3.1 30-Day Free Trial (no credit card).</strong> When you sign up with your name, email, and password, your trial begins immediately and ends 30 days later. During Day 0–30, you have full access to the features included in your Plan.</p>
-                    <p class="mb-2"><strong>3.2 Post-Trial Grace Period (Days 31–37).</strong> From the day after your trial expires through Day 37, your account enters a 7-day grace period. On login you will be redirected to the payment screen with the notice: "Your free trial has ended. Subscribe now to keep your data."</p>
-                    <p class="mb-2"><strong>3.3 Account Lock (from Day 38).</strong> If payment is not completed by Day 38 after trial expiration, your account is locked. Locked accounts cannot access the Service and will see: "Your trial has expired. Reactivate anytime to continue."</p>
-                    <p class="mb-4"><strong>3.4 Cancellation (Paid Plans).</strong> You can cancel any paid subscription at any time via billing settings. Cancellation becomes effective at the end of the current billing period; you will retain access until then.</p>
+                    <h3 class="text-xl font-bold mb-4 mt-8">3. Free Trial, Grace Period, Cancellations & Refunds</h3>
+                    <p class="mb-3"><strong>3.1 30-Day Free Trial (no credit card).</strong> When you sign up with your name, email, and password, your trial begins immediately (trial_started_at = the time of registration) and ends 30 days later (trial_expires_at = trial_started_at + 30 days). During Day 0–30, you have full access to the features included in your Plan.</p>
+                    <p class="mb-3"><strong>3.2 Post-Trial Grace Period (Days 31–37).</strong> From the day after your trial expires through Day 37, your account enters a 7-day grace period. On login you will be redirected to the payment screen with the notice: "Your free trial has ended. Subscribe now to keep your data."</p>
+                    <p class="mb-3"><strong>3.3 Account Lock (from Day 38).</strong> If payment is not completed by Day 38 after trial expiration, your account is locked. Locked accounts cannot access the Service and will see: "Your trial has expired. Reactivate anytime to continue."</p>
+                    <p class="mb-3"><strong>3.4 Cancellation (Paid Plans).</strong> You can cancel any paid subscription at any time via billing settings. Cancellation becomes effective at the end of the current billing period; you will retain access until then.</p>
+                    <p class="mb-3"><strong>3.5 Refunds.</strong> Except where required by law or expressly stated otherwise, all fees are non-refundable and non-creditable, including for partial periods and unused features.</p>
+                    <p class="mb-6"><strong>3.6 Trials Are As-Is.</strong> During the free trial, the Service is provided "as is" with no warranties or commitments, and features or limits may change.</p>
                     
                     <h3 class="font-semibold mb-2">4. Access Rights; Acceptable Use</h3>
                     <p class="mb-2"><strong>4.1 License.</strong> Subject to these Terms and your payment of applicable fees, we grant you a limited, non-exclusive, non-transferable, revocable right to access and use the Service for your internal business purposes.</p>
@@ -711,8 +718,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p class="text-sm text-gray-600 mt-4">By using the Service, you acknowledge that you have read and agree to these Terms.</p>
                 </div>
             </div>
-            <div class="flex justify-end mt-4">
-                <button type="button" onclick="document.getElementById('termsModal').classList.add('hidden')" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+            <div class="flex justify-end mt-6">
+                <button type="button" onclick="document.getElementById('termsModal').classList.add('hidden')" class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-lg font-medium">
                     Close
                 </button>
             </div>

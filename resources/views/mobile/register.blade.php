@@ -500,45 +500,50 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Mobile Terms of Service Modal -->
 <div id="mobileTermsModal" class="hidden fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50">
-    <div class="bg-white p-4 rounded shadow max-w-xs w-full mx-4 max-h-96 overflow-y-auto">
-        <div class="flex justify-between items-center mb-3">
-            <h3 class="text-lg font-medium text-gray-900">Terms of Service</h3>
+    <div class="bg-white p-4 rounded shadow max-w-sm w-full mx-4 max-h-[80vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-gray-900">Terms of Service</h3>
             <button type="button" onclick="document.getElementById('mobileTermsModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
             </button>
         </div>
-        <div class="text-xs text-gray-700 leading-relaxed">
-            <h4 class="font-semibold mb-2">MaintainXtra Terms of Service</h4>
-            <p class="text-xs text-gray-500 mb-3">Last updated: 10 August 2025</p>
+        <div class="text-sm text-gray-700 leading-relaxed">
+            <h4 class="text-lg font-bold mb-2">MaintainXtra Terms of Service</h4>
+            <p class="text-xs text-gray-500 mb-4">Last updated: 10 August 2025</p>
             
-            <p class="mb-3">These Terms of Service govern access to and use of the MaintainXtra website and services. By using the Service, you agree to these Terms.</p>
+            <p class="mb-4">These Terms of Service govern access to and use of the MaintainXtra website and services. By using the Service, you agree to these Terms.</p>
             
-            <p class="mb-3 font-semibold">Summary: MaintainXtra is a monthly subscription SaaS for property managers. Your plan auto-renews each month until cancelled. You own your data; we license the software.</p>
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                <p class="font-semibold text-sm">Summary:</p>
+                <p class="text-sm">MaintainXtra is a monthly subscription SaaS for property managers. Your plan auto-renews each month until cancelled. You own your data; we license the software.</p>
+            </div>
             
-            <h5 class="font-semibold mb-1">1. Eligibility & Accounts</h5>
-            <p class="mb-2">You must be at least 18 years old. You are responsible for maintaining account security and all activities under your account.</p>
+            <h5 class="font-bold mb-2 text-base">1. Eligibility & Accounts</h5>
+            <p class="mb-3">You must be at least 18 years old. You are responsible for maintaining account security and all activities under your account.</p>
             
-            <h5 class="font-semibold mb-1">2. Subscription & Billing</h5>
-            <p class="mb-2">Monthly subscription with auto-renewal. You authorize us to charge your payment method for fees and taxes.</p>
+            <h5 class="font-bold mb-2 text-base">2. Subscription & Billing</h5>
+            <p class="mb-3">Monthly subscription with auto-renewal. You authorize us to charge your payment method for fees and taxes.</p>
             
-            <h5 class="font-semibold mb-1">3. Free Trial</h5>
-            <p class="mb-2">30-day free trial, no credit card required. 7-day grace period after trial ends. Account locks after Day 38 without payment.</p>
+            <h5 class="font-bold mb-2 text-base">3. Free Trial</h5>
+            <p class="mb-3">30-day free trial, no credit card required. 7-day grace period after trial ends. Account locks after Day 38 without payment.</p>
             
-            <h5 class="font-semibold mb-1">4. Data & Privacy</h5>
-            <p class="mb-2">You own your data. We may use it to provide the Service. Data retained for 90 days after trial expiration.</p>
+            <h5 class="font-bold mb-2 text-base">4. Data & Privacy</h5>
+            <p class="mb-3">You own your data. We may use it to provide the Service. Data retained for 90 days after trial expiration.</p>
             
-            <h5 class="font-semibold mb-1">5. Service Disclaimer</h5>
-            <p class="mb-2">Service provided "AS IS" without warranties. We are not liable for indirect or consequential damages.</p>
+            <h5 class="font-bold mb-2 text-base">5. Service Disclaimer</h5>
+            <p class="mb-3">Service provided "AS IS" without warranties. We are not liable for indirect or consequential damages.</p>
             
-            <h5 class="font-semibold mb-1">6. Contact</h5>
-            <p class="mb-3">Questions? Contact us at admin@maintainxtra.com</p>
+            <h5 class="font-bold mb-2 text-base">6. Contact</h5>
+            <p class="mb-4">Questions? Contact us at admin@maintainxtra.com</p>
             
-            <p class="text-xs text-gray-600">By using the Service, you acknowledge that you have read and agree to these Terms.</p>
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 mt-4">
+                <p class="text-sm font-semibold text-center">By using the Service, you acknowledge that you have read and agree to these Terms.</p>
+            </div>
         </div>
-        <div class="flex justify-end mt-3">
-            <button type="button" onclick="document.getElementById('mobileTermsModal').classList.add('hidden')" class="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
+        <div class="flex justify-end mt-4">
+            <button type="button" onclick="document.getElementById('mobileTermsModal').classList.add('hidden')" class="px-4 py-2 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
                 Close
             </button>
         </div>
