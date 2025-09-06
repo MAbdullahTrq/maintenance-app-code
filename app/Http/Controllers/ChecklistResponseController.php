@@ -14,15 +14,22 @@ class ChecklistResponseController extends Controller
     /**
      * Store a checklist response.
      */
-    public function store(Request $request, MaintenanceRequest $maintenance, ChecklistItem $checklistItem)
+    public function store(Request $request, MaintenanceRequest $maintenance, $checklistItem)
     {
         try {
+            // Handle both model binding and manual lookup
+            if (!($checklistItem instanceof ChecklistItem)) {
+                $checklistItem = ChecklistItem::findOrFail($checklistItem);
+            }
+            
             // Log the incoming request for debugging
             \Log::info('Checklist response store called', [
                 'request_id' => $maintenance->id,
                 'item_id' => $checklistItem->id,
                 'user_id' => auth()->id(),
-                'request_data' => $request->all()
+                'request_data' => $request->all(),
+                'url' => $request->url(),
+                'method' => $request->method()
             ]);
             
             $this->authorize('update', $maintenance);
@@ -76,10 +83,13 @@ class ChecklistResponseController extends Controller
         } catch (\Exception $e) {
             // Log the error for debugging
             \Log::error('Checklist response error: ' . $e->getMessage(), [
-                'request_id' => $maintenance->id,
-                'item_id' => $checklistItem->id,
+                'request_id' => $maintenance->id ?? 'unknown',
+                'item_id' => $checklistItem->id ?? 'unknown',
                 'user_id' => auth()->id(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->all(),
+                'url' => $request->url(),
+                'method' => $request->method()
             ]);
 
             // Check if it's a database connection error
@@ -98,10 +108,22 @@ class ChecklistResponseController extends Controller
 
             // Return JSON error response for AJAX requests
             if ($request->expectsJson()) {
+                $statusCode = 500;
+                
+                // Check for specific error types
+                if ($e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+                    $statusCode = 404;
+                } elseif ($e instanceof \Illuminate\Auth\Access\AuthorizationException) {
+                    $statusCode = 403;
+                } elseif ($e instanceof \Illuminate\Validation\ValidationException) {
+                    $statusCode = 422;
+                }
+                
                 return response()->json([
                     'success' => false,
-                    'message' => 'Error updating checklist item: ' . $e->getMessage()
-                ], 500);
+                    'message' => 'Error updating checklist item: ' . $e->getMessage(),
+                    'error_type' => get_class($e)
+                ], $statusCode);
             }
 
             return redirect()->back()->with('error', 'Error updating checklist item: ' . $e->getMessage());

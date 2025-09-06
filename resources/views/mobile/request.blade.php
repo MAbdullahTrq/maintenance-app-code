@@ -433,7 +433,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     is_completed: isChecked
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     // Show success feedback
@@ -458,7 +463,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     label.classList.add('line-through', 'text-gray-500');
                 }
-                showMobileFeedback('Error updating item', 'error');
+                showMobileFeedback(`Error: ${error.message}`, 'error');
             });
         });
     });
