@@ -626,7 +626,7 @@
 
 <!-- Reopen Request Modal -->
 @if((auth()->user()->isPropertyManager() || auth()->user()->isEditor()) && in_array($maintenance->status, ['completed', 'closed']))
-<div id="reopenModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+<div id="reopenModal" class="fixed inset-0 backdrop-blur-sm overflow-y-auto h-full w-full hidden z-50">
     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
         <div class="mt-3">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Reopen Request</h3>

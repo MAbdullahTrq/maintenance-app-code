@@ -320,7 +320,7 @@
 
 <!-- Reopen Modal -->
 @if(auth()->user() && (auth()->user()->isPropertyManager() || auth()->user()->isEditor()) && in_array($request->status, ['completed', 'closed']))
-<div id="reopenModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+<div id="reopenModal" class="hidden fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50">
     <form method="POST" action="{{ route('mobile.request.reopen', $request->id) }}" class="bg-white p-4 rounded shadow max-w-xs w-full">
         @csrf
         <div class="mb-2 font-semibold">Reason for Reopening</div>
