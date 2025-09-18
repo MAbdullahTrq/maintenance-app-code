@@ -62,6 +62,32 @@
                 <label class="block font-semibold mb-1">Special Instructions</label>
                 <textarea name="special_instructions" class="w-full border rounded p-2"></textarea>
             </div>
+            
+            @if(Auth::user()->isPropertyManager())
+            <!-- Team Member Assignment Section (Managers Only) -->
+            <div class="mb-4 p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                <label class="block font-semibold mb-2 text-purple-800">Assign Team Members</label>
+                <p class="text-purple-600 text-xs mb-3">Select team members who should receive email updates for requests related to this property:</p>
+                <div class="space-y-2">
+                    @if(isset($editorTeamMembers) && $editorTeamMembers->count() > 0)
+                        @foreach($editorTeamMembers as $member)
+                            <label class="flex items-center">
+                                <input type="checkbox" name="assigned_team_members[]" value="{{ $member->id }}" 
+                                    class="rounded border-gray-300 text-purple-600 shadow-sm focus:border-purple-300 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
+                                    {{ in_array($member->id, old('assigned_team_members', [])) ? 'checked' : '' }}>
+                                <span class="ml-2 text-xs text-gray-700">{{ $member->name }}<br><span class="text-gray-500">({{ $member->email }})</span></span>
+                            </label>
+                        @endforeach
+                    @else
+                        <p class="text-gray-500 text-xs">No editor team members available for assignment.</p>
+                    @endif
+                </div>
+                @error('assigned_team_members')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+            @endif
+            
             <div class="mb-3">
                 <label class="block font-semibold mb-1">Property Image</label>
                 <input type="file" name="image" id="property-image-input" class="w-full border rounded p-2" accept="image/*">

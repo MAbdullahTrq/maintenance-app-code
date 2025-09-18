@@ -3,6 +3,55 @@
 @section('title', 'Maintenance Request Details')
 
 @section('content')
+<style>
+/* Touch-friendly checkbox styling for gloved users */
+.checklist-item-checkbox {
+    min-height: 32px !important;
+    min-width: 32px !important;
+    transform: scale(1.2);
+    margin: 4px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+}
+
+.checklist-item-checkbox:focus {
+    ring-width: 4px !important;
+    ring-color: #16a34a !important;
+    outline: 2px solid #16a34a !important;
+    outline-offset: 2px !important;
+}
+
+/* Green checkmarks */
+.checklist-item-checkbox:checked {
+    background-color: #16a34a !important;
+    border-color: #16a34a !important;
+}
+
+.checklist-item-checkbox:checked::after {
+    content: '✓' !important;
+    color: white !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Increase touch target area */
+.checklist-item-checkbox::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    z-index: -1;
+}
+</style>
 <div class="container mx-auto px-4 py-8">
     <div class="mb-6">
         <a href="{{ route('maintenance.index') }}" class="text-blue-500 hover:text-blue-700">
@@ -64,12 +113,12 @@
                                             $response = $maintenance->checklistResponses()->where('checklist_item_id', $item->id)->first();
                                             $isCompleted = $response ? $response->is_completed : false;
                                         @endphp
-                                        <div class="flex items-start space-x-3">
+                                        <div class="flex items-center space-x-3">
                                             @if($item->type === 'checkbox')
-                                                <div class="flex-shrink-0 mt-1">
+                                                <div class="flex-shrink-0">
                                                     <input type="checkbox" 
                                                            id="item_{{ $item->id }}" 
-                                                           class="checklist-item-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                                           class="checklist-item-checkbox h-8 w-8 text-green-600 focus:ring-green-500 border-gray-300 rounded p-1"
                                                            data-item-id="{{ $item->id }}"
                                                            data-request-id="{{ $maintenance->id }}"
                                                                                                       {{ $isCompleted ? 'checked' : '' }}
@@ -551,8 +600,14 @@
                         <h2 class="text-xl font-bold text-gray-900">Manager Actions</h2>
                     </div>
                     <div class="p-6">
-                        <button type="button" onclick="document.getElementById('completeModal').classList.remove('hidden')" class="w-full px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
-                            Mark as Completed
+                        @php
+                            $canComplete = !$maintenance->checklist || $maintenance->areRequiredChecklistItemsCompleted();
+                        @endphp
+                        <button type="button" 
+                                onclick="{{ $canComplete ? "document.getElementById('completeModal').classList.remove('hidden')" : '' }}" 
+                                class="w-full px-4 py-2 rounded-lg {{ $canComplete ? 'bg-purple-500 text-white hover:bg-purple-600' : 'bg-gray-300 text-gray-500 cursor-not-allowed' }}"
+                                {{ $canComplete ? '' : 'disabled' }}>
+                            {{ $canComplete ? 'Mark as Completed' : 'Mark as Completed (Complete required checklist items first)' }}
                         </button>
                     </div>
                 </div>
@@ -670,19 +725,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Send AJAX request to update the response
+            const formData = new FormData();
+            formData.append('is_completed', isChecked ? '1' : '0');
+            formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+            
             fetch(`/maintenance/${requestId}/checklist/${itemId}/response`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
                 },
-                body: JSON.stringify({
-                    is_completed: isChecked
-                })
+                body: formData
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    // Try to get error message from response
+                    return response.text().then(text => {
+                        throw new Error(`HTTP ${response.status}: ${text}`);
+                    });
                 }
                 return response.json();
             })

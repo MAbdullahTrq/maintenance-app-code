@@ -19,6 +19,9 @@ trait HasSmtp2goTracking
             'bounces' => false,
         ]);
 
+        // Force sender name through SMTP2GO headers
+        $this->addHeader($message, 'X-SMTP2GO-FROM-NAME', config('mail.from.name', 'MaintainXtra Support'));
+
         if ($config['opens']) {
             $this->addHeader($message, 'X-SMTP2GO-TRACK-OPENS', '1');
         }

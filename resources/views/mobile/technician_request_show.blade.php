@@ -7,6 +7,55 @@
 @endsection
 
 @section('content')
+<style>
+/* Touch-friendly checkbox styling for gloved users */
+.checklist-item-checkbox {
+    min-height: 32px !important;
+    min-width: 32px !important;
+    transform: scale(1.2);
+    margin: 4px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+}
+
+.checklist-item-checkbox:focus {
+    ring-width: 4px !important;
+    ring-color: #16a34a !important;
+    outline: 2px solid #16a34a !important;
+    outline-offset: 2px !important;
+}
+
+/* Green checkmarks */
+.checklist-item-checkbox:checked {
+    background-color: #16a34a !important;
+    border-color: #16a34a !important;
+}
+
+.checklist-item-checkbox:checked::after {
+    content: '✓' !important;
+    color: white !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Increase touch target area */
+.checklist-item-checkbox::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    z-index: -1;
+}
+</style>
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-6 w-full max-w-4xl mx-auto">
         <div class="mb-2">
@@ -35,7 +84,17 @@
             @elseif($request->status === 'accepted' || $request->status === 'acknowledged')
                 <form method="POST" action="{{ route('mobile.technician.request.start', $request->id) }}">@csrf<button type="submit" class="w-full bg-green-600 text-white py-2 rounded font-semibold">Start</button></form>
             @elseif($request->status === 'started')
-                <form method="POST" action="{{ route('mobile.technician.request.finish', $request->id) }}">@csrf<button type="submit" class="w-full bg-yellow-500 text-black py-2 rounded font-semibold">Finish</button></form>
+                @php
+                    $canFinish = !$request->checklist || $request->areRequiredChecklistItemsCompleted();
+                @endphp
+                <form method="POST" action="{{ route('mobile.technician.request.finish', $request->id) }}">
+                    @csrf
+                    <button type="submit" 
+                            class="w-full py-2 rounded font-semibold {{ $canFinish ? 'bg-yellow-500 text-black' : 'bg-gray-300 text-gray-500 cursor-not-allowed' }}"
+                            {{ $canFinish ? '' : 'disabled' }}>
+                        {{ $canFinish ? 'Finish' : 'Finish (Complete required checklist items first)' }}
+                    </button>
+                </form>
             @endif
         </div>
         <hr class="my-4 border-gray-300">
@@ -48,57 +107,55 @@
             @if($request->checklist)
                 <!-- Checklist Items as Interactive Checkboxes -->
                 <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-2">
-                    <div class="font-medium text-gray-900 text-base mb-3">Checklist Items:</div>
+                    <div class="font-semibold text-gray-900 text-lg mb-3">Checklist Items:</div>
                                          <div class="space-y-3">
                          @foreach($request->checklist->items as $item)
                              @php
                                  $response = $request->checklistResponses()->where('checklist_item_id', $item->id)->first();
                                  $isCompleted = $response ? $response->is_completed : false;
                              @endphp
-                             <div class="flex items-start space-x-3">
+                             <div class="flex items-center space-x-3">
                                  @if($item->type === 'checkbox')
-                                     <div class="flex-shrink-0 mt-1">
-                                         <input type="checkbox" 
-                                                id="item_{{ $item->id }}" 
-                                                class="checklist-item-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                     <div class="flex-shrink-0">
+                                        <input type="checkbox" 
+                                               id="item_{{ $item->id }}" 
+                                               class="checklist-item-checkbox h-8 w-8 text-green-600 focus:ring-green-500 border-gray-300 rounded p-1"
                                                 data-item-id="{{ $item->id }}"
                                                 data-request-id="{{ $request->id }}"
                                                 {{ $isCompleted ? 'checked' : '' }}
                                                 {{ ($request->status === 'completed' || $request->status !== 'started') ? 'disabled' : '' }}>
                                      </div>
                                      <div class="flex-1">
-                                         <label for="item_{{ $item->id }}" class="text-sm font-medium text-gray-900 {{ $isCompleted ? 'line-through text-gray-500' : '' }}">
+                                         <label for="item_{{ $item->id }}" class="text-base font-medium text-gray-900 {{ $isCompleted ? 'line-through text-gray-500' : '' }}">
                                              {{ $item->description }}
                                              @if($item->is_required)
                                                  <span class="text-red-500 ml-1">*</span>
                                              @endif
                                          </label>
                                          @if($item->attachment_path)
-                                             <div class="mt-1">
-                                                 <a href="{{ $item->attachment_url }}" 
-                                                    target="_blank"
-                                                    class="text-xs text-blue-600 hover:text-blue-800">
+                                             <div class="mt-1 flex justify-end">
+                                                 <button onclick="window.open('{{ $item->attachment_url }}', '_blank')" 
+                                                         class="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors">
                                                      <i class="fas fa-paperclip mr-1"></i>View Attachment
-                                                 </a>
+                                                 </button>
                                              </div>
                                          @endif
                                      </div>
                                  @else
                                      <!-- Text items - no checkbox, just display the text -->
                                      <div class="flex-1">
-                                         <div class="text-sm font-medium text-gray-900">
+                                         <div class="text-base font-medium text-gray-900">
                                              {{ $item->description }}
                                              @if($item->is_required)
                                                  <span class="text-red-500 ml-1">*</span>
                                              @endif
                                          </div>
                                          @if($item->attachment_path)
-                                             <div class="mt-1">
-                                                 <a href="{{ $item->attachment_url }}" 
-                                                    target="_blank"
-                                                    class="text-xs text-blue-600 hover:text-blue-800">
+                                             <div class="mt-1 flex justify-end">
+                                                 <button onclick="window.open('{{ $item->attachment_url }}', '_blank')" 
+                                                         class="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors">
                                                      <i class="fas fa-paperclip mr-1"></i>View Attachment
-                                                 </a>
+                                                 </button>
                                              </div>
                                          @endif
                                      </div>
@@ -106,7 +163,7 @@
                              </div>
                          @endforeach
                     </div>
-                                         <div class="mt-3 text-xs text-gray-500">
+                                         <div class="mt-3 text-sm text-gray-600">
                          <span class="text-red-500">*</span> Required checkbox items must be completed
                          @if($request->status !== 'started' && $request->status !== 'completed')
                              <br><span class="text-orange-600">⚠️ Checklist items will become available after you start this job</span>
@@ -355,15 +412,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
                          // Send AJAX request to update the response
+             const formData = new FormData();
+             formData.append('is_completed', isChecked ? '1' : '0');
+             formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+             
              fetch(`/maintenance/${requestId}/checklist/${itemId}/response`, {
                  method: 'POST',
                  headers: {
-                     'Content-Type': 'application/json',
-                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                     'X-Requested-With': 'XMLHttpRequest',
+                     'Accept': 'application/json'
                  },
-                 body: JSON.stringify({
-                     is_completed: isChecked
-                 })
+                 body: formData
              })
              .then(response => {
                  console.log('Response status:', response.status);

@@ -35,7 +35,7 @@
                     </thead>
                     <tbody>
                         @foreach($technicians as $tech)
-                        <tr x-ref="'row_{{ $tech->id }}'" data-active="{{ $tech->is_active ? '1' : '0' }}" class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer @if(!$tech->is_active) opacity-60 bg-gray-100 @endif" x-show="!search || '{{ strtolower($tech->name) }}'.includes(search.toLowerCase()) || '{{ strtolower($tech->email) }}'.includes(search.toLowerCase()) || '{{ strtolower($tech->phone) }}'.includes(search.toLowerCase())" onclick="window.location.href='{{ route('mobile.technicians.show', $tech->id) }}'">
+                        <tr x-ref="'row_{{ $tech->id }}'" data-active="{{ $tech->is_active ? '1' : '0' }}" class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer @if(!$tech->is_active) opacity-60 bg-gray-100 @endif" x-show="!search || '{{ str_replace(["\r", "\n", "'"], ['', '', "\\'"], strtolower($tech->name)) }}'.includes(search.toLowerCase()) || '{{ str_replace(["\r", "\n", "'"], ['', '', "\\'"], strtolower($tech->email)) }}'.includes(search.toLowerCase()) || '{{ str_replace(["\r", "\n", "'"], ['', '', "\\'"], strtolower($tech->phone)) }}'.includes(search.toLowerCase())" onclick="window.location.href='{{ route('mobile.technicians.show', $tech->id) }}'">
                             <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">
                                 @if($tech->image)
                                     <img src="{{ asset('storage/' . $tech->image) }}" class="rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 object-cover mx-auto" alt="Profile">

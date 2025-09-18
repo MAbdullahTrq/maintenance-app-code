@@ -28,25 +28,7 @@
         }
     }
 
-    /* Single Phone input styling for mobile */
-    .phone-input-container {
-        position: relative;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
-        transition: all 0.2s ease;
-        background: white;
-    }
-    
-    .phone-input-container:focus-within {
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-    
-    .phone-input-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 0;
-    }
+    /* Phone input now uses standard Tailwind classes for uniform styling */
     
     .phone-country-code {
         width: 60px;
@@ -113,6 +95,191 @@
     
     .phone-feedback-icon {
         font-size: 11px;
+    }
+    
+    /* Mobile Country Dropdown Styles */
+    .mobile-country-dropdown {
+        position: relative;
+        display: inline-block;
+        width: 120px;
+        min-width: 120px;
+    }
+    
+    /* Country select button now uses standard Tailwind classes for uniform styling */
+    
+    
+    .mobile-country-code {
+        font-size: 14px;
+        font-weight: 500;
+        color: #374151;
+        white-space: nowrap;
+    }
+    
+    .mobile-country-dropdown-arrow {
+        font-size: 10px;
+        color: #6b7280;
+        margin-left: 8px;
+        transition: transform 0.2s ease;
+    }
+    
+    .mobile-country-dropdown.open .mobile-country-dropdown-arrow {
+        transform: rotate(180deg);
+    }
+    
+    .mobile-country-options {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        z-index: 1000;
+        max-height: 200px;
+        display: none;
+        margin-top: 4px;
+        backdrop-filter: blur(8px);
+    }
+    
+    .mobile-country-options.show {
+        display: block;
+    }
+    
+    /* Ensure mobile dropdown is hidden by default */
+    #mobileCountryOptions {
+        display: none;
+    }
+    
+    #mobileCountryOptions.show {
+        display: block;
+    }
+    
+    .mobile-country-search {
+        width: 100%;
+        padding: 12px 16px;
+        border: none;
+        border-bottom: 1px solid #e5e7eb;
+        font-size: 13px;
+        outline: none;
+        background: #f8fafc;
+        border-radius: 8px 8px 0 0;
+        color: #374151;
+        transition: all 0.2s ease;
+    }
+    
+    .mobile-country-search:focus {
+        background: white;
+        border-bottom-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .mobile-country-search::placeholder {
+        color: #9ca3af;
+        font-weight: 400;
+    }
+    
+    .mobile-country-option {
+        padding: 10px 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        font-size: 13px;
+        border-bottom: 1px solid #f1f5f9;
+        color: #374151;
+        transition: all 0.2s ease;
+        min-height: 40px;
+        position: relative;
+    }
+    
+    .mobile-country-option:hover {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        transform: translateX(2px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .mobile-country-option:active {
+        background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+        transform: translateX(1px);
+    }
+    
+    .mobile-country-option:last-child {
+        border-bottom: none;
+        border-radius: 0 0 8px 8px;
+    }
+    
+    .mobile-country-option:first-child {
+        border-radius: 8px 8px 0 0;
+    }
+    
+    .mobile-country-option-flag {
+        font-size: 16px;
+        margin-right: 12px;
+        width: 20px;
+        text-align: center;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+    }
+    
+    .mobile-country-option-name {
+        flex: 1;
+        color: #1f2937;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 12px;
+        font-weight: 500;
+        font-size: 13px;
+    }
+    
+    .mobile-country-option-code {
+        color: #4b5563;
+        font-size: 11px;
+        font-weight: 600;
+        background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        padding: 3px 8px;
+        border-radius: 4px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+    }
+    
+    .mobile-country-option:hover .mobile-country-option-code {
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        border-color: #93c5fd;
+        color: #1e40af;
+    }
+    
+    /* Ensure mobile country list is visible and scrollable */
+    #mobileCountryList {
+        max-height: 160px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    
+    /* Custom scrollbar for mobile country list */
+    #mobileCountryList::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    #mobileCountryList::-webkit-scrollbar-track {
+        background: #f8fafc;
+        border-radius: 3px;
+        margin: 4px 0;
+    }
+    
+    #mobileCountryList::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
+        border-radius: 3px;
+        border: 1px solid #e2e8f0;
+    }
+    
+    #mobileCountryList::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+        border-color: #cbd5e1;
+    }
+    
+    #mobileCountryList::-webkit-scrollbar-thumb:active {
+        background: linear-gradient(135deg, #64748b 0%, #475569 100%);
     }
     
     .phone-example {
@@ -184,19 +351,44 @@
                 </div>
                 <div>
                     <label for="mobile_phone" class="sr-only">Phone Number</label>
-                    <div class="phone-input-container @error('phone') border-red-500 @enderror">
-                        <div class="phone-input-wrapper">
-                            <input type="text" id="mobile_country_code_input" 
-                                class="phone-country-code"
-                                placeholder="+1">
-                            <input type="tel" name="phone" id="mobile_phone" 
-                                class="phone-number-input"
-                                placeholder="555 123 4567" value="{{ old('phone') }}" required>
+                    <div class="space-y-3">
+                        <!-- Country Code Field -->
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-1">Country code</label>
+                            <div class="mobile-country-dropdown relative" id="mobileCountryDropdown">
+                                <button type="button" class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex items-center justify-between @error('phone') border-red-500 @enderror" id="mobileCountrySelectButton">
+                                    <div class="flex items-center">
+                                        <span class="mobile-country-code" id="mobileSelectedCode">Singapore (+65)</span>
+                                    </div>
+                                    <span class="mobile-country-dropdown-arrow">▼</span>
+                                </button>
+                                
+                                <div class="absolute left-0 top-full mt-1 w-full bg-white rounded-md shadow-lg z-50 border border-gray-200" id="mobileCountryOptions" style="display: none !important;">
+                                    <input type="text" class="w-full px-3 py-2 text-sm border-b border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500" id="mobileCountrySearch" placeholder="Search countries...">
+                                    <div id="mobileCountryList" class="max-h-40 overflow-y-auto">
+                                        <!-- Countries will be populated by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <input type="hidden" name="country_code" id="mobile_country_code" value="{{ old('country_code', $userCountry) }}">
+                        
+                        <!-- Phone Number Field -->
+                        <div>
+                            <input type="tel" name="phone" id="mobile_phone" 
+                                class="w-full border border-gray-300 rounded-lg p-3 text-sm placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('phone') border-red-500 @enderror"
+                                placeholder="Phone number" value="{{ old('phone') }}" required>
+                        </div>
                     </div>
+                    <input type="hidden" name="country_code" id="mobile_country_code" value="{{ old('country_code', '+65') }}">
                     <div id="mobile-phone-feedback" class="phone-feedback" style="margin-top: 15px;"></div>
                     <div id="mobile-phone-example" class="phone-example" style="margin-top: 15px;"></div>
+                    
+                    <!-- Privacy Policy Text -->
+                    <div class="mt-3 text-xs text-gray-600">
+                        We'll call or text you to confirm your number. Standard message and data rates apply. 
+                        <a href="#" class="text-blue-600 hover:text-blue-800 underline">Privacy Policy</a>
+                    </div>
+                    
                     @error('phone')
                         <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
                     @enderror
@@ -288,42 +480,59 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Country data with flags
     const countryData = @json($countries);
-    const countryFlags = {
-        'US': '🇺🇸', 'CA': '🇨🇦', 'GB': '🇬🇧', 'AU': '🇦🇺', 'DE': '🇩🇪', 'FR': '🇫🇷', 'IT': '🇮🇹', 'ES': '🇪🇸',
-        'NL': '🇳🇱', 'BE': '🇧🇪', 'CH': '🇨🇭', 'AT': '🇦🇹', 'SE': '🇸🇪', 'NO': '🇳🇴', 'DK': '🇩🇰', 'FI': '🇫🇮',
-        'IE': '🇮🇪', 'PT': '🇵🇹', 'GR': '🇬🇷', 'PL': '🇵🇱', 'CZ': '🇨🇿', 'HU': '🇭🇺', 'SK': '🇸🇰', 'SI': '🇸🇮',
-        'HR': '🇭🇷', 'BG': '🇧🇬', 'RO': '🇷🇴', 'LT': '🇱🇹', 'LV': '🇱🇻', 'EE': '🇪🇪', 'RU': '🇷🇺', 'UA': '🇺🇦',
-        'BY': '🇧🇾', 'TR': '🇹🇷', 'IL': '🇮🇱', 'SA': '🇸🇦', 'AE': '🇦🇪', 'IN': '🇮🇳', 'CN': '🇨🇳', 'JP': '🇯🇵',
-        'KR': '🇰🇷', 'SG': '🇸🇬', 'MY': '🇲🇾', 'TH': '🇹🇭', 'PH': '🇵🇭', 'ID': '🇮🇩', 'VN': '🇻🇳', 'BR': '🇧🇷',
-        'MX': '🇲🇽', 'AR': '🇦🇷', 'CL': '🇨🇱', 'CO': '🇨🇴', 'PE': '🇵🇪', 'ZA': '🇿🇦', 'EG': '🇪🇬', 'NG': '🇳🇬',
-        'KE': '🇰🇪', 'GH': '🇬🇭', 'MA': '🇲🇦', 'TN': '🇹🇳', 'DZ': '🇩🇿', 'PK': '🇵🇰', 'BD': '🇧🇩', 'LK': '🇱🇰', 'NZ': '🇳🇿'
-    };
+    // console.log('Raw country data from PHP:', countryData); // Debug log
 
     // DOM elements
     const phoneInput = document.getElementById('mobile_phone');
     const countryCodeInput = document.getElementById('mobile_country_code');
-    const countryCodeDisplay = document.getElementById('mobile_country_code_input');
     const feedbackDiv = document.getElementById('mobile-phone-feedback');
     const exampleDiv = document.getElementById('mobile-phone-example');
     const submitBtn = document.getElementById('mobileSubmitBtn');
+    const mobileCountryDropdown = document.getElementById('mobileCountryDropdown');
+    const mobileCountrySelectButton = document.getElementById('mobileCountrySelectButton');
+    const mobileCountryOptions = document.getElementById('mobileCountryOptions');
+    const mobileCountrySearch = document.getElementById('mobileCountrySearch');
+    const mobileCountryList = document.getElementById('mobileCountryList');
+    const mobileSelectedCode = document.getElementById('mobileSelectedCode');
 
     let validationTimeout;
     let isPhoneValid = false;
     let detectedCountry = null;
+    let filteredCountries = [];
 
-    // Initialize phone input
-    function initializePhoneInput() {
+    // Initialize mobile countries dropdown
+    function initializeMobileCountries() {
+        // console.log('Initializing mobile countries, countryData:', countryData); // Debug log
+        filteredCountries = Object.entries(countryData).map(([countryCode, country]) => ({
+            countryCode,
+            name: country.name,
+            dialCode: country.code
+        }));
+        
+        // console.log('Filtered countries created:', filteredCountries.length, 'countries'); // Debug log
+        // console.log('First few filtered countries:', filteredCountries.slice(0, 3)); // Debug log
+        renderMobileCountryList();
+        
+        // Ensure dropdown is hidden initially
+        mobileCountryDropdown.classList.remove('open');
+        
         // Priority order for country selection:
         // 1. Old form value (from validation errors)
         // 2. User's previous selection (from localStorage)
-        // 3. Default country (US)
+        // 3. Default country (Singapore)
         
-        let selectedCountry = 'US'; // Default fallback
+        let selectedCountry = 'SG'; // Default fallback
         
         // Check for old form value first (highest priority)
         const oldCountryCode = '{{ old('country_code') }}';
         if (oldCountryCode) {
-            selectedCountry = oldCountryCode;
+            // Find country by dial code if old value is a dial code
+            for (const [countryCode, country] of Object.entries(countryData)) {
+                if (country.code === oldCountryCode) {
+                    selectedCountry = countryCode;
+                    break;
+                }
+            }
         } else {
             // Check if user has a previously selected country in localStorage
             const savedCountry = localStorage.getItem('selectedCountryCode');
@@ -332,15 +541,102 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        const country = countryData[selectedCountry];
+        selectMobileCountry(selectedCountry);
+    }
+    
+    function renderMobileCountryList() {
+        // console.log('Rendering mobile country list, count:', filteredCountries.length); // Debug log
+        mobileCountryList.innerHTML = '';
+        
+        if (filteredCountries.length === 0) {
+            // console.error('No countries to render!'); // Debug log
+            return;
+        }
+        
+        // Render all countries with scrolling
+        filteredCountries.forEach((country) => {
+            // console.log('Rendering country:', country.countryCode); // Debug log
+            const option = document.createElement('div');
+            option.className = 'flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer border-b border-gray-100 last:border-b-0';
+            option.dataset.code = country.countryCode;
+            option.innerHTML = `
+                <span class="flex-1 font-medium">${country.name} (${country.dialCode})</span>
+            `;
+            option.addEventListener('click', () => {
+                selectMobileCountry(country.countryCode);
+                closeMobileDropdown();
+            });
+            mobileCountryList.appendChild(option);
+        });
+        
+        // console.log('Mobile country list rendered with', mobileCountryList.children.length, 'items'); // Debug log
+    }
+    
+    function selectMobileCountry(countryCode) {
+        // console.log('Selecting country:', countryCode); // Debug log
+        const country = countryData[countryCode];
+        // console.log('Country data:', country); // Debug log
         if (country) {
-            countryCodeDisplay.value = country.code;
-            countryCodeInput.value = selectedCountry;
-            phoneInput.placeholder = `555 123 4567`;
+            // console.log('Setting country code display to:', `${country.name} (${country.code})`); // Debug log
+            mobileSelectedCode.textContent = `${country.name} (${country.code})`;
+            
+            // Always update the hidden input with the dialing code (not country code)
+            countryCodeInput.value = country.code;
             
             // Save the selection to localStorage for persistence
-            localStorage.setItem('selectedCountryCode', selectedCountry);
+            localStorage.setItem('selectedCountryCode', countryCode);
+            
+            // Update placeholder
+            phoneInput.placeholder = `Phone number`;
+            
+            // Validate phone if there's input
+            if (phoneInput.value.trim()) {
+                validatePhone();
+            }
         }
+    }
+    
+    function openMobileDropdown() {
+        // console.log('Opening mobile dropdown'); // Debug log
+        // console.log('Filtered countries count:', filteredCountries.length); // Debug log
+        // console.log('Mobile country list element:', mobileCountryList); // Debug log
+        // console.log('Mobile country list children:', mobileCountryList.children.length); // Debug log
+        
+        // Dropdown will position itself below the button using CSS
+        
+        mobileCountryDropdown.classList.add('open');
+        mobileCountryOptions.style.display = 'block';
+        
+        if (mobileCountrySearch) {
+            mobileCountrySearch.focus();
+        }
+    }
+    
+    function closeMobileDropdown() {
+        // console.log('Closing mobile dropdown'); // Debug log
+        mobileCountryDropdown.classList.remove('open');
+        mobileCountryOptions.style.display = 'none';
+        if (mobileCountrySearch) {
+            mobileCountrySearch.value = '';
+        }
+        renderMobileCountryList();
+    }
+    
+    function filterMobileCountries(searchTerm) {
+        const term = searchTerm.toLowerCase();
+        filteredCountries = Object.entries(countryData)
+            .map(([countryCode, country]) => ({
+                countryCode,
+                name: country.name,
+                dialCode: country.code
+            }))
+            .filter(country => 
+                country.name.toLowerCase().includes(term) ||
+                country.countryCode.toLowerCase().includes(term) ||
+                country.dialCode.includes(term)
+            );
+        
+        renderMobileCountryList();
     }
 
     function detectCountryFromCode(code) {
@@ -348,10 +644,15 @@ document.addEventListener('DOMContentLoaded', function() {
             return null;
         }
         
-        // Find country by dial code
+        // First try to find by country code (e.g., "PK")
+        if (countryData[code]) {
+            return { countryCode: code, ...countryData[code] };
+        }
+        
+        // If not found, try to find by dial code (e.g., "+92")
         for (const [countryCode, country] of Object.entries(countryData)) {
             if (country.code === code) {
-                return { code: countryCode, ...country };
+                return { countryCode: countryCode, ...country };
             }
         }
         
@@ -360,11 +661,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateCountryCodeDisplay(country) {
         if (country) {
-            countryCodeDisplay.value = country.code;
             countryCodeInput.value = country.code;
             
             // Save the selection to localStorage for persistence
-            localStorage.setItem('selectedCountryCode', country.code);
+            localStorage.setItem('selectedCountryCode', country.countryCode);
         }
     }
 
@@ -378,7 +678,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function validatePhone() {
         const phone = phoneInput.value.trim();
-        const countryCode = countryCodeDisplay.value.trim();
+        const countryCode = countryCodeInput.value.trim();
         
         if (!phone || !countryCode) {
             feedbackDiv.innerHTML = '';
@@ -393,7 +693,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const detectedCountry = detectCountryFromCode(countryCode);
         
         if (detectedCountry) {
-            updateCountryCodeDisplay(detectedCountry);
+            // Only update display if it's different from current selection
+            const currentDisplay = mobileSelectedCode.textContent;
+            const expectedDisplay = `${detectedCountry.name} (${detectedCountry.code})`;
+            if (currentDisplay !== expectedDisplay) {
+                updateCountryCodeDisplay(detectedCountry);
+            }
             updatePhoneExample(detectedCountry);
         } else {
             exampleDiv.textContent = '';
@@ -443,53 +748,74 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateSubmitButton() {
-        if (isPhoneValid && phoneInput.value.trim()) {
-            submitBtn.disabled = false;
-        } else {
+        const termsCheckbox = document.getElementById('mobile_terms_accepted');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const passwordConfirmationInput = document.getElementById('password_confirmation');
+        
+        const isTermsAccepted = termsCheckbox.checked;
+        const isNameFilled = nameInput.value.trim() !== '';
+        const isEmailFilled = emailInput.value.trim() !== '';
+        const isPasswordFilled = passwordInput.value.trim() !== '';
+        const isPasswordConfirmationFilled = passwordConfirmationInput.value.trim() !== '';
+        
+        // Disable button if any required field is empty, terms not accepted, or phone validation fails
+        if (!isTermsAccepted || !isNameFilled || !isEmailFilled || !isPasswordFilled || !isPasswordConfirmationFilled || !isPhoneValid || !phoneInput.value.trim()) {
             submitBtn.disabled = true;
+        } else {
+            submitBtn.disabled = false;
         }
     }
 
     // Event listeners
     phoneInput.addEventListener('input', validatePhone);
-    countryCodeDisplay.addEventListener('input', validatePhone); // Listen for changes in country code display
+    
+    // Mobile country dropdown event listeners
+    if (mobileCountrySelectButton) {
+        mobileCountrySelectButton.addEventListener('click', (e) => {
+        e.preventDefault();
+            e.stopPropagation();
+            // console.log('Mobile country button clicked'); // Debug log
+        if (mobileCountryOptions.style.display === 'block') {
+            closeMobileDropdown();
+        } else {
+            openMobileDropdown();
+        }
+        });
+    } else {
+        console.error('Mobile country select button not found');
+    }
+
+    mobileCountrySearch.addEventListener('input', (e) => {
+        filterMobileCountries(e.target.value);
+    });
+    
+    // Terms checkbox event listener
+    document.getElementById('mobile_terms_accepted').addEventListener('change', updateSubmitButton);
+    
+    // Required fields event listeners
+    document.getElementById('name').addEventListener('input', updateSubmitButton);
+    document.getElementById('email').addEventListener('input', updateSubmitButton);
+    document.getElementById('password').addEventListener('input', updateSubmitButton);
+    document.getElementById('password_confirmation').addEventListener('input', updateSubmitButton);
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!mobileCountryDropdown.contains(e.target)) {
+            closeMobileDropdown();
+        }
+    });
 
     // Initialize
-    initializePhoneInput();
+    initializeMobileCountries();
+    updateSubmitButton(); // Initial button state
+
+    // Ensure mobile dropdown is hidden immediately
+    mobileCountryOptions.style.display = 'none';
+    mobileCountryDropdown.classList.remove('open');
     
-    // Add form submission debugging
-    const form = document.getElementById('mobileRegisterForm');
-    form.addEventListener('submit', function(e) {
-        // Prevent the form from submitting so we can see the debug info
-        e.preventDefault();
-        
-        console.log('=== MOBILE FORM SUBMISSION DEBUG ===');
-        console.log('Mobile form submission attempted');
-        console.log('Form action:', form.action);
-        console.log('Form method:', form.method);
-        console.log('Submit button disabled:', mobileSubmitBtn.disabled);
-        console.log('Form action URL:', form.getAttribute('action'));
-        console.log('Current page URL:', window.location.href);
-        
-        // Show form data
-        const formData = new FormData(form);
-        console.log('Form data:');
-        for (let [key, value] of formData.entries()) {
-            console.log(key + ':', value);
-        }
-        
-        if (mobileSubmitBtn.disabled) {
-            console.log('❌ Form submission prevented - submit button is disabled');
-            return false;
-        }
-        
-        console.log('✅ Form submission would proceed...');
-        console.log('=== END DEBUG ===');
-        
-        // Now actually submit the form
-        console.log('Submitting mobile form now...');
-        form.submit();
-    });
+    // Form submission is now handled normally
 
     // Initial validation if there's an old value
     if (phoneInput.value) {

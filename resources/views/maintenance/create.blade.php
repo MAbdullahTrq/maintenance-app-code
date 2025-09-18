@@ -99,6 +99,31 @@
                     @enderror
                 </div>
                 
+            @if(Auth::user()->isPropertyManager())
+            <!-- Email Updates Section (Managers Only) -->
+            <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg" data-email-updates>
+                    <label class="block text-sm font-medium text-green-800 mb-3">Email Updates</label>
+                    <p class="text-green-600 text-sm mb-3">Select team members who should receive email updates about this request:</p>
+                    <div class="space-y-2">
+                        @if(isset($editorTeamMembers) && $editorTeamMembers->count() > 0)
+                            @foreach($editorTeamMembers as $member)
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="email_updates[]" value="{{ $member->id }}" 
+                                        class="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50"
+                                        {{ in_array($member->id, old('email_updates', [])) ? 'checked' : '' }}>
+                                    <span class="ml-2 text-sm text-gray-700">{{ $member->name }} ({{ $member->email }})</span>
+                                </label>
+                            @endforeach
+                        @else
+                            <p class="text-gray-500 text-sm">No editor team members available for email updates.</p>
+                        @endif
+                    </div>
+                    @error('email_updates')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                @endif
+                
                 <div class="mb-6">
                     <label for="images" class="block text-sm font-medium text-gray-700 mb-1">Images (Optional)</label>
                     <input type="file" id="images" name="images[]" multiple 
@@ -269,6 +294,52 @@ input.addEventListener('change', function(e) {
         };
         reader.readAsDataURL(file);
     });
+});
+
+// Filter team members based on property selection
+document.addEventListener('DOMContentLoaded', function() {
+    const propertySelect = document.getElementById('property_id');
+    const emailUpdatesSection = document.querySelector('[data-email-updates]');
+    
+    if (propertySelect && emailUpdatesSection) {
+        propertySelect.addEventListener('change', function() {
+            const propertyId = this.value;
+            
+            if (propertyId) {
+                // Fetch assigned team members for this property
+                fetch(`/api/properties/${propertyId}/assigned-team-members`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update the email updates checkboxes
+                        const checkboxes = emailUpdatesSection.querySelectorAll('input[type="checkbox"]');
+                        checkboxes.forEach(checkbox => {
+                            const userId = checkbox.value;
+                            const isAssigned = data.assigned_team_members.includes(parseInt(userId));
+                            
+                            if (isAssigned) {
+                                checkbox.closest('label').style.display = 'flex';
+                                checkbox.disabled = false;
+                            } else {
+                                checkbox.closest('label').style.display = 'none';
+                                checkbox.checked = false;
+                                checkbox.disabled = true;
+                            }
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching assigned team members:', error);
+                    });
+            } else {
+                // Reset all checkboxes when no property is selected
+                const checkboxes = emailUpdatesSection.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.closest('label').style.display = 'flex';
+                    checkbox.disabled = false;
+                    checkbox.checked = false;
+                });
+            }
+        });
+    }
 });
 </script>
 @endsection 

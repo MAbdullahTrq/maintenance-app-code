@@ -66,6 +66,14 @@ class Property extends Model
     }
 
     /**
+     * Get the team members assigned to this property.
+     */
+    public function assignedTeamMembers(): HasMany
+    {
+        return $this->hasMany(PropertyAssignment::class);
+    }
+
+    /**
      * Generate a QR code for the property.
      */
     public function generateQrCode(): string

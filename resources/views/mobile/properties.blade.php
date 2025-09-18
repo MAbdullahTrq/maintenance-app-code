@@ -87,6 +87,7 @@
                             <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Name</th>
                             <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Address</th>
                             <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Owner</th>
+                            <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Managed by</th>
                             <th class="p-2 md:p-3 lg:p-4 text-center">Actions</th>
                         </tr>
                     </thead>
@@ -107,6 +108,21 @@
                             <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
                                 <div class="text-gray-700">{{ $property->owner->displayName ?? '-' }}</div>
                             </td>
+                            <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
+                                <div class="text-gray-700">
+                                    @if($property->assignedTeamMembers->count() > 0)
+                                        @foreach($property->assignedTeamMembers as $assignment)
+                                            <div>{{ $assignment->user->name }}</div>
+                                        @endforeach
+                                    @elseif($property->owner->assignedTeamMembers->count() > 0)
+                                        @foreach($property->owner->assignedTeamMembers as $assignment)
+                                            <div>{{ $assignment->user->name }}</div>
+                                        @endforeach
+                                    @else
+                                        -
+                                    @endif
+                                </div>
+                            </td>
                             <td class="p-2 md:p-3 lg:p-4 align-top text-center" style="position: relative; overflow: visible;" onclick="event.stopPropagation();">
                                 <div class="relative" style="overflow: visible;">
                                     <button onclick="toggleDropdown(this)" class="px-2 py-1 text-gray-600 hover:text-gray-800 text-lg md:text-xl focus:outline-none dropdown-btn">
@@ -120,6 +136,11 @@
                                             @if(!Auth::user()->isViewer())
                                             <a href="{{ route('mobile.properties.edit', $property->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors text-left">
                                                 <i class="fas fa-edit mr-2 text-green-500"></i>Edit
+                                            </a>
+                                            @endif
+                                            @if(Auth::user()->isPropertyManager())
+                                            <a href="{{ route('mobile.properties.assign', $property->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors text-left">
+                                                <i class="fas fa-users mr-2 text-purple-500"></i>Assign Team
                                             </a>
                                             @endif
                                             <a href="{{ route('mobile.properties.qrcode', $property->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors text-left">

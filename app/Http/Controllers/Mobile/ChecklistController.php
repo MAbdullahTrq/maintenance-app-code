@@ -123,6 +123,45 @@ class ChecklistController extends Controller
         $checklist = Checklist::findOrFail($id);
         $this->authorize('update', $checklist);
 
+        // Handle AJAX requests for inline editing
+        if ($request->ajax()) {
+            // Determine which field is being updated
+            $field = null;
+            $value = null;
+            
+            if ($request->has('name')) {
+                $field = 'name';
+                $value = $request->input('name');
+                $request->validate([
+                    'name' => 'required|string|max:255',
+                ]);
+            } elseif ($request->has('description')) {
+                $field = 'description';
+                $value = $request->input('description');
+                $request->validate([
+                    'description' => 'nullable|string',
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No field specified for update.'
+                ], 400);
+            }
+
+            $checklist->update([
+                $field => $value,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Checklist updated successfully.',
+                'data' => [
+                    $field => $value
+                ]
+            ]);
+        }
+
+        // Handle regular form submissions
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',

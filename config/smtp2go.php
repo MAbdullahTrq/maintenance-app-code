@@ -28,7 +28,7 @@ return [
 
     'sender' => [
         'email' => env('MAIL_FROM_ADDRESS', 'noreply@yourdomain.com'),
-        'name' => env('MAIL_FROM_NAME', 'MaintainXtra'),
+        'name' => env('MAIL_FROM_NAME', 'MaintainXtra Support'),
     ],
 
     /*

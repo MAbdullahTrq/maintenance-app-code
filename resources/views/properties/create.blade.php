@@ -109,6 +109,31 @@
                 @endif
             </div>
 
+            @if(Auth::user()->isPropertyManager())
+            <!-- Team Member Assignment Section (Managers Only) -->
+            <div class="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                <label class="block text-purple-800 font-medium mb-3">Assign Team Members</label>
+                <p class="text-purple-600 text-sm mb-3">Select team members who should receive email updates for requests related to this property:</p>
+                <div class="space-y-2">
+                    @if(isset($editorTeamMembers) && $editorTeamMembers->count() > 0)
+                        @foreach($editorTeamMembers as $member)
+                            <label class="flex items-center">
+                                <input type="checkbox" name="assigned_team_members[]" value="{{ $member->id }}" 
+                                    class="rounded border-gray-300 text-purple-600 shadow-sm focus:border-purple-300 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
+                                    {{ in_array($member->id, old('assigned_team_members', [])) ? 'checked' : '' }}>
+                                <span class="ml-2 text-sm text-gray-700">{{ $member->name }} ({{ $member->email }})</span>
+                            </label>
+                        @endforeach
+                    @else
+                        <p class="text-gray-500 text-sm">No editor team members available for assignment.</p>
+                    @endif
+                </div>
+                @error('assigned_team_members')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+            @endif
+
             <div class="mb-6">
                 <label for="image" class="block text-gray-700 font-medium mb-2">Property Image</label>
                 <input type="file" name="image" id="image" 

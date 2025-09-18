@@ -114,7 +114,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'noreply@maintainxtra.com'),
-        'name' => env('MAIL_FROM_NAME', 'MaintainXtra'),
+        'name' => env('MAIL_FROM_NAME', 'MaintainXtra Support'),
     ],
 
 ];

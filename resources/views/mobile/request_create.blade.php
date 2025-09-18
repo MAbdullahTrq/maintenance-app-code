@@ -39,8 +39,8 @@
                     <textarea name="description" id="description-field" class="w-full border rounded p-2" placeholder="Please describe the issue in detail..." required></textarea>
                 </div>
                 <div class="mb-3">
-                    <label class="block font-semibold mb-1">Location*</label>
-                    <input type="text" name="location" id="location-field" class="w-full border rounded p-2" placeholder="e.g., Kitchen, Unit 2B, Basement" required>
+                    <label class="block font-semibold mb-1">Location</label>
+                    <input type="text" name="location" id="location-field" class="w-full border rounded p-2" placeholder="e.g., Kitchen, Unit 2B, Basement">
                 </div>
             </div>
             
@@ -52,6 +52,31 @@
                     <option value="high">High</option>
                 </select>
             </div>
+            @if(Auth::user()->isPropertyManager())
+            <!-- Email Updates Section (Managers Only) -->
+            <div class="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                <label class="block font-semibold mb-2 text-green-800">Email Updates</label>
+                <p class="text-green-600 text-xs mb-3">Select team members who should receive email updates about this request:</p>
+                <div class="space-y-2">
+                    @if(isset($editorTeamMembers) && $editorTeamMembers->count() > 0)
+                        @foreach($editorTeamMembers as $member)
+                            <label class="flex items-center">
+                                <input type="checkbox" name="email_updates[]" value="{{ $member->id }}" 
+                                    class="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50"
+                                    {{ in_array($member->id, old('email_updates', [])) ? 'checked' : '' }}>
+                                <span class="ml-2 text-xs text-gray-700">{{ $member->name }}<br><span class="text-gray-500">({{ $member->email }})</span></span>
+                            </label>
+                        @endforeach
+                    @else
+                        <p class="text-gray-500 text-xs">No editor team members available for email updates.</p>
+                    @endif
+                </div>
+                @error('email_updates')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+            @endif
+            
             <div class="mb-3">
                 <label class="block font-semibold mb-1">Images</label>
                 <input type="file" name="images[]" id="request-images-input" class="w-full border rounded p-2" multiple accept="image/*">

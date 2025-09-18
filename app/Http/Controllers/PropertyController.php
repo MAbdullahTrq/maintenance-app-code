@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Property;
+use App\Models\PropertyAssignment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,7 +28,18 @@ class PropertyController extends Controller
     public function create()
     {
         $owners = Auth::user()->managedOwners()->get();
-        return view('properties.create', compact('owners'));
+        
+        // Get editor team members for assignment (only for managers)
+        $editorTeamMembers = null;
+        if (Auth::user()->isPropertyManager()) {
+            $editorTeamMembers = Auth::user()->teamMembers()
+                ->whereHas('role', function ($query) {
+                    $query->where('slug', 'editor');
+                })
+                ->get();
+        }
+        
+        return view('properties.create', compact('owners', 'editorTeamMembers'));
     }
 
     /**
@@ -40,6 +52,8 @@ class PropertyController extends Controller
             'address' => 'required|string',
             'owner_id' => 'required|exists:owners,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'assigned_team_members' => 'nullable|array',
+            'assigned_team_members.*' => 'exists:users,id',
         ]);
 
         $user = Auth::user();
@@ -68,6 +82,16 @@ class PropertyController extends Controller
 
         $property = $user->managedProperties()->create($data);
 
+        // Handle team member assignments (only for managers)
+        if ($user->isPropertyManager() && $request->has('assigned_team_members')) {
+            foreach ($request->assigned_team_members as $userId) {
+                PropertyAssignment::create([
+                    'property_id' => $property->id,
+                    'user_id' => $userId,
+                ]);
+            }
+        }
+
         // Generate QR code
         $this->generateQrCode($property);
 
@@ -86,6 +110,9 @@ class PropertyController extends Controller
     {
         $this->authorize('view', $property);
         
+        // Load the assigned team members relationship
+        $property->load('assignedTeamMembers.user');
+        
         return view('properties.show', compact('property'));
     }
 
@@ -97,7 +124,21 @@ class PropertyController extends Controller
         $this->authorize('update', $property);
         
         $owners = Auth::user()->managedOwners()->get();
-        return view('properties.edit', compact('property', 'owners'));
+        
+        // Get editor team members for assignment (only for managers)
+        $editorTeamMembers = null;
+        if (Auth::user()->isPropertyManager()) {
+            $editorTeamMembers = Auth::user()->teamMembers()
+                ->whereHas('role', function ($query) {
+                    $query->where('slug', 'editor');
+                })
+                ->get();
+        }
+        
+        // Load the assigned team members relationship
+        $property->load('assignedTeamMembers');
+        
+        return view('properties.edit', compact('property', 'owners', 'editorTeamMembers'));
     }
 
     /**
@@ -112,6 +153,8 @@ class PropertyController extends Controller
             'address' => 'required|string',
             'owner_id' => 'required|exists:owners,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'assigned_team_members' => 'nullable|array',
+            'assigned_team_members.*' => 'exists:users,id',
         ]);
 
         $data = [
@@ -133,8 +176,42 @@ class PropertyController extends Controller
 
         $property->update($data);
 
+        // Handle team member assignments (only for managers)
+        if (Auth::user()->isPropertyManager()) {
+            // Remove existing assignments
+            $property->assignedTeamMembers()->delete();
+            
+            // Add new assignments
+            if ($request->has('assigned_team_members')) {
+                foreach ($request->assigned_team_members as $userId) {
+                    PropertyAssignment::create([
+                        'property_id' => $property->id,
+                        'user_id' => $userId,
+                    ]);
+                }
+            }
+        }
+
         return redirect()->route('properties.index')
             ->with('success', 'Property updated successfully.');
+    }
+
+    /**
+     * Get assigned team members for a property (API endpoint)
+     */
+    public function getAssignedTeamMembers(Property $property)
+    {
+        $this->authorize('view', $property);
+        
+        $assignedTeamMembers = $property->assignedTeamMembers()
+            ->with('user')
+            ->get()
+            ->pluck('user.id')
+            ->toArray();
+        
+        return response()->json([
+            'assigned_team_members' => $assignedTeamMembers
+        ]);
     }
 
     /**

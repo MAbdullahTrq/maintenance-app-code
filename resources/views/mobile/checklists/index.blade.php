@@ -27,7 +27,7 @@
             
             <div class="space-y-3">
                 @foreach($checklists as $checklist)
-                <div x-show="search === '' || '{{ strtolower($checklist->name . ' ' . $checklist->description) }}'.includes(search.toLowerCase())" 
+                <div x-show="search === '' || '{{ str_replace(["\r", "\n", "'"], ['', '', "\\'"], strtolower($checklist->name . ' ' . $checklist->description)) }}'.includes(search.toLowerCase())" 
                      class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
                      onclick="window.location.href='/m/cl/{{ $checklist->id }}'">
                     <div class="flex items-start justify-between">
@@ -48,7 +48,7 @@
                                 Created by {{ $checklist->manager->name }} {{ $checklist->created_at->diffForHumans() }}
                             </p>
                         </div>
-                        <div class="flex space-x-2 ml-4">
+                        <div class="flex space-x-2 ml-4" @click.stop>
                             <a href="/m/cl/{{ $checklist->id }}" class="text-blue-600 hover:text-blue-800 p-2">
                                 <i class="fas fa-eye"></i>
                             </a>

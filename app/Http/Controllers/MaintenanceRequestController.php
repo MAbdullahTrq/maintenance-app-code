@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\MaintenanceRequest;
 use App\Models\Property;
 use App\Models\RequestComment;
+use App\Models\RequestEmailUpdate;
 use App\Models\RequestImage;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -64,7 +65,17 @@ class MaintenanceRequestController extends Controller
         $workspaceUserIds = array_merge($workspaceUserIds, $workspaceOwner->teamMembers()->pluck('users.id')->toArray());
         $checklists = \App\Models\Checklist::whereIn('manager_id', $workspaceUserIds)->withCount('items')->get();
         
-        return view('maintenance.create', compact('properties', 'checklists'));
+        // Get editor team members for email updates (only for managers)
+        $editorTeamMembers = null;
+        if ($user->isPropertyManager()) {
+            $editorTeamMembers = $workspaceOwner->teamMembers()
+                ->whereHas('role', function ($query) {
+                    $query->where('slug', 'editor');
+                })
+                ->get();
+        }
+        
+        return view('maintenance.create', compact('properties', 'checklists', 'editorTeamMembers'));
     }
 
     /**
@@ -80,6 +91,8 @@ class MaintenanceRequestController extends Controller
             'description' => $request->checklist_id ? 'nullable|string' : 'required|string',
             'location' => 'required|string|max:255',
             'images.*' => 'nullable|image|max:2048',
+            'email_updates' => 'nullable|array',
+            'email_updates.*' => 'exists:users,id',
         ]);
 
         // Check if user can create request for this property
@@ -124,6 +137,38 @@ class MaintenanceRequestController extends Controller
                     'type' => 'request',
                 ]);
             }
+        }
+
+        // Handle email updates (only for managers)
+        $user = Auth::user();
+        if ($user->isPropertyManager() && $request->has('email_updates')) {
+            // Only add team members who are assigned to this property
+            $assignedTeamMemberIds = $property->assignedTeamMembers()->pluck('user_id')->toArray();
+            
+            foreach ($request->email_updates as $userId) {
+                // Only add if the team member is assigned to this property
+                if (in_array($userId, $assignedTeamMemberIds)) {
+                    RequestEmailUpdate::create([
+                        'maintenance_request_id' => $maintenanceRequest->id,
+                        'user_id' => $userId,
+                    ]);
+                }
+            }
+        } elseif ($user->hasTeamMemberRole()) {
+            // For team members, automatically add the team member and manager to email updates
+            $workspaceOwner = $user->getWorkspaceOwner();
+            
+            // Add the team member
+            RequestEmailUpdate::create([
+                'maintenance_request_id' => $maintenanceRequest->id,
+                'user_id' => $user->id,
+            ]);
+            
+            // Add the manager
+            RequestEmailUpdate::create([
+                'maintenance_request_id' => $maintenanceRequest->id,
+                'user_id' => $workspaceOwner->id,
+            ]);
         }
 
         // Send notification to property manager if request is created by someone else

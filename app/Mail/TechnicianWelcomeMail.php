@@ -35,6 +35,10 @@ class TechnicianWelcomeMail extends Mailable
     {
         return new Envelope(
             subject: 'Welcome to MaintainXtra - Verify Your Account',
+            from: new \Illuminate\Mail\Mailables\Address(
+                config('mail.from.address', 'noreply@maintainxtra.com'),
+                config('mail.from.name', 'MaintainXtra Support')
+            ),
         );
     }
 

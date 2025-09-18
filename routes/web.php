@@ -11,6 +11,7 @@ use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TechnicianController;
+use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\Mobile\DashboardController as MobileDashboardController;
 use App\Http\Controllers\Mobile\RequestController;
 use App\Http\Controllers\Mobile\TechnicianController as MobileTechnicianController;
@@ -34,9 +35,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Public routes
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
+
+// Terms and Conditions
+Route::get('/terms', [App\Http\Controllers\TermsController::class, 'index'])->name('terms');
 
 // Guest maintenance request routes
 Route::get('/request/{accessLink}', [GuestRequestController::class, 'showRequestForm'])->name('guest.request.form');
@@ -201,6 +203,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/properties/{property}', [PropertyController::class, 'update'])->name('properties.update');
         Route::delete('/properties/{property}', [PropertyController::class, 'destroy'])->name('properties.destroy');
         Route::get('/properties/{property}/qrcode', [PropertyController::class, 'downloadQrCode'])->name('properties.qrcode');
+        Route::get('/api/properties/{property}/assigned-team-members', [PropertyController::class, 'getAssignedTeamMembers'])->name('api.properties.assigned-team-members');
     });
 
     // Property manager routes
@@ -366,6 +369,8 @@ Route::delete('/r/{id}', [App\Http\Controllers\Mobile\RequestController::class, 
             Route::get('/ao/{id}', [MobileOwnerController::class, 'show'])->name('mobile.owners.show');
             Route::get('/ao/{id}/edit', [MobileOwnerController::class, 'edit'])->name('mobile.owners.edit');
             Route::post('/ao/{id}/edit', [MobileOwnerController::class, 'update'])->name('mobile.owners.update');
+            Route::get('/ao/{id}/assign', [MobileOwnerController::class, 'assign'])->name('mobile.owners.assign');
+            Route::post('/ao/{id}/assign', [MobileOwnerController::class, 'updateAssignment'])->name('mobile.owners.assign.update');
             Route::delete('/ao/{id}', [MobileOwnerController::class, 'destroy'])->name('mobile.owners.destroy');
             Route::get('/ao/{id}/qrcode', [MobileOwnerController::class, 'qrcode'])->name('mobile.owners.qrcode');
             
@@ -390,6 +395,8 @@ Route::delete('/r/{id}', [App\Http\Controllers\Mobile\RequestController::class, 
             Route::get('/ap/{id}', [MobilePropertyController::class, 'show'])->name('mobile.properties.show');
             Route::get('/ep/{id}', [MobilePropertyController::class, 'edit'])->name('mobile.properties.edit');
             Route::post('/ep/{id}', [MobilePropertyController::class, 'update'])->name('mobile.properties.ep.update');
+            Route::get('/ap/{id}/assign', [MobilePropertyController::class, 'assign'])->name('mobile.properties.assign');
+            Route::post('/ap/{id}/assign', [MobilePropertyController::class, 'updateAssignments'])->name('mobile.properties.assign.update');
             Route::get('/ap/{id}/qrcode', [MobilePropertyController::class, 'qrcode'])->name('mobile.properties.qrcode');
             
             // Mobile team management routes
@@ -413,6 +420,7 @@ Route::delete('/r/{id}', [App\Http\Controllers\Mobile\RequestController::class, 
             Route::post('/cl/{checklist}/items', [App\Http\Controllers\Mobile\ChecklistItemController::class, 'store'])->name('mobile.checklists.items.store');
             Route::put('/cl/{checklist}/items/{item}', [App\Http\Controllers\Mobile\ChecklistItemController::class, 'update'])->name('mobile.checklists.items.update');
             Route::delete('/cl/{checklist}/items/{item}', [App\Http\Controllers\Mobile\ChecklistItemController::class, 'destroy'])->name('mobile.checklists.items.destroy');
+            Route::post('/cl/{checklist}/items/order', [App\Http\Controllers\Mobile\ChecklistItemController::class, 'updateOrder'])->name('mobile.checklists.items.order');
         });
     });
 
@@ -436,5 +444,12 @@ Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestF
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+
+
+
+
+
+
+
 
 

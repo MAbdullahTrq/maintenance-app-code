@@ -90,6 +90,14 @@ class MaintenanceRequest extends Model
     }
 
     /**
+     * Get the email updates for this maintenance request.
+     */
+    public function emailUpdates(): HasMany
+    {
+        return $this->hasMany(RequestEmailUpdate::class);
+    }
+
+    /**
      * Get the request images by type.
      */
     public function getImagesByType(string $type): HasMany

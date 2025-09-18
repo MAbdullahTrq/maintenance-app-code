@@ -25,9 +25,12 @@ class WelcomeMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Welcome to MaintainXtra!')
-                    ->markdown('emails.auth.welcome', [
-                        'user' => $this->user,
-                    ]);
+        return $this->from(
+            config('mail.from.address', 'noreply@maintainxtra.com'),
+            config('mail.from.name', 'MaintainXtra Support')
+        )->subject('Welcome to MaintainXtra!')
+        ->markdown('emails.auth.welcome', [
+            'user' => $this->user,
+        ]);
     }
 } 

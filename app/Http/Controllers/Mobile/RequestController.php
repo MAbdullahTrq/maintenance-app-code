@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Mobile;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\MaintenanceRequest;
+use App\Models\RequestEmailUpdate;
 use App\Mail\TechnicianAssignedNotification;
 use App\Mail\TechnicianStartedNotification;
 use App\Mail\TechnicianCompletedNotification;
@@ -50,7 +51,17 @@ class RequestController extends Controller
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $properties->pluck('id'))->count();
         $teamMembersCount = $workspaceOwner->teamMembers()->count();
         
-        return view('mobile.request_create', compact('properties', 'checklists', 'ownersCount', 'propertiesCount', 'techniciansCount', 'requestsCount', 'teamMembersCount'));
+        // Get editor team members for email updates (only for managers)
+        $editorTeamMembers = null;
+        if ($user->isPropertyManager()) {
+            $editorTeamMembers = $workspaceOwner->teamMembers()
+                ->whereHas('role', function ($query) {
+                    $query->where('slug', 'editor');
+                })
+                ->get();
+        }
+        
+        return view('mobile.request_create', compact('properties', 'checklists', 'ownersCount', 'propertiesCount', 'techniciansCount', 'requestsCount', 'teamMembersCount', 'editorTeamMembers'));
     }
 
     /**
@@ -64,8 +75,10 @@ class RequestController extends Controller
             'checklist_id' => 'nullable|exists:checklists,id',
             'title' => $request->checklist_id ? 'nullable|string|max:255' : 'required|string|max:255',
             'description' => $request->checklist_id ? 'nullable|string' : 'required|string',
-            'location' => 'required|string|max:255',
+            'location' => 'nullable|string|max:255',
             'images.*' => 'nullable|image|max:10240', // Allow up to 10MB per image, will be resized
+            'email_updates' => 'nullable|array',
+            'email_updates.*' => 'exists:users,id',
         ]);
 
         $user = auth()->user();
@@ -99,9 +112,9 @@ class RequestController extends Controller
             'priority' => $request->priority,
             'property_id' => $request->property_id,
             'checklist_id' => $request->checklist_id,
-            'requester_name' => $user->name,
-            'requester_email' => $user->email,
-            'requester_phone' => $user->phone,
+            'requester_name' => null, // Manager creating request, not a requester
+            'requester_email' => null, // Manager creating request, not a requester
+            'requester_phone' => null, // Manager creating request, not a requester
             'status' => 'pending',
         ]);
 
@@ -122,6 +135,37 @@ class RequestController extends Controller
                     'type' => 'request',
                 ]);
             }
+        }
+
+        // Handle email updates (only for managers)
+        if ($user->isPropertyManager() && $request->has('email_updates')) {
+            // Only add team members who are assigned to this property
+            $assignedTeamMemberIds = $property->assignedTeamMembers()->pluck('user_id')->toArray();
+            
+            foreach ($request->email_updates as $userId) {
+                // Only add if the team member is assigned to this property
+                if (in_array($userId, $assignedTeamMemberIds)) {
+                    RequestEmailUpdate::create([
+                        'maintenance_request_id' => $maintenanceRequest->id,
+                        'user_id' => $userId,
+                    ]);
+                }
+            }
+        } elseif ($user->hasTeamMemberRole()) {
+            // For team members, automatically add the team member and manager to email updates
+            $workspaceOwner = $user->getWorkspaceOwner();
+            
+            // Add the team member
+            RequestEmailUpdate::create([
+                'maintenance_request_id' => $maintenanceRequest->id,
+                'user_id' => $user->id,
+            ]);
+            
+            // Add the manager
+            RequestEmailUpdate::create([
+                'maintenance_request_id' => $maintenanceRequest->id,
+                'user_id' => $workspaceOwner->id,
+            ]);
         }
 
         // Send notification to property manager
@@ -225,7 +269,7 @@ class RequestController extends Controller
         
         // Check if user can complete this request
         $user = auth()->user();
-        if (!$user->can('approve', $maintenance)) {
+        if (!$user->can('updateStatus', $maintenance)) {
             abort(403, 'You are not authorized to complete this request.');
         }
         
@@ -252,7 +296,7 @@ class RequestController extends Controller
         
         // Check if user can close this request
         $user = auth()->user();
-        if (!$user->can('approve', $maintenance)) {
+        if (!$user->can('close', $maintenance)) {
             abort(403, 'You are not authorized to close this request.');
         }
         $maintenance->status = 'closed';

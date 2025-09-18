@@ -105,6 +105,47 @@
         </div>
     </div>
 
+    <!-- Team Member Assignments Section -->
+    @if(Auth::user()->isPropertyManager())
+    <div class="mt-8 bg-white shadow rounded-lg overflow-hidden">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Team Member Assignments</h2>
+                <a href="{{ route('properties.edit', $property->id) }}" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium">
+                    <i class="fas fa-users mr-1"></i>Manage Assignments
+                </a>
+            </div>
+            
+            @if($property->assignedTeamMembers->count() > 0)
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    @foreach($property->assignedTeamMembers as $assignment)
+                        <div class="flex items-center p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-user-check text-purple-600 text-xl"></i>
+                            </div>
+                            <div class="ml-3 flex-1">
+                                <div class="font-medium text-gray-900">{{ $assignment->user->name }}</div>
+                                <div class="text-sm text-gray-600">{{ $assignment->user->email }}</div>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                    Editor
+                                </span>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fas fa-users text-4xl mb-4"></i>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">No team members assigned</h3>
+                    <p class="text-sm">Team members assigned here will receive email updates for requests related to this property</p>
+                </div>
+            @endif
+        </div>
+    </div>
+    @endif
+
     <!-- Recent Maintenance Requests -->
     <div class="mt-8 bg-white shadow rounded-lg overflow-hidden">
         <div class="p-6">

@@ -221,6 +221,12 @@ class MaintenanceRequestPolicy
             return true;
         }
 
+        // Team members with editor role can update status of requests for their workspace owner's properties
+        if ($user->isEditor()) {
+            $workspaceOwner = $user->getWorkspaceOwner();
+            return $maintenanceRequest->property->manager_id === $workspaceOwner->id;
+        }
+
         // Technicians can update status of requests assigned to them
         if ($user->isTechnician() && $maintenanceRequest->assigned_to === $user->id) {
             return true;
@@ -244,6 +250,12 @@ class MaintenanceRequestPolicy
             return true;
         }
 
+        // Team members with editor role can delete images from requests for their workspace owner's properties
+        if ($user->isEditor()) {
+            $workspaceOwner = $user->getWorkspaceOwner();
+            return $maintenanceRequest->property->manager_id === $workspaceOwner->id;
+        }
+
         return false;
     }
 
@@ -257,6 +269,12 @@ class MaintenanceRequestPolicy
         // Property managers can restore requests for their properties
         if ($user->isPropertyManager()) {
             return $maintenanceRequest->property->manager_id === $user->id;
+        }
+
+        // Team members with editor role can restore requests for their workspace owner's properties
+        if ($user->isEditor()) {
+            $workspaceOwner = $user->getWorkspaceOwner();
+            return $maintenanceRequest->property->manager_id === $workspaceOwner->id;
         }
 
         return false;
@@ -284,6 +302,12 @@ class MaintenanceRequestPolicy
         // Property managers can close completed requests for their properties
         if ($user->isPropertyManager() && $maintenanceRequest->property->manager_id === $user->id) {
             return $maintenanceRequest->status === 'completed';
+        }
+        
+        // Team members with editor role can close completed requests for their workspace owner's properties
+        if ($user->isEditor()) {
+            $workspaceOwner = $user->getWorkspaceOwner();
+            return $maintenanceRequest->property->manager_id === $workspaceOwner->id && $maintenanceRequest->status === 'completed';
         }
         
         return false;

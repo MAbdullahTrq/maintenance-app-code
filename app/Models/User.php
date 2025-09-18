@@ -148,6 +148,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the properties assigned to this user.
+     */
+    public function assignedProperties(): HasMany
+    {
+        return $this->hasMany(PropertyAssignment::class);
+    }
+
+    /**
      * Get the team owner (user who invited this user).
      */
     public function teamOwner(): BelongsTo
@@ -213,6 +221,22 @@ class User extends Authenticatable
     public function managedOwners(): HasMany
     {
         return $this->hasMany(Owner::class, 'manager_id');
+    }
+
+    /**
+     * Get the owners assigned to this user for management.
+     */
+    public function assignedOwners(): HasMany
+    {
+        return $this->hasMany(Owner::class, 'managed_by');
+    }
+
+    /**
+     * Get the owner assignments for this user.
+     */
+    public function ownerAssignments(): HasMany
+    {
+        return $this->hasMany(OwnerAssignment::class);
     }
 
     /**

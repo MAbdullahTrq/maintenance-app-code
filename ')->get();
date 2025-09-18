@@ -1,0 +1,32 @@
+[90m= [39m[34;4mIlluminate\Support\Collection[39;24m {#6386
+    [34mall[39m: [
+      {#6388
+        +"[1mid[22m": [35m1[39m,
+        +"[1mname[22m": "[32mAdmin[39m",
+        +"[1mslug[22m": "[32madmin[39m",
+        +"[1mdescription[22m": "[32mAdministrator with full access to all features[39m",
+        +"[1mcreated_at[22m": "[32m2025-04-15 15:45:28[39m",
+        +"[1mupdated_at[22m": "[32m2025-04-15 15:45:28[39m",
+        +"[1mguard_name[22m": "[32mweb[39m",
+      },
+      {#6390
+        +"[1mid[22m": [35m2[39m,
+        +"[1mname[22m": "[32mProperty Manager[39m",
+        +"[1mslug[22m": "[32mproperty_manager[39m",
+        +"[1mdescription[22m": "[32mHandles work orders, approves requests, and assigns tasks.[39m",
+        +"[1mcreated_at[22m": "[32m2025-04-15 15:45:28[39m",
+        +"[1mupdated_at[22m": "[32m2025-04-15 15:45:28[39m",
+        +"[1mguard_name[22m": "[32mweb[39m",
+      },
+      {#6392
+        +"[1mid[22m": [35m3[39m,
+        +"[1mname[22m": "[32mTechnician[39m",
+        +"[1mslug[22m": "[32mtechnician[39m",
+        +"[1mdescription[22m": "[32mCompletes maintenance tasks assigned by the Property Manager.[39m",
+        +"[1mcreated_at[22m": "[32m2025-04-15 15:45:28[39m",
+        +"[1mupdated_at[22m": "[32m2025-04-15 15:45:28[39m",
+        +"[1mguard_name[22m": "[32mweb[39m",
+      },
+    ],
+  }
+

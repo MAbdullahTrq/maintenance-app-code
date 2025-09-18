@@ -37,6 +37,11 @@
                                     <span class="text-red-500 ml-1">*</span>
                                 @endif
                             </div>
+                            @if($item->task_description)
+                                <div class="text-sm text-gray-600 mt-1">
+                                    {{ $item->task_description }}
+                                </div>
+                            @endif
                             <div class="text-xs text-gray-500 mt-1">
                                 Type: {{ ucfirst($item->type) }}
                                 @if($item->is_required)
@@ -44,12 +49,11 @@
                                 @endif
                             </div>
                             @if($item->attachment_path)
-                                <div class="mt-2">
-                                    <a href="{{ $item->attachment_url }}" 
-                                       target="_blank"
-                                       class="text-xs text-blue-600 hover:text-blue-800">
+                                <div class="mt-2 flex justify-end">
+                                    <button onclick="window.open('{{ $item->attachment_url }}', '_blank')" 
+                                            class="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors">
                                         <i class="fas fa-paperclip mr-1"></i>View Attachment
-                                    </a>
+                                    </button>
                                 </div>
                             @endif
                         </div>

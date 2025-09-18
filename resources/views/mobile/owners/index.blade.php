@@ -35,7 +35,7 @@
                     </thead>
                     <tbody>
                         @foreach($owners as $owner)
-                        <tr x-show="search === '' || '{{ strtolower($owner->name . ' ' . $owner->email . ' ' . $owner->company) }}'.includes(search.toLowerCase())" class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" onclick="window.location.href='/m/ao/{{ $owner->id }}'">
+                        <tr x-show="search === '' || '{{ str_replace(["\r", "\n", "'"], ['', '', "\\'"], strtolower($owner->name . ' ' . $owner->email . ' ' . $owner->company)) }}'.includes(search.toLowerCase())" class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" onclick="window.location.href='/m/ao/{{ $owner->id }}'">
                             <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
                                 <div class="font-semibold">{{ $owner->displayName }}</div>
                                 <div class="text-gray-500 text-xs md:text-sm">{{ $owner->email }}</div>

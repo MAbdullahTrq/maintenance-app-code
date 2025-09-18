@@ -59,6 +59,9 @@
 </head>
 <body>
     <div class="header">
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 10px;">
+            <span style="color: #1d4ed8;">Maintain</span><span style="color: #000000;">Xtra</span>
+        </div>
         <h1>🎉 You're Invited!</h1>
         <p>Join the {{ config('app.name') }} team</p>
     </div>

@@ -87,6 +87,41 @@
         </div>
     </div>
 
+    <!-- Team Member Assignments Section -->
+    @if(Auth::user()->isPropertyManager())
+    <div class="bg-white border rounded p-3 md:p-4 lg:p-6 mb-4 md:mb-6">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-lg md:text-xl font-bold text-purple-800">Team Member Assignments</h3>
+            <a href="{{ route('mobile.properties.assign', $property->id) }}" class="bg-purple-600 text-white px-3 py-1 rounded text-sm hover:bg-purple-700 transition">
+                <i class="fas fa-users mr-1"></i>Manage
+            </a>
+        </div>
+        
+        @if($property->assignedTeamMembers->count() > 0)
+            <div class="space-y-2">
+                @foreach($property->assignedTeamMembers as $assignment)
+                    <div class="flex items-center justify-between p-2 bg-purple-50 border border-purple-200 rounded">
+                        <div class="flex items-center">
+                            <i class="fas fa-user-check mr-2 text-purple-600"></i>
+                            <div>
+                                <div class="font-medium text-gray-900">{{ $assignment->user->name }}</div>
+                                <div class="text-sm text-gray-600">{{ $assignment->user->email }}</div>
+                            </div>
+                        </div>
+                        <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">Editor</span>
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <div class="text-center py-4 text-gray-500">
+                <i class="fas fa-users text-2xl mb-2"></i>
+                <p>No team members assigned to this property</p>
+                <p class="text-sm">Team members assigned here will receive email updates for requests related to this property</p>
+            </div>
+        @endif
+    </div>
+    @endif
+
     <div>
         <h3 class="text-center text-lg md:text-xl lg:text-2xl font-bold mb-2 md:mb-4">Maintenance requests</h3>
         <div class="overflow-x-auto w-full">

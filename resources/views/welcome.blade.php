@@ -277,6 +277,109 @@
         </div>
     </div>
 
+    <!-- Pricing section -->
+    <div class="py-16 bg-gradient-to-br from-gray-50 to-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h2 class="text-4xl font-semibold text-blue-600 tracking-wide uppercase font-weight-bold">Pricing</h2>
+                <p class="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight">
+                    Simple, transparent pricing
+                </p>
+                <p class="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
+                    Choose the plan that fits your property management needs. All plans include our core features with no hidden fees.
+                </p>
+            </div>
+
+            <div class="mt-16">
+                <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+                    @foreach($plans as $index => $plan)
+                        <div class="bg-white rounded-xl p-8 border {{ $plan->name === 'Standard' ? 'border-2 border-blue-600 shadow-xl relative' : 'border-gray-200 shadow-lg hover:shadow-xl transition-shadow duration-300' }} flex flex-col h-full">
+                            @if($plan->name === 'Standard')
+                                <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                                    <span class="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-semibold">Most Popular</span>
+                                </div>
+                            @endif
+                            <div class="text-center">
+                                <h3 class="text-2xl font-bold text-gray-900">{{ $plan->name }}</h3>
+                                <p class="mt-2 text-gray-600">{{ $plan->description }}</p>
+                                <div class="mt-6">
+                                    <span class="text-4xl font-bold text-blue-600">{{ $plan->formatted_price }}</span>
+                                    <span class="text-gray-600">/month</span>
+                                </div>
+                            </div>
+                            <ul class="mt-8 space-y-4 flex-grow">
+                                <li class="flex items-center">
+                                    <i class="fas fa-gift text-green-500 mr-3"></i>
+                                    <span class="text-gray-700 font-semibold">Free one month trial</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-3"></i>
+                                    <span class="text-gray-700">{{ $plan->property_limit }} Properties</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-3"></i>
+                                    <span class="text-gray-700">{{ $plan->technician_limit }} Technicians</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-3"></i>
+                                    <span class="text-gray-700">Unlimited Maintenance Requests</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-3"></i>
+                                    <span class="text-gray-700">QR Code Generation</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-3"></i>
+                                    <span class="text-gray-700">Email Notifications</span>
+                                </li>
+                                @if($plan->name === 'Premium')
+                                    <li class="flex items-center">
+                                        <i class="fas fa-check text-green-500 mr-3"></i>
+                                        <span class="text-gray-700">Advanced Reporting & Analytics</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-check text-green-500 mr-3"></i>
+                                        <span class="text-gray-700">Priority Support</span>
+                                    </li>
+                                @endif
+                            </ul>
+                            <div class="mt-8">
+                                <a href="{{ route('register') }}" class="block w-full {{ $plan->name === 'Standard' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-900 hover:bg-gray-800' }} text-white text-center py-3 px-6 rounded-lg font-semibold transition-colors">
+                                    Get Started
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <!-- Additional pricing info -->
+                <div class="mt-16 text-center">
+                    <div class="bg-blue-50 rounded-xl p-8 border border-blue-200 max-w-7xl mx-auto">
+                        <h3 class="text-2xl font-bold text-blue-900 mb-4">All Plans Include</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div class="flex items-center justify-center">
+                                <i class="fas fa-shield-alt text-blue-600 mr-2"></i>
+                                <span class="text-blue-900 font-medium">30-day free trial</span>
+                            </div>
+                            <div class="flex items-center justify-center">
+                                <i class="fas fa-credit-card text-blue-600 mr-2"></i>
+                                <span class="text-blue-900 font-medium">No setup fees</span>
+                            </div>
+                            <div class="flex items-center justify-center">
+                                <i class="fas fa-mobile-alt text-blue-600 mr-2"></i>
+                                <span class="text-blue-900 font-medium">Mobile responsive</span>
+                            </div>
+                            <div class="flex items-center justify-center">
+                                <i class="fas fa-headset text-blue-600 mr-2"></i>
+                                <span class="text-blue-900 font-medium">24/7 support</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- CTA section -->
     <div class="py-16 bg-gray-900 relative">
             <!-- Background gradient with overlay -->

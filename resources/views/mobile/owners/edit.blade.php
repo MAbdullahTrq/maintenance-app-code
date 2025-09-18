@@ -51,6 +51,22 @@
                     <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
                 @enderror
             </div>
+            <div class="mb-3">
+                <label class="block font-semibold mb-1">Managed by</label>
+                <select name="managed_by" class="w-full border rounded p-2">
+                    <option value="">Select a team member (optional)</option>
+                    @if(isset($teamMembers))
+                        @foreach($teamMembers as $member)
+                            <option value="{{ $member->id }}" {{ old('managed_by', $owner->managed_by) == $member->id ? 'selected' : '' }}>
+                                {{ $member->name }} ({{ $member->role->name }})
+                            </option>
+                        @endforeach
+                    @endif
+                </select>
+                @error('managed_by')
+                    <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                @enderror
+            </div>
             <button type="submit" id="submit-btn" class="w-full bg-blue-700 text-white py-2 rounded">Update Owner</button>
         </form>
     </div>

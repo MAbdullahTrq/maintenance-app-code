@@ -15,6 +15,7 @@ class ChecklistItem extends Model
         'checklist_id',
         'type',
         'description',
+        'task_description',
         'is_required',
         'attachment_path',
         'order',

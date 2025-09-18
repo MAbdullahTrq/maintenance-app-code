@@ -30,6 +30,10 @@ class MaintenanceRequestNotification extends Mailable
     {
         return new Envelope(
             subject: $this->subject_line,
+            from: new \Illuminate\Mail\Mailables\Address(
+                config('mail.from.address', 'noreply@maintainxtra.com'),
+                config('mail.from.name', 'MaintainXtra Support')
+            ),
         );
     }
 
@@ -51,7 +55,10 @@ class MaintenanceRequestNotification extends Mailable
      */
     public function build()
     {
-        return $this->withSymfonyMessage(function ($message) {
+        return $this->from(
+            config('mail.from.address', 'noreply@maintainxtra.com'),
+            config('mail.from.name', 'MaintainXtra Support')
+        )->withSymfonyMessage(function ($message) {
             $this->addSmtp2goTracking($message);
             
             // Add custom headers for maintenance request

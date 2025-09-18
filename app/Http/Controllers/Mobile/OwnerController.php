@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Mobile;
 
 use App\Http\Controllers\Controller;
 use App\Models\Owner;
+use App\Models\OwnerAssignment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -55,7 +56,14 @@ class OwnerController extends Controller
         $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $workspaceOwner->managedProperties()->pluck('id'))->count();
         $teamMembersCount = $workspaceOwner->teamMembers()->count();
         
-        return view('mobile.owners.create', compact('ownersCount', 'propertiesCount', 'techniciansCount', 'requestsCount', 'teamMembersCount'));
+        // Get team members for managed_by assignment (only editors)
+        $teamMembers = $workspaceOwner->teamMembers()
+            ->whereHas('role', function ($query) {
+                $query->where('slug', 'editor');
+            })
+            ->get();
+        
+        return view('mobile.owners.create', compact('ownersCount', 'propertiesCount', 'techniciansCount', 'requestsCount', 'teamMembersCount', 'teamMembers'));
     }
 
     /**
@@ -70,6 +78,7 @@ class OwnerController extends Controller
             'address' => 'nullable|string',
             'company' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
+            'managed_by' => 'nullable|exists:users,id',
         ]);
 
         $user = Auth::user();
@@ -87,7 +96,7 @@ class OwnerController extends Controller
      */
     public function show($id)
     {
-        $owner = Owner::findOrFail($id);
+        $owner = Owner::with('managedBy', 'assignedTeamMembers.user')->findOrFail($id);
         $this->authorize('view', $owner);
         
         $properties = $owner->properties()->latest()->paginate(10);
@@ -116,7 +125,17 @@ class OwnerController extends Controller
         $owner = Owner::findOrFail($id);
         $this->authorize('update', $owner);
         
-        return view('mobile.owners.edit', compact('owner'));
+        $user = Auth::user();
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
+        // Get team members for managed_by assignment (only editors)
+        $teamMembers = $workspaceOwner->teamMembers()
+            ->whereHas('role', function ($query) {
+                $query->where('slug', 'editor');
+            })
+            ->get();
+        
+        return view('mobile.owners.edit', compact('owner', 'teamMembers'));
     }
 
     /**
@@ -134,6 +153,7 @@ class OwnerController extends Controller
             'address' => 'nullable|string',
             'company' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
+            'managed_by' => 'nullable|exists:users,id',
         ]);
 
         $owner->update($request->all());
@@ -164,6 +184,70 @@ class OwnerController extends Controller
         $owner->delete();
         
         return redirect('/m/ao')->with('success', 'Owner deleted successfully.');
+    }
+
+    /**
+     * Show the form for assigning team members to an owner
+     */
+    public function assign($id)
+    {
+        $owner = Owner::findOrFail($id);
+        $this->authorize('update', $owner);
+        
+        $user = Auth::user();
+        $workspaceOwner = $user->isTeamMember() ? $user->getWorkspaceOwner() : $user;
+        
+        // Get team members for assignment (only editors)
+        $teamMembers = $workspaceOwner->teamMembers()
+            ->whereHas('role', function ($query) {
+                $query->where('slug', 'editor');
+            })
+            ->get();
+        
+        // Get stats for mobile layout
+        $propertiesCount = $workspaceOwner->managedProperties()->count();
+        $ownersCount = $workspaceOwner->managedOwners()->count();
+        $techniciansCount = \App\Models\User::whereHas('role', function ($q) { 
+            $q->where('slug', 'technician'); 
+        })->where('invited_by', $workspaceOwner->id)->count();
+        $requestsCount = \App\Models\MaintenanceRequest::whereIn('property_id', $workspaceOwner->managedProperties()->pluck('id'))->count();
+        $teamMembersCount = \App\Models\User::where('invited_by', $workspaceOwner->id)
+            ->whereHas('role', function ($query) {
+                $query->whereIn('slug', ['editor', 'viewer']);
+            })
+            ->count();
+        
+        return view('mobile.owners.assign', compact('owner', 'teamMembers', 'propertiesCount', 'ownersCount', 'techniciansCount', 'requestsCount', 'teamMembersCount'));
+    }
+
+    /**
+     * Update team member assignment for an owner
+     */
+    public function updateAssignment(Request $request, $id)
+    {
+        $owner = Owner::findOrFail($id);
+        $this->authorize('update', $owner);
+        
+        $request->validate([
+            'managed_by' => 'nullable|array',
+            'managed_by.*' => 'exists:users,id',
+        ]);
+        
+        // Remove existing assignments
+        $owner->assignedTeamMembers()->delete();
+        
+        // Add new assignments
+        if ($request->has('managed_by')) {
+            foreach ($request->managed_by as $userId) {
+                OwnerAssignment::create([
+                    'owner_id' => $owner->id,
+                    'user_id' => $userId,
+                ]);
+            }
+        }
+        
+        return redirect()->route('mobile.owners.show', $owner->id)
+            ->with('success', 'Owner assignment updated successfully.');
     }
 
     /**

@@ -51,8 +51,13 @@
             const filtered = requests.filter(req => {
                 const propertyName = req.property?.name?.toLowerCase() || '';
                 const propertyAddress = req.property?.address?.toLowerCase() || '';
+                const requestTitle = req.title?.toLowerCase() || '';
+                const requestDescription = req.description?.toLowerCase() || '';
                 const searchTerm = this.search.toLowerCase();
-                return propertyName.includes(searchTerm) || propertyAddress.includes(searchTerm);
+                return propertyName.includes(searchTerm) || 
+                       propertyAddress.includes(searchTerm) ||
+                       requestTitle.includes(searchTerm) ||
+                       requestDescription.includes(searchTerm);
             });
             
             return this.getSortedRequests(filtered);
@@ -93,6 +98,7 @@
             <template x-if="activeTab === 'assigned'">
                 <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-hidden table-fixed">
                     <colgroup>
+                        <col class="w-1/5">
                         <col class="w-2/5">
                         <col class="w-1/6">
                         <col class="w-1/6">
@@ -101,6 +107,7 @@
                     <thead>
                         <tr class="bg-gray-100 border-b border-gray-400">
                             <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Property</th>
+                            <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Request</th>
                             <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400">
                                 <button @click="toggleSort('priority')" class="flex items-center justify-center hover:text-blue-600 w-full">
                                     Priority
@@ -123,12 +130,13 @@
                                     <div class="font-semibold" x-text="req.property?.name || ''"></div>
                                     <div class="text-xs md:text-sm text-blue-700 underline">
                                         <template x-if="req.property?.address">
-                                            <div>
-                                                <span class="md:hidden" x-text="(req.property.address.length > 15) ? req.property.address.substring(0, 15) + '...' : req.property.address"></span>
-                                                <span class="hidden md:block" x-text="(req.property.address.length > 30) ? req.property.address.substring(0, 30) + '...' : req.property.address"></span>
-                                            </div>
+                                            <div x-text="req.property.address"></div>
                                         </template>
                                     </div>
+                                </td>
+                                <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
+                                    <div class="font-bold text-black" style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;" x-text="req.title || ''"></div>
+                                    <div class="text-gray-700 text-xs md:text-sm" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" x-text="req.description || ''"></div>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center" 
                                     :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-200' : (req.priority?.toLowerCase() === 'low' ? 'bg-blue-200' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-200' : ''))"
@@ -150,6 +158,7 @@
             <template x-if="activeTab === 'accepted'">
                 <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-hidden table-fixed">
                     <colgroup>
+                        <col class="w-1/5">
                         <col class="w-2/5">
                         <col class="w-1/6">
                         <col class="w-1/6">
@@ -158,6 +167,7 @@
                     <thead>
                         <tr class="bg-gray-100 border-b border-gray-400">
                             <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Property</th>
+                            <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Request</th>
                             <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400">
                                 <button @click="toggleSort('priority')" class="flex items-center justify-center hover:text-blue-600 w-full">
                                     Priority
@@ -180,12 +190,13 @@
                                     <div class="font-semibold" x-text="req.property?.name || ''"></div>
                                     <div class="text-xs md:text-sm text-blue-700 underline">
                                         <template x-if="req.property?.address">
-                                            <div>
-                                                <span class="md:hidden" x-text="(req.property.address.length > 15) ? req.property.address.substring(0, 15) + '...' : req.property.address"></span>
-                                                <span class="hidden md:block" x-text="(req.property.address.length > 30) ? req.property.address.substring(0, 30) + '...' : req.property.address"></span>
-                                            </div>
+                                            <div x-text="req.property.address"></div>
                                         </template>
                                     </div>
+                                </td>
+                                <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
+                                    <div class="font-bold text-black" style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;" x-text="req.title || ''"></div>
+                                    <div class="text-gray-700 text-xs md:text-sm" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" x-text="req.description || ''"></div>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center" 
                                     :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-200' : (req.priority?.toLowerCase() === 'low' ? 'bg-blue-200' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-200' : ''))"
@@ -207,6 +218,7 @@
             <template x-if="activeTab === 'completed'">
                 <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-hidden table-fixed">
                     <colgroup>
+                        <col class="w-1/5">
                         <col class="w-2/5">
                         <col class="w-1/6">
                         <col class="w-1/6">
@@ -215,6 +227,7 @@
                     <thead>
                         <tr class="bg-gray-100 border-b border-gray-400">
                             <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Property</th>
+                            <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Request</th>
                             <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400">
                                 <button @click="toggleSort('priority')" class="flex items-center justify-center hover:text-blue-600 w-full">
                                     Priority
@@ -237,12 +250,13 @@
                                     <div class="font-semibold" x-text="req.property?.name || ''"></div>
                                     <div class="text-xs md:text-sm text-blue-700 underline">
                                         <template x-if="req.property?.address">
-                                            <div>
-                                                <span class="md:hidden" x-text="(req.property.address.length > 15) ? req.property.address.substring(0, 15) + '...' : req.property.address"></span>
-                                                <span class="hidden md:block" x-text="(req.property.address.length > 30) ? req.property.address.substring(0, 30) + '...' : req.property.address"></span>
-                                            </div>
+                                            <div x-text="req.property.address"></div>
                                         </template>
                                     </div>
+                                </td>
+                                <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
+                                    <div class="font-bold text-black" style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;" x-text="req.title || ''"></div>
+                                    <div class="text-gray-700 text-xs md:text-sm" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" x-text="req.description || ''"></div>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center" 
                                     :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-200' : (req.priority?.toLowerCase() === 'low' ? 'bg-blue-200' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-200' : ''))"
@@ -264,6 +278,7 @@
             <template x-if="activeTab === 'requests'">
                 <table class="min-w-full text-xs md:text-sm lg:text-base border border-gray-400 border-collapse rounded overflow-hidden table-fixed">
                     <colgroup>
+                        <col class="w-1/5">
                         <col class="w-2/5">
                         <col class="w-1/6">
                         <col class="w-1/6">
@@ -272,6 +287,7 @@
                     <thead>
                         <tr class="bg-gray-100 border-b border-gray-400">
                             <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Property</th>
+                            <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400 text-left">Request</th>
                             <th class="p-2 md:p-3 lg:p-4 border-r border-gray-400">
                                 <button @click="toggleSort('priority')" class="flex items-center justify-center hover:text-blue-600 w-full">
                                     Priority
@@ -294,12 +310,13 @@
                                     <div class="font-semibold" x-text="req.property?.name || ''"></div>
                                     <div class="text-xs md:text-sm text-blue-700 underline">
                                         <template x-if="req.property?.address">
-                                            <div>
-                                                <span class="md:hidden" x-text="(req.property.address.length > 15) ? req.property.address.substring(0, 15) + '...' : req.property.address"></span>
-                                                <span class="hidden md:block" x-text="(req.property.address.length > 30) ? req.property.address.substring(0, 30) + '...' : req.property.address"></span>
-                                            </div>
+                                            <div x-text="req.property.address"></div>
                                         </template>
                                     </div>
+                                </td>
+                                <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
+                                    <div class="font-bold text-black" style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;" x-text="req.title || ''"></div>
+                                    <div class="text-gray-700 text-xs md:text-sm" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" x-text="req.description || ''"></div>
                                 </td>
                                 <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center" 
                                     :class="req.priority?.toLowerCase() === 'high' ? 'bg-red-200' : (req.priority?.toLowerCase() === 'low' ? 'bg-blue-200' : (req.priority?.toLowerCase() === 'medium' ? 'bg-yellow-200' : ''))"

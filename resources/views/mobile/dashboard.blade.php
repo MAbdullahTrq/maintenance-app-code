@@ -64,15 +64,14 @@
                     @foreach($pendingRequests as $req)
                     <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" onclick="window.location.href='{{ route('mobile.request.show', $req->id) }}'">
                         <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
-                            <span class="font-semibold">{{ Str::limit($req->property->name, 15) }}</span><br>
+                            <span class="font-semibold">{{ $req->property->name }}</span><br>
                             <div class="text-gray-500 text-xs md:text-sm">
-                                <div class="md:hidden">{{ Str::limit($req->property->address, 15) }}</div>
-                                <div class="hidden md:block">{{ Str::limit($req->property->address, 30) }}</div>
+                                {{ $req->property->address }}
                             </div>
                         </td>
                         <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
-                            <span class="font-bold text-black">{{ Str::limit($req->title, 25) }}</span><br>
-                            <span class="text-gray-700 text-xs md:text-sm">{{ Str::limit($req->description, 25) }}</span>
+                            <span class="font-bold text-black" style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;">{{ $req->title }}</span><br>
+                            <span class="text-gray-700 text-xs md:text-sm" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $req->description }}</span>
                         </td>
                         <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center {{ $req->priority == 'high' ? 'bg-red-200' : ($req->priority == 'low' ? 'bg-blue-200' : ($req->priority == 'medium' ? 'bg-yellow-200' : '')) }}" style="{{ $req->priority == 'high' ? 'background-color: #fecaca;' : ($req->priority == 'low' ? 'background-color: #bfdbfe;' : ($req->priority == 'medium' ? 'background-color: #fde68a;' : '')) }}">
                             {{ ucfirst($req->priority) }}

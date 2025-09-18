@@ -7,8 +7,75 @@
 @endsection
 
 @section('content')
-<div class="flex justify-center">
-    <div class="bg-white rounded-xl shadow p-2 md:p-3 lg:p-4 w-full max-w-6xl mx-auto">
+<style>
+/* Ensure dropdown positioning works correctly */
+.dropdown-menu {
+    transition: all 0.2s ease;
+}
+
+.dropdown-menu.top-full {
+    top: 100% !important;
+    bottom: auto !important;
+}
+
+.dropdown-menu.bottom-full {
+    bottom: 100% !important;
+    top: auto !important;
+}
+
+/* Ensure proper positioning */
+.dropdown-menu.mt-2 {
+    margin-top: 0.5rem !important;
+}
+
+.dropdown-menu.mb-2 {
+    margin-bottom: 0.5rem !important;
+}
+</style>
+<div class="flex justify-center" x-data="{
+    openDropdownId: null,
+    positionDropdown(event, dropdownId) {
+        const button = event.target.closest('button');
+        const rect = button.getBoundingClientRect();
+        const dropdown = button.nextElementSibling;
+        const viewportHeight = window.innerHeight;
+        const dropdownHeight = 120; // Increased dropdown height estimate
+        const spaceBelow = viewportHeight - rect.bottom;
+        const spaceAbove = rect.top;
+        
+        // Remove all positioning classes first
+        dropdown.classList.remove('mt-2', 'mb-2', 'bottom-full', 'top-full');
+        
+        // Add a small delay to ensure the dropdown is rendered
+        setTimeout(() => {
+            // Check if button is in the bottom 30% of viewport - if so, always position above
+            const isInBottomThird = rect.bottom > (viewportHeight * 0.7);
+            
+            // Be more conservative - if space below is less than 150px OR in bottom third, position above
+            if (spaceBelow >= 150 && !isInBottomThird) {
+                // Position below (default)
+                dropdown.classList.add('mt-2', 'top-full');
+                console.log('Positioning dropdown below, space below:', spaceBelow, 'isInBottomThird:', isInBottomThird);
+            } else {
+                // Position above
+                dropdown.classList.add('mb-2', 'bottom-full');
+                console.log('Positioning dropdown above, space below:', spaceBelow, 'space above:', spaceAbove, 'isInBottomThird:', isInBottomThird);
+            }
+        }, 10);
+    },
+    toggleDropdown(dropdownId, event) {
+        if (this.openDropdownId === dropdownId) {
+            this.openDropdownId = null;
+        } else {
+            this.openDropdownId = dropdownId;
+            this.positionDropdown(event, dropdownId);
+        }
+    },
+    closeAllDropdowns() {
+        this.openDropdownId = null;
+    }
+}" @click="closeAllDropdowns()">
+    <div class="bg-white rounded-xl shadow p-2 md:p-3 lg:p-4 w-full max-w-6xl mx-auto" @click.stop>
         <div class="flex justify-between items-center mb-4">
             <div class="font-bold text-lg md:text-xl lg:text-2xl">All Requests</div>
             <div class="flex items-center gap-2">
@@ -98,15 +165,14 @@
                     @foreach($allRequests as $req)
                     <tr class="border-b border-gray-400 hover:bg-gray-50 cursor-pointer" onclick="if (!event.target.closest('.actions-cell')) window.location.href='{{ route('mobile.request.show', $req->id) }}'">
                         <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
-                            <span class="font-semibold">{{ Str::limit($req->property->name, 15) }}</span><br>
+                            <span class="font-semibold">{{ $req->property->name }}</span><br>
                             <div class="text-gray-500 text-xs md:text-sm">
-                                <div class="md:hidden">{{ Str::limit($req->property->address, 15) }}</div>
-                                <div class="hidden md:block">{{ Str::limit($req->property->address, 30) }}</div>
+                                {{ $req->property->address }}
                             </div>
                         </td>
                         <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400">
-                            <span class="font-bold text-black">{{ Str::limit($req->title, 25) }}</span><br>
-                            <span class="text-gray-700 text-xs md:text-sm">{{ Str::limit($req->description, 25) }}</span>
+                            <span class="font-bold text-black" style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;">{{ $req->title }}</span><br>
+                            <span class="text-gray-700 text-xs md:text-sm" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $req->description }}</span>
                         </td>
                         <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center {{ $req->priority == 'high' ? 'bg-red-200' : ($req->priority == 'low' ? 'bg-blue-200' : ($req->priority == 'medium' ? 'bg-yellow-200' : '')) }}" style="{{ $req->priority == 'high' ? 'background-color: #fecaca;' : ($req->priority == 'low' ? 'background-color: #bfdbfe;' : ($req->priority == 'medium' ? 'background-color: #fde68a;' : '')) }}">
                             {{ ucfirst($req->priority) }}
@@ -117,11 +183,11 @@
                         </td>
                         <td class="p-2 md:p-3 lg:p-4 align-top border-r border-gray-400 text-center">{{ ucfirst($req->status) }}</td>
                         <td class="p-2 md:p-3 lg:p-4 align-top text-center actions-cell">
-                            <div class="relative" x-data="{ open: false }">
-                                <button @click="open = !open; event.stopPropagation();" class="text-gray-600 hover:text-gray-800 text-lg md:text-xl">
+                            <div class="relative">
+                                <button @click="toggleDropdown('dropdown-{{ $req->id }}', $event); event.stopPropagation();" class="text-gray-600 hover:text-gray-800 text-lg md:text-xl">
                                     <i class="fas fa-ellipsis-v"></i>
                                 </button>
-                                <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-50 border">
+                                <div x-show="openDropdownId === 'dropdown-{{ $req->id }}'" @click.stop class="dropdown-menu absolute right-0 w-32 bg-white rounded-md shadow-lg z-50 border">
                                     <a href="{{ route('mobile.request.show', $req->id) }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="event.stopPropagation();">
                                         <i class="fas fa-eye w-4 mr-2"></i>View
                                     </a>

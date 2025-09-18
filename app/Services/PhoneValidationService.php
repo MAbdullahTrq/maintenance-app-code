@@ -43,7 +43,7 @@ class PhoneValidationService
      */
     public function getCountries(): array
     {
-        return [
+        $countries = [
             'US' => ['name' => 'United States', 'code' => '+1'],
             'CA' => ['name' => 'Canada', 'code' => '+1'],
             'GB' => ['name' => 'United Kingdom', 'code' => '+44'],
@@ -110,6 +110,13 @@ class PhoneValidationService
             'LK' => ['name' => 'Sri Lanka', 'code' => '+94'],
             'NZ' => ['name' => 'New Zealand', 'code' => '+64'],
         ];
+
+        // Sort countries alphabetically by name
+        uasort($countries, function($a, $b) {
+            return strcmp($a['name'], $b['name']);
+        });
+
+        return $countries;
     }
 
     /**

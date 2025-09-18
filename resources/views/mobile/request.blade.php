@@ -7,6 +7,55 @@
 @endsection
 
 @section('content')
+<style>
+/* Touch-friendly checkbox styling for gloved users */
+.mobile-checklist-item-checkbox {
+    min-height: 32px !important;
+    min-width: 32px !important;
+    transform: scale(1.2);
+    margin: 4px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+}
+
+.mobile-checklist-item-checkbox:focus {
+    ring-width: 4px !important;
+    ring-color: #16a34a !important;
+    outline: 2px solid #16a34a !important;
+    outline-offset: 2px !important;
+}
+
+/* Green checkmarks */
+.mobile-checklist-item-checkbox:checked {
+    background-color: #16a34a !important;
+    border-color: #16a34a !important;
+}
+
+.mobile-checklist-item-checkbox:checked::after {
+    content: '✓' !important;
+    color: white !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Increase touch target area */
+.mobile-checklist-item-checkbox::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    z-index: -1;
+}
+</style>
 <div class="flex justify-center">
     <div class="bg-white rounded-xl shadow p-3 md:p-4 lg:p-6 w-full max-w-6xl mx-auto">
         <div class="mb-2 flex items-center">
@@ -62,12 +111,12 @@
                                 $response = $request->checklistResponses()->where('checklist_item_id', $item->id)->first();
                                 $isCompleted = $response ? $response->is_completed : false;
                             @endphp
-                            <div class="flex items-start space-x-2">
+                            <div class="flex items-center space-x-2">
                                 @if($item->type === 'checkbox')
-                                    <div class="flex-shrink-0 mt-1">
+                                    <div class="flex-shrink-0">
                                         <input type="checkbox" 
                                                id="mobile_item_{{ $item->id }}" 
-                                               class="mobile-checklist-item-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                               class="mobile-checklist-item-checkbox h-8 w-8 text-green-600 focus:ring-green-500 border-gray-300 rounded p-1"
                                                data-item-id="{{ $item->id }}"
                                                data-request-id="{{ $request->id }}"
                                                {{ $isCompleted ? 'checked' : '' }}
@@ -85,12 +134,11 @@
                                             @endif
                                         </label>
                                         @if($item->attachment_path)
-                                            <div class="mt-1">
-                                                <a href="{{ $item->attachment_url }}" 
-                                                   target="_blank"
-                                                   class="text-xs text-blue-600 hover:text-blue-800">
+                                            <div class="mt-1 flex justify-end">
+                                                <button onclick="window.open('{{ $item->attachment_url }}', '_blank')" 
+                                                        class="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors">
                                                     <i class="fas fa-paperclip mr-1"></i>View Attachment
-                                                </a>
+                                                </button>
                                             </div>
                                         @endif
                                     </div>
@@ -104,12 +152,11 @@
                                             @endif
                                         </div>
                                         @if($item->attachment_path)
-                                            <div class="mt-1">
-                                                <a href="{{ $item->attachment_url }}" 
-                                                   target="_blank"
-                                                   class="text-xs text-blue-600 hover:text-blue-800">
+                                            <div class="mt-1 flex justify-end">
+                                                <button onclick="window.open('{{ $item->attachment_url }}', '_blank')" 
+                                                        class="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors">
                                                     <i class="fas fa-paperclip mr-1"></i>View Attachment
-                                                </a>
+                                                </button>
                                             </div>
                                         @endif
                                     </div>
@@ -273,18 +320,32 @@
                     <button type="submit" class="w-full bg-green-500 text-white py-2 rounded">Start</button>
                 </form>
             @elseif($request->status === 'started' && auth()->user() && auth()->user()->isTechnician() && $request->assigned_to == auth()->id())
+                @php
+                    $canFinish = !$request->checklist || $request->areRequiredChecklistItemsCompleted();
+                @endphp
                 <form method="POST" action="{{ route('mobile.request.finish', $request->id) }}" class="mb-2">
                     @csrf
-                    <button type="submit" class="w-full bg-green-500 text-white py-2 rounded">Finish</button>
+                    <button type="submit" 
+                            class="w-full py-2 rounded {{ $canFinish ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed' }}"
+                            {{ $canFinish ? '' : 'disabled' }}>
+                        {{ $canFinish ? 'Finish' : 'Finish (Complete required checklist items first)' }}
+                    </button>
                 </form>
 
             @endif
             {{-- Always show Mark as Complete if eligible --}}
             @if(auth()->user() && auth()->user()->canAssignTasks() && in_array($request->status, ['pending', 'assigned', 'started', 'acknowledged', 'accepted']))
-            <form method="POST" action="{{ route('mobile.request.complete', $request->id) }}" class="mb-2">
-                @csrf
-                <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded">Mark as Complete</button>
-            </form>
+                @php
+                    $canComplete = !$request->checklist || $request->areRequiredChecklistItemsCompleted();
+                @endphp
+                <form method="POST" action="{{ route('mobile.request.complete', $request->id) }}" class="mb-2">
+                    @csrf
+                    <button type="submit" 
+                            class="w-full py-2 rounded {{ $canComplete ? 'bg-blue-700 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed' }}"
+                            {{ $canComplete ? '' : 'disabled' }}>
+                        {{ $canComplete ? 'Mark as Complete' : 'Mark as Complete (Complete required checklist items first)' }}
+                    </button>
+                </form>
             @endif
             
             {{-- Reopen button for completed/closed requests --}}
@@ -423,19 +484,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Send AJAX request to update the response
+            const formData = new FormData();
+            formData.append('is_completed', isChecked ? '1' : '0');
+            formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+            
             fetch(`/maintenance/${requestId}/checklist/${itemId}/response`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
                 },
-                body: JSON.stringify({
-                    is_completed: isChecked
-                })
+                body: formData
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    // Try to get error message from response
+                    return response.text().then(text => {
+                        throw new Error(`HTTP ${response.status}: ${text}`);
+                    });
                 }
                 return response.json();
             })

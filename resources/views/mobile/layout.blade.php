@@ -17,7 +17,7 @@
     
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#2563eb">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="MaintainXtra">
     
@@ -83,6 +83,7 @@
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit&t={{ time() }}" async defer></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
+    <div class="flex flex-col min-h-screen">
     <header class="bg-white shadow p-4 md:p-6 lg:p-8 flex items-center justify-between">
         <a href="@auth
             @if(Auth::user() && method_exists(Auth::user(), 'isPropertyManager') && Auth::user()->isPropertyManager())
@@ -158,11 +159,11 @@
                     <a href="/m/at" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
                         Technicians
                     </a>
-                    <a href="/m/cl" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
-                        Checklists
-                    </a>
                     <a href="{{ route('mobile.manager.all-requests') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
                         Requests
+                    </a>
+                    <a href="/m/cl" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
+                        Checklists
                     </a>
                     
                     <!-- Team Management Section -->
@@ -183,11 +184,11 @@
                     <a href="/m/at" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
                         Technicians
                     </a>
-                    <a href="/m/cl" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
-                        Checklists
-                    </a>
                     <a href="{{ route('mobile.manager.all-requests') }}" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
                         Requests
+                    </a>
+                    <a href="/m/cl" class="flex items-center px-4 py-2 text-sm md:text-base text-gray-700 hover:bg-gray-100">
+                        Checklists
                     </a>
                 @endif
                 <div class="border-t border-gray-200 my-1"></div>
@@ -354,9 +355,26 @@
         </div>
     @endif
     
-    <main class="p-2">
+    <main class="flex-1 p-2">
         @yield('content')
     </main>
+    
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+        <div class="px-4 py-4">
+            <div class="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
+                <div class="text-xs text-gray-500 text-center sm:text-left">
+                    &copy; {{ date('Y') }} MaintainXtra. All rights reserved.
+                </div>
+                <div class="flex space-x-4">
+                    <a href="{{ route('terms') }}" class="text-xs text-gray-500 hover:text-gray-700 transition-colors">
+                        Terms & Conditions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    </div>
     
     @stack('scripts')
 </body>

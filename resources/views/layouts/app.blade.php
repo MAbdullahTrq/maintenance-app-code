@@ -17,7 +17,7 @@
     
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#2563eb">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="MaintainXtra">
     
@@ -154,14 +154,21 @@
         </div>
     @endif
     
-    <main class="flex-grow">
+    <main class="flex-1">
         @yield('content')
     </main>
     
-    <footer class="bg-white shadow-inner py-6 mt-8">
+    <footer class="bg-white border-t border-gray-200 mt-auto">
         <div class="container mx-auto px-4">
-            <div class="text-center text-gray-500 text-sm">
-                &copy; {{ date('Y') }} MaintainXtra. All rights reserved.
+            <div class="flex justify-between items-center py-4">
+                <div class="text-sm text-gray-500">
+                    &copy; {{ date('Y') }} MaintainXtra. All rights reserved.
+                </div>
+                <div class="flex space-x-6">
+                    <a href="{{ route('terms') }}" class="text-sm text-gray-500 hover:text-gray-700 transition-colors">
+                        Terms & Conditions
+                    </a>
+                </div>
             </div>
         </div>
     </footer>

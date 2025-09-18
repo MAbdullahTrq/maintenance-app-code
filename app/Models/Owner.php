@@ -24,6 +24,7 @@ class Owner extends Model
         'company',
         'notes',
         'manager_id',
+        'managed_by',
         'qr_code',
         'unique_identifier',
     ];
@@ -49,6 +50,22 @@ class Owner extends Model
     public function manager(): BelongsTo
     {
         return $this->belongsTo(User::class, 'manager_id');
+    }
+
+    /**
+     * Get the team member assigned to manage this owner.
+     */
+    public function managedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'managed_by');
+    }
+
+    /**
+     * Get the team members assigned to this owner.
+     */
+    public function assignedTeamMembers(): HasMany
+    {
+        return $this->hasMany(OwnerAssignment::class);
     }
 
     /**
