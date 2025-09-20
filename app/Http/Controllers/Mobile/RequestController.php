@@ -73,8 +73,8 @@ class RequestController extends Controller
             'priority' => 'required|in:low,medium,high',
             'property_id' => 'required|exists:properties,id',
             'checklist_id' => 'nullable|exists:checklists,id',
-            'title' => $request->checklist_id ? 'nullable|string|max:255' : 'required|string|max:255',
-            'description' => $request->checklist_id ? 'nullable|string' : 'required|string',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
             'location' => 'nullable|string|max:255',
             'images.*' => 'nullable|image|max:10240', // Allow up to 10MB per image, will be resized
             'email_updates' => 'nullable|array',
@@ -91,19 +91,10 @@ class RequestController extends Controller
             abort(403, 'Unauthorized to create request for this property');
         }
 
-        // Determine title, description, and location based on checklist selection
-        if ($request->checklist_id) {
-            // Use checklist data for title and description, but location from form
-            $checklist = \App\Models\Checklist::find($request->checklist_id);
-            $title = $checklist->name;
-            $description = $checklist->generateFormattedDescription();
-            $location = $request->location;
-        } else {
-            // Use manual form data
-            $title = $request->title;
-            $description = $request->description;
-            $location = $request->location;
-        }
+        // Use user input for title and description (whether from checklist auto-fill or manual entry)
+        $title = $request->title;
+        $description = $request->description;
+        $location = $request->location;
 
         $maintenanceRequest = MaintenanceRequest::create([
             'title' => $title,

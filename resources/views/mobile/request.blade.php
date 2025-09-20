@@ -100,68 +100,92 @@
         <div class="mb-4">
             <div class="font-semibold">Request title</div>
             <div>{{ $request->title }}</div>
+            @if($request->location)
+                <div class="font-semibold mt-2">Location</div>
+                <div>{{ $request->location }}</div>
+            @endif
             <div class="font-semibold mt-2">Description</div>
+            <div class="text-gray-700 mt-2">{{ $request->description }}</div>
             @if($request->checklist && (auth()->user()->isTechnician() || auth()->user()->isPropertyManager() || auth()->user()->hasTeamMemberRole()))
                 <!-- Checklist Items as Interactive Checkboxes for Technicians, Managers, and Team Members -->
                 <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 mt-2">
-                    <div class="font-medium text-gray-900 text-sm mb-3">Checklist Items:</div>
+                    <div class="font-medium text-gray-900 text-base mb-2">Complete Checklist:</div>
                     <div class="space-y-2">
                         @foreach($request->checklist->items as $item)
                             @php
                                 $response = $request->checklistResponses()->where('checklist_item_id', $item->id)->first();
                                 $isCompleted = $response ? $response->is_completed : false;
                             @endphp
-                            <div class="flex items-center space-x-2">
-                                @if($item->type === 'checkbox')
-                                    <div class="flex-shrink-0">
-                                        <input type="checkbox" 
-                                               id="mobile_item_{{ $item->id }}" 
-                                               class="mobile-checklist-item-checkbox h-8 w-8 text-green-600 focus:ring-green-500 border-gray-300 rounded p-1"
-                                               data-item-id="{{ $item->id }}"
-                                               data-request-id="{{ $request->id }}"
-                                               {{ $isCompleted ? 'checked' : '' }}
-                                                                                                  @php
-                                                   $isDisabled = $request->status === 'completed' || 
-                                                                (auth()->user()->isTechnician() && $request->status !== 'started');
-                                               @endphp
-                                               {{ $isDisabled ? 'disabled' : '' }}>
-                                    </div>
-                                    <div class="flex-1">
-                                        <label for="mobile_item_{{ $item->id }}" class="text-sm font-medium text-gray-900 {{ $isCompleted ? 'line-through text-gray-500' : '' }}">
-                                            {{ $item->description }}
-                                            @if($item->is_required)
-                                                <span class="text-red-500 ml-1">*</span>
-                                            @endif
-                                        </label>
-                                        @if($item->attachment_path)
-                                            <div class="mt-1 flex justify-end">
-                                                <button onclick="window.open('{{ $item->attachment_url }}', '_blank')" 
-                                                        class="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors">
-                                                    <i class="fas fa-paperclip mr-1"></i>View Attachment
-                                                </button>
-                                            </div>
-                                        @endif
-                                    </div>
-                                @else
-                                    <!-- Text items - no checkbox, just display the text -->
-                                    <div class="flex-1">
-                                        <div class="text-sm font-medium text-gray-900">
-                                            {{ $item->description }}
-                                            @if($item->is_required)
-                                                <span class="text-red-500 ml-1">*</span>
-                                            @endif
+                            
+                            @if($item->type === 'header')
+                                <div class="text-xl font-bold text-gray-900 ml-2 mt-4">
+                                    {{ $item->description }}
+                                </div>
+                            @else
+                                <div class="flex {{ $item->task_description ? 'items-start' : 'items-center' }} space-x-3">
+                                    @if($item->type === 'checkbox')
+                                        <div class="flex-shrink-0 {{ $item->task_description ? 'mt-1' : 'flex items-center' }}">
+                                            <input type="checkbox" 
+                                                   id="mobile_item_{{ $item->id }}" 
+                                                   class="mobile-checklist-item-checkbox h-6 w-6 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                                                   data-item-id="{{ $item->id }}"
+                                                   data-request-id="{{ $request->id }}"
+                                                   {{ $isCompleted ? 'checked' : '' }}
+                                                                                                      @php
+                                                       $isDisabled = $request->status === 'completed' || 
+                                                                    (auth()->user()->isTechnician() && $request->status !== 'started');
+                                                   @endphp
+                                                   {{ $isDisabled ? 'disabled' : '' }}>
                                         </div>
-                                        @if($item->attachment_path)
-                                            <div class="mt-1 flex justify-end">
-                                                <button onclick="window.open('{{ $item->attachment_url }}', '_blank')" 
-                                                        class="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors">
-                                                    <i class="fas fa-paperclip mr-1"></i>View Attachment
-                                                </button>
+                                    @endif
+                                    <div class="flex-1 {{ $item->task_description ? '' : 'flex items-center' }}">
+                                        @if($item->type === 'checkbox')
+                                            <label for="mobile_item_{{ $item->id }}" class="text-base font-medium text-gray-900 {{ $isCompleted ? 'line-through text-gray-500' : '' }} {{ $item->task_description ? 'leading-6' : 'leading-6' }}">
+                                                {{ $item->description }}
+                                                @if($item->is_required)
+                                                    <span class="text-red-500 ml-1">*</span>
+                                                @endif
+                                            </label>
+                                        @else
+                                            <div class="text-base font-medium text-gray-900">
+                                                {{ $item->description }}
+                                                @if($item->is_required)
+                                                    <span class="text-red-500 ml-1">*</span>
+                                                @endif
+                                            </div>
+                                        @endif
+                                        @if($item->task_description)
+                                            <div class="text-sm text-gray-600 mt-1">
+                                                {{ $item->task_description }}
                                             </div>
                                         @endif
                                     </div>
-                                @endif
-                            </div>
+                                    @if($item->hasAttachments())
+                                        <div class="flex-shrink-0 ml-2">
+                                            <div class="flex space-x-1">
+                                                @foreach($item->getAllAttachmentPaths() as $attachmentPath)
+                                                    @php
+                                                        $isImage = in_array(strtolower(pathinfo($attachmentPath, PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+                                                        $attachmentUrl = asset('storage/' . $attachmentPath);
+                                                    @endphp
+                                                    
+                                                    @if($isImage)
+                                                        <img src="{{ $attachmentUrl }}" 
+                                                             alt="Attachment" 
+                                                             class="w-8 h-8 object-cover rounded border border-gray-200 cursor-pointer hover:scale-110 transition-transform duration-200"
+                                                             onclick="openImageModal('{{ $attachmentUrl }}')">
+                                                    @else
+                                                        <button onclick="window.open('{{ $attachmentUrl }}', '_blank')" 
+                                                                class="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors">
+                                                            <i class="fas fa-paperclip mr-1"></i>View
+                                                        </button>
+                                                    @endif
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
                         @endforeach
                     </div>
                     <div class="mt-2 text-xs text-gray-500">
@@ -175,8 +199,6 @@
                 <!-- Regular Description for non-checklist requests -->
                 <div>{{ $request->description }}</div>
             @endif
-            <div class="font-semibold mt-2">Location</div>
-            <div>{{ $request->location }}</div>
         </div>
         <hr class="my-4 border-gray-300">
         <div class="mb-4 md:mb-6">
@@ -549,6 +571,42 @@ function showMobileFeedback(message, type) {
     setTimeout(() => {
         feedback.remove();
     }, 2000);
+}
+
+function openImageModal(imageUrl) {
+    // Create modal overlay
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50';
+    modal.onclick = function(e) {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    };
+    
+    // Create modal content
+    const modalContent = document.createElement('div');
+    modalContent.className = 'max-w-4xl max-h-full p-4';
+    
+    const img = document.createElement('img');
+    img.src = imageUrl;
+    img.className = 'max-w-full max-h-full object-contain rounded';
+    img.onclick = function(e) {
+        e.stopPropagation();
+    };
+    
+    // Close button
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+    closeBtn.className = 'absolute top-4 right-4 text-white text-2xl hover:text-gray-300';
+    closeBtn.onclick = function() {
+        modal.remove();
+    };
+    
+    modalContent.appendChild(img);
+    modal.appendChild(modalContent);
+    modal.appendChild(closeBtn);
+    
+    document.body.appendChild(modal);
 }
 </script>
 @endsection 

@@ -107,7 +107,7 @@
             @if($request->checklist)
                 <!-- Checklist Items as Interactive Checkboxes -->
                 <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-2">
-                    <div class="font-semibold text-gray-900 text-lg mb-3">Checklist Items:</div>
+                    <div class="font-semibold text-gray-900 text-xl mb-3">Checklist Items:</div>
                                          <div class="space-y-3">
                          @foreach($request->checklist->items as $item)
                              @php
@@ -126,12 +126,23 @@
                                                 {{ ($request->status === 'completed' || $request->status !== 'started') ? 'disabled' : '' }}>
                                      </div>
                                      <div class="flex-1">
-                                         <label for="item_{{ $item->id }}" class="text-base font-medium text-gray-900 {{ $isCompleted ? 'line-through text-gray-500' : '' }}">
-                                             {{ $item->description }}
-                                             @if($item->is_required)
-                                                 <span class="text-red-500 ml-1">*</span>
+                                         @if($item->type === 'header')
+                                             <div class="text-xl font-bold text-gray-900 ml-2">
+                                                 {{ $item->description }}
+                                             </div>
+                                         @else
+                                             <label for="item_{{ $item->id }}" class="text-lg font-medium text-gray-900 {{ $isCompleted ? 'line-through text-gray-500' : '' }}">
+                                                 {{ $item->description }}
+                                                 @if($item->is_required)
+                                                     <span class="text-red-500 ml-1">*</span>
+                                                 @endif
+                                             </label>
+                                             @if($item->task_description)
+                                                 <div class="text-sm text-gray-600 mt-1">
+                                                     {{ $item->task_description }}
+                                                 </div>
                                              @endif
-                                         </label>
+                                         @endif
                                          @if($item->attachment_path)
                                              <div class="mt-1 flex justify-end">
                                                  <button onclick="window.open('{{ $item->attachment_url }}', '_blank')" 
@@ -144,12 +155,23 @@
                                  @else
                                      <!-- Text items - no checkbox, just display the text -->
                                      <div class="flex-1">
-                                         <div class="text-base font-medium text-gray-900">
-                                             {{ $item->description }}
-                                             @if($item->is_required)
-                                                 <span class="text-red-500 ml-1">*</span>
+                                         @if($item->type === 'header')
+                                             <div class="text-xl font-bold text-gray-900 ml-2">
+                                                 {{ $item->description }}
+                                             </div>
+                                         @else
+                                             <div class="text-lg font-medium text-gray-900">
+                                                 {{ $item->description }}
+                                                 @if($item->is_required)
+                                                     <span class="text-red-500 ml-1">*</span>
+                                                 @endif
+                                             </div>
+                                             @if($item->task_description)
+                                                 <div class="text-sm text-gray-600 mt-1">
+                                                     {{ $item->task_description }}
+                                                 </div>
                                              @endif
-                                         </div>
+                                         @endif
                                          @if($item->attachment_path)
                                              <div class="mt-1 flex justify-end">
                                                  <button onclick="window.open('{{ $item->attachment_url }}', '_blank')" 

@@ -31,28 +31,27 @@ class ChecklistItemController extends Controller
             'description' => 'required|string|max:500',
             'task_description' => 'nullable|string|max:1000',
             'is_required' => 'boolean',
-            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp|max:10240', // 10MB max for images
+            'attachments' => 'nullable|array|max:4',
+            'attachments.*' => 'file|mimes:jpg,jpeg,png,gif,webp|max:10240', // 10MB max per image
         ]);
 
-        $attachment_path = null;
+        $attachments = [];
         
-        if ($request->hasFile('attachment')) {
-            $file = $request->file('attachment');
-            $mediaType = $file->getMimeType();
-            $isImage = strpos($mediaType, 'image/') === 0;
-            
-            if ($isImage) {
-                // Optimize images using the existing service
-                $attachment_path = $this->imageService->optimizeAndResize(
-                    $file,
-                    'checklist_attachments',
-                    800, // width
-                    600  // height
-                );
-            } else {
-                // Store non-image files directly
-                $filename = time() . '_' . $file->getClientOriginalName();
-                $attachment_path = $file->storeAs('checklist_attachments', $filename, 'public');
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                $mediaType = $file->getMimeType();
+                $isImage = strpos($mediaType, 'image/') === 0;
+                
+                if ($isImage) {
+                    // Optimize images using the existing service
+                    $attachment_path = $this->imageService->optimizeAndResize(
+                        $file,
+                        'checklist_attachments',
+                        800, // width
+                        600  // height
+                    );
+                    $attachments[] = $attachment_path;
+                }
             }
         }
 
@@ -63,7 +62,7 @@ class ChecklistItemController extends Controller
             'description' => $request->description,
             'task_description' => $request->task_description,
             'is_required' => $request->boolean('is_required'),
-            'attachment_path' => $attachment_path,
+            'attachments' => $attachments,
             'order' => $order,
         ]);
 
@@ -91,33 +90,35 @@ class ChecklistItemController extends Controller
             'description' => 'required|string|max:500',
             'task_description' => 'nullable|string|max:1000',
             'is_required' => 'boolean',
-            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp|max:10240', // 10MB max for images
+            'attachments' => 'nullable|array|max:4',
+            'attachments.*' => 'file|mimes:jpg,jpeg,png,gif,webp|max:10240', // 10MB max per image
         ]);
 
-        $attachment_path = $item->attachment_path;
+        $attachments = $item->attachments ?? [];
         
-        if ($request->hasFile('attachment')) {
-            // Delete old attachment if exists
-            if ($item->attachment_path && Storage::disk('public')->exists($item->attachment_path)) {
-                Storage::disk('public')->delete($item->attachment_path);
+        if ($request->hasFile('attachments')) {
+            // Delete old attachments if they exist
+            foreach ($item->getAllAttachmentPaths() as $oldPath) {
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
             }
             
-            $file = $request->file('attachment');
-            $mediaType = $file->getMimeType();
-            $isImage = strpos($mediaType, 'image/') === 0;
-            
-            if ($isImage) {
-                // Optimize images using the existing service
-                $attachment_path = $this->imageService->optimizeAndResize(
-                    $file,
-                    'checklist_attachments',
-                    800, // width
-                    600  // height
-                );
-            } else {
-                // Store non-image files directly
-                $filename = time() . '_' . $file->getClientOriginalName();
-                $attachment_path = $file->storeAs('checklist_attachments', $filename, 'public');
+            $attachments = [];
+            foreach ($request->file('attachments') as $file) {
+                $mediaType = $file->getMimeType();
+                $isImage = strpos($mediaType, 'image/') === 0;
+                
+                if ($isImage) {
+                    // Optimize images using the existing service
+                    $attachment_path = $this->imageService->optimizeAndResize(
+                        $file,
+                        'checklist_attachments',
+                        800, // width
+                        600  // height
+                    );
+                    $attachments[] = $attachment_path;
+                }
             }
         }
 
@@ -126,7 +127,7 @@ class ChecklistItemController extends Controller
             'description' => $request->description,
             'task_description' => $request->task_description,
             'is_required' => $request->boolean('is_required'),
-            'attachment_path' => $attachment_path,
+            'attachments' => $attachments,
         ]);
 
         if ($request->expectsJson()) {

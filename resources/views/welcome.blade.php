@@ -51,7 +51,7 @@
                     <div class="text-blue-200 text-3xl mb-4 group-hover:text-white transition-colors">
                         <i class="fas fa-users"></i>
                     </div>
-                    <p class="text-white text-base font-medium leading-relaxed">Add team members – <span class="text-blue-300">role based permissions</span></p>
+                    <p class="text-white text-base font-medium leading-relaxed">Add team members – role based permissions</p>
                 </div>
             </div
             @auth

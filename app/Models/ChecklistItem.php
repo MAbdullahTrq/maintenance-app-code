@@ -17,12 +17,14 @@ class ChecklistItem extends Model
         'description',
         'task_description',
         'is_required',
-        'attachment_path',
+        'attachment_path_old',
+        'attachments',
         'order',
     ];
 
     protected $casts = [
         'is_required' => 'boolean',
+        'attachments' => 'array',
     ];
 
     /**
@@ -62,10 +64,52 @@ class ChecklistItem extends Model
      */
     public function getAttachmentUrlAttribute(): ?string
     {
-        if (!$this->attachment_path) {
+        if (!$this->attachment_path_old) {
             return null;
         }
         
-        return asset('storage/' . $this->attachment_path);
+        return asset('storage/' . $this->attachment_path_old);
+    }
+
+    /**
+     * Get all attachment URLs.
+     */
+    public function getAttachmentUrlsAttribute(): array
+    {
+        if (!$this->attachments) {
+            return [];
+        }
+        
+        return array_map(function($path) {
+            return asset('storage/' . $path);
+        }, $this->attachments);
+    }
+
+    /**
+     * Check if item has any attachments.
+     */
+    public function hasAttachments(): bool
+    {
+        return !empty($this->attachments) || !empty($this->attachment_path_old);
+    }
+
+    /**
+     * Get all attachment paths (including legacy single attachment).
+     */
+    public function getAllAttachmentPaths(): array
+    {
+        $paths = [];
+        
+        // Add legacy single attachment if exists
+        if ($this->attachment_path_old) {
+            $paths[] = $this->attachment_path_old;
+        }
+        
+        // Add multiple attachments if exist
+        if ($this->attachments) {
+            $paths = array_merge($paths, $this->attachments);
+        }
+        
+        return $paths;
     }
 }

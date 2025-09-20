@@ -271,13 +271,9 @@ button:hover {
                             <span class="ml-2 text-sm text-gray-600">Required</span>
                         </label>
                 <div class="flex items-center space-x-2">
-                            <!-- Attachment thumbnail container -->
-                            <div id="attachmentThumbnail" class="hidden">
-                                <img id="attachmentThumbnailImg" 
-                                     src="" 
-                                     alt="Attachment" 
-                                     class="w-8 h-8 object-cover rounded border border-gray-200 cursor-pointer hover:scale-110 transition-transform duration-200"
-                                     onclick="openImageModal(this.src)">
+                            <!-- Attachment thumbnails container -->
+                            <div id="attachmentThumbnails" class="hidden flex space-x-1">
+                                <!-- Thumbnails will be dynamically added here -->
                             </div>
                     <button type="button" 
                                     id="addAttachmentBtn"
@@ -290,6 +286,7 @@ button:hover {
                         <input type="file" 
                                id="attachmentInput" 
                                accept="image/*" 
+                               multiple
                                style="display: none;">
                     </div>
                     </div>
@@ -345,40 +342,44 @@ button:hover {
                                     <div class="flex-1">
                                         <div class="flex items-center justify-between">
                                             <div class="flex-1">
-                                                <h4 class="font-medium text-gray-900 text-lg" style="font-size: 1.125rem !important;">
-                                                    {{ $item->description }}
-                                                    @if($item->is_required)
-                                                        <span class="text-red-500 ml-1">*</span>
-                                                    @endif
-                                                </h4>
+                                                @if($item->type === 'header')
+                                                    <h3 class="font-bold text-gray-900 text-2xl" style="font-size: 1.5rem !important;">
+                                                        {{ $item->description }}
+                                                    </h3>
+                                                @else
+                                                    <h4 class="font-normal text-gray-900 text-lg" style="font-size: 1.125rem !important;">
+                                                        {{ $item->description }}
+                                                        @if($item->is_required)
+                                                            <span class="text-red-500 ml-1">*</span>
+                                                        @endif
+                                                    </h4>
+                                                @endif
                                                 @if($item->task_description)
                                                     <p class="text-sm text-gray-600 mt-1">{{ $item->task_description }}</p>
                                                 @endif
-                                                @if($item->attachment_path)
+                                                @if($item->hasAttachments())
                                                     <div class="mt-2">
-                                                        @php
-                                                            $isImage = in_array(strtolower(pathinfo($item->attachment_path, PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png', 'gif', 'webp']);
-                                                        @endphp
-                                                        
-                                                        @if($isImage)
-                                                            <div class="flex items-center space-x-2">
-                                                                <img src="{{ $item->attachment_url }}" 
-                                                                     alt="Attachment" 
-                                                                     class="w-12 h-12 object-cover rounded border border-gray-200 cursor-pointer hover:opacity-80 transition-opacity"
-                                                                     onclick="openImageModal('{{ $item->attachment_url }}')">
-                                                                <a href="{{ $item->attachment_url }}" 
-                                                                   target="_blank"
-                                                                   class="text-xs text-blue-600 hover:text-blue-800">
-                                                                    <i class="fas fa-external-link-alt mr-1"></i>View Full Size
-                                                                </a>
-                                                            </div>
-                                                        @else
-                                                            <a href="{{ $item->attachment_url }}" 
-                                                               target="_blank"
-                                                               class="text-sm text-blue-600 hover:text-blue-800">
-                                                                <i class="fas fa-paperclip mr-1"></i>View Attachment
-                                                            </a>
-                                                        @endif
+                                                        <div class="flex space-x-1">
+                                                            @foreach($item->getAllAttachmentPaths() as $attachmentPath)
+                                                                @php
+                                                                    $isImage = in_array(strtolower(pathinfo($attachmentPath, PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+                                                                    $attachmentUrl = asset('storage/' . $attachmentPath);
+                                                                @endphp
+                                                                
+                                                                @if($isImage)
+                                                                    <img src="{{ $attachmentUrl }}" 
+                                                                         alt="Attachment" 
+                                                                         class="w-8 h-8 object-cover rounded border border-gray-200 cursor-pointer hover:scale-110 transition-transform duration-200"
+                                                                         onclick="openImageModal('{{ $attachmentUrl }}')">
+                                                                @else
+                                                                    <a href="{{ $attachmentUrl }}" 
+                                                                       target="_blank"
+                                                                       class="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors">
+                                                                        <i class="fas fa-paperclip mr-1"></i>View
+                                                                    </a>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
                                                     </div>
                                                 @endif
                 </div>
@@ -442,12 +443,11 @@ function initializeDescriptionField() {
     const typeSelect = document.getElementById('newItemType');
     const taskDescriptionRow = document.getElementById('taskDescriptionRow');
     
-    // Always show the task description row by default
-    taskDescriptionRow.classList.remove('hidden');
-    taskDescriptionRow.style.display = 'block';
-    
-    // Only hide it if the type is 'header'
-    if (typeSelect.value === 'header') {
+    // Show/hide based on current type selection
+    if (typeSelect.value === 'checkbox') {
+        taskDescriptionRow.classList.remove('hidden');
+        taskDescriptionRow.style.display = 'block';
+    } else {
         taskDescriptionRow.classList.add('hidden');
         taskDescriptionRow.style.display = 'none';
     }
@@ -467,8 +467,10 @@ function setupInlineEditing() {
     typeSelect.addEventListener('change', function() {
         if (this.value === 'checkbox') {
             taskDescriptionRow.classList.remove('hidden');
+            taskDescriptionRow.style.display = 'block';
         } else {
             taskDescriptionRow.classList.add('hidden');
+            taskDescriptionRow.style.display = 'none';
         }
     });
     
@@ -479,10 +481,20 @@ function setupInlineEditing() {
     
     // Handle file selection
     attachmentInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            // Compress and preview the image
-            compressAndPreviewImage(file);
+        const files = Array.from(e.target.files);
+        if (files.length > 0) {
+            // Check if we already have files and adding more would exceed limit
+            if (compressedImageFiles.length + files.length > 4) {
+                showNotification('Maximum 4 images allowed', 'error');
+                return;
+            }
+            
+            // Process each file
+            files.forEach(file => {
+                if (compressedImageFiles.length < 4) {
+                    compressAndPreviewImage(file);
+                }
+            });
         }
     });
     
@@ -668,7 +680,7 @@ function createChecklistItemElement(itemData) {
                 <div class="flex-1">
                     <div class="flex items-center justify-between">
                         <div class="flex-1">
-                            <h4 class="font-medium text-gray-900 text-lg" style="font-size: 1.125rem !important;">
+                            <h4 class="font-normal text-gray-900 text-lg" style="font-size: 1.125rem !important;">
                                 ${itemData.description}
                                 ${itemData.is_required ? '<span class="text-red-500 ml-1">*</span>' : ''}
                             </h4>
@@ -702,18 +714,20 @@ function clearInlineForm() {
     document.getElementById('newItemDescription').value = '';
     
     // Show description field since checkbox is default
-    document.getElementById('taskDescriptionRow').classList.remove('hidden');
+    const taskDescriptionRow = document.getElementById('taskDescriptionRow');
+    taskDescriptionRow.classList.remove('hidden');
+    taskDescriptionRow.style.display = 'block';
     
-    // Reset attachment
-    compressedImageFile = null;
+    // Reset attachments
+    compressedImageFiles = [];
     document.getElementById('attachmentInput').value = '';
     const attachmentBtn = document.getElementById('addAttachmentBtn');
     attachmentBtn.innerHTML = '<i class="fas fa-paperclip"></i>';
     attachmentBtn.title = '';
     
-    // Hide attachment thumbnail
-    const attachmentThumbnail = document.getElementById('attachmentThumbnail');
-    attachmentThumbnail.classList.add('hidden');
+    // Hide attachment thumbnails
+    const attachmentThumbnails = document.getElementById('attachmentThumbnails');
+    attachmentThumbnails.classList.add('hidden');
     
     // Reset edit state
     const saveBtn = document.getElementById('saveChecklistBtn');
@@ -744,10 +758,10 @@ function saveItemToServer(itemData) {
     formData.append('is_required', itemData.is_required ? '1' : '0');
     formData.append('_token', '{{ csrf_token() }}');
     
-    // Add attachment if available
-    if (compressedImageFile) {
-        formData.append('attachment', compressedImageFile);
-    }
+    // Add attachments if available
+    compressedImageFiles.forEach((file, index) => {
+        formData.append(`attachments[${index}]`, file);
+    });
     
     fetch('{{ route("mobile.checklists.items.store", $checklist) }}', {
         method: 'POST',
@@ -786,10 +800,10 @@ function updateItemOnServer(itemData, itemId) {
     formData.append('_token', '{{ csrf_token() }}');
     formData.append('_method', 'PUT');
     
-    // Add attachment if available
-    if (compressedImageFile) {
-        formData.append('attachment', compressedImageFile);
-    }
+    // Add attachments if available
+    compressedImageFiles.forEach((file, index) => {
+        formData.append(`attachments[${index}]`, file);
+    });
     
     fetch(`{{ route("mobile.checklists.items.update", [$checklist, '']) }}/${itemId}`, {
         method: 'POST',
@@ -887,11 +901,14 @@ function editExistingItem(button) {
     document.getElementById('newItemRequired').checked = itemRequired;
     
     // Show task description row if needed
+    const taskDescriptionRow = document.getElementById('taskDescriptionRow');
     if (itemType === 'checkbox') {
-        document.getElementById('taskDescriptionRow').classList.remove('hidden');
+        taskDescriptionRow.classList.remove('hidden');
+        taskDescriptionRow.style.display = 'block';
         document.getElementById('newItemDescription').value = itemTaskDescription || '';
     } else {
-        document.getElementById('taskDescriptionRow').classList.add('hidden');
+        taskDescriptionRow.classList.add('hidden');
+        taskDescriptionRow.style.display = 'none';
     }
     
     // Handle existing attachment
@@ -1007,8 +1024,8 @@ function showNotification(message, type) {
     }, 3000);
 }
 
-// Global variable to store compressed image
-let compressedImageFile = null;
+// Global variable to store compressed images
+let compressedImageFiles = [];
 
 function compressAndPreviewImage(file) {
     if (!file.type.startsWith('image/')) {
@@ -1061,23 +1078,23 @@ function compressAndPreviewImage(file) {
                     
                     if (sizeKB <= TARGET_SIZE_KB || attempts >= maxAttempts) {
                         // Create new file from compressed blob
-                        compressedImageFile = new File([blob], file.name, {
+                        const compressedFile = new File([blob], file.name, {
                             type: 'image/jpeg',
                             lastModified: Date.now()
                         });
                         
-                        // Update attachment button and show thumbnail
+                        // Add to compressed files array
+                        compressedImageFiles.push(compressedFile);
+                        
+                        // Update attachment button
                         const attachmentBtn = document.getElementById('addAttachmentBtn');
-                        attachmentBtn.innerHTML = '<i class="fas fa-image text-green-600"></i>';
-                        attachmentBtn.title = 'Image attached: ' + file.name;
+                        attachmentBtn.innerHTML = `<i class="fas fa-image text-green-600"></i> (${compressedImageFiles.length}/4)`;
+                        attachmentBtn.title = `${compressedImageFiles.length} image(s) attached`;
                         
-                        // Show thumbnail
-                        const attachmentThumbnail = document.getElementById('attachmentThumbnail');
-                        const attachmentThumbnailImg = document.getElementById('attachmentThumbnailImg');
-                        attachmentThumbnailImg.src = URL.createObjectURL(compressedImageFile);
-                        attachmentThumbnail.classList.remove('hidden');
+                        // Show thumbnails
+                        updateAttachmentThumbnails();
                         
-                        showNotification('Image compressed and ready to attach', 'success');
+                        showNotification(`Image ${compressedImageFiles.length} compressed and ready to attach`, 'success');
                     } else {
                         quality -= 0.1;
                         attempts++;
@@ -1091,6 +1108,53 @@ function compressAndPreviewImage(file) {
         img.src = e.target.result;
     };
     reader.readAsDataURL(file);
+}
+
+function updateAttachmentThumbnails() {
+    const thumbnailsContainer = document.getElementById('attachmentThumbnails');
+    thumbnailsContainer.innerHTML = '';
+    
+    compressedImageFiles.forEach((file, index) => {
+        const thumbnail = document.createElement('div');
+        thumbnail.className = 'relative';
+        
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.className = 'w-8 h-8 object-cover rounded border border-gray-200 cursor-pointer hover:scale-110 transition-transform duration-200';
+        img.onclick = () => openImageModal(img.src);
+        
+        const removeBtn = document.createElement('button');
+        removeBtn.innerHTML = '×';
+        removeBtn.className = 'absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full hover:bg-red-600';
+        removeBtn.onclick = (e) => {
+            e.stopPropagation();
+            removeAttachment(index);
+        };
+        
+        thumbnail.appendChild(img);
+        thumbnail.appendChild(removeBtn);
+        thumbnailsContainer.appendChild(thumbnail);
+    });
+    
+    if (compressedImageFiles.length > 0) {
+        thumbnailsContainer.classList.remove('hidden');
+    } else {
+        thumbnailsContainer.classList.add('hidden');
+    }
+}
+
+function removeAttachment(index) {
+    compressedImageFiles.splice(index, 1);
+    updateAttachmentThumbnails();
+    
+    const attachmentBtn = document.getElementById('addAttachmentBtn');
+    if (compressedImageFiles.length === 0) {
+        attachmentBtn.innerHTML = '<i class="fas fa-paperclip"></i>';
+        attachmentBtn.title = '';
+    } else {
+        attachmentBtn.innerHTML = `<i class="fas fa-image text-green-600"></i> (${compressedImageFiles.length}/4)`;
+        attachmentBtn.title = `${compressedImageFiles.length} image(s) attached`;
+    }
 }
 
 function openImageModal(imageUrl) {

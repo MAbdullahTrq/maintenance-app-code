@@ -22,7 +22,7 @@
                 <select name="checklist_id" id="checklist-select" class="w-full border rounded p-2" onchange="toggleFormFields()">
                     <option value="">No checklist - Fill form manually</option>
                     @foreach($checklists as $checklist)
-                        <option value="{{ $checklist->id }}" data-name="{{ $checklist->name }}" data-description="{{ $checklist->generateFormattedDescription() }}">{{ $checklist->name }} ({{ $checklist->items->count() }} items)</option>
+                        <option value="{{ $checklist->id }}" data-name="{{ $checklist->name }}" data-description="{{ $checklist->description }}">{{ $checklist->name }} ({{ $checklist->items->count() }} items)</option>
                     @endforeach
                 </select>
                 <div class="text-xs text-blue-600 mt-1">Select a checklist to auto-fill the request details</div>
@@ -108,24 +108,22 @@ function toggleFormFields() {
         descriptionField.value = checklistDescription;
         // Location field remains enabled and required
         
-        // Disable manual fields (except location)
-        titleField.disabled = true;
-        descriptionField.disabled = true;
-        locationField.disabled = false; // Explicitly keep location field enabled
+        // Keep all fields enabled and editable
+        titleField.disabled = false;
+        descriptionField.disabled = false;
+        locationField.disabled = false;
         
-        // Remove required attributes (except location)
-        titleField.removeAttribute('required');
-        descriptionField.removeAttribute('required');
-        locationField.setAttribute('required', 'required'); // Explicitly keep location required
+        // Keep required attributes for title and description
+        titleField.setAttribute('required', 'required');
+        descriptionField.setAttribute('required', 'required');
+        locationField.removeAttribute('required'); // Location is optional
         
-        // Visual feedback - only apply to title and description fields, not location
-        titleField.style.opacity = '0.6';
-        descriptionField.style.opacity = '0.6';
-        titleField.style.pointerEvents = 'none';
-        descriptionField.style.pointerEvents = 'none';
-        
-        // Keep location field fully functional
+        // Keep all fields fully functional and visible
+        titleField.style.opacity = '1';
+        descriptionField.style.opacity = '1';
         locationField.style.opacity = '1';
+        titleField.style.pointerEvents = 'auto';
+        descriptionField.style.pointerEvents = 'auto';
         locationField.style.pointerEvents = 'auto';
     } else {
         // No checklist - enable manual fields
@@ -138,10 +136,10 @@ function toggleFormFields() {
         descriptionField.disabled = false;
         locationField.disabled = false;
         
-        // Add required attributes back
+        // Add required attributes back (location is optional)
         titleField.setAttribute('required', 'required');
         descriptionField.setAttribute('required', 'required');
-        locationField.setAttribute('required', 'required');
+        locationField.removeAttribute('required'); // Location remains optional
         
         // Visual feedback - reset all fields
         titleField.style.opacity = '1';

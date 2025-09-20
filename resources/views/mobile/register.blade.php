@@ -383,11 +383,11 @@
                     <div id="mobile-phone-feedback" class="phone-feedback" style="margin-top: 15px;"></div>
                     <div id="mobile-phone-example" class="phone-example" style="margin-top: 15px;"></div>
                     
-                    <!-- Privacy Policy Text -->
+                    <!-- Privacy Policy Text
                     <div class="mt-3 text-xs text-gray-600">
                         We'll call or text you to confirm your number. Standard message and data rates apply. 
                         <a href="#" class="text-blue-600 hover:text-blue-800 underline">Privacy Policy</a>
-                    </div>
+                    </div> -->
                     
                     @error('phone')
                         <div class="text-red-500 text-xs mt-1">{{ $message }}</div>

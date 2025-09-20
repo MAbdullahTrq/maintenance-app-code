@@ -21,7 +21,7 @@
                 <li>• Assign tasks – to your preferred technicians</li>
                 <li>• Real-time notifications – keep everyone in the loop</li>
                 <li>• Create reports – Admin is a breeze</li>
-                <li>• Add team members – <span class="underline">role based permissions</span></li>
+                <li>• Add team members – role based permissions</li>
             </ul>
         </div>
         
